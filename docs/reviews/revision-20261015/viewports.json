@@ -1,0 +1,316 @@
+{
+  "home": [
+    {
+      "characters": [
+        {
+          "fit": "contain",
+          "key": "mascot_leaf",
+          "loaded": true,
+          "parentOutline": "3px"
+        },
+        {
+          "fit": "contain",
+          "key": "mascot_water",
+          "loaded": true,
+          "parentOutline": "3px"
+        },
+        {
+          "fit": "contain",
+          "key": "mascot_flower",
+          "loaded": true,
+          "parentOutline": "3px"
+        }
+      ],
+      "overflow": false,
+      "page": "home",
+      "width": 1280
+    },
+    {
+      "characters": [
+        {
+          "fit": "contain",
+          "key": "mascot_leaf",
+          "loaded": true,
+          "parentOutline": "3px"
+        },
+        {
+          "fit": "contain",
+          "key": "mascot_water",
+          "loaded": true,
+          "parentOutline": "3px"
+        },
+        {
+          "fit": "contain",
+          "key": "mascot_flower",
+          "loaded": true,
+          "parentOutline": "3px"
+        }
+      ],
+      "overflow": false,
+      "page": "home",
+      "width": 1024
+    },
+    {
+      "characters": [
+        {
+          "fit": "contain",
+          "key": "mascot_leaf",
+          "loaded": true,
+          "parentOutline": "3px"
+        },
+        {
+          "fit": "contain",
+          "key": "mascot_water",
+          "loaded": true,
+          "parentOutline": "3px"
+        },
+        {
+          "fit": "contain",
+          "key": "mascot_flower",
+          "loaded": true,
+          "parentOutline": "3px"
+        }
+      ],
+      "overflow": false,
+      "page": "home",
+      "width": 768
+    },
+    {
+      "characters": [
+        {
+          "fit": "contain",
+          "key": "mascot_leaf",
+          "loaded": true,
+          "parentOutline": "3px"
+        },
+        {
+          "fit": "contain",
+          "key": "mascot_water",
+          "loaded": true,
+          "parentOutline": "3px"
+        },
+        {
+          "fit": "contain",
+          "key": "mascot_flower",
+          "loaded": true,
+          "parentOutline": "3px"
+        }
+      ],
+      "overflow": false,
+      "page": "home",
+      "width": 375
+    }
+  ],
+  "map": [
+    {
+      "broken": 0,
+      "nodes": [
+        {
+          "h": 89,
+          "w": 89
+        },
+        {
+          "h": 89,
+          "w": 89
+        },
+        {
+          "h": 89,
+          "w": 89
+        },
+        {
+          "h": 89,
+          "w": 89
+        },
+        {
+          "h": 89,
+          "w": 89
+        }
+      ],
+      "overflow": false,
+      "page": "map",
+      "width": 375
+    },
+    {
+      "broken": 0,
+      "nodes": [
+        {
+          "h": 165,
+          "w": 170
+        },
+        {
+          "h": 165,
+          "w": 170
+        },
+        {
+          "h": 165,
+          "w": 170
+        },
+        {
+          "h": 165,
+          "w": 170
+        },
+        {
+          "h": 165,
+          "w": 170
+        }
+      ],
+      "overflow": false,
+      "page": "map",
+      "width": 768
+    },
+    {
+      "broken": 0,
+      "nodes": [
+        {
+          "h": 161,
+          "w": 165
+        },
+        {
+          "h": 161,
+          "w": 165
+        },
+        {
+          "h": 161,
+          "w": 165
+        },
+        {
+          "h": 161,
+          "w": 165
+        },
+        {
+          "h": 161,
+          "w": 165
+        }
+      ],
+      "overflow": false,
+      "page": "map",
+      "width": 1024
+    },
+    {
+      "broken": 0,
+      "nodes": [
+        {
+          "h": 197,
+          "w": 202
+        },
+        {
+          "h": 197,
+          "w": 202
+        },
+        {
+          "h": 197,
+          "w": 202
+        },
+        {
+          "h": 197,
+          "w": 202
+        },
+        {
+          "h": 197,
+          "w": 202
+        }
+      ],
+      "overflow": false,
+      "page": "map",
+      "width": 1280
+    }
+  ],
+  "invention": [
+    {
+      "broken": 0,
+      "overflow": false,
+      "page": "발명품 테스트센터",
+      "parts": [
+        {
+          "h": 148,
+          "w": 228
+        },
+        {
+          "h": 148,
+          "w": 228
+        },
+        {
+          "h": 148,
+          "w": 228
+        },
+        {
+          "h": 148,
+          "w": 228
+        }
+      ],
+      "width": 1280
+    },
+    {
+      "broken": 0,
+      "overflow": false,
+      "page": "발명품 테스트센터",
+      "parts": [
+        {
+          "h": 148,
+          "w": 186
+        },
+        {
+          "h": 148,
+          "w": 186
+        },
+        {
+          "h": 148,
+          "w": 186
+        },
+        {
+          "h": 148,
+          "w": 186
+        }
+      ],
+      "width": 1024
+    },
+    {
+      "broken": 0,
+      "overflow": false,
+      "page": "발명품 테스트센터",
+      "parts": [
+        {
+          "h": 148,
+          "w": 147
+        },
+        {
+          "h": 148,
+          "w": 147
+        },
+        {
+          "h": 148,
+          "w": 147
+        },
+        {
+          "h": 148,
+          "w": 147
+        }
+      ],
+      "width": 768
+    },
+    {
+      "broken": 0,
+      "overflow": false,
+      "page": "발명품 테스트센터",
+      "parts": [
+        {
+          "h": 157,
+          "w": 141
+        },
+        {
+          "h": 157,
+          "w": 141
+        },
+        {
+          "h": 157,
+          "w": 141
+        },
+        {
+          "h": 157,
+          "w": 141
+        }
+      ],
+      "width": 375
+    }
+  ]
+}

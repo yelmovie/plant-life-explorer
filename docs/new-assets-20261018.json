@@ -1,0 +1,14 @@
+{
+  "date": "2026-10-18",
+  "assets": [{
+    "id": "greenhouse_studio_v1",
+    "tool": "image_gen.imagegen",
+    "purpose": "Landscape activity backdrop with an empty worktable and calm greenhouse setting",
+    "prompt": "Create a polished 3D storybook game environment background for an elementary school plant research game, landscape 1536x1024. View from a child's eye level inside a cozy botanical greenhouse research studio, soft sage green wooden frames, tall arched windows with sunlit garden trees, distant shelves with a few potted plants along left and right edges, warm cream plaster, soft morning sunlight. A very broad empty pale warm wood worktable fills the lower half, its flat open center from x20% to85% has NO objects so interactive specimens will be composited over it. Upper middle is airy window glass and soft garden greenery, no sharp busy details. Charming high quality clay/miniature 3D illustrated rendering, natural muted green palette, gentle shadows, welcoming and calm, no people, no mascots, NO text, NO labels, NO UI, NO borders, no symbols, no floating objects. This is a seamless full-screen backdrop with spacious legible center, not an illustration inside a card.",
+    "source": "assets/generated/greenhouse_studio_v1.png",
+    "web": "assets/generated/greenhouse_studio_v1.webp",
+    "width": 1536,
+    "height": 1024,
+    "webBytes": 259178
+  }]
+}

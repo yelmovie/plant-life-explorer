@@ -1,0 +1,20 @@
+<!doctype html><meta charset="utf-8"><title>태블릿 QA 전용</title>
+<script type="module">
+// Only the isolated QA origin may replace its own disposable records.
+if(location.hostname!=='127.0.0.1'||location.port!=='4331')throw Error('Use isolated QA port 4331');
+const {freshState,STORAGE_KEY,PLANTS,HABITAT_PLANTS,recordFeature,testDesign,presetTerrain}=await import('/src/model.js');
+const q=new URLSearchParams(location.search),s=freshState();
+s.adminUnlocked=true;s.soundEnabled=false;
+if(q.get('ready')==='1'){
+ for(const p of PLANTS){recordFeature(s,p.id,'shape',p.id);recordFeature(s,p.id,'edge',p.edge?'yes':'no');}
+ s.groups={cherry:'yes',ginkgo:'no',grass:'no'};s.groupsByRule.edge={...s.groups};s.classificationEvidence.edge='cherry';s.groupsByRule.narrow={cherry:'no',ginkgo:'no',grass:'yes'};s.classificationEvidence.narrow='grass';
+ s.seasonalRecords=['cherry:3','cherry:0'];s.seasonPhotos={'cherry:3':{underground:true},'cherry:0':{underground:true}};s.seasonalRecords=['cherry:3','cherry:0','sowthistle:3','sowthistle:0'];s.seasonPhotos=Object.fromEntries(s.seasonalRecords.map(k=>[k,{underground:true}]));s.linkedEvidence=[...s.seasonalRecords];s.seasonExplained=['cherry','sowthistle'];
+ s.terrain=presetTerrain();s.experiment.step=5;s.experimentAnswer='air';
+ for(const p of HABITAT_PLANTS){s.habitats[p.id]=p.habitat;s.reasons[p.id]=p.id;s.habitatFeatures[p.id]=p.id;s.garden[p.id]=s.terrain.indexOf(p.habitat);}
+ s.gardenReasons=HABITAT_PLANTS.map(p=>p.id);s.gardenReviewed=true;
+ s.design={surface:'lotus',cover:'flap',linked:true};s.tests=[testDesign({surface:'plain',cover:'flap'}),testDesign(s.design)];s.testExplanation={key:'lotus:flap',before:'plain:flap',part:'surface'};
+ s.completed.fill(true);s.sharing={question:'surface',response:'keep',status:'shared'};s.finalChecks.habitat=true;
+}
+s.page=Number(q.get('p')||0);s.screen=q.get('screen')||'activity';s.finished=s.screen==='ending';s.largeText=q.get('large')==='1';
+localStorage.setItem(STORAGE_KEY,JSON.stringify(s));location.replace('/');
+</script>

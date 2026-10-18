@@ -1,0 +1,634 @@
+[
+  {
+    "size": "375x812",
+    "route": "메인",
+    "brokenImages": [],
+    "content": 360,
+    "fallbacks": 0,
+    "viewport": 375
+  },
+  {
+    "size": "375x812",
+    "route": "스테이지 선택",
+    "brokenImages": [],
+    "content": 360,
+    "fallbacks": 0,
+    "viewport": 375
+  },
+  {
+    "size": "375x812",
+    "route": "식물 표본 스캔",
+    "brokenImages": [],
+    "content": 360,
+    "fallbacks": 0,
+    "viewport": 375
+  },
+  {
+    "size": "375x812",
+    "route": "분류 규칙 연구실",
+    "brokenImages": [],
+    "content": 360,
+    "fallbacks": 0,
+    "viewport": 375
+  },
+  {
+    "size": "375x812",
+    "route": "계절 관찰 타임랩",
+    "brokenImages": [],
+    "content": 360,
+    "fallbacks": 0,
+    "viewport": 375
+  },
+  {
+    "size": "375x812",
+    "route": "생활 증거 분석실",
+    "brokenImages": [],
+    "content": 360,
+    "fallbacks": 0,
+    "viewport": 375
+  },
+  {
+    "size": "375x812",
+    "route": "환경 실험 챔버",
+    "brokenImages": [],
+    "content": 360,
+    "fallbacks": 0,
+    "viewport": 375
+  },
+  {
+    "size": "375x812",
+    "route": "서식지 판정실",
+    "brokenImages": [],
+    "content": 360,
+    "fallbacks": 0,
+    "viewport": 375
+  },
+  {
+    "size": "375x812",
+    "route": "초록정원 지형 설계",
+    "brokenImages": [],
+    "content": 360,
+    "fallbacks": 0,
+    "viewport": 375
+  },
+  {
+    "size": "375x812",
+    "route": "연구정원 배치 완성",
+    "brokenImages": [],
+    "content": 360,
+    "fallbacks": 0,
+    "viewport": 375
+  },
+  {
+    "size": "375x812",
+    "route": "식물 아이디어 공방",
+    "brokenImages": [],
+    "content": 360,
+    "fallbacks": 0,
+    "viewport": 375
+  },
+  {
+    "size": "375x812",
+    "route": "발명품 테스트센터",
+    "brokenImages": [],
+    "content": 360,
+    "fallbacks": 0,
+    "viewport": 375
+  },
+  {
+    "size": "375x812",
+    "route": "최종 연구 보고",
+    "brokenImages": [],
+    "content": 360,
+    "fallbacks": 0,
+    "viewport": 375
+  },
+  {
+    "size": "375x812",
+    "route": "최종 시운전",
+    "brokenImages": [],
+    "content": 360,
+    "fallbacks": 0,
+    "viewport": 375
+  },
+  {
+    "size": "375x812",
+    "route": "엔딩 · 인증서",
+    "brokenImages": [],
+    "content": 360,
+    "fallbacks": 0,
+    "viewport": 375
+  },
+  {
+    "size": "768x1024",
+    "route": "메인",
+    "brokenImages": [],
+    "content": 768,
+    "fallbacks": 0,
+    "viewport": 768
+  },
+  {
+    "size": "768x1024",
+    "route": "스테이지 선택",
+    "brokenImages": [],
+    "content": 753,
+    "fallbacks": 0,
+    "viewport": 768
+  },
+  {
+    "size": "768x1024",
+    "route": "식물 표본 스캔",
+    "brokenImages": [],
+    "content": 753,
+    "fallbacks": 0,
+    "viewport": 768
+  },
+  {
+    "size": "768x1024",
+    "route": "분류 규칙 연구실",
+    "brokenImages": [],
+    "content": 753,
+    "fallbacks": 0,
+    "viewport": 768
+  },
+  {
+    "size": "768x1024",
+    "route": "계절 관찰 타임랩",
+    "brokenImages": [],
+    "content": 753,
+    "fallbacks": 0,
+    "viewport": 768
+  },
+  {
+    "size": "768x1024",
+    "route": "생활 증거 분석실",
+    "brokenImages": [],
+    "content": 753,
+    "fallbacks": 0,
+    "viewport": 768
+  },
+  {
+    "size": "768x1024",
+    "route": "환경 실험 챔버",
+    "brokenImages": [],
+    "content": 753,
+    "fallbacks": 0,
+    "viewport": 768
+  },
+  {
+    "size": "768x1024",
+    "route": "서식지 판정실",
+    "brokenImages": [],
+    "content": 753,
+    "fallbacks": 0,
+    "viewport": 768
+  },
+  {
+    "size": "768x1024",
+    "route": "초록정원 지형 설계",
+    "brokenImages": [],
+    "content": 753,
+    "fallbacks": 0,
+    "viewport": 768
+  },
+  {
+    "size": "768x1024",
+    "route": "연구정원 배치 완성",
+    "brokenImages": [],
+    "content": 753,
+    "fallbacks": 0,
+    "viewport": 768
+  },
+  {
+    "size": "768x1024",
+    "route": "식물 아이디어 공방",
+    "brokenImages": [],
+    "content": 753,
+    "fallbacks": 0,
+    "viewport": 768
+  },
+  {
+    "size": "768x1024",
+    "route": "발명품 테스트센터",
+    "brokenImages": [],
+    "content": 753,
+    "fallbacks": 0,
+    "viewport": 768
+  },
+  {
+    "size": "768x1024",
+    "route": "최종 연구 보고",
+    "brokenImages": [],
+    "content": 753,
+    "fallbacks": 0,
+    "viewport": 768
+  },
+  {
+    "size": "768x1024",
+    "route": "최종 시운전",
+    "brokenImages": [],
+    "content": 753,
+    "fallbacks": 0,
+    "viewport": 768
+  },
+  {
+    "size": "768x1024",
+    "route": "엔딩 · 인증서",
+    "brokenImages": [],
+    "content": 753,
+    "fallbacks": 0,
+    "viewport": 768
+  },
+  {
+    "size": "1280x800",
+    "route": "메인",
+    "brokenImages": [],
+    "content": 1265,
+    "fallbacks": 0,
+    "viewport": 1280
+  },
+  {
+    "size": "1280x800",
+    "route": "스테이지 선택",
+    "brokenImages": [],
+    "content": 1265,
+    "fallbacks": 0,
+    "viewport": 1280
+  },
+  {
+    "size": "1280x800",
+    "route": "식물 표본 스캔",
+    "brokenImages": [],
+    "content": 1265,
+    "fallbacks": 0,
+    "viewport": 1280
+  },
+  {
+    "size": "1280x800",
+    "route": "분류 규칙 연구실",
+    "brokenImages": [],
+    "content": 1265,
+    "fallbacks": 0,
+    "viewport": 1280
+  },
+  {
+    "size": "1280x800",
+    "route": "계절 관찰 타임랩",
+    "brokenImages": [],
+    "content": 1265,
+    "fallbacks": 0,
+    "viewport": 1280
+  },
+  {
+    "size": "1280x800",
+    "route": "생활 증거 분석실",
+    "brokenImages": [],
+    "content": 1265,
+    "fallbacks": 0,
+    "viewport": 1280
+  },
+  {
+    "size": "1280x800",
+    "route": "환경 실험 챔버",
+    "brokenImages": [],
+    "content": 1265,
+    "fallbacks": 0,
+    "viewport": 1280
+  },
+  {
+    "size": "1280x800",
+    "route": "서식지 판정실",
+    "brokenImages": [],
+    "content": 1265,
+    "fallbacks": 0,
+    "viewport": 1280
+  },
+  {
+    "size": "1280x800",
+    "route": "초록정원 지형 설계",
+    "brokenImages": [],
+    "content": 1265,
+    "fallbacks": 0,
+    "viewport": 1280
+  },
+  {
+    "size": "1280x800",
+    "route": "연구정원 배치 완성",
+    "brokenImages": [],
+    "content": 1265,
+    "fallbacks": 0,
+    "viewport": 1280
+  },
+  {
+    "size": "1280x800",
+    "route": "식물 아이디어 공방",
+    "brokenImages": [],
+    "content": 1265,
+    "fallbacks": 0,
+    "viewport": 1280
+  },
+  {
+    "size": "1280x800",
+    "route": "발명품 테스트센터",
+    "brokenImages": [],
+    "content": 1265,
+    "fallbacks": 0,
+    "viewport": 1280
+  },
+  {
+    "size": "1280x800",
+    "route": "최종 연구 보고",
+    "brokenImages": [],
+    "content": 1265,
+    "fallbacks": 0,
+    "viewport": 1280
+  },
+  {
+    "size": "1280x800",
+    "route": "최종 시운전",
+    "brokenImages": [],
+    "content": 1265,
+    "fallbacks": 0,
+    "viewport": 1280
+  },
+  {
+    "size": "1280x800",
+    "route": "엔딩 · 인증서",
+    "brokenImages": [],
+    "content": 1265,
+    "fallbacks": 0,
+    "viewport": 1280
+  },
+  {
+    "size": "915x412",
+    "route": "메인",
+    "brokenImages": [],
+    "content": 900,
+    "fallbacks": 0,
+    "viewport": 915
+  },
+  {
+    "size": "915x412",
+    "route": "스테이지 선택",
+    "brokenImages": [],
+    "content": 900,
+    "fallbacks": 0,
+    "viewport": 915
+  },
+  {
+    "size": "915x412",
+    "route": "식물 표본 스캔",
+    "brokenImages": [],
+    "content": 900,
+    "fallbacks": 0,
+    "viewport": 915
+  },
+  {
+    "size": "915x412",
+    "route": "분류 규칙 연구실",
+    "brokenImages": [],
+    "content": 900,
+    "fallbacks": 0,
+    "viewport": 915
+  },
+  {
+    "size": "915x412",
+    "route": "계절 관찰 타임랩",
+    "brokenImages": [],
+    "content": 900,
+    "fallbacks": 0,
+    "viewport": 915
+  },
+  {
+    "size": "915x412",
+    "route": "생활 증거 분석실",
+    "brokenImages": [],
+    "content": 900,
+    "fallbacks": 0,
+    "viewport": 915
+  },
+  {
+    "size": "915x412",
+    "route": "환경 실험 챔버",
+    "brokenImages": [],
+    "content": 900,
+    "fallbacks": 0,
+    "viewport": 915
+  },
+  {
+    "size": "915x412",
+    "route": "서식지 판정실",
+    "brokenImages": [],
+    "content": 900,
+    "fallbacks": 0,
+    "viewport": 915
+  },
+  {
+    "size": "915x412",
+    "route": "초록정원 지형 설계",
+    "brokenImages": [],
+    "content": 900,
+    "fallbacks": 0,
+    "viewport": 915
+  },
+  {
+    "size": "915x412",
+    "route": "연구정원 배치 완성",
+    "brokenImages": [],
+    "content": 900,
+    "fallbacks": 0,
+    "viewport": 915
+  },
+  {
+    "size": "915x412",
+    "route": "식물 아이디어 공방",
+    "brokenImages": [],
+    "content": 900,
+    "fallbacks": 0,
+    "viewport": 915
+  },
+  {
+    "size": "915x412",
+    "route": "발명품 테스트센터",
+    "brokenImages": [],
+    "content": 900,
+    "fallbacks": 0,
+    "viewport": 915
+  },
+  {
+    "size": "915x412",
+    "route": "최종 연구 보고",
+    "brokenImages": [],
+    "content": 900,
+    "fallbacks": 0,
+    "viewport": 915
+  },
+  {
+    "size": "915x412",
+    "route": "최종 시운전",
+    "brokenImages": [],
+    "content": 900,
+    "fallbacks": 0,
+    "viewport": 915
+  },
+  {
+    "size": "915x412",
+    "route": "엔딩 · 인증서",
+    "brokenImages": [],
+    "content": 900,
+    "fallbacks": 0,
+    "viewport": 915
+  },
+  {
+    "size": "1920x1080",
+    "route": "메인",
+    "brokenImages": [],
+    "content": 1920,
+    "fallbacks": 0,
+    "viewport": 1920
+  },
+  {
+    "size": "1920x1080",
+    "route": "스테이지 선택",
+    "brokenImages": [],
+    "content": 1920,
+    "fallbacks": 0,
+    "viewport": 1920
+  },
+  {
+    "size": "1920x1080",
+    "route": "식물 표본 스캔",
+    "brokenImages": [],
+    "content": 1920,
+    "fallbacks": 0,
+    "viewport": 1920
+  },
+  {
+    "size": "1920x1080",
+    "route": "분류 규칙 연구실",
+    "brokenImages": [],
+    "content": 1905,
+    "fallbacks": 0,
+    "viewport": 1920
+  },
+  {
+    "size": "1920x1080",
+    "route": "계절 관찰 타임랩",
+    "brokenImages": [],
+    "content": 1905,
+    "fallbacks": 0,
+    "viewport": 1920
+  },
+  {
+    "size": "1920x1080",
+    "route": "생활 증거 분석실",
+    "brokenImages": [],
+    "content": 1905,
+    "fallbacks": 0,
+    "viewport": 1920
+  },
+  {
+    "size": "1920x1080",
+    "route": "환경 실험 챔버",
+    "brokenImages": [],
+    "content": 1905,
+    "fallbacks": 0,
+    "viewport": 1920
+  },
+  {
+    "size": "1920x1080",
+    "route": "서식지 판정실",
+    "brokenImages": [],
+    "content": 1905,
+    "fallbacks": 0,
+    "viewport": 1920
+  },
+  {
+    "size": "1920x1080",
+    "route": "초록정원 지형 설계",
+    "brokenImages": [],
+    "content": 1920,
+    "fallbacks": 0,
+    "viewport": 1920
+  },
+  {
+    "size": "1920x1080",
+    "route": "연구정원 배치 완성",
+    "brokenImages": [],
+    "content": 1905,
+    "fallbacks": 0,
+    "viewport": 1920
+  },
+  {
+    "size": "1920x1080",
+    "route": "식물 아이디어 공방",
+    "brokenImages": [],
+    "content": 1905,
+    "fallbacks": 0,
+    "viewport": 1920
+  },
+  {
+    "size": "1920x1080",
+    "route": "발명품 테스트센터",
+    "brokenImages": [],
+    "content": 1920,
+    "fallbacks": 0,
+    "viewport": 1920
+  },
+  {
+    "size": "1920x1080",
+    "route": "최종 연구 보고",
+    "brokenImages": [],
+    "content": 1920,
+    "fallbacks": 0,
+    "viewport": 1920
+  },
+  {
+    "size": "1920x1080",
+    "route": "최종 시운전",
+    "brokenImages": [],
+    "content": 1905,
+    "fallbacks": 0,
+    "viewport": 1920
+  },
+  {
+    "size": "1920x1080",
+    "route": "엔딩 · 인증서",
+    "brokenImages": [],
+    "content": 1905,
+    "fallbacks": 0,
+    "viewport": 1920
+  },
+  {
+    "size": "1024x768-large",
+    "route": "환경 실험 챔버",
+    "brokenImages": [],
+    "content": 1009,
+    "fallbacks": 0,
+    "viewport": 1024
+  },
+  {
+    "size": "1024x768-large",
+    "route": "생활 증거 분석실",
+    "brokenImages": [],
+    "content": 1009,
+    "fallbacks": 0,
+    "viewport": 1024
+  },
+  {
+    "size": "1024x768-large",
+    "route": "발명품 테스트센터",
+    "brokenImages": [],
+    "content": 1009,
+    "fallbacks": 0,
+    "viewport": 1024
+  },
+  {
+    "size": "1440x900",
+    "route": "메인",
+    "brokenImages": [],
+    "content": 1425,
+    "fallbacks": 0,
+    "viewport": 1440
+  }
+]

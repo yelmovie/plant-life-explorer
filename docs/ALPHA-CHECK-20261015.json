@@ -1,0 +1,236 @@
+[
+  {
+    "key": "mascot_leaf",
+    "width": 1227,
+    "height": 1282,
+    "transparentPercent": 70,
+    "corners": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "bounds": [
+      281,
+      90,
+      944,
+      1165
+    ]
+  },
+  {
+    "key": "mascot_water",
+    "width": 1223,
+    "height": 1286,
+    "transparentPercent": 70,
+    "corners": [
+      1,
+      0,
+      0,
+      0
+    ],
+    "bounds": [
+      296,
+      152,
+      966,
+      1167
+    ]
+  },
+  {
+    "key": "mascot_flower",
+    "width": 1245,
+    "height": 1263,
+    "transparentPercent": 60,
+    "corners": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "bounds": [
+      206,
+      101,
+      1027,
+      1166
+    ]
+  },
+  {
+    "key": "reward_observatory",
+    "width": 1312,
+    "height": 1199,
+    "transparentPercent": 34,
+    "corners": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "bounds": [
+      43,
+      19,
+      1273,
+      1173
+    ]
+  },
+  {
+    "key": "reward_seasons",
+    "width": 1312,
+    "height": 1199,
+    "transparentPercent": 49,
+    "corners": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "bounds": [
+      142,
+      18,
+      1170,
+      1160
+    ]
+  },
+  {
+    "key": "reward_water",
+    "width": 1312,
+    "height": 1199,
+    "transparentPercent": 40,
+    "corners": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "bounds": [
+      57,
+      68,
+      1264,
+      1135
+    ]
+  },
+  {
+    "key": "reward_garden",
+    "width": 1312,
+    "height": 1199,
+    "transparentPercent": 44,
+    "corners": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "bounds": [
+      41,
+      14,
+      1283,
+      1129
+    ]
+  },
+  {
+    "key": "reward_workshop",
+    "width": 1374,
+    "height": 1145,
+    "transparentPercent": 36,
+    "corners": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "bounds": [
+      91,
+      19,
+      1304,
+      1098
+    ]
+  },
+  {
+    "key": "map_island",
+    "width": 1536,
+    "height": 1024,
+    "transparentPercent": 0,
+    "corners": [
+      255,
+      255,
+      255,
+      255
+    ],
+    "bounds": [
+      0,
+      0,
+      1535,
+      1023
+    ]
+  },
+  {
+    "key": "notebook_dry",
+    "width": 1254,
+    "height": 1254,
+    "transparentPercent": 62,
+    "corners": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "bounds": [
+      293,
+      143,
+      960,
+      1114
+    ]
+  },
+  {
+    "key": "notebook_wet",
+    "width": 1254,
+    "height": 1254,
+    "transparentPercent": 59,
+    "corners": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "bounds": [
+      204,
+      121,
+      1053,
+      1138
+    ]
+  },
+  {
+    "key": "bag_lotus_open",
+    "width": 1536,
+    "height": 1024,
+    "transparentPercent": 47,
+    "corners": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "bounds": [
+      176,
+      93,
+      1352,
+      964
+    ]
+  },
+  {
+    "key": "bag_lotus_closed",
+    "width": 1536,
+    "height": 1024,
+    "transparentPercent": 41,
+    "corners": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "bounds": [
+      143,
+      62,
+      1398,
+      959
+    ]
+  }
+]

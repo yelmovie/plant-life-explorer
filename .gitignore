@@ -1,0 +1,29 @@
+# Local tools, caches, credentials and dependency installs
+.claude/
+.codex/
+.agents/
+.tmp/
+node_modules/
+.env
+.env.*
+!.env.example
+*.log
+Thumbs.db
+.DS_Store
+
+# Rebuild with npm run build; keep original deliverables locally
+dist/
+*.zip
+
+# Reference textbooks, supplied artwork, source PNGs and historical backups
+files/
+image/
+samplepages/
+assets/**/*.png
+docs/implementation-backup-*/
+
+# Captured shared-chat payloads can contain unrelated context
+docs/reviews/shared-design-*.html
+docs/reviews/shared-design-*.json
+docs/reviews/shared-design-*.txt
+docs/reviews/shared-design-transcript-*.md
