@@ -13,7 +13,6 @@ export const ASSETS = Object.freeze({
   reward_water: ['물길 실험실', '맑은 연못과 수로가 있는 실험실'],
   reward_garden: ['나의 연구정원', '물가와 풀밭, 건조 구역이 있는 정원'],
   reward_workshop: ['발명 공방', '탐험 가방을 만드는 잎 지붕 공방'],
-  map_island: ['초록정원 지도', '다섯 연구 장소를 잇는 정원 섬'],
   notebook_dry: ['뽀송한 수첩', '젖지 않은 노란 탐험 수첩'],
   notebook_wet: ['젖은 수첩', '빗물이 묻고 종이가 젖은 탐험 수첩'],
   bag_lotus_open: ['연잎 코팅 가방', '연잎 무늬 겉면과 열린 입구의 초록 가방'],
@@ -21,10 +20,8 @@ export const ASSETS = Object.freeze({
   water_hyacinth_whole: ['부레옥잠 전체', '둥근 잎과 부푼 잎자루, 아래로 자란 뿌리'],
   hyacinth_petiole_whole: ['부레옥잠 잎자루', '잎과 식물의 밑부분을 연결하는 부푼 잎자루'],
   hyacinth_petiole_cutaway: ['부레옥잠 잎자루 단면', '조직 사이의 공기 공간을 크게 나타낸 관찰 모형'],
-  aloe_leaf_whole: ['알로에 잎', '도톰한 잎과 가장자리의 작은 가시'],
   aloe_leaf_cutaway: ['알로에 잎 단면', '잎 안쪽의 수분을 머금은 조직을 보여 주는 관찰 모형'],
   research_bag_body: ['가방 본체', '입구가 열린 크림색 연구용 가방'],
-  research_bag_flap: ['가방 덮개', '입구를 가릴 수 있는 별도 덮개'],
   research_bag_closed: ['덮개를 단 가방', '입구를 덮개로 가린 연구용 가방'],
   lotus_leaf_whole: ['연잎', '넓고 둥근 잎과 잎자루'],
   lotus_surface_diagram: ['연잎 표면 확대 모형', '확대한 표면 위에 맺힌 둥근 물방울'],
@@ -35,10 +32,40 @@ export const ASSETS = Object.freeze({
   aloe_plant: ['알로에', '두꺼운 잎들이 모여 자라는 식물'],
   garden_hero: ['초록정원 연구기지', '연못과 정원 사이의 작은 식물 연구기지'],
   plant_lab_background: ['식물 연구실', '햇빛이 드는 온실의 관찰 작업대'],
+  mood_leaf_idle: ['리피', '반갑게 서 있는 리피'],
+  mood_leaf_happy: ['리피', '기뻐하는 리피'],
+  mood_leaf_think: ['리피', '곰곰이 생각하는 리피'],
+  mood_leaf_surprise: ['리피', '깜짝 놀란 리피'],
+  mood_water_idle: ['방울', '반갑게 서 있는 방울'],
+  mood_water_happy: ['방울', '기뻐하는 방울'],
+  mood_water_think: ['방울', '곰곰이 생각하는 방울'],
+  mood_water_surprise: ['방울', '깜짝 놀란 방울'],
+  mood_flower_idle: ['꽃이', '반갑게 서 있는 꽃이'],
+  mood_flower_happy: ['꽃이', '기뻐하는 꽃이'],
+  mood_flower_think: ['꽃이', '곰곰이 생각하는 꽃이'],
+  mood_flower_surprise: ['꽃이', '깜짝 놀란 꽃이'],
+  stamp_direct: ['한 번에 찾았어 도장', '잎과 반짝이 별이 새겨진 초록 도장'],
+  stamp_fixed: ['고쳐서 찾았어 도장', '돋보기와 새싹, 다시 도는 화살표가 새겨진 주황 도장'],
+  stamp_complete: ['탐구 완료 도장', '유리 돔 안에서 싹이 튼 씨앗이 새겨진 연구기지 도장'],
+  bg_m1_1_scan: ['표본 스캔대', '잎 표본을 올려 살펴보는 온실 관찰대'],
+  bg_m1_2_sort: ['분류 연구실', '표본을 나누어 붙이는 넓은 작업대'],
+  bg_m2_1_seasons: ['계절 꽃돔', '봄·가을·겨울 나무가 담긴 유리 돔'],
+  bg_m2_2_evidence: ['증거 분석실', '계절 기록을 모으는 분석 보드'],
+  bg_m3_1_chamber: ['환경 실험 챔버', '부레옥잠이 떠 있는 큰 수조'],
+  bg_m3_2_habitat: ['서식지 판정실', '들·물가·사막이 보이는 세 창'],
+  bg_m4_1_terrain: ['정원 지형 부지', '물가와 흙과 풀밭이 있는 빈 부지'],
+  bg_m4_2_garden: ['완성된 연구정원', '연못과 선인장이 어우러진 정원'],
+  bg_m5_1_idea: ['아이디어 공방', '식물 그림이 걸린 발명 작업대'],
+  bg_m5_2_test: ['시험 센터', '비가 내리는 유리 시험 챔버'],
 });
 
-export function assetImage(key, className = '', eager = false) {
+// 240px thumbnails (`*_thumb.webp`) for small slots such as the home .mission-mini cards.
+export const THUMBS = Object.freeze(['reward_observatory','reward_seasons','reward_water','reward_garden','reward_workshop']);
+
+// eager: images shown inside dialogs/mission cards load immediately instead of lazily.
+export function assetImage(key, className = '', eager = false, thumb = false) {
   const asset = ASSETS[key];
   if (!asset) return '';
-  return `<img class="asset-image ${className}" src="/assets/generated/${key}.webp" alt="${asset[1]}" data-asset="${key}" width="1024" height="1024" decoding="async" ${eager ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"'} draggable="false">`;
+  const small = thumb && THUMBS.includes(key);
+  return `<img class="asset-image ${className}" src="/assets/generated/${key}${small ? '_thumb' : ''}.webp" alt="${asset[1]}" data-asset="${key}" width="${small ? 240 : 1024}" height="${small ? 240 : 1024}" decoding="async" ${eager ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"'} draggable="false">`;
 }

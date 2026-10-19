@@ -1,0 +1,784 @@
+/* polish.css — dokdo-design override layer. Loaded LAST (after fieldwork.css). Base sheets stay untouched;
+   this layer wins by one id-level prefix (#app or :is(#app,body)), never by !important (except reduced-motion).
+   :is(#app,body) = id specificity once; the body branch reaches <dialog id="dialog"> and .toast, which live outside #app.
+   Values come from style.css :root (forest palette) and the greenhouse / mascot / garden_hero assets — see DESIGN.md. */
+
+/* ── 1. Fonts: self-hosted, 0 external requests. Title·button·label = Jua, body = Pretendard ── */
+@font-face{font-family:'GG Display';font-style:normal;font-weight:400;font-display:swap;src:url('/assets/fonts/gg-display-ko.woff2') format('woff2');unicode-range:U+AC00-D7A3,U+1100-11FF,U+3130-318F,U+A960-A97F,U+D7B0-D7FF,U+3000-303F,U+FF00-FFEF}
+@font-face{font-family:'GG Display';font-style:normal;font-weight:400;font-display:swap;src:url('/assets/fonts/gg-display-latin.woff2') format('woff2');unicode-range:U+0000-00FF,U+2000-206F,U+2190-21FF}
+/* Official Pretendard KS X 1001 subset (2,350 syllables) — covers every Hangul syllable in src/*.js; rarer ones fall back per glyph. */
+@font-face{font-family:'GG Text';font-style:normal;font-weight:400;font-display:swap;src:url('/assets/fonts/gg-text-regular.woff2') format('woff2')}
+@font-face{font-family:'GG Text';font-style:normal;font-weight:700;font-display:swap;src:url('/assets/fonts/gg-text-bold.woff2') format('woff2')}
+
+/* ── 2. Tokens (3 layers). New rules below use only these. ── */
+:root{
+ /* base */
+ --space-4:4px;--space-8:8px;--space-16:16px;--space-24:24px;--space-32:32px;--space-48:48px;
+ --radius-sm:12px;--radius-md:18px;--radius-lg:24px;--radius-pill:999px;
+ --font-size-xs:clamp(16px,1.25vw,18px);   /* aux: badge·caption·small — 16px floor */
+ --font-size-sm:clamp(18px,1.4vw,20px);    /* body·button floor 18px */
+ --font-size-md:clamp(18px,1.6vw,22px);
+ --font-size-lg:clamp(22px,2vw,28px);
+ --font-size-xl:clamp(28px,2.6vw,40px);
+ --dur-fast:160ms;--dur-base:280ms;
+ --ease-out:cubic-bezier(.2,.8,.2,1);--ease-back:cubic-bezier(.34,1.56,.64,1);--ease-slam:cubic-bezier(.55,0,1,.45);
+ /* semantic — from style.css :root + assets */
+ --font-body:'GG Text','Malgun Gothic','Apple SD Gothic Neo',system-ui,sans-serif;
+ --font-display:'GG Display',var(--font-body);
+ --color-bg:var(--cream);--color-surface:var(--paper);--color-surface-glass:#fffef7e6;--color-panel:#fffdf4;--color-surface-soft:#f2f3e9;
+ --color-primary:var(--forest);--color-primary-top:#356048;--color-primary-edge:#183827;--color-primary-soft:var(--lime);
+ --color-secondary:var(--water);--color-accent:var(--gold);
+ --color-text-main:var(--ink);--color-text-sub:var(--muted);--color-border-soft:var(--line);
+ --color-correct:var(--green);--color-wrong:#984b3d;--color-water-edge:#2d6271;
+ --shadow-button:0 4px 0 var(--color-primary-edge);--shadow-button-pressed:0 1px 0 var(--color-primary-edge);--shadow-button-hover:0 5px 0 var(--color-primary-edge);
+ /* component */
+ --button-height-sm:44px;--button-height-md:48px;--button-height-lg:56px;--button-gap:var(--space-16);
+ --button-press:3px;--button-edge-room:6px;--disabled-opacity:.5;
+ --panel-radius:var(--radius-lg);--panel-padding:var(--space-16);
+ --guide-column-width:188px;--guide-bubble-padding:var(--space-16) var(--space-16);
+ --notebook-chip-width:96px;--notebook-chip-max:150px;--notebook-chip-height:110px;
+ --dialog-pop-duration:260ms;--screen-enter-duration:var(--dur-base);--stamp-duration:220ms;
+ --float-distance:6px;
+ --dur-press:60ms;--button-press-sm:2px;--button-lift:1px;--disabled-opacity-soft:.7;--footer-row-min:70px;
+ --stamp-delay:200ms;--shake-duration:180ms;--shake-delay:420ms;
+ font-family:var(--font-body);
+}
+@media(max-width:1100px){:root{--guide-column-width:164px;--guide-bubble-padding:var(--space-16) var(--space-8)}}
+
+/* ── 3. Type base: body text floor 18px (unsized text used to inherit 16px from :root) ── */
+body{font-size:var(--font-size-sm)}
+/* Jua has one weight; font-synthesis:none (style.css :root) keeps it from fake-bolding. */
+:is(#app,body) :is(h1,h2,h3,h4,legend,summary,.btn,.spatial-controls button,.eyebrow,.pill,.scene-badge,.world-label,.page-number,.reward-seed,.guide-progress,.map-tag,.preview-tag,.step-dot){font-family:var(--font-display)}
+/* Long sentence choices read better in the body face. */
+:is(#app,body) :is(.reason-cards .btn,.sharing-card .btn,.admin-page-list .btn,.idea-answers .btn,select,input,textarea){font-family:var(--font-body)}
+:is(h1,h2,h3,h4,legend,.eyebrow,.page-heading p){text-wrap:balance}
+:is(p,li,dd,figcaption,.guide-bubble,.toast,.reward-why,.reward-proof){text-wrap:pretty}
+
+/* ── 4. Font-size floor (generated mirror) ──
+   Every font-size declaration in the 6 base sheets, re-emitted in the same file/rule order with the same @media,
+   prefixed once with :is(#app,body). Same +id on every rule ⇒ the original cascade is preserved exactly; only values change:
+   <18px → --font-size-xs (aux: small·badge·caption) or --font-size-sm (body·button). ≥18px values are copied as-is
+   (large-text values become max(value,--font-size-md) so large mode never drops below normal mode).
+   Migration: when a base sheet is moved to tokens, delete its block here (see DESIGN.md "이관 계획"). */
+/* style.css */
+:is(#app,body) h1{font-size:clamp(25px,2.5vw,36px)}
+:is(#app,body) h2{font-size:24px}
+:is(#app,body) h3{font-size:18px}
+:is(#app,body) .eyebrow{font-size:var(--font-size-xs)}
+:is(#app,body) .pill{font-size:var(--font-size-xs)}
+:is(#app,body) .btn{font-size:var(--font-size-sm)}
+:is(#app,body) .btn.jumbo{font-size:19px}
+:is(#app,body) .btn.text-danger{font-size:var(--font-size-sm)}
+:is(#app,body) .wordmark span{font-size:var(--font-size-xs)}
+:is(#app,body) .wordmark small{font-size:var(--font-size-xs)}
+:is(#app,body) .subject{font-size:var(--font-size-xs)}
+:is(#app,body) .home-eyebrow{font-size:var(--font-size-xs)}
+:is(#app,body) .home-copy>p{font-size:25px}
+:is(#app,body) .home-copy>p strong{font-size:29px}
+:is(#app,body) .home-actions>span{font-size:var(--font-size-xs)}
+:is(#app,body) .floating-note{font-size:var(--font-size-xs)}
+:is(#app,body) .adventure-label .eyebrow{font-size:var(--font-size-xs)}
+:is(#app,body) .adventure-label h2{font-size:20px}
+:is(#app,body) .home-missions small{font-size:var(--font-size-xs)}
+:is(#app,body) .home-missions strong{font-size:var(--font-size-sm)}
+:is(#app,body) .home-footer{font-size:var(--font-size-xs)}
+:is(#app,body) .page-heading p{font-size:var(--font-size-sm)}
+:is(#app,body) .recovery>span{font-size:var(--font-size-xs)}
+:is(#app,body) .recovery strong{font-size:32px}
+:is(#app,body) .recovery strong small{font-size:var(--font-size-xs)}
+:is(#app,body) .map-tag{font-size:var(--font-size-xs)}
+:is(#app,body) .map-pin>span{font-size:var(--font-size-xs)}
+:is(#app,body) .map-pin b{font-size:var(--font-size-xs)}
+:is(#app,body) .map-caption{font-size:var(--font-size-xs)}
+:is(#app,body) .mission-preview>.eyebrow{font-size:var(--font-size-xs)}
+:is(#app,body) .mission-preview h2{font-size:24px}
+:is(#app,body) .mission-preview>p{font-size:var(--font-size-sm)}
+:is(#app,body) .chapter-list>div{font-size:var(--font-size-sm)}
+:is(#app,body) .chapter-list span{font-size:var(--font-size-xs)}
+:is(#app,body) .preview-reward{font-size:var(--font-size-xs)}
+:is(#app,body) .progress-stop{font-size:var(--font-size-xs)}
+:is(#app,body) .progress-stop>span{font-size:var(--font-size-xs)}
+:is(#app,body) .report-banner span{font-size:var(--font-size-xs)}
+:is(#app,body) .activity-heading .eyebrow{font-size:var(--font-size-xs)}
+:is(#app,body) .activity-heading h1{font-size:27px}
+:is(#app,body) .page-number{font-size:var(--font-size-xs)}
+:is(#app,body) .page-number strong{font-size:27px}
+:is(#app,body) .mission-prompt>div>span{font-size:var(--font-size-xs)}
+:is(#app,body) .mission-prompt p{font-size:18px}
+:is(#app,body) .notebook{font-size:var(--font-size-sm)}
+:is(#app,body) .notebook h3{font-size:var(--font-size-sm)}
+:is(#app,body) .note-intro{font-size:var(--font-size-sm)}
+:is(#app,body) .note-section strong{font-size:var(--font-size-sm)}
+:is(#app,body) .note-section p{font-size:var(--font-size-sm)}
+:is(#app,body) .check-row{font-size:var(--font-size-sm)}
+:is(#app,body) .check-row>span{font-size:var(--font-size-xs)}
+:is(#app,body) .specimen-tabs .btn{font-size:var(--font-size-sm)}
+:is(#app,body) .specimen-label span{font-size:var(--font-size-xs)}
+:is(#app,body) .specimen-label h2{font-size:19px}
+:is(#app,body) .specimen-hotspots .btn{font-size:var(--font-size-sm)}
+:is(#app,body) .scale-line{font-size:var(--font-size-xs)}
+:is(#app,body) .zoom-control{font-size:var(--font-size-sm)}
+:is(#app,body) .zoom-control output{font-size:var(--font-size-xs)}
+:is(#app,body) .microcopy{font-size:var(--font-size-xs)!important}
+:is(#app,body) .footer-status{font-size:var(--font-size-xs)}
+:is(#app,body) .activity .progress-stop{font-size:var(--font-size-xs)}
+:is(#app,body) .rule-builder .btn{font-size:var(--font-size-sm)}
+:is(#app,body) .plant-card strong{font-size:var(--font-size-sm)}
+:is(#app,body) .plant-card small{font-size:var(--font-size-xs)}
+:is(#app,body) .bin-title{font-size:var(--font-size-xs)}
+:is(#app,body) .bin-title small{font-size:var(--font-size-xs)}
+:is(#app,body) .placed-label{font-size:var(--font-size-xs)}
+:is(#app,body) .empty-label{font-size:var(--font-size-sm)}
+:is(#app,body) .inline-tip{font-size:var(--font-size-sm)}
+:is(#app,body) .scene-badge{font-size:var(--font-size-xs)}
+:is(#app,body) .layer-button{font-size:var(--font-size-sm)}
+:is(#app,body) .season-tab{font-size:var(--font-size-sm)}
+:is(#app,body) .season-caption{font-size:var(--font-size-xs)}
+:is(#app,body) .claim{font-size:25px}
+:is(#app,body) .evidence-card>span{font-size:var(--font-size-xs)}
+:is(#app,body) .evidence-card p{font-size:var(--font-size-sm)}
+:is(#app,body) .evidence-card b{font-size:var(--font-size-xs)}
+:is(#app,body) .explanation-slot{font-size:var(--font-size-sm)}
+:is(#app,body) .explanation-slot small{font-size:var(--font-size-xs)}
+:is(#app,body) .conclusion{font-size:var(--font-size-sm)}
+:is(#app,body) .cross-section span{font-size:var(--font-size-xs)}
+:is(#app,body) .water-level span{font-size:var(--font-size-xs)}
+:is(#app,body) .phenomenon{font-size:var(--font-size-sm)}
+:is(#app,body) .experiment-tools .btn{font-size:var(--font-size-sm)}
+:is(#app,body) .comparison strong{font-size:var(--font-size-sm)}
+:is(#app,body) .comparison p{font-size:var(--font-size-sm)}
+:is(#app,body) .habitat-options strong{font-size:var(--font-size-sm)}
+:is(#app,body) .reason-box label{font-size:var(--font-size-sm)}
+:is(#app,body) .reason-box select{font-size:var(--font-size-sm)}
+:is(#app,body) .chain-text span{font-size:var(--font-size-xs)}
+:is(#app,body) .terrain-tools .btn{font-size:var(--font-size-sm)}
+:is(#app,body) .terrain-count{font-size:var(--font-size-xs)}
+:is(#app,body) .terrain-count>strong{font-size:22px}
+:is(#app,body) .terrain-count small{font-size:var(--font-size-xs)}
+:is(#app,body) .placement-info>span{font-size:var(--font-size-xs)}
+:is(#app,body) .placement-info>span strong{font-size:var(--font-size-sm)}
+:is(#app,body) .placement-info .btn{font-size:var(--font-size-sm)}
+:is(#app,body) .design-story h2{font-size:22px}
+:is(#app,body) .design-story p{font-size:var(--font-size-sm)}
+:is(#app,body) .sketch-label{font-size:var(--font-size-xs)}
+:is(#app,body) .parts-menu legend{font-size:var(--font-size-sm)}
+:is(#app,body) .parts-menu .btn{font-size:var(--font-size-sm)}
+:is(#app,body) .feature-link{font-size:var(--font-size-sm)}
+:is(#app,body) .feature-link strong{font-size:var(--font-size-sm)}
+:is(#app,body) .test-result-cloud>div{font-size:var(--font-size-sm)}
+:is(#app,body) .test-entry>strong{font-size:var(--font-size-sm)}
+:is(#app,body) .test-entry>span{font-size:var(--font-size-xs)}
+:is(#app,body) .report-card small{font-size:var(--font-size-xs)}
+:is(#app,body) .report-card h3{font-size:18px}
+:is(#app,body) .report-card p{font-size:var(--font-size-sm)}
+:is(#app,body) .report-card b{font-size:var(--font-size-xs)}
+:is(#app,body) .report-bottom p{font-size:var(--font-size-sm)}
+:is(#app,body) .module-number{font-size:42px}
+:is(#app,body) .final-module h2{font-size:21px}
+:is(#app,body) .final-module p{font-size:var(--font-size-sm)}
+:is(#app,body) .final-module .btn{font-size:var(--font-size-sm)}
+:is(#app,body) .ending h1{font-size:35px}
+:is(#app,body) .ending-top p{font-size:var(--font-size-sm)}
+:is(#app,body) .ending-results h2{font-size:var(--font-size-sm)}
+:is(#app,body) .ending-invention p{font-size:var(--font-size-sm)}
+:is(#app,body) .certificate .eyebrow{font-size:var(--font-size-xs)}
+:is(#app,body) .certificate h2{font-size:25px}
+:is(#app,body) .certificate p{font-size:var(--font-size-sm)}
+:is(#app,body) .certificate>div{font-size:var(--font-size-sm)}
+:is(#app,body) .dialog-top .eyebrow{font-size:var(--font-size-xs)}
+:is(#app,body) dialog h2{font-size:25px}
+:is(#app,body) dialog>p{font-size:var(--font-size-sm)}
+:is(#app,body) .intro-dialog p{font-size:var(--font-size-sm)}
+:is(#app,body) .intro-steps{font-size:var(--font-size-sm)}
+:is(#app,body) .reward h3{font-size:23px}
+:is(#app,body) .reward p{font-size:var(--font-size-sm)}
+:is(#app,body) .journal-list h3{font-size:var(--font-size-sm)}
+:is(#app,body) .journal-list p{font-size:var(--font-size-sm)}
+:is(#app,body) .settings-list p{font-size:var(--font-size-sm)}
+:is(#app,body) .toast{font-size:var(--font-size-sm)}
+body.large-text:is(#app,body) .mission-prompt p{font-size:max(22px,var(--font-size-md))}
+body.large-text:is(#app,body) .note-section p,body.large-text:is(#app,body) .check-row,body.large-text:is(#app,body) .note-intro,body.large-text:is(#app,body) .evidence-card p,body.large-text:is(#app,body) .reason-box select,body.large-text:is(#app,body) .season-caption,body.large-text:is(#app,body) .final-module p,body.large-text:is(#app,body) .comparison p,body.large-text:is(#app,body) .inline-tip,body.large-text:is(#app,body) .conclusion{font-size:max(19px,var(--font-size-md))}
+body.large-text:is(#app,body) .btn{font-size:max(18px,var(--font-size-md))}
+@media(min-width:851px) and (max-height:900px){:is(#app,body) .activity-heading h1{font-size:25px}}
+@media(max-width:1150px){:is(#app,body) .subject{font-size:var(--font-size-xs)}}
+@media(max-width:1150px){:is(#app,body) .home-copy>p{font-size:23px}}
+@media(max-width:1150px){:is(#app,body) .home-copy>p strong{font-size:26px}}
+@media(max-width:1150px){:is(#app,body) .home-actions .btn{font-size:var(--font-size-sm)}}
+@media(max-width:1150px){:is(#app,body) .floating-note{font-size:var(--font-size-xs)}}
+@media(max-width:1150px){:is(#app,body) .adventure-label h2{font-size:18px}}
+@media(max-width:1150px){:is(#app,body) .home-missions strong{font-size:var(--font-size-sm)}}
+@media(max-width:1150px){:is(#app,body) .home-missions small{font-size:var(--font-size-xs)}}
+@media(max-width:1150px){:is(#app,body) .mission-preview h2{font-size:22px}}
+@media(max-width:1150px){:is(#app,body) .map-pin b{font-size:var(--font-size-xs)}}
+@media(max-width:1150px){:is(#app,body) .map-pin>span{font-size:var(--font-size-xs)}}
+@media(max-width:1150px){:is(#app,body) .specimen-hotspots .btn{font-size:var(--font-size-sm)}}
+@media(max-width:1150px){:is(#app,body) .activity-heading h1{font-size:25px}}
+@media(max-width:1150px){:is(#app,body) .mission-prompt p{font-size:18px}}
+@media(max-width:1150px){:is(#app,body) .progress-stop{font-size:var(--font-size-xs)}}
+@media(max-width:1150px){:is(#app,body) .report-card h3{font-size:var(--font-size-sm)}}
+@media(max-width:1150px){:is(#app,body) .report-card p{font-size:var(--font-size-sm)}}
+@media(max-width:850px){:is(#app,body) .home-copy>p{font-size:21px}}
+@media(max-width:850px){:is(#app,body) .adventure-label h2{font-size:var(--font-size-sm)}}
+@media(max-width:850px){:is(#app,body) .adventure-label .eyebrow{font-size:var(--font-size-xs)}}
+@media(max-width:850px){:is(#app,body) .home-missions strong{font-size:var(--font-size-sm)}}
+@media(max-width:850px){:is(#app,body) .map-pin b{font-size:var(--font-size-xs)}}
+@media(max-width:850px){:is(#app,body) .progress-stop{font-size:var(--font-size-xs)}}
+@media(max-width:560px){:is(#app,body) .wordmark span{font-size:var(--font-size-xs)}}
+@media(max-width:560px){:is(#app,body) .wordmark small{font-size:var(--font-size-xs)}}
+@media(max-width:560px){:is(#app,body) .home-eyebrow{font-size:var(--font-size-xs)}}
+@media(max-width:560px){:is(#app,body) .home-copy>p{font-size:19px}}
+@media(max-width:560px){:is(#app,body) .home-copy>p strong{font-size:23px}}
+@media(max-width:560px){:is(#app,body) .home-actions>.btn{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .home-actions>span{font-size:var(--font-size-xs)}}
+@media(max-width:560px){:is(#app,body) .adventure-label h2{font-size:20px}}
+@media(max-width:560px){:is(#app,body) .home-missions strong{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .home-missions small{font-size:var(--font-size-xs)}}
+@media(max-width:560px){:is(#app,body) .home-footer{font-size:var(--font-size-xs)}}
+@media(max-width:560px){:is(#app,body) .page-heading h1{font-size:23px}}
+@media(max-width:560px){:is(#app,body) .page-heading p{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .page-heading .eyebrow{font-size:var(--font-size-xs)}}
+@media(max-width:560px){:is(#app,body) .recovery>span{font-size:var(--font-size-xs)}}
+@media(max-width:560px){:is(#app,body) .recovery strong{font-size:25px}}
+@media(max-width:560px){:is(#app,body) .map-tag{font-size:var(--font-size-xs)}}
+@media(max-width:560px){:is(#app,body) .map-pin>span{font-size:var(--font-size-xs)}}
+@media(max-width:560px){:is(#app,body) .map-caption{font-size:var(--font-size-xs)}}
+@media(max-width:560px){:is(#app,body) .mission-preview>.pill{font-size:var(--font-size-xs)}}
+@media(max-width:560px){:is(#app,body) .mission-preview h2{font-size:24px}}
+@media(max-width:560px){:is(#app,body) .mission-preview>p{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .progress-stop{font-size:var(--font-size-xs)}}
+@media(max-width:560px){:is(#app,body) .activity-heading h1{font-size:20px}}
+@media(max-width:560px){:is(#app,body) .activity-heading .eyebrow{font-size:var(--font-size-xs)}}
+@media(max-width:560px){:is(#app,body) .page-number{font-size:var(--font-size-xs)}}
+@media(max-width:560px){:is(#app,body) .page-number strong{font-size:22px}}
+@media(max-width:560px){:is(#app,body) .mission-prompt p{font-size:18px}}
+@media(max-width:560px){:is(#app,body) .mission-prompt>div>span{font-size:var(--font-size-xs)}}
+@media(max-width:560px){:is(#app,body) .specimen-tabs .btn{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .specimen-hotspots .btn{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .specimen-label h2{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .zoom-control{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .tool-row>.btn{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .footer-status{font-size:var(--font-size-xs)}}
+@media(max-width:560px){:is(#app,body) .footer-actions .btn{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .footer-actions .quiet{font-size:var(--font-size-xs)}}
+@media(max-width:560px){:is(#app,body) .rule-builder .btn{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .plant-card strong{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .plant-card small{font-size:var(--font-size-xs)}}
+@media(max-width:560px){:is(#app,body) .bin-title{font-size:var(--font-size-xs)}}
+@media(max-width:560px){:is(#app,body) .placed-label{font-size:var(--font-size-xs)}}
+@media(max-width:560px){:is(#app,body) .empty-label{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .inline-tip{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .season-caption{font-size:var(--font-size-xs)}}
+@media(max-width:560px){:is(#app,body) .claim{font-size:19px}}
+@media(max-width:560px){:is(#app,body) .evidence-card p{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .cross-section span{font-size:var(--font-size-xs)}}
+@media(max-width:560px){:is(#app,body) .experiment-tools .btn{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .phenomenon{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .water-level span{font-size:var(--font-size-xs)}}
+@media(max-width:560px){:is(#app,body) .habitat-options strong{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .reason-box label{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .reason-box select{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .terrain-tools .btn{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .design-story h2{font-size:18px}}
+@media(max-width:560px){:is(#app,body) .design-story p{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .parts-menu legend{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .parts-menu .btn{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .feature-link{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .test-result-cloud>div{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .test-controls .btn{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .report-card h3{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .report-card small{font-size:var(--font-size-xs)}}
+@media(max-width:560px){:is(#app,body) .report-card p{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .report-card b{font-size:var(--font-size-xs)}}
+@media(max-width:560px){:is(#app,body) .report-banner>div{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .final-module p{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .final-module h2{font-size:20px}}
+@media(max-width:560px){:is(#app,body) .ending h1{font-size:26px}}
+@media(max-width:560px){:is(#app,body) .ending-top p{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .certificate h2{font-size:21px}}
+@media(max-width:560px){:is(#app,body) .certificate p{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .certificate>div{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .ending-actions .btn{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) dialog h2{font-size:22px}}
+@media(max-width:560px){:is(#app,body) .intro-dialog p{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .intro-steps{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .reward h3{font-size:19px}}
+@media(max-width:560px){:is(#app,body) .reward p{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .toast{font-size:var(--font-size-sm)}}
+@media(max-width:560px){body.large-text:is(#app,body) .mission-prompt p{font-size:max(21px,var(--font-size-md))}}
+:is(#app,body) .admin-hint{font-size:var(--font-size-sm)}
+:is(#app,body) .admin-page-list .btn{font-size:var(--font-size-sm)}
+@media(max-width:850px){:is(#app,body) .home-missions strong{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .toast{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .activity-heading h1{font-size:22px}}
+@media(max-width:560px){:is(#app,body) .recovery strong{font-size:24px}}
+@media(max-width:560px){:is(#app,body) .plant-card small{font-size:var(--font-size-xs)}}
+@media(max-width:560px){:is(#app,body) .plant-card strong{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .bin-title{font-size:var(--font-size-xs)}}
+@media(max-width:560px){:is(#app,body) .evidence-card p{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .specimen-hotspots .btn{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .intro-steps{font-size:var(--font-size-sm)}}
+/* visuals.css */
+:is(#app,body) .asset-fallback{font-size:var(--font-size-xs)}
+:is(#app,body) .boot-message{font-size:20px}
+:is(#app,body) .home-copy>p{font-size:24px}
+:is(#app,body) .whole-specimen>span{font-size:var(--font-size-xs)}
+:is(#app,body) .specimen-focus>span{font-size:var(--font-size-xs)}
+:is(#app,body) .experiment-hint{font-size:var(--font-size-sm)}
+:is(#app,body) .experiment-tools .btn{font-size:var(--font-size-sm)}
+:is(#app,body) .step-dot{font-size:var(--font-size-xs)}
+:is(#app,body) .comparison p{font-size:var(--font-size-sm)}
+:is(#app,body) .asset-detail+.microcopy{font-size:var(--font-size-xs)}
+:is(#app,body) .surface-swatch{font-size:var(--font-size-xs)}
+:is(#app,body) .bag-preview .sketch-label{font-size:var(--font-size-xs)}
+:is(#app,body) .parts-menu legend{font-size:var(--font-size-sm)}
+:is(#app,body) .inspiration-card>span{font-size:var(--font-size-xs)}
+:is(#app,body) .lotus-detail figcaption{font-size:var(--font-size-xs)}
+:is(#app,body) .test-stage .scene-badge{font-size:var(--font-size-xs)}
+:is(#app,body) .test-result-cloud>div{font-size:var(--font-size-sm)}
+:is(#app,body) .testing-caption{font-size:var(--font-size-sm)}
+:is(#app,body) .new-design-notice{font-size:var(--font-size-sm)}
+:is(#app,body) .test-entry strong{font-size:var(--font-size-sm)}
+:is(#app,body) .teacher-settings summary{font-size:var(--font-size-sm)}
+:is(#app,body) .teacher-settings>p{font-size:var(--font-size-sm)}
+:is(#app,body) .guide-buttons .btn{font-size:var(--font-size-sm)}
+:is(#app,body) .guide-list{font-size:var(--font-size-sm)}
+@media(min-width:1500px){:is(#app,body) .experiment-hint{font-size:19px}}
+@media(min-width:1500px){:is(#app,body) .experiment-tools .btn{font-size:var(--font-size-sm)}}
+@media(max-width:1150px){:is(#app,body) .experiment-tools .btn{font-size:var(--font-size-sm)}}
+@media(max-width:1150px){:is(#app,body) .experiment-hint{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .home-copy>p{font-size:20px}}
+@media(max-width:560px){:is(#app,body) .whole-specimen>span{font-size:var(--font-size-xs)}}
+@media(max-width:560px){:is(#app,body) .specimen-focus>span{font-size:var(--font-size-xs)}}
+@media(max-width:560px){:is(#app,body) .experiment-tools .btn{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .experiment-hint{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .test-result-cloud>div{font-size:var(--font-size-sm)}}
+body.large-text:is(#app,body) :is(p,label,select,.btn,.check-row,.note-intro,.conclusion,.chain-text,.placement-info,.season-caption){font-size:max(20px,var(--font-size-md))}
+body.large-text:is(#app,body) :is(small,.eyebrow,.microcopy,.scene-badge,.pill,.step-dot,.footer-status,.page-number,.sketch-label){font-size:var(--font-size-xs)}
+body.large-text:is(#app,body) h1{font-size:clamp(30px,2.6vw,40px)}
+body.large-text:is(#app,body) h2{font-size:clamp(26px,2.2vw,34px)}
+body.large-text:is(#app,body) h3{font-size:max(22px,var(--font-size-md))}
+body.large-text:is(#app,body) .experiment-hint{font-size:max(21px,var(--font-size-md))}
+body.large-text:is(#app,body) .experiment-tools .btn{font-size:max(20px,var(--font-size-md))}
+body.large-text:is(#app,body) .test-result-cloud>div{font-size:max(20px,var(--font-size-md))}
+body.large-text:is(#app,body) :is(.specimen-focus>span,.whole-specimen>span,.inspiration-card>span,.lotus-detail figcaption,.home-actions>span){font-size:var(--font-size-xs)}
+/* adventure.css */
+:is(#app,body) .home-missions small{font-size:var(--font-size-xs)}
+:is(#app,body) .home-missions strong{font-size:var(--font-size-sm)}
+:is(#app,body) .world-label{font-size:var(--font-size-xs)}
+:is(#app,body) .world-label b{font-size:var(--font-size-xs)}
+:is(#app,body) .world-light{font-size:26px}
+:is(#app,body) .world-core{font-size:var(--font-size-xs)}
+:is(#app,body) .world-flowers span{font-size:22px}
+:is(#app,body) .map-caption{font-size:var(--font-size-xs)}
+:is(#app,body) .reward-preview h2{font-size:25px}
+:is(#app,body) .reward-preview p{font-size:var(--font-size-sm)}
+:is(#app,body) .reward-preview .chapter-list>div{font-size:var(--font-size-sm)}
+:is(#app,body) .seed-progress strong{font-size:var(--font-size-sm)}
+:is(#app,body) .theme-picker>span{font-size:var(--font-size-xs)}
+:is(#app,body) .theme-choice{font-size:var(--font-size-sm)}
+:is(#app,body) .flower-swatch{font-size:25px}
+:is(#app,body) .theme-picker small{font-size:var(--font-size-xs)}
+:is(#app,body) .reward-dialog h2{font-size:26px}
+:is(#app,body) .reward-why{font-size:var(--font-size-sm)}
+:is(#app,body) .reward-proof{font-size:var(--font-size-sm)}
+:is(#app,body) .reward-next{font-size:var(--font-size-sm)}
+:is(#app,body) .collection-item{font-size:var(--font-size-sm)}
+:is(#app,body) .adventure-brief h2{font-size:25px}
+:is(#app,body) .adventure-brief p{font-size:var(--font-size-sm)}
+:is(#app,body) .invention-steps li{font-size:var(--font-size-sm)}
+:is(#app,body) .invention-steps li span{font-size:var(--font-size-xs)}
+:is(#app,body) .preview-tag{font-size:var(--font-size-xs)}
+:is(#app,body) .design-tags span{font-size:var(--font-size-xs)}
+:is(#app,body) .picture-parts legend{font-size:18px}
+:is(#app,body) .part-card strong{font-size:var(--font-size-sm)}
+:is(#app,body) .part-card small{font-size:var(--font-size-xs)}
+:is(#app,body) .leaf-demo{font-size:var(--font-size-sm)}
+:is(#app,body) .leaf-idea h3{font-size:19px}
+:is(#app,body) .leaf-idea p{font-size:var(--font-size-sm)}
+:is(#app,body) .idea-answers .btn{font-size:var(--font-size-sm)}
+:is(#app,body) .notebook-window>span{font-size:var(--font-size-xs)}
+:is(#app,body) .rain-progress{font-size:var(--font-size-xs)}
+:is(#app,body) .rain-button{font-size:22px}
+:is(#app,body) .test-goals{font-size:var(--font-size-sm)}
+:is(#app,body) .repair-heading h3{font-size:22px}
+:is(#app,body) .repair-heading p{font-size:var(--font-size-sm)}
+:is(#app,body) .repair-panel legend{font-size:var(--font-size-sm)}
+:is(#app,body) .outcome small{font-size:var(--font-size-xs)}
+:is(#app,body) .outcome strong{font-size:var(--font-size-sm)}
+:is(#app,body) .invention-coach h3{font-size:20px}
+:is(#app,body) .invention-coach p{font-size:var(--font-size-sm)}
+:is(#app,body) .invention-coach .btn{font-size:var(--font-size-sm)}
+:is(#app,body) .comparison-drawer summary{font-size:var(--font-size-sm)}
+:is(#app,body) .comparison-drawer summary>span{font-size:var(--font-size-xs)}
+:is(#app,body) .comparison-record small{font-size:var(--font-size-xs)}
+:is(#app,body) .comparison-record strong{font-size:var(--font-size-sm)}
+:is(#app,body) .comparison-record p{font-size:var(--font-size-sm)}
+@media(max-width:1050px){:is(#app,body) .world-label{font-size:var(--font-size-xs)}}
+@media(max-width:850px){:is(#app,body) .world-label{font-size:var(--font-size-xs)}}
+@media(max-width:850px){:is(#app,body) .outcome strong{font-size:var(--font-size-sm)}}
+@media(max-width:850px){:is(#app,body) .invention-steps li{font-size:var(--font-size-sm)}}
+@media(max-width:850px){:is(#app,body) .reward-dialog h2{font-size:23px}}
+@media(max-width:600px){:is(#app,body) .home-missions strong{font-size:var(--font-size-sm)}}
+@media(max-width:600px){:is(#app,body) .mission-prompt p{font-size:var(--font-size-sm)}}
+@media(max-width:600px){:is(#app,body) .world-label{font-size:var(--font-size-xs)}}
+@media(max-width:600px){:is(#app,body) .world-label b{font-size:var(--font-size-xs)}}
+@media(max-width:600px){:is(#app,body) .world-core{font-size:var(--font-size-xs)}}
+@media(max-width:600px){:is(#app,body) .world-flowers span{font-size:var(--font-size-xs)}}
+@media(max-width:600px){:is(#app,body) .world-light{font-size:var(--font-size-xs)}}
+@media(max-width:600px){:is(#app,body) .map-caption{font-size:var(--font-size-xs)}}
+@media(max-width:600px){:is(#app,body) .reward-preview h2{font-size:22px}}
+@media(max-width:600px){:is(#app,body) .theme-choice{font-size:var(--font-size-sm)}}
+@media(max-width:600px){:is(#app,body) .flower-swatch{font-size:22px}}
+@media(max-width:600px){:is(#app,body) .adventure-brief h2{font-size:21px}}
+@media(max-width:600px){:is(#app,body) .adventure-brief p{font-size:var(--font-size-sm)}}
+@media(max-width:600px){:is(#app,body) .invention-steps li{font-size:var(--font-size-sm)}}
+@media(max-width:600px){:is(#app,body) .preview-tag{font-size:var(--font-size-xs)}}
+@media(max-width:600px){:is(#app,body) .picture-parts legend{font-size:var(--font-size-sm)}}
+@media(max-width:600px){:is(#app,body) .part-card strong{font-size:var(--font-size-sm)}}
+@media(max-width:600px){:is(#app,body) .part-card small{font-size:var(--font-size-xs)}}
+@media(max-width:600px){:is(#app,body) .leaf-idea h3{font-size:18px}}
+@media(max-width:600px){:is(#app,body) .idea-answers .btn{font-size:var(--font-size-sm)}}
+@media(max-width:600px){:is(#app,body) .outcome strong{font-size:var(--font-size-sm)}}
+@media(max-width:600px){:is(#app,body) .outcome small{font-size:var(--font-size-xs)}}
+@media(max-width:600px){:is(#app,body) .notebook-window>span{font-size:var(--font-size-xs)}}
+@media(max-width:600px){:is(#app,body) .rain-button{font-size:20px}}
+@media(max-width:600px){:is(#app,body) .repair-heading h3{font-size:21px}}
+@media(max-width:600px){:is(#app,body) .invention-coach h3{font-size:var(--font-size-sm)}}
+@media(max-width:600px){:is(#app,body) .invention-coach p{font-size:var(--font-size-sm)}}
+@media(max-width:600px){:is(#app,body) .comparison-record strong{font-size:var(--font-size-sm)}}
+@media(max-width:600px){:is(#app,body) .comparison-record p{font-size:var(--font-size-sm)}}
+@media(max-width:600px){:is(#app,body) .comparison-drawer summary{font-size:var(--font-size-sm)}}
+@media(max-width:600px){:is(#app,body) .comparison-drawer summary>span{font-size:var(--font-size-xs)}}
+@media(max-width:600px){:is(#app,body) .reward-dialog h2{font-size:22px}}
+@media(max-width:600px){:is(#app,body) .reward-why{font-size:var(--font-size-sm)}}
+@media(max-width:600px){:is(#app,body) .reward-dialog .dialog-actions .btn{font-size:var(--font-size-sm)}}
+@media(max-width:600px){:is(#app,body) .collection-item span{font-size:var(--font-size-xs)}}
+/* tablet.css */
+:is(#app,body) .garden-legend{font-size:var(--font-size-xs)}
+:is(#app,body) .topbar .wordmark{font-size:18px}
+:is(#app,body) .topbar .subject{font-size:var(--font-size-xs)}
+:is(#app,body) .learning-heading h1{font-size:28px}
+:is(#app,body) .learning-heading p{font-size:var(--font-size-sm)}
+:is(#app,body) .learning-heading .eyebrow{font-size:var(--font-size-xs)}
+:is(#app,body) .learning-heading .page-number{font-size:var(--font-size-xs)}
+:is(#app,body) .learning-note h2{font-size:19px}
+:is(#app,body) .learning-note h3{font-size:var(--font-size-sm)}
+:is(#app,body) .learning-note p{font-size:var(--font-size-sm)}
+:is(#app,body) .learning-scene .btn{font-size:var(--font-size-sm)}
+:is(#app,body) .learning-footer>span{font-size:var(--font-size-xs)}
+:is(#app,body) .leaf-stage .scene-badge{font-size:var(--font-size-xs)}
+:is(#app,body) .optional-tools summary,:is(#app,body) details summary{font-size:var(--font-size-sm)}
+:is(#app,body) .placed-label{font-size:var(--font-size-xs)}
+:is(#app,body) .reason-cards>p{font-size:var(--font-size-sm)}
+:is(#app,body) .reason-cards .btn{font-size:var(--font-size-sm)}
+:is(#app,body) .tablet-activity .timeline .btn{font-size:var(--font-size-sm)}
+:is(#app,body) .season-caption{font-size:var(--font-size-xs)}
+:is(#app,body) .season-pair figcaption{font-size:var(--font-size-xs)}
+:is(#app,body) .habitat-focus p{font-size:var(--font-size-sm)}
+:is(#app,body) .habitat-focus small{font-size:var(--font-size-xs)}
+:is(#app,body) .environment-cards small{font-size:var(--font-size-xs)}
+:is(#app,body) .picture-parts legend{font-size:var(--font-size-sm)}
+:is(#app,body) .picture-parts .part-card strong{font-size:var(--font-size-sm)}
+:is(#app,body) .lotus-note small{font-size:var(--font-size-xs)}
+:is(#app,body) .water-paths text{font-size:var(--font-size-xs)}
+:is(#app,body) .test-conditions{font-size:var(--font-size-sm)}
+:is(#app,body) .latest-result{font-size:var(--font-size-sm)}
+:is(#app,body) .test-record strong,:is(#app,body) .test-record span{font-size:var(--font-size-sm)}
+:is(#app,body) .test-record p{font-size:var(--font-size-sm)}
+:is(#app,body) .compact.reason-cards .btn{font-size:var(--font-size-sm)}
+:is(#app,body) .test-layout .learning-note p{font-size:var(--font-size-sm)}
+:is(#app,body) .test-layout .learning-note small{font-size:var(--font-size-xs)}
+:is(#app,body) .test-layout .learning-note h3{font-size:var(--font-size-sm)}
+:is(#app,body) .sharing-card h2{font-size:23px}
+:is(#app,body) .sharing-card p{font-size:var(--font-size-sm)}
+:is(#app,body) .sharing-card .btn{font-size:var(--font-size-sm)}
+:is(#app,body) .tablet-report .report-card h2{font-size:18px}
+:is(#app,body) .tablet-report .report-card p{font-size:var(--font-size-sm)}
+:is(#app,body) .tablet-final h2{font-size:21px}
+body.large-text:is(#app,body) .learning-heading p,body.large-text:is(#app,body) .learning-scene .btn,body.large-text:is(#app,body) .learning-note p,body.large-text:is(#app,body) .learning-footer>span{font-size:max(20px,var(--font-size-md))}
+@media(max-height:760px) and (min-width:900px){:is(#app,body) .learning-heading h1{font-size:25px}}
+@media(max-height:760px) and (min-width:900px){:is(#app,body) .learning-heading p{font-size:var(--font-size-sm)}}
+@media(max-height:760px) and (min-width:900px){:is(#app,body) .test-record p{font-size:var(--font-size-sm)}}
+@media(max-width:1100px){:is(#app,body) .learning-heading p{font-size:var(--font-size-sm)}}
+@media(max-width:1100px){:is(#app,body) .picture-parts .part-card strong{font-size:var(--font-size-sm)}}
+@media(max-width:1100px){:is(#app,body) .environment-cards small{font-size:var(--font-size-xs)}}
+@media(max-width:800px){:is(#app,body) .topbar .wordmark{font-size:var(--font-size-xs)}}
+@media(max-width:800px){:is(#app,body) .learning-heading h1{font-size:24px}}
+@media(max-width:800px){:is(#app,body) .learning-heading p{font-size:var(--font-size-sm)}}
+/* exploration.css */
+:is(#app,body) .destination-card p,:is(#app,body) .destination-card li{font-size:18px}
+:is(#app,body) .expedition-map .world-label{font-size:var(--font-size-xs)}
+:is(#app,body) .expedition-map .world-core{font-size:var(--font-size-xs)}
+:is(#app,body) .map-title h1{font-size:23px}
+:is(#app,body) .map-title p{font-size:var(--font-size-sm)}
+:is(#app,body) .map-bottom>span{font-size:var(--font-size-xs)}
+:is(#app,body) .home-copy>p{font-size:25px}
+:is(#app,body) .home-actions>span{font-size:var(--font-size-xs)}
+:is(#app,body) .guide-progress{font-size:var(--font-size-xs)}
+:is(#app,body) .field-guide h1{font-size:23px}
+:is(#app,body) .guide-bubble{font-size:18px}
+:is(#app,body) .guide-tools .btn{font-size:var(--font-size-sm)}
+:is(#app,body) .activity-route{font-size:var(--font-size-sm)!important}
+:is(#app,body) .exploration-activity .learning-footer .btn{font-size:18px}
+:is(#app,body) .exploration-activity .learning-scene .btn{font-size:18px}
+:is(#app,body) .exploration-activity summary{font-size:var(--font-size-sm)}
+:is(#app,body) .exploration-activity .scene-badge{font-size:var(--font-size-xs)}
+:is(#app,body) .exploration-activity .sort-bin{font-size:18px}
+:is(#app,body) .exploration-activity .reason-cards>p{font-size:18px}
+:is(#app,body) .exploration-activity .reason-cards .btn{font-size:var(--font-size-sm)}
+:is(#app,body) .exploration-activity .season-caption{font-size:18px}
+:is(#app,body) .exploration-activity .timeline .btn{font-size:var(--font-size-sm)}
+:is(#app,body) .exploration-activity .season-pair figcaption{font-size:18px}
+:is(#app,body) .exploration-activity .microcopy{font-size:var(--font-size-xs)}
+:is(#app,body) .exploration-activity .habitat-focus p{font-size:18px}
+:is(#app,body) .exploration-activity .environment-cards small{font-size:var(--font-size-xs)}
+:is(#app,body) .exploration-activity .garden-legend{font-size:var(--font-size-xs)}
+:is(#app,body) .exploration-activity .learning-note p{font-size:var(--font-size-sm)}
+:is(#app,body) .exploration-activity .part-card strong{font-size:var(--font-size-sm)}
+:is(#app,body) .exploration-activity .latest-result{font-size:var(--font-size-sm)}
+:is(#app,body) .exploration-activity .test-record p,:is(#app,body) .exploration-activity .test-record span{font-size:var(--font-size-sm)}
+:is(#app,body) .exploration-activity .test-record strong{font-size:var(--font-size-sm)}
+:is(#app,body) .exploration-activity .test-conditions{font-size:var(--font-size-sm)}
+:is(#app,body) .exploration-activity .test-layout .reason-cards .btn{font-size:var(--font-size-sm)}
+:is(#app,body) .exploration-activity .test-layout h3{font-size:18px}
+:is(#app,body) .tablet-report h1,:is(#app,body) .tablet-final h1{font-size:26px}
+:is(#app,body) .tablet-report .page-heading p,:is(#app,body) .tablet-final .page-heading p{font-size:var(--font-size-sm)}
+:is(#app,body) .tablet-report .report-card p{font-size:18px}
+:is(#app,body) .tablet-report .report-card b{font-size:var(--font-size-xs)}
+:is(#app,body) .tablet-report .sharing-card p{font-size:var(--font-size-sm)}
+:is(#app,body) .tablet-report .sharing-card .btn{font-size:var(--font-size-sm)}
+:is(#app,body) .tablet-final h2{font-size:22px}
+:is(#app,body) .tablet-final .learning-note p{font-size:18px}
+:is(#app,body) .ending-top h1{font-size:28px}
+:is(#app,body) .ending-results h2{font-size:18px}
+:is(#app,body) .ending .certificate h2{font-size:18px}
+:is(#app,body) .ending .certificate p{font-size:var(--font-size-sm)}
+@media(max-width:1100px) and (min-width:801px){:is(#app,body) .field-guide h1{font-size:21px}}
+@media(max-width:1100px) and (min-width:801px){:is(#app,body) .guide-bubble{font-size:var(--font-size-sm)}}
+@media(max-width:1100px) and (min-width:801px){:is(#app,body) .exploration-activity .learning-scene .btn{font-size:var(--font-size-sm)}}
+@media(max-width:1100px) and (min-width:801px){:is(#app,body) .exploration-activity .part-card strong{font-size:var(--font-size-sm)}}
+@media(max-width:1100px) and (min-width:801px){:is(#app,body) .exploration-activity .test-layout .reason-cards .btn{font-size:var(--font-size-sm)}}
+@media(max-width:1100px) and (min-width:801px){:is(#app,body) .tablet-report .report-card p{font-size:var(--font-size-sm)}}
+@media(max-width:1100px) and (min-width:801px){:is(#app,body) .map-title h1{font-size:21px}}
+@media(max-width:1100px) and (min-width:801px){:is(#app,body) .expedition-map .world-label{font-size:var(--font-size-xs)}}
+@media(max-height:740px) and (min-width:801px){:is(#app,body) .field-guide h1{font-size:21px}}
+@media(max-height:740px) and (min-width:801px){:is(#app,body) .guide-bubble{font-size:var(--font-size-sm)}}
+@media(max-width:800px),(orientation:portrait){:is(#app,body) .guide-bubble{font-size:var(--font-size-sm)}}
+@media(max-width:800px),(orientation:portrait){:is(#app,body) .expedition-map .world-label{font-size:var(--font-size-xs)}}
+body.large-text:is(#app,body) .guide-bubble,body.large-text:is(#app,body) .exploration-activity .btn{font-size:max(20px,var(--font-size-md))}
+:is(#app,body) .exploration-activity .notebook-result span{font-size:var(--font-size-xs)}
+/* fieldwork.css */
+:is(#app,body) .expedition-map .world-label{font-size:var(--font-size-xs)}
+:is(#app,body) .map-explorer span{font-size:var(--font-size-xs)}
+:is(#app,body) .direct-hint{font-size:var(--font-size-sm)}
+:is(#app,body) .specimen-pick strong{font-size:var(--font-size-sm)}
+:is(#app,body) .classify-leaves small{font-size:var(--font-size-xs)}
+:is(#app,body) .rule-result,:is(#app,body) .evidence-bridge{font-size:var(--font-size-sm)}
+:is(#app,body) .chain-title{font-size:var(--font-size-sm)}
+:is(#app,body) .prediction p{font-size:var(--font-size-sm)}
+:is(#app,body) .exploration-activity .prediction .btn{font-size:var(--font-size-sm)}
+:is(#app,body) .soil-cover{font-size:var(--font-size-xs)}
+:is(#app,body) .evidence-photo strong{font-size:18px}
+:is(#app,body) .spatial-controls>span{font-size:var(--font-size-xs)}
+:is(#app,body) .spatial-controls button{font-size:var(--font-size-sm)}
+@media(max-width:1100px){:is(#app,body) .field-guide h1{font-size:21px}}
+@media(max-width:1100px){:is(#app,body) .guide-bubble{font-size:var(--font-size-sm)}}
+@media(max-width:1100px){:is(#app,body) .exploration-activity .learning-scene .btn{font-size:var(--font-size-sm)}}
+@media(max-width:1100px){:is(#app,body) .map-explorer span{font-size:var(--font-size-xs)}}
+@media(max-height:600px),(max-width:800px){:is(#app,body) .expedition-map .world-label{font-size:var(--font-size-xs)}}
+
+/* ── 5. Buttons: 4 states (hover pointer-only · active press · focus-visible kept from tablet.css · disabled/aria-disabled) ── */
+@media(hover:hover){
+ :is(#app,body) .btn.primary:hover:not(:disabled,[aria-disabled="true"]){background:var(--color-primary-top);transform:translateY(calc(var(--button-lift) * -1));box-shadow:var(--shadow-button-hover)}
+}
+/* Touch: tap leaves :hover stuck, so undo the base sheets' hover looks there. */
+@media(hover:none){
+ :is(#app,body) .btn.primary:not([aria-disabled="true"]):hover{background:var(--color-primary)}
+ :is(#app,body) .btn:is(.soft,.choice):not(.selected):hover{background:var(--color-surface-soft)}
+ :is(#app,body) .btn.quiet:hover{background:transparent}
+ :is(#app,body) .plant-card:hover,:is(#app,body) .plant-card:hover>.asset-image{transform:none}
+}
+/* Press: the 4px edge collapses to 1px while the body drops 3px. Must stay after the hover rule. */
+:is(#app,body) .btn.primary:active:not(:disabled,[aria-disabled="true"]){transform:translateY(var(--button-press));box-shadow:var(--shadow-button-pressed);transition-duration:var(--dur-press)}
+:is(#app,body) .rain-button:active:not(:disabled,[aria-disabled="true"]){transform:translateY(var(--button-press));box-shadow:0 1px 0 var(--color-water-edge);transition-duration:var(--dur-press)}
+:is(#app,body) .spatial-controls button:active{transform:translateY(var(--button-press-sm));box-shadow:none}
+/* aria-disabled = same look as :disabled (tablet.css opacity .5). Stays focusable/tappable so the app can explain why. */
+:is(#app,body) [aria-disabled="true"]{opacity:var(--disabled-opacity)}
+:is(#app,body) .btn[aria-disabled="true"]:active{transform:none}
+:is(#app,body) .world-node[aria-disabled="true"]{opacity:1}
+:is(#app,body) .map-pin[aria-disabled="true"],:is(#app,body) .rain-button[aria-disabled="true"]{opacity:var(--disabled-opacity-soft)}
+:is(#app,body) .rain-button[aria-disabled="true"]{box-shadow:none}
+/* Room for the pressed 3D edge inside blocks that clip or scroll. */
+#app .guide-tools,#app .test-history{padding-bottom:var(--button-edge-room)}
+:is(#app,body) .spatial-controls button svg{display:block;margin:auto}
+
+/* ── 6. Korean text boxes ── */
+/* Guide bubble: wider column + pretty wrap so "줘." no longer drops alone onto the last line. */
+#app .exploration-activity{grid-template-columns:var(--guide-column-width) minmax(0,1fr)}
+#app .guide-bubble{padding:var(--guide-bubble-padding)}
+#app .guide-tools{flex-wrap:wrap;justify-content:center;gap:var(--space-8)}
+#app .guide-tools .btn{flex:1 1 auto;min-width:0;padding:var(--space-8) var(--space-16)}
+/* Footer row grows instead of clipping when the route text wraps at 18px. Skipped in large-text / short screens (own row rules). */
+@media(min-width:801px) and (min-height:601px){body:not(.large-text) #app .exploration-activity{grid-template-rows:minmax(0,1fr) minmax(var(--footer-row-min),auto)}}
+/* Notebook chip: was 90×110 fixed with a nowrap 12px label → grows with its label now. */
+#app .exploration-activity .notebook-result{width:auto;min-width:var(--notebook-chip-width);max-width:var(--notebook-chip-max);height:auto;min-height:var(--notebook-chip-height)}
+#app .exploration-activity .notebook-result span{white-space:normal;text-align:center;line-height:1.25}
+#app .spatial-controls{flex-wrap:wrap}
+/* Contrast: #6e7e68 on #fffef6 was 4.28:1 → --color-text-sub (#56664f) 6.09:1. */
+:is(#app,body) .reward-proof{color:var(--color-text-sub)}
+
+/* ── 7. Painted backgrounds + glass panels (no flat-colour or gradient-only screens) ── */
+:root{
+ --scrim-bg:linear-gradient(#f8f8ee59,#f8f8ee33);            /* light veil so panels separate from the painting */
+ --color-surface-glass-panel:#fffdf4c4;--color-text-plate:#fffdf4e6;--glass-blur:12px;
+ --glass-border:#ffffffb0;--glass-line:inset 0 0 0 1.5px #ffffffb3;--shadow-glass:0 10px 26px #4b41221c;
+ --bg-activity-0:url('/assets/generated/bg_m1_1_scan.webp');--bg-activity-1:url('/assets/generated/bg_m1_2_sort.webp');
+ --bg-activity-2:url('/assets/generated/bg_m2_1_seasons.webp');--bg-activity-3:url('/assets/generated/bg_m2_2_evidence.webp');
+ --bg-activity-4:url('/assets/generated/bg_m3_1_chamber.webp');--bg-activity-5:url('/assets/generated/bg_m3_2_habitat.webp');
+ --bg-activity-6:url('/assets/generated/bg_m4_1_terrain.webp');--bg-activity-7:url('/assets/generated/bg_m4_2_garden.webp');
+ --bg-activity-8:url('/assets/generated/bg_m5_1_idea.webp');--bg-activity-9:url('/assets/generated/bg_m5_2_test.webp');
+ --bg-report:var(--bg-activity-3);--bg-final:var(--bg-activity-5);--bg-ending:var(--bg-activity-7);
+}
+/* learning.js renders <main class="… activity-${p}"> with p = 0…9. Replaces greenhouse_studio_v1 / workshop_studio_v2. */
+#app .exploration-activity{background:var(--scrim-bg),var(--activity-bg,var(--bg-activity-0)) center/cover no-repeat}
+#app .activity-0{--activity-bg:var(--bg-activity-0)}#app .activity-1{--activity-bg:var(--bg-activity-1)}
+#app .activity-2{--activity-bg:var(--bg-activity-2)}#app .activity-3{--activity-bg:var(--bg-activity-3)}
+#app .activity-4{--activity-bg:var(--bg-activity-4)}#app .activity-5{--activity-bg:var(--bg-activity-5)}
+#app .activity-6{--activity-bg:var(--bg-activity-6)}#app .activity-7{--activity-bg:var(--bg-activity-7)}
+#app .activity-8{--activity-bg:var(--bg-activity-8)}#app .activity-9{--activity-bg:var(--bg-activity-9)}
+/* Report / final / ending mains are centred max-width boxes → paint the whole body so no cream bands remain. */
+body[data-screen="report"]{background:var(--scrim-bg),var(--bg-report) center/cover no-repeat}
+body[data-screen="final"]{background:var(--scrim-bg),var(--bg-final) center/cover no-repeat}
+body[data-screen="ending"]{background:var(--scrim-bg),var(--bg-ending) center/cover no-repeat}
+/* Glass panels: translucent + blur + white inset line, so the painting reads through. */
+#app .exploration-activity :is(.design-layout .learning-note,.test-layout .learning-note){background:var(--color-surface-glass-panel);-webkit-backdrop-filter:blur(var(--glass-blur)) saturate(1.1);backdrop-filter:blur(var(--glass-blur)) saturate(1.1);border:1px solid var(--glass-border);box-shadow:var(--glass-line),var(--shadow-glass);color:var(--color-text-main)}
+/* 4.5:1 guard: loose text sitting straight on glass or on the painting gets a near-opaque plate behind it (cards keep their own fills). */
+#app .exploration-activity :is(.chain-title,.direct-hint,.test-conditions,.microcopy:not(.miss-note),.habitat-focus p,.season-caption),
+#app .field-guide h1,#app .exploration-activity .learning-footer>span,
+#app :is(.tablet-report,.tablet-final) .page-heading,#app .ending-top{background:var(--color-text-plate);border-radius:var(--radius-sm);padding:var(--space-4) var(--space-8)}
+#app :is(.tablet-report,.tablet-final) .page-heading,#app .ending-top{padding:var(--space-8) var(--space-16)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+ #app .exploration-activity :is(.learning-scene,.design-layout .learning-note,.test-layout .learning-note){background:var(--color-text-plate)}
+}
+
+/* Guide character: mood_* portraits (≈0.6–0.75 wide) — fit by height; float animation (section 7) stays on .guide-mascot. */
+:root{--guide-mascot-height:170px}
+@media(max-width:1100px) and (min-width:801px){:root{--guide-mascot-height:140px}}
+@media(max-height:740px) and (min-width:801px){:root{--guide-mascot-height:120px}}
+@media(max-width:800px),(orientation:portrait){:root{--guide-mascot-height:115px}}
+#app .guide-mascot{height:var(--guide-mascot-height);width:auto;max-width:100%;aspect-ratio:7/10;object-fit:contain}
+
+/* ── 8. New markup from the education / settings agents (learning.js · rewards.js · app.js · settings-content.js) ── */
+:root{
+ --link-ok:var(--color-correct);--link-miss:var(--color-accent);
+ --stamp-art-size:44px;--world-stamp-size:28px;--complete-stamp-size:clamp(120px,12vw,150px);--complete-stamp-tilt:-8deg;
+ --color-wrong-edge:#6e352b;--color-wrong-soft:#f6e6e1;--color-accent-soft:#f5ecd8;
+ --settings-title-size:clamp(28px,2.4vw,32px);--switch-width:72px;--switch-height:32px;--chevron-size:10px;--chevron-line:2px;
+ --offline-badge-height:32px;--ending-certificate-max:42dvh;
+}
+/* Activity body is the only scroller (learning-scene is overflow:auto). "safe" keeps tall content from being cut off at the top. */
+#app .exploration-activity:not(.activity-3) .learning-scene{justify-content:safe center}
+@media(max-width:1100px){#app .exploration-activity.activity-5 .learning-scene{justify-content:flex-start}}
+
+/* Link board (M3-2 tap-tap matching). Grid/rows stay inline (line endpoints depend on equal rows); cards + line colours here. */
+#app .link-board{margin-block:var(--space-8)}
+#app .link-board .btn{flex-direction:column;justify-content:center;gap:var(--space-4);padding:var(--space-8);line-height:1.25;text-align:center;white-space:normal}
+#app .link-board .btn small{display:block;font-family:var(--font-body);color:var(--color-text-sub)}
+#app .link-board .btn[aria-pressed="true"]{background:var(--color-primary-soft);border-color:var(--color-primary);box-shadow:inset 0 0 0 2px var(--color-primary)}
+/* A plant gets a check svg after its name once both links are made → show the card as connected. */
+#app .link-board .btn:has(> strong + svg){border:2px solid var(--color-correct);background:var(--color-panel)}
+#app .link-board .btn:has(> strong + svg) svg{color:var(--color-correct)}
+#app .link-board line{stroke:var(--link-ok)}
+#app .link-board line[stroke-dasharray]{stroke:var(--link-miss)}
+
+/* Miss note: a clue, not a penalty — dashed like the miss line, no warning red. */
+:is(#app,body) .miss-note{display:inline-flex;align-items:center;gap:var(--space-8);margin:var(--space-4) 0;padding:var(--space-4) var(--space-16);border:1px dashed var(--link-miss);border-radius:var(--radius-pill);background:var(--color-text-plate);color:var(--color-text-main);font-size:var(--font-size-xs)}
+
+/* Stamps (<img class="stamp-img"> from JS). Two equal-rank kinds: identical size, frame and type; only the art differs. */
+:is(#app,body) .stamp-badge{display:inline-flex;align-items:center;gap:var(--space-8);padding:var(--space-4) var(--space-16) var(--space-4) var(--space-4);border:1px solid var(--color-border-soft);border-radius:var(--radius-sm);background:var(--color-panel);color:var(--color-text-main);font-family:var(--font-display);font-size:var(--font-size-xs);white-space:nowrap}
+:is(#app,body) .stamp-badge .stamp-img{flex-shrink:0;width:var(--stamp-art-size);height:var(--stamp-art-size);object-fit:contain}
+:is(#app,body) .world-stamp{display:inline-flex;align-items:center;margin-left:var(--space-4);font-style:normal}
+:is(#app,body) .world-stamp .stamp-img{width:var(--world-stamp-size);height:var(--world-stamp-size);object-fit:contain}
+:is(#app,body) .reward-complete-stamp{position:absolute;top:var(--space-8);right:var(--space-16);z-index:2;width:var(--complete-stamp-size);height:var(--complete-stamp-size);object-fit:contain;rotate:var(--complete-stamp-tilt);pointer-events:none}
+:is(#app,body) .reward-stamps{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--space-8);margin:var(--space-8) 0}
+:is(#app,body) .reward-stamps:empty{display:none}
+:is(#app,body) .reward-life{display:flex;justify-content:center;align-items:center;gap:var(--space-8);margin:var(--space-8) 0;color:var(--color-correct);font-size:var(--font-size-sm)}
+:is(#app,body) .stamp-board{list-style:none;margin:var(--space-8) 0 0;padding:0;display:grid;text-align:left}
+:is(#app,body) .stamp-board li{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-4) var(--space-8);padding:var(--space-8) 0;border-top:1px solid var(--color-border-soft);font-size:var(--font-size-sm)}
+:is(#app,body) .stamp-board small{flex-basis:100%;font-size:var(--font-size-xs);color:var(--color-text-sub)}
+
+/* Ending: five ability statements; the certificate scrolls on its own so the landscape grid never overflows. */
+#app .ability-list{list-style:none;margin:var(--space-8) 0;padding:0;display:grid;gap:var(--space-4);text-align:left}
+#app .ability-list li{display:flex;align-items:flex-start;gap:var(--space-8);font-size:var(--font-size-sm);line-height:1.4;color:var(--color-text-main)}
+#app .ability-list li svg{flex-shrink:0;margin-top:var(--space-4);color:var(--color-correct)}
+#app .ability-final{color:var(--color-text-main)}
+@media(min-width:801px) and (orientation:landscape){body:not(.large-text) #app .ending .certificate{min-height:0;max-height:var(--ending-certificate-max);overflow-y:auto;overscroll-behavior:contain}}
+
+/* Fold cards (settings sections, ending stamp list): closed by default, 48px summary. */
+:is(#app,body) :is(.settings-fold,.stamp-details){border:1px solid var(--color-border-soft);border-radius:var(--radius-md);background:var(--color-surface);text-align:left}
+:is(#app,body) :is(.settings-fold,.stamp-details)>summary{display:flex;align-items:center;gap:var(--space-8);min-height:var(--button-height-md);padding:var(--space-8) var(--space-16);list-style:none;cursor:pointer;font-family:var(--font-display);font-size:var(--font-size-sm)}
+:is(#app,body) :is(.settings-fold,.stamp-details)>summary::-webkit-details-marker{display:none}
+:is(#app,body) :is(.settings-fold,.stamp-details)>summary::after{content:"";flex-shrink:0;margin-left:auto;width:var(--chevron-size);height:var(--chevron-size);border-right:var(--chevron-line) solid currentColor;border-bottom:var(--chevron-line) solid currentColor;rotate:45deg;transition:rotate var(--dur-fast)}
+:is(#app,body) :is(.settings-fold,.stamp-details)[open]>summary::after{rotate:-135deg}
+:is(#app,body) .settings-fold-body,:is(#app,body) .stamp-details>.stamp-board{padding:0 var(--space-16) var(--space-16)}
+:is(#app,body) .settings-fold-body{display:grid;gap:var(--space-8)}
+
+/* Settings dialog (iscream-settings): title row + footer fixed, only .settings-body scrolls; body ≥18px, title ≥28px. */
+:is(#app,body) dialog.settings-dialog[open]{display:flex;flex-direction:column;overflow:hidden}
+:is(#app,body) .settings-dialog>:is(.dialog-top,h2,.dialog-actions){flex-shrink:0}
+:is(#app,body) .settings-dialog>h2{font-size:var(--settings-title-size);margin:var(--space-4) 0 var(--space-16)}
+:is(#app,body) .settings-body{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;display:grid;align-content:start;gap:var(--space-16);padding:var(--space-4) var(--space-4) var(--button-edge-room);font-size:var(--font-size-sm)}
+:is(#app,body) .settings-body :is(p,li,small,label,.microcopy,.btn,input){font-size:var(--font-size-sm)}
+:is(#app,body) .settings-dialog .dialog-actions{margin-top:var(--space-16);padding-top:var(--space-16);border-top:1px solid var(--color-border-soft)}
+:is(#app,body) :is(.settings-sound,.settings-story){display:grid;gap:var(--space-8)}
+:is(#app,body) .setting-switch{justify-content:space-between}
+:is(#app,body) .switch-state{display:inline-flex;align-items:center;justify-content:center;min-width:var(--switch-width);min-height:var(--switch-height);padding:0 var(--space-16);border-radius:var(--radius-pill);background:var(--color-border-soft);color:var(--color-text-sub);font-size:var(--font-size-xs)}
+:is(#app,body) .setting-switch[aria-checked="true"] .switch-state{background:var(--color-primary);color:var(--color-surface)}
+:is(#app,body) .teacher-gate{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-8)}
+:is(#app,body) .teacher-gate label{flex-basis:100%}
+:is(#app,body) .teacher-gate input{flex:1 1 160px;min-width:0;min-height:var(--button-height-md);padding:0 var(--space-16);border:1px solid var(--color-border-soft);border-radius:var(--radius-sm);background:var(--color-surface);color:var(--color-text-main)}
+:is(#app,body) .settings-warning{padding:var(--space-8) var(--space-16);border-radius:var(--radius-sm);background:var(--color-wrong-soft);color:var(--color-wrong)}
+/* Reset confirm "기록 지우기" = .btn.danger: warning colour with its own pressable edge. */
+:is(#app,body) .btn.danger{box-shadow:0 4px 0 var(--color-wrong-edge)}
+:is(#app,body) .btn.danger:active:not(:disabled,[aria-disabled="true"]){transform:translateY(var(--button-press));box-shadow:0 1px 0 var(--color-wrong-edge);transition-duration:var(--dur-press)}
+/* Offline badge: keep [hidden] working — only style it while shown. */
+:is(#app,body) .offline-badge:not([hidden]){display:inline-flex;align-items:center;min-height:var(--offline-badge-height);padding:var(--space-4) var(--space-16);border-radius:var(--radius-pill);background:var(--color-accent-soft);color:var(--color-text-main);font-size:var(--font-size-xs);white-space:nowrap}
+:is(#app,body) .quest-learn{margin:var(--space-8) 0;padding:var(--space-8) var(--space-16);border-radius:var(--radius-sm);background:var(--color-primary-soft);color:var(--color-text-main)}
+:is(#app,body) .quest-learn strong{margin-right:var(--space-8);font-family:var(--font-display);color:var(--color-primary)}
+
+/* ── 9. Motion ── */
+@keyframes dk-pop{from{opacity:0;scale:.86}to{opacity:1;scale:1}}
+@keyframes dk-fade{from{opacity:0}to{opacity:1}}
+@keyframes dk-enter{from{opacity:0;translate:0 6px;scale:1.01}to{opacity:1;translate:0 0;scale:1}}
+@keyframes dk-slam{from{opacity:0;scale:2.2}to{opacity:1;scale:1}}
+@keyframes dk-rise{from{opacity:0;transform:translateX(-50%) translateY(var(--space-8))}to{opacity:1;transform:translateX(-50%)}}
+@keyframes dk-shake{0%,100%{translate:0 0}25%{translate:-3px 1px}50%{translate:3px -1px}75%{translate:-2px 0}}
+@keyframes dk-float{from{translate:0 var(--float-distance)}to{translate:0 calc(var(--float-distance) * -1)}}
+/* fill-mode backwards (not both): once finished, scale/translate fall back to none so no containing block is left behind. */
+dialog[open]{animation:dk-pop var(--dialog-pop-duration) var(--ease-back) backwards}
+dialog[open]::backdrop{animation:dk-fade var(--dialog-pop-duration) var(--ease-out) backwards}
+main.screen-enter{animation:dk-enter var(--screen-enter-duration) var(--ease-out) backwards}
+/* Reward "쾅" (first award only: .stamp-in): the complete stamp slams down with an accelerating ease-in after the modal pop,
+   keeps its -8deg tilt (rotate property), then the scene shakes once on landing. The seed badge just rises in. */
+.reward-dialog .reward-complete-stamp.stamp-in{animation:dk-slam var(--stamp-duration) var(--ease-slam) var(--stamp-delay) backwards}
+.reward-dialog .reward-scene:has(.stamp-in){animation:dk-shake var(--shake-duration) linear var(--shake-delay)}
+.reward-dialog .reward-seed{animation:dk-rise var(--dur-base) var(--ease-out) var(--stamp-delay) backwards}
+/* Mascot idle float — different periods/delays so the trio never moves in lockstep. */
+.hero-friends .mascot-image{animation:dk-float 2400ms ease-in-out infinite alternate}
+.hero-friends .mascot-wrap:nth-child(2) .mascot-image{animation-duration:2100ms;animation-delay:-700ms}
+.hero-friends .mascot-wrap:nth-child(3) .mascot-image{animation-duration:2700ms;animation-delay:-1300ms}
+.guide-mascot{animation:dk-float 2600ms ease-in-out infinite alternate}
+@media(prefers-reduced-motion:reduce){
+ dialog[open],dialog[open]::backdrop,main.screen-enter,.reward-dialog .reward-seed,.reward-dialog .reward-scene,.reward-dialog .reward-complete-stamp,.hero-friends .mascot-image,.guide-mascot{animation:none!important}
+}
+
+/* ── Scene-first activity stage (2026-10-19): the illustrated activity background IS the scene.
+   The big stage panel stays transparent; only text that sits directly on the picture gets a plate. */
+#app .exploration-activity .learning-scene{background:rgb(255 253 244 / .12);backdrop-filter:none;-webkit-backdrop-filter:none;border-color:rgb(255 255 255 / .55);box-shadow:none}
+#app .exploration-activity .learning-scene :is(.optional-tools,.spatial-controls>span,.scene-caption){background:var(--color-text-plate);border-radius:var(--radius-pill,999px);padding:4px 12px;width:fit-content}
+/* Habitat sub-labels in the M3-2 link board (new markup) follow the 16px floor too. */
+#app .exploration-activity .btn small{font-size:var(--font-size-xs)}
+/* The slam starts at scale 2.2 — keep that frame from flashing a horizontal scrollbar. */
+dialog.reward-dialog{overflow-x:hidden}
+/* On the map the toast would cover the seed HUD at the top — drop it below the HUD there only (activities keep the original spot, clear of the answer buttons). */
+html body[data-screen="map"] .toast{top:calc(88px + 76px)}

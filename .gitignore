@@ -20,6 +20,7 @@ files/
 image/
 samplepages/
 assets/**/*.png
+!assets/icons/*.png
 docs/implementation-backup-*/
 
 # Captured shared-chat payloads can contain unrelated context

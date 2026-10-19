@@ -1,6 +1,16 @@
 // Short interface feedback only. Audio starts after a user gesture, never on load.
-let context;
-export function playClick(enabled){
+// The on/off choice has its own storage key so resetting research records keeps it.
+export const SOUND_KEY='green-garden-sound';
+let context,enabled=true;
+try{const saved=localStorage.getItem(SOUND_KEY);if(saved!==null)enabled=saved==='on';}catch{/* storage blocked: default on */}
+export const soundStored=()=>{try{return localStorage.getItem(SOUND_KEY)!==null;}catch{return false;}};
+export const isSoundOn=()=>enabled;
+export function setSound(on){
+  enabled=Boolean(on);
+  try{localStorage.setItem(SOUND_KEY,enabled?'on':'off');}catch{/* keep in memory only */}
+  if(!enabled&&context?.state==='running')void context.suspend().catch(()=>{});
+}
+export function playClick(){
   if(!enabled)return;
   const AudioContext=window.AudioContext||window.webkitAudioContext;
   if(!AudioContext)return;
@@ -14,4 +24,3 @@ export function playClick(enabled){
     tone.onended=()=>{tone.disconnect();volume.disconnect();};
   }catch{/* Keep controls usable on browsers without audio support. */}
 }
-export function muteAudio(){if(context?.state==='running')void context.suspend().catch(()=>{});}

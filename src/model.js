@@ -62,7 +62,7 @@ export const PAGES = [
 ];
 export const SEASONS=['봄','여름','가을','겨울'];
 export function freshState() {
-  return {version:2,legacyCompleted:[],legacyFinished:false,leafEvidence:{},groupsByRule:{edge:{},narrow:{}},classificationEvidence:{},seasonPhotos:{},seasonExplanation:'',seasonExplained:[],habitatFeatures:{},experimentAnswer:'',gardenReviewed:false,testExplanation:null,sharing:{status:'pending',question:'',response:''},highlight:0,screen:'home',page:0,completed:Array(10).fill(false),observation:{cherry:[],ginkgo:[],grass:[]},rule:'edge',groups:{},seasonPlant:'cherry',season:1,underground:false,seasonalRecords:[],linkedEvidence:[],experiment:{step:0,compared:false,prediction:''},habitats:{},reasons:{},terrain:Array(24).fill('empty'),garden:{},gardenReasons:[],design:{surface:'plain',cover:'open',linked:false},tests:[],reportSubmitted:[],finalChecks:{classification:false,habitat:false,garden:false,invention:false},finished:false,gardenTheme:'pink',largeText:false,soundEnabled:true,adminUnlocked:false};
+  return {version:2,legacyCompleted:[],legacyFinished:false,leafEvidence:{},groupsByRule:{edge:{},narrow:{}},classificationEvidence:{},seasonPhotos:{},seasonExplanation:'',seasonExplained:[],habitatFeatures:{},experimentAnswer:'',gardenReviewed:false,testExplanation:null,testPrediction:'',seasonPrediction:{},undergroundSeen:[],misses:Array(5).fill(0),stamps:{direct:[],fixed:[]},sharing:{status:'pending',question:'',response:''},highlight:0,screen:'home',page:0,completed:Array(10).fill(false),observation:{cherry:[],ginkgo:[],grass:[]},rule:'edge',groups:{},seasonPlant:'cherry',season:1,underground:false,seasonalRecords:[],linkedEvidence:[],experiment:{step:0,compared:false,prediction:''},habitats:{},reasons:{},terrain:Array(24).fill('empty'),garden:{},gardenReasons:[],design:{surface:'plain',cover:'open',linked:false},tests:[],reportSubmitted:[],finalChecks:{classification:false,habitat:false,garden:false,invention:false},finished:false,gardenTheme:'pink',largeText:false,soundEnabled:true,adminUnlocked:false};
 }
 export function presetTerrain(){return Array.from({length:24},(_,i)=>['water','grass','dry'][Math.floor((i%6)/2)]);}
 export function evidenceCount(s){return MISSIONS.filter((_,i)=>s.completed[i*2]&&s.completed[i*2+1]).length;}
@@ -76,6 +76,21 @@ export function routeIndex(s){return PAGE_ROUTES.findIndex(r=>r.screen===s.scree
 export function previousRoute(s){return PAGE_ROUTES[Math.max(0,routeIndex(s)-1)];}
 export function designKey(d){return `${d.surface}:${d.cover}`;}
 export function testDesign(d){return {key:designKey(d),surface:d.surface,cover:d.cover,clean:d.surface==='lotus',dry:d.cover==='flap'};}
+export const TERRAIN_MIN=3;
+export function terrainCount(s,t){return s.terrain.filter(x=>x===t).length;}
+export function terrainReady(s){return ['water','grass','dry'].every(t=>terrainCount(s,t)>=TERRAIN_MIN);}
+// Proof for a classification must be an observation of the same kind as the rule.
+export const RULE_FEATURE={edge:'edge',narrow:'shape'};
+export function proofFits(rule,feature){return RULE_FEATURE[rule]===feature;}
+// Stamps (equal praise, not grades): 'direct' = found without a wrong pick, 'fixed' = fixed after wrong picks.
+// Given once, on the mission's first completion. Completed results and rewards are never cleared.
+export const STAMP_KINDS=['direct','fixed'];
+export function addMiss(s,i){if(!missionDone(s,i))s.misses[i]=(s.misses[i]||0)+1;}
+export function missionStamps(s,i){return STAMP_KINDS.filter(k=>s.stamps[k].includes(i));}
+export function awardStamp(s,i){
+  if(missionDone(s,i)||missionStamps(s,i).length)return null;
+  const kind=s.misses[i]?'fixed':'direct';s.stamps[kind].push(i);return kind;
+}
 export function gardenValid(s){return HABITAT_PLANTS.every(p=>Number.isInteger(s.garden[p.id])&&s.terrain[s.garden[p.id]]===p.habitat&&s.gardenReasons.includes(p.id)) && new Set(Object.values(s.garden)).size===3;}
 export function comparisonPair(s){
   const last=s.tests.at(-1);if(!last||last.key!==designKey(s.design))return null;
@@ -98,9 +113,10 @@ export function pageReady(s,p){
     case 3:return pageReady(s,2)&&['cherry','sowthistle'].every(plant=>s.seasonExplained.includes(plant)&&[0,3].every(n=>s.linkedEvidence.includes(`${plant}:${n}`)));
     case 4:return s.experiment.step>=4&&s.experimentAnswer==='air';
     case 5:return pageReady(s,4)&&HABITAT_PLANTS.every(p=>s.habitats[p.id]===p.habitat&&s.habitatFeatures[p.id]===p.id&&s.reasons[p.id]===p.id);
-    case 6:return s.gardenReviewed&&['water','grass','dry'].every(t=>s.terrain.includes(t));
+    // New rules (3-cell area, prediction) apply only to pages not yet completed; saved completions keep the old rule.
+    case 6:return s.gardenReviewed&&(s.completed[6]?['water','grass','dry'].every(t=>s.terrain.includes(t)):terrainReady(s));
     case 7:return pageReady(s,6)&&gardenValid(s);
-    case 8:return s.design.linked;
+    case 8:return s.design.linked&&(s.completed[8]||!!s.testPrediction);
     case 9:return s.design.linked&&testValid(s);
     default:return false;
   }
@@ -138,6 +154,11 @@ export function restoreState(raw){
     s.design.linked=v.design?.linked===true;
     if(Array.isArray(v.tests))s.tests=v.tests.filter(t=>t&&member(t.surface,['plain','lotus'])&&member(t.cover,['open','flap'])).slice(-30).map(testDesign);
     if(Array.isArray(v.reportSubmitted))s.reportSubmitted=[...new Set(v.reportSubmitted.filter(i=>Number.isInteger(i)&&i>=0&&i<MISSIONS.length&&missionDone(s,i)))];
+    if(member(v.testPrediction,['surface','cover']))s.testPrediction=v.testPrediction;
+    for(const p of ['cherry','sowthistle'])if(member(v.seasonPrediction?.[p],['roots','none']))s.seasonPrediction[p]=v.seasonPrediction[p];
+    if(Array.isArray(v.undergroundSeen))s.undergroundSeen=[...new Set(v.undergroundSeen.filter(p=>s.seasonPrediction[p]))];
+    if(Array.isArray(v.misses))s.misses=s.misses.map((_,i)=>Number.isInteger(v.misses[i])&&v.misses[i]>0?Math.min(v.misses[i],999):0);
+    for(const k of STAMP_KINDS)if(Array.isArray(v.stamps?.[k]))s.stamps[k]=[...new Set(v.stamps[k].filter(i=>Number.isInteger(i)&&i>=0&&i<MISSIONS.length&&missionDone(s,i)))];
     for(const k of Object.keys(s.finalChecks))s.finalChecks[k]=v.finalChecks?.[k]===true;
     // Current confirmations are checked after all v2 evidence is restored below.
     s.gardenTheme=canChooseGardenTheme(s)&&GARDEN_THEMES.includes(v.gardenTheme)?v.gardenTheme:'pink';

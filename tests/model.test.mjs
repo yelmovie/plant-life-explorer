@@ -65,3 +65,54 @@ test('복원된 최종 확인은 현재 정원과 발명 시험이 유효할 때
  assert.equal(restored.finalChecks.garden,false);assert.equal(restored.finalChecks.invention,false);assert.equal(restored.finalChecks.classification,true);
  assert.equal(restored.finished,false);assert.equal(restored.screen,'final');
 });
+
+// --- 헛다리·스탬프·근거 판정·예측·저장 호환 ---
+import {awardStamp,addMiss,missionStamps,terrainReady} from '../src/model.js';
+import {learningAction} from '../src/learning.js';
+const ui2=()=>({plant:'cherry',region:'shape',selected:'cherry',undo:[]});
+test('틀린 관찰은 헛다리로 남고 다시 살펴본 뒤에만 고를 수 있다',()=>{
+ const s=freshState(),u=ui2();
+ assert.match(learningAction(s,u,'feature-answer','ginkgo'),/은행나무/);assert.equal(s.misses[0],1);
+ learningAction(s,u,'feature-answer','cherry');assert.equal(s.leafEvidence.cherry,undefined);assert.equal(s.misses[0],1);
+ learningAction(s,u,'region','shape');learningAction(s,u,'feature-answer','cherry');assert.equal(s.leafEvidence.cherry.shape.answer,'cherry');
+});
+test('분류 근거는 기준과 같은 종류의 관찰이어야 한다',()=>{
+ const s=freshState(),u=ui2();s.groups={cherry:'yes',ginkgo:'no',grass:'no'};learningAction(s,u,'check-rule');
+ learningAction(s,u,'classification-proof','ginkgo:shape');assert.equal(s.classificationEvidence.edge,undefined);assert.equal(s.misses[0],1);
+ learningAction(s,u,'classification-proof','ginkgo:edge');assert.equal(s.classificationEvidence.edge,'ginkgo');
+});
+test('예상은 틀려도 헛다리가 아니고 겨울 땅속은 예상 뒤에 열린다',()=>{
+ const s=freshState(),u=ui2();s.season=3;
+ learningAction(s,u,'underground');assert.equal(s.underground,false);
+ learningAction(s,u,'season-predict','none');assert.match(learningAction(s,u,'underground'),/예상과 달라/);assert.deepEqual(s.undergroundSeen,['cherry']);
+ learningAction(s,u,'test-predict','surface');assert.equal(s.testPrediction,'surface');assert.deepEqual(s.misses,[0,0,0,0,0]);
+ s.design.linked=true;assert.equal(pageReady(s,8),true);s.testPrediction='';assert.equal(pageReady(s,8),false);
+});
+test('맞지 않는 환경과 이으면 단서가 나오고 헛다리로 남는다',()=>{
+ const s=freshState(),u=ui2();u.selected='aloe';
+ const clue=learningAction(s,u,'habitat','water');assert.match(clue,/물/);assert.doesNotMatch(clue,/죽/);assert.equal(s.misses[2],1);
+ learningAction(s,u,'habitat','dry');assert.equal(s.misses[2],1);
+});
+test('스탬프 두 종은 첫 완료 때 한 번만 찍히고 완료한 미션의 헛다리는 늘지 않는다',()=>{
+ const s=freshState();assert.equal(awardStamp(s,0),'direct');addMiss(s,1);assert.equal(awardStamp(s,1),'fixed');
+ s.completed[0]=s.completed[1]=true;assert.equal(awardStamp(s,0),null);addMiss(s,0);assert.equal(s.misses[0],0);assert.deepEqual(missionStamps(s,0),['direct']);
+});
+test('예전 저장(새 필드 없음)은 기본값으로, 새 기록은 왕복 보존한다',()=>{
+ const old=freshState();for(const k of ['misses','stamps','testPrediction','seasonPrediction','undergroundSeen'])delete old[k];old.completed[0]=old.completed[1]=true;
+ const r=restoreState(JSON.stringify(old));assert.deepEqual(r.misses,[0,0,0,0,0]);assert.deepEqual(r.stamps,{direct:[],fixed:[]});assert.equal(r.testPrediction,'');
+ r.stamps.direct=[0,3];r.misses[2]=2;r.seasonPrediction.cherry='roots';r.undergroundSeen=['cherry','sowthistle'];
+ const back=restoreState(JSON.stringify(r));assert.deepEqual(back.stamps.direct,[0]);assert.equal(back.misses[2],2);assert.deepEqual(back.undergroundSeen,['cherry']);
+});
+test('정원 지형은 세 환경이 각각 3칸 이상이어야 한다',()=>{
+ const s=freshState();s.gardenReviewed=true;s.terrain=['water','grass','dry','water','grass','dry',...Array(18).fill('empty')];assert.equal(terrainReady(s),false);assert.equal(pageReady(s,6),false);
+ s.terrain[6]='water';s.terrain[7]='grass';s.terrain[8]='dry';assert.equal(pageReady(s,6),true);
+});
+test('예전 저장의 완료 기록은 새 규칙(정원 3칸·가방 예상) 때문에 미완료로 돌아가지 않는다',()=>{
+ const old=freshState();for(const k of ['misses','stamps','testPrediction','seasonPrediction','undergroundSeen'])delete old[k];
+ old.completed=Array(10).fill(true);old.finalChecks={classification:true,habitat:true,garden:true,invention:true};
+ old.terrain=['water','grass','dry',...Array(21).fill('empty')];old.gardenReviewed=true;old.garden={hyacinth:0,cherry:1,aloe:2};old.gardenReasons=['hyacinth','cherry','aloe'];
+ old.design={surface:'lotus',cover:'flap',linked:true};old.tests=[testDesign({surface:'plain',cover:'flap'}),testDesign(old.design)];old.testExplanation={key:'lotus:flap',before:'plain:flap',part:'surface'};
+ const r=restoreState(JSON.stringify(old));
+ assert.ok(r.completed.every(Boolean));assert.equal(pageReady(r,6),true);assert.equal(pageReady(r,7),true);assert.equal(pageReady(r,8),true);assert.equal(r.finalChecks.garden,true);
+ r.completed[6]=false;assert.equal(pageReady(r,6),false);r.completed[8]=false;assert.equal(pageReady(r,8),false);
+});
