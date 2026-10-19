@@ -16,9 +16,8 @@ dist/
 *.zip
 
 # Reference textbooks, supplied artwork, source PNGs and historical backups
-files/
-image/
-samplepages/
+_reference/
+_source/
 assets/**/*.png
 !assets/icons/*.png
 docs/implementation-backup-*/
@@ -28,3 +27,6 @@ docs/reviews/shared-design-*.html
 docs/reviews/shared-design-*.json
 docs/reviews/shared-design-*.txt
 docs/reviews/shared-design-transcript-*.md
+
+# 중복 사본(원본은 _source/meshy-input)
+_unused/duplicates-*/

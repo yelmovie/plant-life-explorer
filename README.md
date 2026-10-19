@@ -43,7 +43,7 @@ npm run preview
 
 입체 모형은 활동에 들어갈 때 지연 로딩한다. WebGL을 사용할 수 없으면 기존 그림·격자·버튼으로 탐구할 수 있다. 그림 모드 선택은 활동 중 도구를 바꾸거나 식물을 심어도 유지된다. 학습 기록과 판정은 렌더링 방식과 분리되어 있다.
 
-Git에는 코드·테스트·문서·실행용 WebP를 보관한다. `dist/`는 `npm run build`로 생성한다. 참고 교재(`files/`), 참고 이미지(`image/`, `samplepages/`), 생성 PNG 원본, 기존 ZIP, 공유 대화 수집 원본은 로컬에 남기고 Git에서 제외한다.
+Git에는 코드·테스트·문서·실행용 WebP를 보관한다. `dist/`는 `npm run build`로 생성한다. 참고 교재(`_reference/files/`), 참고 이미지(`_source/original-images/`, `samplepages/`), 생성 PNG 원본, 기존 ZIP, 공유 대화 수집 원본은 로컬에 남기고 Git에서 제외한다.
 
 ## 기록과 사용 안내
 
@@ -72,3 +72,14 @@ Git에는 코드·테스트·문서·실행용 WebP를 보관한다. `dist/`는 
 - 중단 작업 복구·실측·제한: `docs/reviews/FINAL-CHECK-20261018.md`.
 - 앱의 실행·빌드에는 패키지 설치가 필요 없다. 코드 보관용 GitHub 저장소와 실제 웹앱 공개 배포는 별개이며, 공개 호스팅은 수행하지 않았다.
 
+
+## 폴더 정리 (2026-10-19)
+
+| 폴더 | 내용 | Git |
+|---|---|---|
+| `assets/models/` | 3D 모형 GLB와 원본 대조표(`README.md`) | 포함 |
+| `assets/fonts/` | 화면 글꼴 서브셋, `source/`에 공식 원본 | 포함 |
+| `docs/planning/` | PRD·TRD·QA(0.1)·심화 통합설계 v2 | 포함 |
+| `_source/` | Meshy 원본 GLB, Meshy 입력 그림, 설계 대화 원본 그림 | 제외 |
+| `_reference/` | 참고 교재(`files/`)·샘플 화면(`samplepages/`) | 제외 |
+| `_unused/` | 안 쓰는 그림·옛 납품 zip·예전 배포 잔여물(지우지 않고 보관) | 일부 |

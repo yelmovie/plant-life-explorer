@@ -1,9 +1,12 @@
 import * as THREE from './vendor/three/three.module.min.js';
+import {GLTFLoader} from './vendor/three/addons/loaders/GLTFLoader.js';
 import {icon} from './art.js';
 
 // One renderer is reused between activities. All scene geometry is released on navigation.
 let renderer, activeCleanup;
-const textures=new Map(), views=new Map();
+const textures=new Map(), views=new Map(), models=new Map();
+// GLB scenes are loaded once and shared by clones; cleanup skips them via userData.shared.
+function loadModel(key){if(!models.has(key))models.set(key,new GLTFLoader().loadAsync(`/assets/models/${key}.glb`).then(g=>{g.scene.traverse(o=>{o.userData.shared=true;});return g.scene;}));return models.get(key);}
 const colors={water:0x79c8d4,grass:0x96b85d,dry:0xd9b67b,empty:0xbca78a};
 export function unmountSpatial(){activeCleanup?.();activeCleanup=null;}
 export function mountSpatial(host,s,u,send,paint){
@@ -24,6 +27,7 @@ export function mountSpatial(host,s,u,send,paint){
  const mesh=(geometry,material,x=0,y=0,z=0,parent=group)=>{const m=new THREE.Mesh(geometry,material);m.position.set(x,y,z);parent.add(m);return m;};
  const box=(w,h,d,color,x=0,y=0,z=0,parent=group)=>mesh(new THREE.BoxGeometry(w,h,d),mat(color),x,y,z,parent);
  const sphere=(x,y,z,sx,sy,sz,color,parent=group)=>{const m=mesh(new THREE.SphereGeometry(1,24,16),mat(color),x,y,z,parent);m.scale.set(sx,sy,sz);return m;};
+ const model=(key,parent=group,scale=1,x=0,y=0,z=0)=>{const holder=new THREE.Group();holder.position.set(x,y,z);holder.scale.setScalar(scale);parent.add(holder);loadModel(key).then(src=>{if(disposed)return;holder.add(src.clone());draw();}).catch(()=>{models.delete(key);host.dataset.modelFailed=key;});return holder;};
  let tiles=[],rain=[],bubbles=[];
  if(kind==='leaf'){
   const key={cherry:'cherry_leaf',ginkgo:'ginkgo_leaf',grass:'grass_leaf'}[u.plant]||'cherry_leaf';
@@ -38,17 +42,12 @@ export function mountSpatial(host,s,u,send,paint){
   s.terrain.forEach((t,i)=>{const tile=box(.96,.22, .96,colors[t],i%6-2.5,-.07,Math.floor(i/6)-1.5);tile.userData.cell=i;tiles.push(tile);if(t==='water')for(let j=0;j<2;j++){const ripple=mesh(new THREE.TorusGeometry(.15+j*.09,.008,5,30),mat(0xc6f5ed),tile.position.x,.05,tile.position.z);ripple.rotation.x=-Math.PI/2;}});
   Object.entries(s.garden).forEach(([id,i])=>{const plant=new THREE.Group();plant.position.set(i%6-2.5,.06,Math.floor(i/6)-1.5);group.add(plant);
    if(id==='cherry'){mesh(new THREE.CylinderGeometry(.055,.09,.65,10),mat(0x80603c),0,.3,0,plant);[[-.2,.7,0],[.18,.8,.05],[0,.95,-.05]].forEach(([x,y,z])=>sphere(x,y,z,.34,.35,.3,0x74a74e,plant));}
-   else if(id==='aloe'){for(let j=0;j<9;j++){const l=mesh(new THREE.ConeGeometry(.1,.7,7),mat(j%2?0x529968:0x78b57d),0,.27,0,plant);l.rotation.z=Math.sin(j*2.4)*.65;l.rotation.x=Math.cos(j*2.4)*.65;}}
+   else if(id==='aloe'){model('plant_aloe',plant,.52);}
    else{for(let j=0;j<5;j++){const a=j*Math.PI*2/5;sphere(Math.sin(a)*.19,.17,Math.cos(a)*.19,.15,.13,.19,0x4d9b65,plant);}mesh(new THREE.CylinderGeometry(.025,.035,.4),mat(0x629d61),0,.3,0,plant);sphere(0,.54,0,.12,.14,.12,0xaea4df,plant);}
   });
  }else if(kind==='lab'){
   const cut=s.experiment.step>=1;
-  const petiole=mesh(new THREE.SphereGeometry(1,40,28,cut?Math.PI:0,cut?Math.PI:Math.PI*2),mat(0x77a848));petiole.scale.set(.8,1.2,.7);
-  mesh(new THREE.CylinderGeometry(.13,.2,1.0,20),mat(0x7aab50),0,1.35,0);
-  if(cut){const shape=new THREE.Shape();shape.absellipse(0,0,.8,1.2,0,Math.PI*2,false,0);
-   for(let y=-.75;y<=.76;y+=.36)for(let x=-.45;x<=.46;x+=.3){if((x/.65)**2+(y/1.03)**2>1)continue;const hole=new THREE.Path();hole.absellipse(x,y,.095,.13,0,Math.PI*2,true,0);shape.holes.push(hole);const tube=mesh(new THREE.CylinderGeometry(.105,.105,.38,16,1,true),mat(0x587c38,{side:THREE.DoubleSide}),x,y,-.18);tube.rotation.x=Math.PI/2;}
-   mesh(new THREE.ExtrudeGeometry(shape,{depth:.035,bevelEnabled:false}),mat(0xe3eab3),0,0,0);
-  }
+  model(cut?'petiole_cut':'petiole_whole',group,1.25);
   if(s.experiment.step>=3){mesh(new THREE.BoxGeometry(3.4,2.3,1.9),mat(0x8ddde7,{transparent:true,opacity:.16,depthWrite:false}),0,-.5,-.45);box(3.5,.08,2,0x83abb5,0,-1.67,-.45);}
   if(u.bubbling)for(let i=0;i<14;i++){const b=sphere((i%5-2)*.13,(i%4)*.25-.4,.15,.07,.07,.07,0xc7f3fa);b.material.transparent=true;b.material.opacity=.75;bubbles.push(b);}
  }else if(kind==='bag'){
@@ -80,5 +79,5 @@ export function mountSpatial(host,s,u,send,paint){
  canvas.addEventListener('wheel',e=>{e.preventDefault();view.zoom=Math.max(.8,Math.min(1.7,view.zoom-e.deltaY*.001));draw();},{passive:false,signal});
  const animated=(rain.length&&(u.testing||u.replaying)&&!u.paused)||bubbles.length;
  if(animated&&!matchMedia('(prefers-reduced-motion: reduce)').matches){let last=performance.now();const tick=now=>{if(disposed)return;const dt=Math.min(.05,(now-last)/1000);last=now;rain.forEach((r,i)=>{r.position.y-=dt*2.2;if(r.position.y< -1.5)r.position.y=2.5;if(s.design.cover==='flap'&&r.position.y<.85&&Math.abs(r.position.x)<1.1)r.position.x+=(i%2?1:-1)*dt*2;});bubbles.forEach(b=>{b.position.y+=dt*1.1;if(b.position.y>1.4)b.position.y=-.6;});draw();frame=requestAnimationFrame(tick);};frame=requestAnimationFrame(tick);}
- activeCleanup=()=>{disposed=true;abort.abort();cancelAnimationFrame(frame);observer.disconnect();scene.traverse(o=>{o.geometry?.dispose();if(o.material){for(const m of Array.isArray(o.material)?o.material:[o.material])m.dispose();}});layer.remove();controls.remove();host.classList.remove('spatial-ready');};
+ activeCleanup=()=>{disposed=true;abort.abort();cancelAnimationFrame(frame);observer.disconnect();scene.traverse(o=>{if(o.userData.shared)return;o.geometry?.dispose();if(o.material){for(const m of Array.isArray(o.material)?o.material:[o.material])m.dispose();}});layer.remove();controls.remove();host.classList.remove('spatial-ready');};
 }

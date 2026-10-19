@@ -7,6 +7,8 @@
 | Three.js r181 (`src/vendor/three/`) | MIT | 사용 가능, 원문 `assets/three-license.txt` 동봉 |
 | Jua 글꼴 | SIL Open Font License 1.1 | 사용 가능, 원문 `assets/fonts/Jua-OFL.txt` 동봉 |
 | Pretendard 글꼴 | SIL Open Font License 1.1 | 사용 가능, 원문 `assets/fonts/Pretendard-OFL.txt` 동봉 |
+| 화면 글꼴 `gg-display-*`(Jua 기반)·`gg-text-*`(Pretendard 기반) | SIL OFL 1.1 수정본 | 앱 글자만 남긴 서브셋. 두 글꼴 모두 예약 이름(RFN)이 있어 수정본 이름을 'GG Display'·'GG Text'로 바꿈. 원본 `assets/fonts/source/`, 다시 만들기 `python scripts/subset-fonts.py` |
+| GLTFLoader·BufferGeometryUtils (`src/vendor/three/addons/`) | MIT (Three.js r181) | 원문 `assets/three-license.txt` |
 | 생성 이미지 (`generated/`, `icons/`) | 프로젝트 자체 AI 생성물 | 화면 고지: 설정 > 이미지·소리·저작권 고지 |
 | 효과음 | 앱 코드(Web Audio)로 직접 합성 | 외부 음원 없음 |
 | npm 의존성 | 없음 (`package.json`에 dependencies 없음) | 해당 없음 |
@@ -38,6 +40,10 @@
 
 ## 2026-10-19 활동 배경·표정·도장
 
-- 활동 배경 10장 `generated/bg_m1_1_scan` … `bg_m5_2_test`: 기획자(옐샘)가 설계 대화에서 생성형 AI로 만든 글자 없는 배경(`image/chatgpt_gallery_031~040.png`)을 1600px WebP로 변환. 원본 PNG는 같은 이름으로 보관(Git 제외).
-- 캐릭터 표정 12장 `generated/mood_{leaf|water|flower}_{idle|happy|think|surprise}`: 같은 대화의 투명 표정 시트(`image/chatgpt_gallery_043.png`, 보관본 `generated/mood_sheet.png`)에서 잘라 냄.
+- 활동 배경 10장 `generated/bg_m1_1_scan` … `bg_m5_2_test`: 기획자(옐샘)가 설계 대화에서 생성형 AI로 만든 글자 없는 배경(`_source/original-images/chatgpt_gallery_031~040.png`)을 1600px WebP로 변환. 원본 PNG는 같은 이름으로 보관(Git 제외).
+- 캐릭터 표정 12장 `generated/mood_{leaf|water|flower}_{idle|happy|think|surprise}`: 같은 대화의 투명 표정 시트(`_source/original-images/chatgpt_gallery_043.png`, 보관본 `generated/mood_sheet.png`)에서 잘라 냄.
 - 도장 3장 `generated/stamp_direct`, `stamp_fixed`, `stamp_complete`: Higgsfield(GPT Image 2.5, 투명 배경, 글자 없음)로 생성. 원본 PNG 보관.
+
+## 2026-10-19 3D 모형
+
+- `models/petiole_whole.glb`, `petiole_cut.glb`, `plant_aloe.glb`: 기획자(옐샘)가 Meshy AI Image-to-3D로 생성(입력 그림은 Higgsfield GPT Image 2.5 생성), 블렌더로 축소·정리. 대조표는 `models/README.md`.
