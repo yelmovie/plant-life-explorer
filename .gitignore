@@ -3,6 +3,7 @@
 .codex/
 .agents/
 .tmp/
+.wrangler/
 node_modules/
 .env
 .env.*
