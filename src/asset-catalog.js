@@ -1,6 +1,18 @@
 // Stable asset keys keep the learning UI independent from its current 2D renderer.
 // A future 3D viewer can consume these same keys without changing saved research data.
 export const ASSETS = Object.freeze({
+ expedition_hero_20261020:['리피의 탐험길','숲길을 따라 온실로 이어지는 초록정원'],
+ expedition_hyacinth_tank_20261020:['수조 속 부레옥잠','수면 위 둥근 잎과 부푼 잎자루, 물속 뿌리'],
+ expedition_petiole_model_20261020:['입체 잎자루 관찰 모형','부푼 잎자루와 여러 공기 공간이 보이는 절단 모형'],
+ expedition_restored_garden_20261020:['되살아난 초록정원','리피와 함께 다섯 연구 장소를 다시 연 초록정원'],
+ expedition_tool_lens:['관찰 렌즈','손잡이가 달린 탐험용 돋보기'],
+ expedition_tool_camera:['계절 관찰 수첩','잎과 계절을 기록하는 초록색 관찰 수첩'],
+ expedition_tool_water:['물주기 병','물가를 만드는 눈금 물병과 물길 도구'],
+ expedition_tool_fabric:['정원 도구 꾸러미','모종삽과 씨앗 주머니'],
+ expedition_tool_bag:['나의 탐험 가방','연잎을 닮은 초록색 덮개가 있는 탐험 가방'],
+ field_leaf_maple:['단풍나무 잎','손바닥처럼 갈라지고 가장자리에 톱니가 있는 단풍나무 잎'],
+ field_leaf_pine:['소나무 잎','가늘고 긴 바늘 모양 소나무 잎 두 개'],
+ field_leaf_camellia:['동백나무 잎','윤기 나는 타원형이고 가장자리에 작은 톱니가 있는 동백나무 잎'],
  map_trail_v2:['초록정원 탐험길','숲과 폭포를 지나 다섯 연구 장소를 잇는 길'],
  workshop_studio_v2:['발명 공방','비가 내리는 창가의 발명 작업대'],
  cherry_seasons_v2:['벚나무의 계절','같은 벚나무의 여름, 가을, 겨울, 다음 봄'],

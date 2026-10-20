@@ -1,0 +1,562 @@
+{
+  "created_date": "2026-10-20",
+  "provider": "Higgsfield",
+  "model": "gpt_image_2_5",
+  "project_auto_create": false,
+  "upload_authorization": "사용자가 기존 리피 캐릭터·지도·부레옥잠 이미지의 Higgsfield 참조 업로드를 명시 승인함.",
+  "references": [
+    {
+      "path": "assets/generated/mascot_leaf.webp",
+      "media_id": "1f1de6b5-18f3-42f1-bb39-5be22307f102",
+      "http_put": 200,
+      "confirmed": true
+    },
+    {
+      "path": "assets/generated/map_trail_v2.webp",
+      "media_id": "8c42db8d-470c-46f5-9170-c752c7f4284a",
+      "http_put": 200,
+      "confirmed": true
+    },
+    {
+      "path": "assets/generated/water_hyacinth_whole.webp",
+      "media_id": "42ac4869-1f37-4f99-af4b-9a6d11fbef55",
+      "http_put": 200,
+      "confirmed": true
+    }
+  ],
+  "derivatives": [
+    {
+      "key": "expedition_tool_lens",
+      "actual_subject": "돋보기",
+      "source_asset": "expedition_tools_atlas_20261020",
+      "source_job_id": "26d93454-0930-40a0-aa35-e8d5c81ec596",
+      "crop": {
+        "left": 0,
+        "top": 0,
+        "width": 746,
+        "height": 896
+      },
+      "processing": "셀 분리 후 투명 여백 trim(threshold12), 최대480px 축소, 16px 투명 여백 추가, WebP quality88. key camera/fabric은 런타임 호환 별칭이며 실제 이미지와 UI 이름은 관찰수첩/모종삽으로 기재.",
+      "file": {
+        "path": "assets/generated/expedition_tool_lens.webp",
+        "bytes": 65378,
+        "sha256": "cf82a3845ea57325264644b9bbe2f6ab7264756b0296d8c710a56e71f03a30a3",
+        "width": 400,
+        "height": 512,
+        "format": "webp",
+        "hasAlpha": true
+      }
+    },
+    {
+      "key": "expedition_tool_camera",
+      "actual_subject": "관찰수첩",
+      "source_asset": "expedition_tools_atlas_20261020",
+      "source_job_id": "26d93454-0930-40a0-aa35-e8d5c81ec596",
+      "crop": {
+        "left": 746,
+        "top": 0,
+        "width": 747,
+        "height": 896
+      },
+      "processing": "셀 분리 후 투명 여백 trim(threshold12), 최대480px 축소, 16px 투명 여백 추가, WebP quality88. key camera/fabric은 런타임 호환 별칭이며 실제 이미지와 UI 이름은 관찰수첩/모종삽으로 기재.",
+      "file": {
+        "path": "assets/generated/expedition_tool_camera.webp",
+        "bytes": 63492,
+        "sha256": "27f07b43d23bdb202f815a29b817e014447ec23ea8ca8cbccb0a3254beebf073",
+        "width": 402,
+        "height": 512,
+        "format": "webp",
+        "hasAlpha": true
+      }
+    },
+    {
+      "key": "expedition_tool_water",
+      "actual_subject": "물병",
+      "source_asset": "expedition_tools_atlas_20261020",
+      "source_job_id": "26d93454-0930-40a0-aa35-e8d5c81ec596",
+      "crop": {
+        "left": 1493,
+        "top": 0,
+        "width": 747,
+        "height": 896
+      },
+      "processing": "셀 분리 후 투명 여백 trim(threshold12), 최대480px 축소, 16px 투명 여백 추가, WebP quality88. key camera/fabric은 런타임 호환 별칭이며 실제 이미지와 UI 이름은 관찰수첩/모종삽으로 기재.",
+      "file": {
+        "path": "assets/generated/expedition_tool_water.webp",
+        "bytes": 86560,
+        "sha256": "4e918bec6fe682939a9ca9e0a506ec0bf87670176c632d339cd83d607f7c6e9f",
+        "width": 426,
+        "height": 512,
+        "format": "webp",
+        "hasAlpha": true
+      }
+    },
+    {
+      "key": "expedition_tool_fabric",
+      "actual_subject": "모종삽과 씨앗주머니",
+      "source_asset": "expedition_tools_atlas_20261020",
+      "source_job_id": "26d93454-0930-40a0-aa35-e8d5c81ec596",
+      "crop": {
+        "left": 0,
+        "top": 896,
+        "width": 746,
+        "height": 896
+      },
+      "processing": "셀 분리 후 투명 여백 trim(threshold12), 최대480px 축소, 16px 투명 여백 추가, WebP quality88. key camera/fabric은 런타임 호환 별칭이며 실제 이미지와 UI 이름은 관찰수첩/모종삽으로 기재.",
+      "file": {
+        "path": "assets/generated/expedition_tool_fabric.webp",
+        "bytes": 90970,
+        "sha256": "bfc9159884971ba36f95e0485ae7cde38ee035abbb0321c2d7292f4c8cfa84c1",
+        "width": 422,
+        "height": 512,
+        "format": "webp",
+        "hasAlpha": true
+      }
+    },
+    {
+      "key": "expedition_tool_bag",
+      "actual_subject": "탐험 가방",
+      "source_asset": "expedition_tools_atlas_20261020",
+      "source_job_id": "26d93454-0930-40a0-aa35-e8d5c81ec596",
+      "crop": {
+        "left": 746,
+        "top": 896,
+        "width": 747,
+        "height": 896
+      },
+      "processing": "셀 분리 후 투명 여백 trim(threshold12), 최대480px 축소, 16px 투명 여백 추가, WebP quality88. key camera/fabric은 런타임 호환 별칭이며 실제 이미지와 UI 이름은 관찰수첩/모종삽으로 기재.",
+      "file": {
+        "path": "assets/generated/expedition_tool_bag.webp",
+        "bytes": 89090,
+        "sha256": "acd7021e4221953d6c34a8d9b58af094601934f28500adfa4f07e31cff5f7b30",
+        "width": 512,
+        "height": 487,
+        "format": "webp",
+        "hasAlpha": true
+      }
+    },
+    {
+      "key": "field_leaf_maple",
+      "actual_subject": "단풍나무 잎",
+      "source_asset": "expedition_field_leaf_atlas_20261020",
+      "source_job_id": "0f52169d-ea19-4005-b1a4-45ebf2642b5e",
+      "crop": {
+        "left": 0,
+        "top": 0,
+        "width": 920,
+        "height": 1360
+      },
+      "processing": "서로 섞이지 않는 영역을 먼저 분리 후 투명 여백 trim(threshold12), 최대608px 축소, 16px 투명 여백 추가, WebP quality88.",
+      "file": {
+        "path": "assets/generated/field_leaf_maple.webp",
+        "bytes": 101996,
+        "sha256": "88fea54534dd26533dcdd3258f1ada69675b9fbe64c1d94be81358b0951b16b4",
+        "width": 483,
+        "height": 640,
+        "format": "webp",
+        "hasAlpha": true
+      }
+    },
+    {
+      "key": "field_leaf_pine",
+      "actual_subject": "소나무 바늘잎 두 개",
+      "source_asset": "expedition_field_leaf_atlas_20261020",
+      "source_job_id": "0f52169d-ea19-4005-b1a4-45ebf2642b5e",
+      "crop": {
+        "left": 940,
+        "top": 0,
+        "width": 390,
+        "height": 1360
+      },
+      "processing": "서로 섞이지 않는 영역을 먼저 분리 후 투명 여백 trim(threshold12), 최대608px 축소, 16px 투명 여백 추가, WebP quality88.",
+      "file": {
+        "path": "assets/generated/field_leaf_pine.webp",
+        "bytes": 37962,
+        "sha256": "c9cd59128279c5e184c19431248792ad044bf377d2c2faf3664b69f2fcdb1110",
+        "width": 165,
+        "height": 640,
+        "format": "webp",
+        "hasAlpha": true
+      }
+    },
+    {
+      "key": "field_leaf_camellia",
+      "actual_subject": "동백나무 잎",
+      "source_asset": "expedition_field_leaf_atlas_20261020",
+      "source_job_id": "0f52169d-ea19-4005-b1a4-45ebf2642b5e",
+      "crop": {
+        "left": 1340,
+        "top": 0,
+        "width": 708,
+        "height": 1360
+      },
+      "processing": "서로 섞이지 않는 영역을 먼저 분리 후 투명 여백 trim(threshold12), 최대608px 축소, 16px 투명 여백 추가, WebP quality88.",
+      "file": {
+        "path": "assets/generated/field_leaf_camellia.webp",
+        "bytes": 74296,
+        "sha256": "5b9b02439b27355ef7636df33dac5b2d19eab64d49d868adb60079e96f746a1b",
+        "width": 368,
+        "height": 640,
+        "format": "webp",
+        "hasAlpha": true
+      }
+    }
+  ],
+  "assets": [
+    {
+      "key": "expedition_field_leaf_atlas_20261020",
+      "job_id": "0f52169d-ea19-4005-b1a4-45ebf2642b5e",
+      "status": "completed",
+      "model": "gpt_image_2_5",
+      "quality": "high",
+      "resolution": "2k",
+      "aspect_ratio": "3:2",
+      "prompt": "Create an accurate botanical specimen asset sheet for a Korean elementary science game. Exactly THREE separate leaves in a clean horizontal row, each isolated on a fully TRANSPARENT background in its own equal-width third of the image, with at least 10 percent clear empty gutter between specimens. Beautiful tactile dimensional botanical rendering halfway between realistic plant specimens and premium friendly 3D educational game art. Soft diffuse light, detailed veins, true leaf thickness, believable natural green color, crisp recognizable silhouette. LEFT: one fresh green MAPLE (Acer) leaf with a single leaf blade divided into FIVE to SEVEN distinct pointed palmately arranged LOBES, clearly serrated small teeth along its outer margins, veins radiating from one point near its thin petiole. MIDDLE: one small bundle of PINE (Pinus) NEEDLE LEAVES: exactly a pair of very thin long dark-green needles emerging from ONE tiny brown basal sheath, two clean separate narrow needles clearly visible along almost their whole length, no branch, no pine cone, no broad leaf, no grass tuft. RIGHT: one CAMELLIA (Camellia japonica) leaf: single thick glossy dark-green oval ELLIPTIC leaf blade with a pointed tip, clear central midrib and smaller curved branching veins, very small subtle serrated teeth along edge, short thin petiole. The three species must remain entirely separate specimens, absolutely no hybrid, no combining features, no touching, no shared stem. Each specimen fully visible with generous transparent padding; no clipped tips or stalks. No soil, no pot, no flower, no tree, no labels, no typography, no words, no letters, no numbers, no borders, no frames, no watermark. Very minimal soft contact shading only.",
+      "reference_media_ids": [],
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_333gBCD57aH5O5VoXpTv3vOErGP/hf_20261020_141944_0f52169d-ea19-4005-b1a4-45ebf2642b5e.png",
+      "purpose": "새 식물에 관찰 기준을 적용하는 전이 활동용 단풍나무·소나무·동백나무 잎 표본",
+      "files": [
+        {
+          "path": "assets/generated/expedition_field_leaf_atlas_20261020.png",
+          "bytes": 3603790,
+          "sha256": "e25453efab526603d46e97518d7130fbdc0c4dbf29b605a048b95fc5322fa749",
+          "width": 2048,
+          "height": 1360,
+          "format": "png",
+          "hasAlpha": true
+        },
+        {
+          "path": "assets/generated/expedition_field_leaf_atlas_20261020.webp",
+          "bytes": 417058,
+          "sha256": "e54fb9ffb7d2f449a6c60ee392d24228a20ce9e2bf8763ce4a11c91073888768",
+          "width": 1600,
+          "height": 1063,
+          "format": "webp",
+          "hasAlpha": true
+        }
+      ],
+      "processing": "PNG 원본 보관. 폭 1600px WebP quality 88. 개별 표본은 아래 derivatives에 기재한 영역을 분리·투명 여백 trim·최대608px축소·16px투명여백 추가 후 WebP quality88 저장.",
+      "visual_review": {
+        "status": "passed",
+        "checks": [
+          "세 표본 분리·합체 없음",
+          "단풍나무 잎은 손바닥 5갈래와 톱니·퍼지는 잎맥",
+          "소나무 바늘잎 2개와 갈색 기부 잎집",
+          "동백나무는 윤기 있는 타원형·작은 톱니",
+          "투명 알파 채널 확인",
+          "텍스트 없음"
+        ]
+      }
+    },
+    {
+      "key": "expedition_hero_20261020",
+      "job_id": "2a54d4b0-7247-4ed3-9196-62f5c6b79eff",
+      "status": "completed",
+      "model": "gpt_image_2_5",
+      "quality": "high",
+      "resolution": "2k",
+      "aspect_ratio": "16:9",
+      "prompt": "Premium polished 3D animated educational adventure game key art, tactile hand-painted materials, soft dimensional forms, beautiful diffuse daylight, rich botanical detail, warm inviting forest green and cream palette with turquoise water and restrained gold accents, crisp readable silhouette, subtle depth of field, no lettering, no words, no numbers, no interface panels, no watermark. Children aged 8 to 10. Wide establishing shot of a magical but believable botanical research expedition base. A winding sunlit stone and dirt path enters from the bottom center and leads through an open wooden gate into a glass greenhouse village. On the right foreground, a beautifully crafted open brown field satchel with a green leaf clasp, magnifying glass, blank cream field notebook, soft green seed pouch, water sample bottle and rolled blank map, all naturally placed on a wooden bench. Nearby tall rounded leaves create a welcoming arch. On the left foreground leave a clean uncluttered patch of pathway large enough for a separately composited child-height guide character. Distinct depth with inviting path in middle distance, cheerful discovery mood, no people or creatures. Rendered game scenery with truly dimensional objects rather than flat graphic shapes.",
+      "reference_media_ids": [],
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_333gBCD57aH5O5VoXpTv3vOErGP/hf_20261020_135519_2a54d4b0-7247-4ed3-9196-62f5c6b79eff.png",
+      "purpose": "앱 첫 화면·인트로용 탐험기지 장면. 기존 리피를 로컬 오버레이",
+      "files": [
+        {
+          "path": "assets/generated/expedition_hero_20261020.png",
+          "bytes": 7939964,
+          "sha256": "3242b40a327743f1f05c64da1c7a71a06413793d4c8b2f1328bbe109a0117589",
+          "width": 2688,
+          "height": 1520,
+          "format": "png",
+          "hasAlpha": false
+        },
+        {
+          "path": "assets/generated/expedition_hero_20261020.webp",
+          "bytes": 479768,
+          "sha256": "8c366f6077caf5485050d5044d9cc5266c0ce8393c8d26cc05932144d7c37ff4",
+          "width": 1600,
+          "height": 905,
+          "format": "webp",
+          "hasAlpha": false
+        }
+      ],
+      "processing": "원본 PNG 보관, sharp로 폭 1600px 이하 WebP quality 87 변환. 구도·색 변경 없음.",
+      "visual_review": {
+        "status": "passed",
+        "checks": [
+          "온실·길·도구의 입체감 확인",
+          "왼쪽 여백에 원본 리피를 합성할 수 있음",
+          "문구 없음"
+        ]
+      }
+    },
+    {
+      "key": "expedition_trail_20261020",
+      "job_id": "7773cc82-0a21-460c-9f49-bbf578794dd0",
+      "status": "completed",
+      "model": "gpt_image_2_5",
+      "quality": "high",
+      "resolution": "2k",
+      "aspect_ratio": "3:2",
+      "prompt": "Premium polished 3D animated educational adventure game key art, tactile hand-painted materials, soft dimensional forms, beautiful diffuse daylight, rich botanical detail, warm inviting forest green and cream palette with turquoise water and restrained gold accents, crisp readable silhouette, subtle depth of field, no lettering, no words, no numbers, no interface panels, no watermark. Children aged 8 to 10. An isometric high-angle botanical adventure game world map, one continuous gently winding warm sandy path linking FIVE spacious circular clearing plazas. Overall landscape of lush forest and a clear blue stream cascading over natural rock ledges and crossing under two small wooden bridges. Five path stops: a small glass specimen greenhouse in the lower-left clearing; a little seasonal tree observatory in the upper-left middle clearing; a round pale stone and glass water laboratory in the upper-center clearing; a restored patchwork research garden in the middle-right clearing; a cozy leaf-roof inventor workshop in the upper-right clearing. Only these five main destinations, each easily distinguishable and with ample clear path immediately in front of its doorway. Map fills frame, no frame border. Buildings are integrated into the ground, not stickers or detached icons. Large passable path routes clearly connected without impossible gaps or crossings. No characters, no flags with labels, no signs containing text.",
+      "reference_media_ids": [],
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_333gBCD57aH5O5VoXpTv3vOErGP/hf_20261020_135519_7773cc82-0a21-460c-9f49-bbf578794dd0.png",
+      "purpose": "선택적 새 지도·스타일 참조. 기존 길 좌표와 다르므로 직접 교체 시 동선 재배치 필요",
+      "files": [
+        {
+          "path": "assets/generated/expedition_trail_20261020.png",
+          "bytes": 6982104,
+          "sha256": "bae337715083201c2f5a64510f75e610ba5f6bafa79f4ff33dc140eb9d99de7b",
+          "width": 2048,
+          "height": 1360,
+          "format": "png",
+          "hasAlpha": false
+        },
+        {
+          "path": "assets/generated/expedition_trail_20261020.webp",
+          "bytes": 755994,
+          "sha256": "51ee2fbe7cfac2b29286293fd9dda29569631cc82e2e988dde17b6013f57cce1",
+          "width": 1600,
+          "height": 1063,
+          "format": "webp",
+          "hasAlpha": false
+        }
+      ],
+      "processing": "원본 PNG 보관, sharp로 폭 1600px 이하 WebP quality 87 변환. 구도·색 변경 없음.",
+      "visual_review": {
+        "status": "passed",
+        "checks": [
+          "서로 다른 연구 건물 5개 확인",
+          "땅과 건물 입체감·연결된 길 확인",
+          "기존 지도 경로와 다른 배치이므로 선택적 사용"
+        ]
+      }
+    },
+    {
+      "key": "expedition_hyacinth_tank_20261020",
+      "job_id": "a13e7466-2c5e-4dda-9a1d-1eb322bdcb2b",
+      "status": "completed",
+      "model": "gpt_image_2_5",
+      "quality": "high",
+      "resolution": "2k",
+      "aspect_ratio": "16:9",
+      "prompt": "Premium polished 3D animated educational adventure game key art, tactile hand-painted materials, soft dimensional forms, beautiful diffuse daylight, rich botanical detail, warm inviting forest green and cream palette with turquoise water and restrained gold accents, crisp readable silhouette, subtle depth of field, no lettering, no words, no numbers, no interface panels, no watermark. Children aged 8 to 10. Use the supplied botanical reference to preserve the correct water hyacinth plant anatomy. Close eye-level scientific observation view of ONE healthy water hyacinth plant floating naturally in the center of a wide crystal-clear glass observation tank on a greenhouse lab bench. Whole plant at large useful size in the middle 65 percent of frame: separate broad rounded glossy green LEAF BLADES sit at the TOP of distinct thick light-green ovoid SWOLLEN PETIOLES, like pear-shaped inflated leaf stalks, connecting each leaf blade to a common basal crown at the water surface. Leaves must NOT be inflated balloons, the swollen parts are the stalks below them. Five leaf blades with five rounded buoyant stalks, clear three-dimensional volume, specular highlights and contact shadows. Dense dark purplish fine fibrous roots hang naturally below the crown underwater. No terrestrial soil, no pot, no bubbles attached to leaves, no artificial tubes. Surface waterline crosses near the basal crown, leaf stalk bulges mostly above water. Glass tank front and side show depth. Background greenhouse is softly blurred, simple. No labels or arrows. An accurate educational plant model, not a photograph used as scientific evidence.",
+      "reference_media_ids": [
+        "42ac4869-1f37-4f99-af4b-9a6d11fbef55"
+      ],
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_333gBCD57aH5O5VoXpTv3vOErGP/hf_20261020_141644_a13e7466-2c5e-4dda-9a1d-1eb322bdcb2b.png",
+      "purpose": "M3의 입체 관찰 수조. 잎몸·부푼 잎자루·뿌리 구분",
+      "files": [
+        {
+          "path": "assets/generated/expedition_hyacinth_tank_20261020.png",
+          "bytes": 5507193,
+          "sha256": "f02b0c8b13160a8db1c534d02ded140cffddcd85ae9b68fe143fda34ac477eae",
+          "width": 2688,
+          "height": 1520,
+          "format": "png",
+          "hasAlpha": false
+        },
+        {
+          "path": "assets/generated/expedition_hyacinth_tank_20261020.webp",
+          "bytes": 218450,
+          "sha256": "0e67d2df2e1a345e823616195a91326502729d64989ef7231d9012cfca6fa6af",
+          "width": 1600,
+          "height": 905,
+          "format": "webp",
+          "hasAlpha": false
+        }
+      ],
+      "processing": "원본 PNG 보관, sharp로 폭 1600px 이하 WebP quality 87 변환. 구도·색 변경 없음.",
+      "visual_review": {
+        "status": "passed",
+        "checks": [
+          "넓고 둥근 잎몸과 아래 부푼 잎자루 분리",
+          "퍼진 뿌리가 수면 아래에 있음",
+          "부푼 부위가 잎몸으로 오인되지 않는 구조"
+        ]
+      }
+    },
+    {
+      "key": "expedition_petiole_model_20261020",
+      "job_id": "55877372-de5b-4fe3-b4ba-928a7842b169",
+      "status": "completed",
+      "model": "gpt_image_2_5",
+      "quality": "high",
+      "resolution": "2k",
+      "aspect_ratio": "4:3",
+      "prompt": "Premium polished 3D animated educational adventure game key art, tactile hand-painted materials, soft dimensional forms, beautiful diffuse daylight, rich botanical detail, warm inviting forest green and cream palette with turquoise water and restrained gold accents, crisp readable silhouette, subtle depth of field, no lettering, no words, no numbers, no interface panels, no watermark. Children aged 8 to 10. Scientific educational still life on a warm ivory neutral background, isolated three-dimensional WATER HYACINTH LEAF AND SWOLLEN PETIOLE teaching model. On the LEFT a whole glossy rounded green leaf blade on top of its thick ovoid pear-shaped swollen leaf stalk, with a narrow short stalk base below. On the RIGHT an enlarged longitudinal cutaway of the SAME swollen leaf stalk ONLY, outer skin removed along one broad side to reveal a SPONGY MULTICELLULAR NETWORK OF MANY IRREGULAR SMALL AIR SPACES separated by thin pale-green tissue walls. Aerenchyma air spaces form a branching porous lattice through the petiole, not a single giant empty balloon and not rows of uniform manufactured holes. Cut surface has volume and natural tissue structure, a clearly convex pear-shaped silhouette. Separate flat broad leaf blade remains clearly distinct from bulbous petiole below it. No literal air bubbles, no water droplets inside tissue, no machinery, no glowing magic. Strong soft ambient occlusion and warm studio shading make rounded stalk volume unmistakable. No text or labels. Accurate simplified model, not microscopic photograph.",
+      "reference_media_ids": [],
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_333gBCD57aH5O5VoXpTv3vOErGP/hf_20261020_135518_55877372-de5b-4fe3-b4ba-928a7842b169.png",
+      "purpose": "M3의 잎자루 겉모습과 공기 공간 절개 교육 모형",
+      "files": [
+        {
+          "path": "assets/generated/expedition_petiole_model_20261020.png",
+          "bytes": 4013842,
+          "sha256": "8b8bd5dcb2e7fb27a4a877a648e9d6d2ad374242a1ef35f951882bd86264b7a6",
+          "width": 2336,
+          "height": 1744,
+          "format": "png",
+          "hasAlpha": false
+        },
+        {
+          "path": "assets/generated/expedition_petiole_model_20261020.webp",
+          "bytes": 127452,
+          "sha256": "6a2679d59e96a3d0750184c009a3f5f2ce1f523bbb0a26e7a2ad0344b6d19149",
+          "width": 1600,
+          "height": 1195,
+          "format": "webp",
+          "hasAlpha": false
+        }
+      ],
+      "processing": "원본 PNG 보관, sharp로 폭 1600px 이하 WebP quality 87 변환. 구도·색 변경 없음.",
+      "visual_review": {
+        "status": "passed",
+        "checks": [
+          "왼쪽 전체 잎과 부푼 잎자루 연결",
+          "오른쪽 여러 불규칙 공기 공간",
+          "단일 빈 풍선 모형 아님"
+        ]
+      }
+    },
+    {
+      "key": "expedition_tools_atlas_20261020",
+      "job_id": "26d93454-0930-40a0-aa35-e8d5c81ec596",
+      "status": "completed",
+      "model": "gpt_image_2_5",
+      "quality": "high",
+      "resolution": "2k",
+      "aspect_ratio": "5:4",
+      "prompt": "Premium polished 3D animated educational adventure game key art, tactile hand-painted materials, soft dimensional forms, beautiful diffuse daylight, rich botanical detail, warm inviting forest green and cream palette with turquoise water and restrained gold accents, crisp readable silhouette, subtle depth of field, no lettering, no words, no numbers, no interface panels, no watermark. Children aged 8 to 10. A clean game inventory item asset sheet on a fully transparent background, arranged in a precise 3-column by 2-row regular grid of equal size cells. Each item is isolated with very generous empty transparent gutters and no touching or overlap. Exactly FIVE beautifully rendered dimensional botanical exploration tools: TOP LEFT a brass-rimmed magnifying glass with dark brown handle and one tiny green leaf emblem; TOP MIDDLE a closed warm cream field notebook with green leaf clasp and brown binding, cover BLANK without lettering; TOP RIGHT a round glass water sample bottle with cork, blue water and a small leaf medallion; BOTTOM LEFT a small polished wooden-handled garden trowel with one green seed pouch resting beside it as one grouped reward item; BOTTOM MIDDLE a compact handsome brown explorer satchel with green leaf clasp, rolled blank cream map protruding from top, green fabric shoulder strap; BOTTOM RIGHT remains completely EMPTY. 3D family adventure game quality, consistent front three-quarter view, tactile materials, cheerful proportions, crisp item silhouettes. Each item must fit comfortably within its own cell at equal perceived size and centered. No drop shadow extending outside item, no decorative frames, no circular plaques, no title, no text anywhere. Transparent background.",
+      "reference_media_ids": [],
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_333gBCD57aH5O5VoXpTv3vOErGP/hf_20261020_135518_26d93454-0930-40a0-aa35-e8d5c81ec596.png",
+      "purpose": "스테이지 보상 도구 원본 아틀라스. 개별 transparent WebP 5개 추출",
+      "files": [
+        {
+          "path": "assets/generated/expedition_tools_atlas_20261020.png",
+          "bytes": 5413722,
+          "sha256": "8924bfe9f796fcc35be790f031b418ae37e3f9cdbcf413aa0f2666aff7cbfadf",
+          "width": 2240,
+          "height": 1792,
+          "format": "png",
+          "hasAlpha": true
+        },
+        {
+          "path": "assets/generated/expedition_tools_atlas_20261020.webp",
+          "bytes": 562270,
+          "sha256": "2a6c96d9bd5715ddbacc074320488ec6d9803e6103c92d6fc5dc87273890eaef",
+          "width": 1600,
+          "height": 1280,
+          "format": "webp",
+          "hasAlpha": true
+        }
+      ],
+      "processing": "원본 PNG 보관, sharp로 폭 1600px 이하 WebP quality 87 변환. 구도·색 변경 없음.",
+      "visual_review": {
+        "status": "passed",
+        "checks": [
+          "3x2 셀 중 5개 도구·1개 빈 셀",
+          "알파 채널 있음",
+          "서로 닿지 않는 5종 도구"
+        ]
+      }
+    },
+    {
+      "key": "expedition_restored_garden_20261020",
+      "job_id": "edbc991d-5b1f-4138-ba1b-e69b5c8a63aa",
+      "status": "completed",
+      "model": "gpt_image_2_5",
+      "quality": "high",
+      "resolution": "2k",
+      "aspect_ratio": "16:9",
+      "prompt": "Premium polished 3D animated educational adventure game key art, tactile hand-painted materials, soft dimensional forms, beautiful diffuse daylight, rich botanical detail, warm inviting forest green and cream palette with turquoise water and restrained gold accents, crisp readable silhouette, subtle depth of field, no lettering, no words, no numbers, no interface panels, no watermark. Children aged 8 to 10. Use only the single guide character identity in the supplied reference, preserving exact round cream face, giant brown glossy eyes, green leaf-fringe, rosy cheeks, green leaf hood with one leaf at top, green leaf cape, cream tunic and green boots, brown satchel. Only ONE character in the scene, no clones or companions. Wide triumphant final reward scene of a fully restored botanical research garden at golden morning sunlight. A warm sunlit pathway leads from foreground to a flourishing round central greenhouse. Three beautiful separated habitats form an inviting garden around it: at left a clear pond with natural floating plants and blue water, in center a healthy green meadow and a leafy tree with a wooden observation bench, at right a small well-drained sandy rock garden with aloe and hardy plants. Beautiful newly repaired wooden bridges and glass observation lamps. Five subtle golden leaf-shaped glints rise around the central garden as a celebration of discovery. The guide character stands in LEFT foreground, full body occupying only about 25 percent frame height, smiling and holding up one small glowing seedling in a terracotta pot proudly toward the viewer. Entire planted garden remains clearly visible. Rich dimensional vegetation and architecture, clear materials, magical joy through sunlight and fireflies. No humans, no animals, no trophy text, no certificate, no interface.",
+      "reference_media_ids": [
+        "1f1de6b5-18f3-42f1-bb39-5be22307f102"
+      ],
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_333gBCD57aH5O5VoXpTv3vOErGP/hf_20261020_141643_edbc991d-5b1f-4138-ba1b-e69b5c8a63aa.png",
+      "purpose": "최종 보상·아웃트로용 복구 정원. 참조한 리피가 직접 등장",
+      "files": [
+        {
+          "path": "assets/generated/expedition_restored_garden_20261020.png",
+          "bytes": 7258362,
+          "sha256": "62644b1bea634068aff4c3c2de32497f86f03c83611f932e9552a854d34057e2",
+          "width": 2688,
+          "height": 1520,
+          "format": "png",
+          "hasAlpha": false
+        },
+        {
+          "path": "assets/generated/expedition_restored_garden_20261020.webp",
+          "bytes": 461946,
+          "sha256": "0b1f5afb4d4bfb4910590d2d95bab48a49364eb2dc56f7a5d22d7b4817d746be",
+          "width": 1600,
+          "height": 905,
+          "format": "webp",
+          "hasAlpha": false
+        }
+      ],
+      "processing": "원본 PNG 보관, sharp로 폭 1600px 이하 WebP quality 87 변환. 구도·색 변경 없음.",
+      "visual_review": {
+        "status": "passed",
+        "checks": [
+          "한 명의 리피 정체성 유지",
+          "정원·물가·건조 구역 구분",
+          "보상 화분·복구 정원 확인"
+        ]
+      }
+    },
+    {
+      "key": "expedition_leafy_sheet_20261020",
+      "job_id": "4f11c6f1-6c24-4093-ab2c-c5e3c638a409",
+      "status": "completed",
+      "reference_media_ids": [
+        "1f1de6b5-18f3-42f1-bb39-5be22307f102"
+      ],
+      "quality": "high",
+      "resolution": "2k",
+      "aspect_ratio": "16:9",
+      "purpose": "인트로·아웃트로 영상용 캐릭터 일관성 3패널 시트",
+      "prompt": "Create a precise three-panel character consistency sheet based only on the supplied character reference. Preserve this EXACT cute leaf-hooded guide identity: soft round cream face, huge glossy dark brown eyes, small green leaf fringe, rosy cheeks, green leaf hood with a single long leaf sprouting from top, layered green leaf shoulder cape, cream tunic and round green boots. Premium soft dimensional 3D children's game rendering with smooth tactile detail, matching the reference's proportions and green colors. The sheet has EXACTLY THREE equal-width vertical panels on a plain warm ivory background. Panel 1 LEFT: full FRONT outfit BODY ONLY on a headless mannequin, from collar to green boots, do not draw any head, face, leaf hood or neck above collar. Preserve cloak, tunic and shoes, no satchel or tools. Panel 2 MIDDLE: full BACK view of the complete character including green hood and leaf top, cloak and boots. Panel 3 RIGHT: large FACE CLOSE-UP with hood framing face, preserve eyes, leaf fringe, mouth and cheeks, cropped at shoulders. Three views of the same single identity, not three different people. Exactly three panels, no side view, no extra pose, no spare face, no objects, no props, no bag, no palette, no color swatches, no hex codes, no captions, no letters, no numbers, no watermark. Plenty of clean margin around every view.",
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_333gBCD57aH5O5VoXpTv3vOErGP/hf_20261020_141332_4f11c6f1-6c24-4093-ab2c-c5e3c638a409.png",
+      "files": [
+        {
+          "path": "assets/generated/expedition_leafy_sheet_20261020.png",
+          "bytes": 3813689,
+          "sha256": "cc280601775abe71509ad910ee1c89366d1c572b5209f461862df2465f3cea39",
+          "width": 2688,
+          "height": 1520,
+          "format": "png",
+          "hasAlpha": false
+        },
+        {
+          "path": "assets/generated/expedition_leafy_sheet_20261020.webp",
+          "bytes": 124190,
+          "sha256": "2137e470f5394e6b4788cd2485e2129ed4a4298c5abe05ac41112931b9833553",
+          "width": 1920,
+          "height": 1086,
+          "format": "webp",
+          "hasAlpha": false
+        }
+      ],
+      "processing": "원본 PNG 보관, sharp로 폭 1920px 이하 축소 후 WebP quality 88. 자르기·색변경·배경제거 없음.",
+      "visual_review": {
+        "status": "passed",
+        "checks": [
+          "정확히 3개 패널",
+          "정면은 머리 없는 몸·의상·신발",
+          "중앙은 전신 후면",
+          "오른쪽은 얼굴 클로즈업",
+          "추가 인물·측면·소품·팔레트·글자 없음",
+          "기존 리피의 얼굴·잎 모자·의상 형태 유지"
+        ]
+      }
+    }
+  ],
+  "notes": [
+    "기존 프로젝트 이미지 3개는 읽기만 했으며 덮어쓰지 않음.",
+    "첫 참조 업로드 시도는 네트워크 차단·자동승인검토 거절로 전송되지 않았고, 사용자 명시 승인 후 다시 전송함.",
+    "앞선 무참조 6장 생성 호출은 도구에서 aborted로 반환됨. 사용자가 '생성 이력 확인해'라고 승인한 후 최근 이력 1페이지를 확인하여 완료한 4개 job을 회수했고, 미접수한 수조·정원 2개만 추가 생성함. 중복 생성하지 않음.",
+    "6개 본 이미지가 모두 완료된 후 정확히 1개 show_generation_by_ids 갤러리로 표시함. 별도 생성한 캐릭터 시트는 기존 자동 widget만 사용함.",
+    "생성 과학 그림은 관찰을 돕는 단순화 교육 모형이며 실제 현미경 사진이나 과학적 증거 자체가 아님.",
+    "영상은 생성하지 않음."
+  ]
+}

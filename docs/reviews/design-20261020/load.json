@@ -1,0 +1,24 @@
+{
+  "appRendered": true,
+  "viewport": {
+    "width": 1248,
+    "height": 500
+  },
+  "loadMs": 203,
+  "domReadyMs": 106,
+  "readyAndFontsMs": 239,
+  "paint": [
+    {
+      "name": "first-paint",
+      "ms": 108
+    },
+    {
+      "name": "first-contentful-paint",
+      "ms": 108
+    }
+  ],
+  "requestCount": 30,
+  "transferBytes": 1396230,
+  "encodedBytes": 1387230,
+  "external": []
+}

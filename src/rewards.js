@@ -10,6 +10,8 @@ export const REWARDS = [
   {asset:'reward_garden',name:'나의 연구정원',title:'네가 만든 정원이 생겼어!',why:'이제 나는 식물이 사는 환경에 맞게 정원을 꾸밀 수 있어.',next:'정원 탐험에 가져갈 가방도 직접 발명해 볼까?',x:80,y:48},
   {asset:'reward_workshop',name:'발명 공방',title:'우리의 탐험 가방이 완성됐어!',why:'이제 나는 식물의 특징을 본떠 물건을 만들고 시험할 수 있어.',next:'완성한 가방을 연구 기록에 남기자. 빛씨앗 5개가 모이면 그린코어를 깨울 수 있어!',x:85,y:13},
 ];
+export function nextMapMission(state){return MISSIONS.findIndex((_,i)=>!missionDone(state,i)&&openMission(state,i));}
+export function mapPrerequisite(state,i){return MISSIONS.findIndex((_,n)=>n<i&&!missionDone(state,n));}
 // Two stamps of equal standing: both are praise, neither is a grade.
 export const STAMPS={direct:{name:'한 번에 찾았어',icon:'spark',desc:'근거를 보고 바로 찾았어.'},fixed:{name:'고쳐서 찾았어',icon:'rotate',desc:'헛다리를 단서 삼아 스스로 고쳤어.'}};
 export const stampBadges=(state,i)=>missionStamps(state,i).map(k=>`<span class="stamp-badge ${k}" title="${STAMPS[k].desc}">${assetImage('stamp_'+k,'stamp-img')}<span>${STAMPS[k].name}</span></span>`).join('');
@@ -30,14 +32,16 @@ export function themePicker(state){
 
 export function worldMap(state,current=-1,recent=-1,interactive=true){
   const flowers=canChooseGardenTheme(state),theme=THEMES[state.gardenTheme]||THEMES.pink;
+  const next=nextMapMission(state);
   return `<div class="island-map ${flowers?'has-flowers':''} ${state.finished?'world-awake':''}" style="--flower-color:${theme.color}" aria-label="${rewardCount(state)}개 장소가 깨어난 초록정원">${assetImage('map_trail_v2','island-ground',true)}
     ${REWARDS.map((r,i)=>{
       const done=missionDone(state,i),available=openMission(state,i),stamps=missionStamps(state,i),label=`${i+1}. ${r.name} ${done?'복구 완료':available?'탐구 가능':'아직 잠김'}${stamps.map(k=>' · '+STAMPS[k].name+' 스탬프').join('')}`;
-      const body=`${assetImage(r.asset,'world-building')}<span class="world-label"><b>${done?icon('check',15):available?i+1:icon('lock',14)}</b>${r.name}${stamps.map(k=>`<i class="world-stamp ${k}" aria-hidden="true">${assetImage('stamp_'+k,'stamp-img')}</i>`).join('')}</span>${done?`<span class="world-light" aria-hidden="true">${icon('spark',16)}</span>`:''}`;
-      const attrs=`class="world-node ${done?'restored':'sleeping'} ${current===i?'chosen':''} ${recent===i?'just-restored':''}" style="left:${r.x}%;top:${r.y}%"`;
-      return interactive?`<button ${attrs} data-action="map-select" data-id="${i}" ${available?'':`aria-disabled="true" data-reason="${REWARDS[i-1]?.name}을 깨우면 열려."`} aria-label="${label}">${body}</button>`:`<div ${attrs} role="img" aria-label="${label}">${body}</div>`;
+      const body=`${assetImage(r.asset,'world-building')}<span class="world-label"><b>${done?icon('check',15):i+1}</b><span>${r.name}${interactive?`<small>${done?'탐구 완료':!available?icon('lock',12)+' 잠겨 있어':state.adminUnlocked?'미리보기':i===next?'다음 탐구':'다시 탐구'}</small>`:''}</span>${stamps.map(k=>`<i class="world-stamp ${k}" aria-hidden="true">${assetImage('stamp_'+k,'stamp-img')}</i>`).join('')}</span>${done?`<span class="world-light" aria-hidden="true">${icon('spark',16)}</span>`:''}${interactive&&i===next?'<span class="world-next">여기부터!</span>':''}`;
+      const position=interactive?`--stage-x:${r.x}%;--stage-y:${i===REWARDS.length-1?20:r.y}%`:`left:${r.x}%;top:${r.y}%`;
+      const attrs=`class="world-node ${done?'restored':'sleeping'} ${available?'available':'locked'} ${i===next?'next-stop':''} ${current===i?'chosen':''} ${recent===i?'just-restored':''}" style="${position}"`;
+      return interactive?`<button ${attrs} data-action="map-select" data-id="${i}" ${i===next?'aria-current="step"':''} ${available?'':`aria-disabled="true" data-reason="${REWARDS[mapPrerequisite(state,i)]?.name}을 깨우면 열려."`} aria-label="${label}">${body}</button>`:`<div ${attrs} role="img" aria-label="${label}">${body}</div>`;
     }).join('')}
-    ${interactive?`<div class="map-explorer" style="left:${REWARDS[Math.min(4,rewardCount(state))].x-8}%;top:${REWARDS[Math.min(4,rewardCount(state))].y+4}%">${assetImage('mascot_leaf')}<span>여기로 가자!</span></div>`:''}<div class="world-core ${rewardCount(state)===5?'charged':''}">${icon('leaf',27)}<span>${state.finished?'깨어난 정원':`${rewardCount(state)} / 5`}</span></div>
+    <div class="world-core ${rewardCount(state)===5?'charged':''}">${icon('leaf',27)}<span>${state.finished?'깨어난 정원':`${rewardCount(state)} / ${MISSIONS.length}`}</span></div>
     ${flowers?`<div class="world-flowers" aria-hidden="true">${[[12,57],[18,66],[39,88],[48,83],[85,61],[71,22],[34,21],[54,87]].map(([x,y],i)=>`<span style="left:${x}%;top:${y}%;transform:rotate(${i*23}deg)">✿</span>`).join('')}</div>`:''}
   </div>`;
 }

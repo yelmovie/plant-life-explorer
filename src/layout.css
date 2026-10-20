@@ -1,0 +1,718 @@
+/* Scene composition, 2026-10-20. This file owns screen geometry, scene lighting,
+   expedition controls and responsive behaviour. Component fundamentals and
+   self-hosted fonts remain in polish.css; map coordinates remain in stage-map.css. */
+:root {
+  --hud-edge: 16px;
+  --hud-size: 48px;
+  --hud-top: 80px;
+  --frame-gap: 16px;
+  --frame-footer: 72px;
+  --frame-guide: clamp(128px, 12vw, 164px);
+  --frame-text: clamp(18px, 1.45vw, 22px);
+  --frame-title: clamp(25px, 2.2vw, 36px);
+  --frame-paper: #fffcef;
+  --frame-tint: transparent;
+  --frame-outline: #657452;
+  --scene-ink: #203e2e;
+  --scene-gold: #d4a74c;
+  --scene-gold-soft: #fff1bd;
+  --scene-shadow: 0 6px 0 #384b2d30, 0 14px 28px #27392724;
+  --scrim-bg: linear-gradient(180deg, #152c2012, transparent 24%, transparent 72%, #1830252b);
+}
+
+html, body { min-height: 100%; }
+#app { position: relative; min-height: 100dvh; }
+#app .topbar {
+  position: absolute; inset: 0 0 auto; z-index: 20;
+  height: var(--hud-top); min-height: 0; padding: var(--hud-edge);
+  align-items: flex-start; pointer-events: none;
+  background: none; border: 0; box-shadow: none;
+}
+#app .topbar :is(.header-left, .page-navigation, .header-tools) { gap: 8px; }
+#app .topbar :is(.page-navigation, .header-tools) { pointer-events: auto; }
+#app .topbar .header-tools { margin-left: auto; }
+#app .water-paths text { font-size: 26px; }
+body .toast { pointer-events: none; }
+#app .topbar .icon-btn {
+  width: var(--hud-size); height: var(--hud-size); min-width: var(--hud-size);
+  min-height: var(--hud-size); padding: 0; background: var(--frame-paper);
+  border: 2px solid var(--frame-outline); border-radius: 16px;
+  color: var(--color-primary); box-shadow: 0 4px 0 #34492d;
+}
+#app .topbar .icon-btn svg { width: 24px; height: 24px; }
+#app .topbar .icon-btn:hover { background: #f1f4d9; transform: translateY(-1px); }
+#app .topbar .icon-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #34492d; }
+#app .topbar :is(.wordmark, .subject) { display: none; }
+
+/* The painting reaches behind every floating control. */
+#app :is(.home, .home-scene, .stage-map) {
+  width: 100%; height: 100dvh; min-height: 0; max-width: none;
+  margin: 0; border: 0; border-radius: 0;
+}
+#app .home-scene { min-height: 0; }
+#app .home-scene::after { background: linear-gradient(90deg,#fffceee8 0%,#fffceed9 26%,#fffcee85 43%,transparent 65%); }
+#app .home-copy {
+  width: 53%; max-width: 760px;
+  padding: max(var(--hud-top), 10vh) 0 0 6%;
+}
+#app .hero-logo { max-width: 650px; width: 100%; height: auto; aspect-ratio: 2.8; margin: 0 0 12px; }
+#app .home-copy > p { font-size: clamp(24px, 2.1vw, 34px); line-height: 1.55; margin-top: 0; }
+#app .home-copy > p, #app .home-actions > span { color: #264b36; text-shadow: 0 1px 0 #fffdf5; }
+#app .home-copy > p strong { font-size: 1.13em; }
+#app .home-actions { gap: 14px; margin-top: 24px; }
+#app .home-actions .jumbo { min-height: 64px; padding-inline: 28px; font-size: clamp(22px, 1.8vw, 28px); }
+#app .home-actions > span { max-width: 26em; font-size: var(--frame-text); }
+#app .hero-friends { right: 6%; bottom: 7%; filter: drop-shadow(0 10px 6px #243d3c45); }
+#app .hero-friends .mascot-wrap.large { width: clamp(130px, 13vw, 230px); height: clamp(170px, 18vw, 300px); }
+#app .home .hero-friends .mascot-wrap.large { width: clamp(160px,17vw,250px); height: clamp(220px,23vw,340px); }
+
+#app .exploration-activity {
+  position: relative; width: 100%; height: 100dvh; min-height: 0; max-width: none;
+  margin: 0; padding: var(--hud-top) var(--frame-gap) 0;
+  display: grid; grid-template-columns: var(--frame-guide) minmax(0, 1fr);
+  grid-template-rows: 60px minmax(0, 1fr) var(--frame-footer);
+  gap: 8px var(--frame-gap); overflow: hidden;
+}
+#app .field-guide {
+  position: static; grid-column: 1; grid-row: 2; min-height: 0; padding: 12px 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 12px;
+}
+#app .field-guide h1 {
+  position: absolute; top: var(--hud-edge); left: 150px; right: 150px;
+  width: fit-content; max-width: calc(100% - 300px); margin: 0 auto;
+  font-size: var(--frame-title); line-height: 1.3; text-align: center;
+  color: var(--scene-ink); background: var(--frame-paper); border: 1px solid #fffaf0;
+  border-radius: 16px; padding: 8px 18px; box-shadow: 0 4px 0 #3c4f3530;
+}
+#app .field-guide :is(.guide-progress, .guide-tools) { display: none; }
+#app .guide-mascot { order: 2; height: clamp(136px, 22vh, 230px); width: 100%; max-width: 176px; filter: drop-shadow(0 8px 5px #203e3240); }
+#app .guide-bubble {
+  position: relative; width: 100%; margin: 0; padding: 14px 12px; font-size: var(--frame-text); line-height: 1.5;
+  color: var(--scene-ink); background: var(--frame-paper); border: 2px solid #879f70;
+  border-radius: 20px 20px 20px 5px; box-shadow: 0 5px 0 #526c3b25;
+}
+#app .guide-bubble::after { content: ''; position: absolute; left: 28px; bottom: -12px; width: 16px; height: 16px; background: var(--frame-paper); border-right: 2px solid #879f70; border-bottom: 2px solid #879f70; transform: skewY(-25deg) rotate(45deg); }
+#app .guide-partner { order: 3; padding: 4px 10px; color: var(--scene-ink); background: var(--frame-paper); border-radius: 999px; font-family: var(--font-display); font-size: 16px; white-space: nowrap; }
+#app .field-guide .miss-note { margin: 0; padding: 4px 8px; background: var(--frame-paper); border-radius: 8px; }
+#app .exploration-activity > .learning-layout {
+  grid-column: 2; grid-row: 2; height: 100%; min-height: 0;
+  margin: 0; align-items: start;
+}
+#app .exploration-activity .learning-scene {
+  height: 100%; min-height: 0; padding: 8px 12px;
+  background: transparent; border: 0;
+  border-radius: 0; box-shadow: none; gap: 10px;
+  overflow: auto; overscroll-behavior: contain; scrollbar-width: thin;
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+}
+#app .exploration-activity :is(.design-layout, .test-layout) { grid-template-columns: minmax(0,1fr) clamp(240px, 24vw, 340px); gap: var(--frame-gap); }
+#app .exploration-activity :is(.design-layout, .test-layout) > .learning-note {
+  height: auto; min-height: 0; max-height: 100%; overflow: auto; padding: 18px;
+  background: rgb(255 253 241 / .88); border: 1px solid #fffdf0;
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+}
+#app .exploration-activity .learning-scene :is(.btn, .sort-bin, .specimen-pick, .plant-card) { font-size: var(--frame-text); }
+#app .exploration-activity .learning-scene .btn { min-height: 48px; padding: 10px 14px; }
+#app .exploration-activity .learning-note p { font-size: var(--frame-text); line-height: 1.5; }
+#app .exploration-activity :is(.direct-hint, .chain-title, .season-caption, .rule-result, .evidence-bridge) { font-size: var(--frame-text); line-height: 1.4; }
+#app .exploration-activity .learning-footer {
+  position: static; grid-column: 1 / -1; grid-row: 3;
+  min-height: 0; width: 100%; padding: 10px 0 16px; margin: 0;
+  background: none; border: 0; box-shadow: none;
+}
+#app .learning-footer > .activity-route { display: none; }
+#app .learning-footer > div { display: flex; justify-content: flex-start; width: 100%; gap: 12px; }
+#app .learning-footer > div > .primary { margin-left: auto; }
+#app .exploration-activity .learning-footer .btn { min-height: 48px; font-size: var(--frame-text); white-space: nowrap; }
+#app .learning-footer .btn:not(.primary) { background: var(--frame-paper); border-color: #a9b99a; }
+
+/* One visible journey: do the mission, explain the discovery, use the reward. */
+#app .mission-journey-root {
+  grid-column: 1 / -1; grid-row: 1; display: flex; align-items: stretch;
+  width: fit-content; max-width: 100%; gap: 6px; margin: 0 auto;
+  padding: 4px; border: 1px solid #e4e8ce; border-radius: 18px;
+  background: var(--frame-paper); box-shadow: 0 4px 0 #3a4f2f2b;
+}
+#app .mission-step {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 48px; min-width: 48px; padding: 8px 16px;
+  border: 0; border-radius: 13px; background: transparent; color: #637259;
+  font: 18px/1.25 var(--font-display); word-break: keep-all;
+}
+#app .mission-step b { display: grid; place-items: center; width: 28px; height: 28px; flex-shrink: 0; border-radius: 50%; background: #e8eacb; font-weight: 400; }
+#app .mission-step.active { background: #2d5a3d; color: #fffced; box-shadow: 0 3px 0 #173824; }
+#app .mission-step.active b { background: #cbe6a4; color: #26462e; }
+#app .mission-step.done:not(.active) { color: #2e5d3d; background: #eef3d9; }
+#app .mission-step:focus-visible { outline: 3px solid #d4a74c; outline-offset: 2px; }
+#app .field-mission-view .learning-scene { padding: 0; justify-content: stretch; overflow: auto; }
+#app .field-mission-view .field-layout { display: block; }
+#app .field-mission-view .field-layout > .learning-scene { display: block; padding: 0 8px 8px; }
+#app .field-mission { display: flex; min-height: 100%; flex-direction: column; gap: 10px; padding-bottom: 6px; }
+#app .field-mission .mission-journey { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 6px; flex-shrink: 0; }
+#app .field-mission .mission-step { min-height: 48px; padding: 7px 12px; background: #fffceee8; font-size: 18px; }
+#app .field-mission .mission-step.active { background: #2d5a3d; }
+#app .mission-objective { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 18px; background: var(--frame-paper); border-radius: 16px; color: var(--scene-ink); box-shadow: 0 4px 0 #42503525; }
+#app .mission-objective > span { font: 22px/1.4 var(--font-display); }
+#app .mission-objective > small { font-size: 16px; color: #66704f; }
+#app .mission-workspace { position: relative; min-height: 240px; flex: 1; }
+#app .mission-tool { min-height: 56px; min-width: 56px; padding: 10px 16px; border: 2px solid #9aa77a; border-radius: 16px; color: var(--scene-ink); background: var(--frame-paper); box-shadow: 0 4px 0 #657452; font: 20px/1.3 var(--font-display); }
+#app .mission-tool.selected { background: #e2edbd; border-color: #3d663f; }
+#app .mission-feedback { padding: 10px 16px; background: var(--frame-paper); border-left: 5px solid #d4a74c; border-radius: 12px; color: var(--scene-ink); font-size: var(--frame-text); }
+#app .mission-feedback.success { background: #edf6d9; border-color: #507b44; }
+:is(#app,body) .mission-loot { display: flex; align-items: center; gap: 8px; padding: 10px 14px; color: #6a4c1c; background: var(--scene-gold-soft); border: 1px solid #d4b974; border-radius: 12px; font-size: 18px; }
+:is(#app,body) .mission-loot > img { width: 64px; height: 72px; object-fit: contain; flex-shrink: 0; }
+#app .field-tools { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 12px; padding: 6px 4px; }
+#app .field-tools > .microcopy { flex: 0 1 auto; max-width: 30em; }
+#app .field-token { touch-action: none; user-select: none; -webkit-user-select: none; cursor: grab; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+#app .field-token:active { cursor: grabbing; transform: translateY(3px); box-shadow: 0 1px 0 #657452; }
+#app .field-token.selected { outline: 3px solid #f0c75a; outline-offset: 2px; }
+#app .field-target { position: relative; min-height: 52px; min-width: 48px; border: 2px dashed #7d9460; padding: 12px 16px; border-radius: 18px; background: #fffcf0ed; color: var(--scene-ink); font: 18px/1.4 var(--font-body); transition: background .16s, transform .16s, border-color .16s; }
+#app .field-target:hover { background: #f2f7dc; }
+#app .field-target:focus-visible { outline: 3px solid #b88a27; outline-offset: 3px; }
+#app .field-drag-over { background: #eef9c5; border-color: #365f36; border-style: solid; transform: scale(1.025); box-shadow: 0 0 0 5px #eff7cb70; }
+#app .field-target > strong { display: block; font: 22px/1.35 var(--font-display); }
+#app .field-leaf-tray { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); align-items: stretch; gap: 16px; }
+#app .field-specimen { position: relative; min-width: 0; padding: 8px; text-align: center; }
+#app .field-specimen > h3 { display: inline-block; padding: 5px 16px; border-radius: 999px; background: var(--frame-paper); font-size: 22px; box-shadow: 0 3px 0 #778b4b30; }
+#app .field-leaf-picture { width: 100%; height: 165px; object-fit: contain; overflow: visible; filter: drop-shadow(0 9px 5px #223f342e); }
+#app .field-leaf-picture .leaf-veins { fill: none; stroke: #dce7ad; stroke-width: 3px; opacity: .8; }
+#app .field-specimen > .field-leaf-picture { height: clamp(150px,23vh,230px); }
+#app .field-specimen > p { font-size: 18px; line-height: 1.4; background: #fffceee8; border-radius: 12px; padding: 5px 8px; }
+#app .field-hotspots { display: flex; justify-content: center; gap: 6px; padding: 6px 0; }
+#app .field-hotspot { min-height: 48px; padding: 7px 9px; border-color: #8b792e; background: #fff5cf; border-radius: 14px; font: 18px/1.25 var(--font-display); }
+#app .field-magnified { display: grid; grid-template-columns: 64px minmax(0,1fr); align-items: center; min-height: 64px; gap: 8px; margin-top: 8px; padding: 5px 8px; background: #f6fbdf; border: 2px solid #bdcda0; border-radius: 14px; text-align: left; }
+#app .field-magnified .field-leaf-picture { height: 64px; transform: scale(1.15); }
+#app .field-magnified strong { font-size: 16px; font-weight: 700; }
+#app .field-leaf-token { flex-direction: column; padding: 6px 20px; font-size: 18px; }
+#app .field-leaf-token .field-leaf-picture { width: 90px; height: 88px; }
+#app .field-sort-bins { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; margin: 10px 0; }
+#app .field-sort-bin { min-height: 132px; background: #fffce8eb; box-shadow: inset 0 -6px 0 #ccb77d33,0 5px 0 #65745230; }
+#app .field-sort-bin > span { display: block; margin-top: 10px; }
+#app .field-bin-content { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
+#app .field-sort-bin > .field-bin-content { display: flex; }
+#app .field-bin-content > span { display: flex; flex-direction: column; align-items: center; font-size: 18px; }
+#app .field-bin-content .field-leaf-picture { height: 76px; width: 88px; }
+#app .field-season-pairs { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; }
+#app .field-season-pair { min-width: 0; }
+#app .field-season-pair > h3 { width: fit-content; margin: 0 auto 8px; padding: 4px 16px; border-radius: 999px; background: var(--frame-paper); font-size: 22px; }
+#app .field-season-images { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
+#app .field-season-images > div { display: flex; flex-direction: column; align-items: stretch; gap: 8px; min-width: 0; }
+#app .field-season-images :is(svg,.season-atlas) { width: 100%; height: 165px; object-fit: contain; }
+#app .field-season-images .field-token { font-size: 18px; padding: 8px; }
+#app .field-link-targets { display: grid; gap: 8px; }
+#app .field-link-targets .field-target { padding: 8px; }
+#app .field-frame-tray, #app .field-timeline { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; }
+#app .field-frame-tray { margin-bottom: 16px; }
+#app .field-frame { display: flex; flex-direction: column; align-items: center; padding: 8px; gap: 8px; font-size: 18px; background: #fffced; border-radius: 14px; box-shadow: 0 5px 0 #c0c9a3; }
+#app .field-frame :is(svg,.season-atlas), #app .field-time-slot :is(svg,.season-atlas) { width: 100%; height: 115px; min-height: 0; object-fit: contain; }
+#app .field-time-slot { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; min-height: 158px; }
+#app .field-time-slot > b { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: #e3eac7; font: 20px/1 var(--font-display); }
+#app .field-bud-picture { max-width: 100%; }
+#app .field-float-model { width: 140px; height: 105px; filter: drop-shadow(0 7px 4px #244a3c22); }
+#app .field-model-token { flex-direction: column; font-size: 18px; gap: 0; padding: 6px 20px; }
+#app .field-model-token .field-float-model { width: 115px; height: 80px; }
+#app .field-tank-drop { display: block; width: 100%; padding: 0; overflow: hidden; border: 2px dashed #347285; background: transparent; }
+#app .field-tank { position: relative; width: 100%; min-height: 215px; border: 3px solid #d5efe5; border-top: 12px solid #e6f8ef; border-radius: 22px 22px 32px 32px; overflow: hidden; background: linear-gradient(#d6eff2aa 0 26%,#6ac6d4cc 26% 80%,#4c9dacc7); box-shadow: inset 0 0 32px #ffffff80,0 9px 0 #34686b35; }
+#app .field-tank::before { content: ''; position: absolute; left: 0; right: 0; top: 26%; height: 3px; background: #e2faff; }
+#app .field-tank-model { position: absolute; display: flex; flex-direction: column; align-items: center; width: 40%; }
+#app .field-tank-model.is-floating { left: 8%; top: 4%; animation: float-model-bob 3s ease-in-out infinite; }
+#app .field-tank-model.is-sinking { right: 8%; bottom: 8%; }
+#app .field-tank-model .field-float-model { height: 100px; }
+#app .field-tank-model > span { padding: 3px 10px; font-size: 18px; line-height: 1.4; background: var(--frame-paper); border-radius: 999px; white-space: nowrap; }
+#app .field-water-line { position: absolute; top: 8px; left: 14px; font: 18px/1.3 var(--font-display); color: #255461; }
+#app .field-restoration { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 16px; margin: 8px 0 14px; }
+#app .field-garden-zone { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-height: 240px; padding: 14px; border: 2px solid #a1a76b; border-radius: 22px 22px 40px 40px; box-shadow: inset 0 -10px 0 #6d795533,0 7px 0 #6b7a5435; }
+#app .field-garden-zone.zone-pond { background: linear-gradient(#e0f1e9,#99d0d2); }
+#app .field-garden-zone.zone-meadow { background: linear-gradient(#eef2d8,#c4db94); }
+#app .field-garden-zone.zone-ridge { background: linear-gradient(#f9edcf,#e3c79a); }
+#app .field-garden-zone > strong { font: 18px/1.4 var(--font-body); }
+#app .field-zone-name { padding: 4px 14px; margin: 10px 0; background: #fffcef; border-radius: 999px; font-family: var(--font-display); }
+#app .field-garden-zone > :is(img,svg) { flex: 1; width: 100%; height: 115px; min-height: 0; object-fit: contain; filter: drop-shadow(0 7px 5px #3548272e); }
+#app .field-plant-space { display: grid; align-items: center; flex: 1; min-height: 96px; color: #59664d; border: 2px dashed #70875e70; border-radius: 50%; padding: 10px; }
+#app .field-plant-token { flex-direction: column; gap: 0; font-size: 18px; padding: 5px 18px; }
+#app .field-plant-token :is(img,svg) { width: 100px; height: 85px; object-fit: contain; }
+#app .field-bag-parts { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; padding: 10px; background: #fffcf0ed; border-radius: 18px; }
+#app .field-bag-parts > div { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+#app .field-bag-parts > div > strong { font: 20px/1.35 var(--font-display); text-align: center; }
+#app .field-bag-parts .field-token { min-height: 48px; padding: 9px; font-size: 18px; }
+#app .field-bag-assembly { display: grid; grid-template-columns: minmax(180px,1fr) minmax(240px,1fr); align-items: center; gap: 16px; margin: 12px 0; }
+#app .field-bag-assembly > :is(img,svg,.bag-art) { width: 100%; height: 235px; object-fit: contain; filter: drop-shadow(0 9px 5px #2c453f40); }
+#app .field-bag-assembly > div:last-child { display: grid; gap: 10px; }
+#app .field-bag-assembly .bag-product, #app .field-trial-card .bag-product { width: 100%; height: 100%; object-fit: contain; }
+#app .mission-4 .mission-workspace:has(> .field-bag-parts) { display: grid; grid-template-columns: minmax(0,1.25fr) minmax(270px,1fr); align-items: start; gap: 16px; }
+#app .mission-4 .field-request { display: none; }
+#app .mission-4 .field-bag-parts { grid-column: 2; grid-row: 1; grid-template-columns: 1fr; padding: 12px; gap: 14px; }
+#app .mission-4 .field-bag-parts > div { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+#app .mission-4 .field-bag-parts > div > strong { grid-column: 1 / -1; }
+#app .mission-4 .field-bag-assembly { grid-column: 1; grid-row: 1; display: grid; grid-template-columns: 1fr; margin: 0; gap: 10px; }
+#app .mission-4 .field-bag-assembly > div:last-child { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 8px; }
+#app .mission-4 .field-part-slot { min-width: 0; min-height: 100px; padding: 8px; text-align: center; }
+#app .mission-4 .field-part-slot > strong { font-size: 20px; }
+#app .mission-4 .field-part-slot > span { font-size: 16px; }
+#app .mission-4 .mission-workspace > :is(.btn,.field-trials,.microcopy) { grid-column: 1 / -1; }
+#app .field-part-slot { text-align: left; padding: 12px 16px; }
+#app .field-part-slot > span { display: block; font-size: 18px; margin-top: 4px; }
+#app .field-trials { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; margin: 12px 0; }
+#app .field-trial-card { padding: 14px; border: 1px solid #d7d8b4; border-radius: 18px; background: #fffcefee; }
+#app .field-trial-card h4 { font-size: 20px; margin: 0 0 8px; color: #31563a; }
+#app .field-trial-card > :is(img,svg,.bag-art) { width: 100%; height: 135px; object-fit: contain; }
+#app .field-trial-card p { font-size: 18px; line-height: 1.45; }
+#app .field-trial-card > small { display: block; font-size: 16px; margin-top: 8px; }
+#app .field-request { width: fit-content; padding: 9px 16px; background: #fff1c7; border-radius: 14px; font-size: 20px; font-family: var(--font-display); margin-bottom: 10px; }
+#app .field-mission > .mission-feedback { display: flex; align-items: center; gap: 12px; flex-shrink: 0; padding: 6px 16px 6px 8px; }
+#app .field-leafy { width: 46px; height: 58px; object-fit: contain; flex-shrink: 0; }
+#app .field-mission > .mission-feedback p { font-size: 18px; line-height: 1.45; margin: 0; }
+#app .field-mission > .btn { align-self: flex-end; }
+#app .field-mission .microcopy { width: fit-content; max-width: 100%; font-size: 16px; line-height: 1.4; padding: 5px 10px; margin: 3px 0; background: #fffcefe8; border-radius: 10px; }
+#app .field-access-help { align-self: flex-end; }
+#app .field-access-help > summary { display: flex; align-items: center; padding: 6px 10px; min-height: 48px; cursor: pointer; }
+#app .field-access-help[open] > summary { margin-bottom: 6px; }
+@keyframes float-model-bob { 50% { transform: translateY(5px); } }
+@media (prefers-reduced-motion: reduce) {
+  #app .field-tank-model.is-floating { animation: none; }
+  #app .field-target { transition: none; }
+}
+body .expedition-brief { display: grid; grid-template-columns: 140px minmax(0,1fr); align-items: center; gap: 24px; }
+body .brief-leafy { width: 140px; height: 200px; object-fit: contain; filter: drop-shadow(0 8px 5px #35523a25); }
+body .expedition-brief h3 { font-size: 26px; line-height: 1.35; }
+body .expedition-brief p, body .expedition-brief ol { font-size: 18px; line-height: 1.6; }
+body .expedition-brief ol { display: grid; gap: 8px; padding-left: 24px; }
+body .expedition-tool-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; margin-top: 16px; }
+body .expedition-tool { padding: 18px; display: grid; grid-template-columns: 64px minmax(0,1fr); align-content: start; column-gap: 14px; border: 2px solid #d8dfc0; border-radius: 20px; background: #f2f3e6; }
+body .expedition-tool > div { display: grid; place-items: center; grid-column: 1; grid-row: 1 / 4; }
+body .expedition-tool > div :is(img,svg) { width: 64px; height: 84px; object-fit: contain; }
+body .expedition-tool :is(h3,span,p) { grid-column: 2; margin: 0; }
+body .expedition-tool h3 { font-size: 22px; line-height: 1.35; }
+body .expedition-tool > span { margin: 5px 0; font-size: 16px; color: #697451; }
+body .expedition-tool p { font-size: 18px; line-height: 1.45; }
+body .expedition-tool.earned { border-color: #bf9c49; background: #fff4d1; box-shadow: 0 4px 0 #a3863c30; }
+body .expedition-tool.waiting > div { opacity: .45; filter: grayscale(.7); }
+body .expedition-loot { display: flex; align-items: center; gap: 20px; padding: 16px 20px; margin: 16px 0; background: #fff1c2; border: 2px solid #d0ae59; border-radius: 20px; }
+body .expedition-loot .loot-tool { width: 88px; height: 96px; display: grid; place-items: center; flex-shrink: 0; }
+body .loot-tool :is(img,svg) { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 4px 3px #84652d25); }
+body .expedition-loot h3 { font-size: 24px; margin: 0 0 5px; }
+body .expedition-loot p { margin: 4px 0; line-height: 1.5; }
+
+/* Short material trays, large scenes, readable answer targets. */
+#app .exploration-activity .specimen-tray { gap: 12px; }
+#app .exploration-activity .specimen-pick { width: clamp(130px, 14vw, 190px); min-height: 58px; padding: 4px 12px; }
+#app .exploration-activity .specimen-pick strong { font-size: var(--frame-text); }
+#app .exploration-activity .specimen-pick img { height: 48px; }
+#app .exploration-activity .feature-choices { display: flex; gap: 12px; }
+#app .exploration-activity .feature-choices .btn { flex: 1; }
+#app .exploration-activity .specimen-stage[data-spatial] { min-height: 140px; height: auto; flex: 1; margin: 0; }
+#app .exploration-activity .classify-leaves { min-height: 130px; max-height: 240px; margin: 0; }
+#app .exploration-activity .classify-leaves .plant-card { flex: 1; width: auto; min-width: 0; max-width: 240px; }
+#app .exploration-activity .classify-leaves img { min-height: 60px; height: 100%; max-height: 150px; }
+#app .exploration-activity .sort-bin { background: rgb(250 252 235 / .76); min-height: 100px; border: 2px dashed #778d5d; }
+#app .exploration-activity .sort-bin:focus-visible { background: #f4f9df; }
+#app .exploration-activity .reason-cards { gap: 10px; margin: 0; }
+#app .exploration-activity .reason-cards > p { font-size: var(--frame-text); line-height: 1.4; }
+#app .exploration-activity .season-scene { flex: 1; height: auto; min-height: 160px; max-height: none; margin: 0; }
+#app .exploration-activity .season-pair { flex: 1; min-height: 180px; max-height: none; }
+#app .exploration-activity .evidence-photo .season-atlas { min-height: 140px; }
+#app .exploration-activity .experiment-stage[data-spatial] { height: auto; min-height: 160px; max-height: none; flex: 1; margin: 0; }
+#app .exploration-activity .habitat-focus { min-height: 96px; max-height: 180px; }
+#app .exploration-activity .habitat-focus > img { max-height: 170px; }
+#app .exploration-activity .link-board { margin-block: 0; }
+#app .exploration-activity .link-board .btn { min-height: 64px; padding: 8px; }
+#app .exploration-activity .garden-frame[data-spatial] { min-height: 192px; height: auto; flex: 1; margin: 0; max-width: none; }
+#app .exploration-activity .garden-grid { height: 100%; max-height: 100%; aspect-ratio: auto; }
+#app .exploration-activity .garden-cell { height: auto; min-height: 48px; }
+#app .exploration-activity .compact-bag[data-spatial] { min-height: 160px; height: auto; max-height: none; flex: 1; }
+#app .exploration-activity .water-demo { min-height: 145px; height: auto; max-height: none; flex: 1; }
+#app .exploration-activity .spatial-controls button { min-width: 48px; min-height: 48px; padding: 6px 10px; }
+#app .exploration-activity .picture-parts { gap: 12px; }
+#app .exploration-activity .picture-parts legend { margin-bottom: 6px; }
+#app .exploration-activity .part-card { min-height: 90px; padding: 6px; }
+#app .exploration-activity .part-card strong { font-size: 18px; }
+#app .exploration-activity .part-card img { height: 56px; }
+
+/* The controller retains walking, scene scale and shared hit targets. */
+#app .stage-map-viewport { inset: 0; }
+#app .map-hud { inset: var(--hud-top) 24px auto; }
+#app .stage-map .map-title { padding: 12px 18px; background: var(--frame-paper); border-radius: 18px; border: 1px solid #f7edcb; box-shadow: var(--scene-shadow); }
+#app .stage-map .map-title h1 { margin: 0; font-size: clamp(23px, 2vw, 32px); }
+#app .stage-map .map-title p { font-size: 18px; margin-top: 4px; }
+#app .stage-map .map-seeds { position: absolute; top: calc(var(--hud-edge) - var(--hud-top)); right: calc(2 * var(--hud-size) + var(--hud-edge) + 8px); display: flex; align-items: center; gap: 12px; width: fit-content; max-width: none; padding: 4px 12px; margin-left: auto; background: var(--frame-paper); border: 1px solid #f7edcb; border-radius: 18px; box-shadow: var(--scene-shadow); pointer-events: auto; }
+#app .stage-map .seed-progress { flex-direction: row; gap: 10px; }
+#app .stage-map .seed-dot { width: 27px; height: 32px; }
+#app .stage-map .seed-progress strong { font-size: 18px; }
+#app .stage-map .map-progress-caption { display: none; }
+#app .stage-map .map-seeds > .btn { min-height: 48px; padding: 8px 10px; font-size: 18px; }
+#app .stage-map .map-bottom { left: var(--hud-edge); right: var(--hud-edge); bottom: var(--hud-edge); gap: 16px; align-items: flex-end; pointer-events: none; }
+#app .stage-map .map-bottom > * { pointer-events: auto; }
+#app .stage-map .world-node[data-id="0"] .world-label { bottom: calc(40px / var(--map-scale)); }
+#app .map-bottom .map-navigation { gap: 10px; padding: 10px; background: var(--frame-paper); border: 1px solid #fffdf0; border-radius: 20px; box-shadow: var(--scene-shadow); }
+#app .map-navigation-copy { max-width: 172px; }
+#app .map-navigation-copy strong { font-size: 18px; }
+#app .map-navigation-copy > span { display: none; }
+#app .map-navigation-copy .btn { min-height: 48px; font-size: 16px; padding: 8px 4px; }
+#app .map-next-card {
+  min-width: 0; max-width: 470px; padding: 12px 16px;
+  gap: 10px 16px; background: var(--frame-paper); box-shadow: var(--scene-shadow);
+  border-radius: 20px; border-color: #e1cc8c;
+}
+#app .map-next-card h2 { margin: 0; font-size: 24px; }
+#app .map-next-card p { display: block; max-width: 280px; font-size: 16px; line-height: 1.45; }
+#app .map-next-card > .btn { min-height: 56px; font-size: 18px; white-space: nowrap; padding: 12px 16px; }
+#app .map-next-card .map-eyebrow { font-size: 16px; }
+#app .map-extras { border: 0; padding: 0; }
+#app .map-extras .btn { min-height: 48px; font-size: 16px; }
+#app .stage-map .map-walker { width: calc(82px / var(--map-scale)); height: calc(112px / var(--map-scale)); }
+#app .stage-map .map-road polyline { stroke: #fff4b9; stroke-width: 7; stroke-dasharray: 1 24; opacity: .85; filter: drop-shadow(0 1px 1px #685225); }
+#app .stage-map .world-label { color: var(--scene-ink); background: var(--frame-paper); }
+#app .stage-map .world-label small { font-size: calc(14px / var(--map-scale)); }
+#app .stage-map .next-stop .world-label { background: #fff0b9; border-color: #a07a2e; }
+#app .stage-map .world-next { color: #fffcef; background: #2c593b; }
+#app .map-preview-note { top: var(--hud-top); bottom: auto; right: 16px; max-width: 50%; }
+
+#app :is(.tablet-report, .tablet-final, .ending) { height: 100dvh; min-height: 0; max-width: none; padding: var(--hud-top) 24px 16px; }
+#app :is(.tablet-report, .tablet-final) .page-heading { width: fit-content; max-width: calc(100% - 240px); align-self: center; text-align: center; padding: 8px 18px; margin: 0 auto; background: var(--frame-paper); }
+#app :is(.tablet-report, .tablet-final) .page-heading h1 { font-size: var(--frame-title); margin: 0; }
+#app :is(.tablet-report, .tablet-final) .page-heading p { font-size: var(--frame-text); margin-top: 4px; }
+#app .report-evidence { margin-top: 0; align-items: center; gap: 16px; }
+#app .tablet-report .report-card { min-height: 0; height: auto; max-height: 100%; padding: 20px 16px; background: rgb(255 253 241 / .92); }
+#app .tablet-report .report-card p { font-size: var(--frame-text); }
+#app .tablet-report .sharing-card { background: rgb(255 253 241 / .9); }
+#app .tablet-report .report-next { align-self: flex-end; padding-bottom: 6px; }
+#app .tablet-final .learning-layout { width: 100%; max-width: 1500px; margin: 0 auto; grid-template-columns: minmax(0, 1fr) minmax(260px, 34%); }
+#app .tablet-final .learning-scene { background: var(--frame-tint); }
+#app .tablet-final .learning-note { background: rgb(255 253 241 / .9); }
+#app .tablet-final .learning-footer { flex-shrink: 0; background: none; border: 0; }
+#app .ending { gap: 12px 24px; }
+#app .ending > .island-map { display: none; }
+#app .ending-restored { position: relative; overflow: hidden; min-height: 0; border-radius: 24px; border: 2px solid #f6e6b5; box-shadow: var(--scene-shadow); }
+#app .ending-restored-art { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 56%; }
+#app .ending-top { width: fit-content; max-width: calc(100% - 240px); margin: 0 auto; background: var(--frame-paper); }
+#app .ending .ending-results { overflow: auto; }
+#app .ending .certificate { background: rgb(255 253 241 / .96); border: 1px solid #d7d8b7; border-radius: 20px; padding: 16px 20px; }
+body:is([data-screen="final"],[data-screen="ending"]) #app { width: 100%; overflow: clip; }
+@media (min-width: 761px) {
+  #app .tablet-final { display: grid; grid-template-rows: auto minmax(0,1fr) auto; gap: 12px; overflow: hidden; }
+  #app .tablet-final > .learning-layout { min-height: 0; height: 100%; }
+  #app .tablet-final .learning-scene { min-height: 0; height: 100%; gap: 8px; overflow: auto; }
+  #app .tablet-final .cactus-picture { min-height: 80px; height: auto; max-height: min(28vh,280px); }
+  #app .tablet-final .learning-note { min-height: 0; max-height: 100%; height: auto; align-self: start; overflow: auto; }
+  #app .tablet-final > .center { grid-row: 3; min-height: 48px; margin: 0; padding-bottom: 6px; }
+  #app .ending { display: grid; grid-template-columns: minmax(0,1.1fr) minmax(0,1fr); grid-template-rows: auto minmax(0,1fr) minmax(0,.75fr) auto; overflow: hidden; }
+  #app .ending > * { min-width: 0; min-height: 0; }
+  #app .ending-top { grid-column: 1 / -1; grid-row: 1; }
+  #app .ending-restored { grid-column: 1; grid-row: 2; }
+  #app .ending .ending-results { grid-column: 1; grid-row: 3; grid-template-columns: repeat(2,minmax(0,1fr)); min-width: 0; min-height: 0; }
+  #app .ending .ending-results > section { overflow: auto; padding: 10px; }
+  #app .ending .ending-results .garden-grid { height: auto; aspect-ratio: auto; grid-template-rows: repeat(4,auto); align-content: start; gap: 4px; }
+  #app .ending .ending-results .garden-cell { height: clamp(18px,3vh,32px); min-height: 0; }
+  #app .ending .ending-results .garden-cell img { height: 100%; max-height: 100%; }
+  #app .ending .ending-results .bag-art { height: min(14vh,140px); }
+  #app .ending .certificate { grid-column: 2; grid-row: 2 / 4; height: 100%; max-height: 100%; min-height: 0; overflow: auto; }
+  #app .ending-actions { grid-column: 1 / -1; grid-row: 4; }
+}
+
+body dialog::backdrop { backdrop-filter: none; -webkit-backdrop-filter: none; }
+body .settings-dialog { width: min(720px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); }
+:is(#app,body) .settings-dialog .settings-volume { display: grid; width: 100%; min-width: 0; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 4px 12px; padding: 8px 0; }
+:is(#app,body) .settings-dialog .settings-volume > span { grid-column: 1; grid-row: 1; }
+:is(#app,body) .settings-dialog .settings-volume > output { grid-column: 2; grid-row: 1; }
+:is(#app,body) .settings-dialog .settings-volume input[type="range"] { display: block; grid-column: 1 / -1; grid-row: 2; width: 100%; min-width: 0; max-width: none; min-height: 48px; margin: 0; accent-color: var(--color-primary); }
+body .settings-tools { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+body .settings-tools .btn { min-height: 52px; }
+html body[data-screen] .toast { top: calc(var(--hud-top) + 8px); max-width: min(72vw, 680px); font-size: var(--frame-text); }
+
+/* Grouping and season controls sit next to their visual evidence, keeping the
+   completed states within the same landscape frame as the first interaction. */
+@media (min-width: 761px) {
+  #app .activity-1 .learning-scene { display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: auto; align-content: safe center; padding-block: 6px; }
+  #app .activity-1 .learning-scene > .learning-tabs { grid-column: 1 / -1; }
+  #app .activity-1 .classify-leaves { grid-column: 1; grid-row: 2 / 4; min-height: 180px; max-height: 260px; gap: 10px; }
+  #app .activity-1 .classify-leaves .plant-card { padding: 6px; }
+  #app .activity-1 .classify-leaves img { min-height: 60px; max-height: 150px; }
+  #app .activity-1 .sort-bins { grid-column: 2; grid-row: 2; gap: 10px; }
+  #app .activity-1 .sort-bin { min-height: 130px; padding: 12px; }
+  #app .activity-1 .direct-hint { grid-column: 1; grid-row: 4; }
+  #app .activity-1 .learning-scene > .center { grid-column: 2; grid-row: 3 / 5; }
+  #app .activity-1 .learning-scene > :is(.reason-cards, .rule-result) { grid-column: 1 / -1; }
+  #app .activity-1 .reason-cards .btn { flex-basis: 22%; }
+  #app .activity-2 .learning-scene { display: grid; grid-template-columns: minmax(0, 1fr) minmax(240px, 37%); grid-auto-rows: auto; align-content: stretch; }
+  #app .activity-2 .learning-scene > .learning-tabs { grid-column: 1 / -1; }
+  #app .activity-2 .season-scene { grid-column: 1; grid-row: 2 / 7; min-height: 210px; height: 100%; }
+  #app .activity-2 .learning-scene > :is(.timeline, .prediction, .rule-result, .season-caption, .btn) { grid-column: 2; }
+  #app .activity-2 .prediction { display: grid; gap: 8px; }
+}
+
+/* Low landscape screens gain space by arranging related controls side by side. */
+@media (min-width: 761px) and (max-height: 650px) {
+  :root { --hud-edge: 12px; --hud-top: 72px; --frame-gap: 12px; --frame-footer: 64px; --frame-guide: 120px; }
+  #app .field-guide { gap: 10px; padding: 8px 0; }
+  #app .guide-mascot { height: 125px; }
+  #app .guide-bubble { padding: 10px; font-size: 18px; }
+  #app .guide-partner { font-size: 16px; padding: 3px 6px; }
+  #app .field-mission { gap: 8px; }
+  #app .field-mission .mission-step { font-size: 16px; padding: 5px 7px; gap: 5px; }
+  #app .mission-objective { padding: 10px 12px; gap: 10px; }
+  #app .mission-objective > span { font-size: 20px; }
+  #app .field-specimen > .field-leaf-picture { height: 140px; }
+  #app .field-specimen > h3 { font-size: 20px; }
+  #app .field-leaf-token .field-leaf-picture { height: 70px; width: 76px; }
+  #app .field-mission .field-tools { gap: 8px; }
+  #app .field-season-pairs { gap: 12px; }
+  #app .field-season-images :is(svg,.season-atlas) { height: 135px; min-height: 135px; }
+  #app .field-season-images .field-token, #app .field-link-targets .field-target { font-size: 16px; }
+  #app .field-restoration { gap: 10px; }
+  #app .field-garden-zone { min-height: 205px; padding: 10px; }
+  #app .field-garden-zone > strong { font-size: 18px; }
+  #app .field-bag-parts { gap: 8px; padding: 8px; }
+  #app .field-bag-parts .field-token { font-size: 16px; }
+  #app .field-bag-assembly { grid-template-columns: minmax(150px,1fr) minmax(210px,1fr); gap: 10px; }
+  #app .field-bag-assembly > .bag-art { height: 190px; }
+  #app .mission-4 .mission-workspace:has(> .field-bag-parts) { gap: 10px; grid-template-columns: minmax(0,1.15fr) minmax(250px,1fr); }
+  #app .mission-4 .field-bag-assembly > .bag-art { height: 145px; }
+  #app .mission-4 .field-bag-parts { padding: 8px; gap: 8px; }
+  #app .mission-4 .field-part-slot { min-height: 92px; padding: 5px; }
+  #app .mission-4 .field-part-slot > strong { font-size: 18px; }
+  #app .field-part-slot { padding: 8px 12px; }
+  #app .field-part-slot > strong { font-size: 20px; }
+  #app .field-part-slot > span { font-size: 16px; }
+  #app .field-mission > .mission-feedback p { font-size: 18px; }
+  #app .exploration-activity .learning-scene { padding: 10px 12px; gap: 8px; }
+  #app .exploration-activity .learning-scene .btn { padding: 8px 10px; }
+  #app .exploration-activity :is(.design-layout, .test-layout) { grid-template-columns: minmax(0, 1fr) 240px; gap: 12px; }
+  #app .exploration-activity :is(.design-layout, .test-layout) > .learning-note { padding: 12px; }
+  #app .activity-1 .learning-scene { display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: auto; align-content: safe center; padding-block: 6px; }
+  #app .activity-1 .learning-scene > .learning-tabs { grid-column: 1 / -1; }
+  #app .activity-1 .classify-leaves { grid-column: 1; grid-row: 2 / 4; min-height: 150px; max-height: 168px; gap: 6px; }
+  #app .activity-1 .classify-leaves .plant-card { padding: 4px; }
+  #app .activity-1 .classify-leaves img { min-height: 40px; max-height: 90px; }
+  #app .activity-1 .classify-leaves :is(strong, small) { font-size: 16px; }
+  #app .activity-1 .sort-bins { grid-column: 2; grid-row: 2; gap: 8px; }
+  #app .activity-1 .sort-bin { min-height: 105px; padding: 8px; font-size: 18px; }
+  #app .activity-1 .direct-hint { grid-column: 1; grid-row: 4; font-size: 16px; }
+  #app .activity-1 .learning-scene > .center { grid-column: 2; grid-row: 3 / 5; }
+  #app .activity-1 .learning-scene > :is(.reason-cards, .rule-result) { grid-column: 1 / -1; }
+  #app .activity-1 .reason-cards { gap: 6px; }
+  #app .activity-1 .reason-cards .btn { flex-basis: 24%; font-size: 16px; }
+  #app .activity-1 .learning-scene:has(.reason-cards) > .direct-hint { display: none; }
+  #app .activity-2 .learning-scene { display: grid; grid-template-columns: minmax(0, 1fr) minmax(240px, 42%); grid-auto-rows: auto; align-content: stretch; }
+  #app .activity-2 .learning-scene > .learning-tabs { grid-column: 1 / -1; }
+  #app .activity-2 .season-scene { grid-column: 1; grid-row: 2 / 7; min-height: 170px; height: 100%; }
+  #app .activity-2 .learning-scene > :is(.timeline, .prediction, .rule-result, .season-caption, .btn) { grid-column: 2; }
+  #app .activity-2 .timeline { min-height: 0; }
+  #app .activity-2 .timeline > div { gap: 4px; }
+  #app .activity-2 .timeline .btn { font-size: 16px; padding: 7px; }
+  #app .activity-2 :is(.timeline .direct-hint, .season-caption, .prediction p, .rule-result) { font-size: 16px; }
+  #app .activity-2 .prediction { display: grid; gap: 6px; }
+  #app .activity-2 .prediction .btn { font-size: 16px; }
+  #app .activity-5 .learning-scene { display: grid; grid-template-columns: 64px minmax(0, 1fr); grid-template-rows: 48px minmax(0,1fr) auto; align-content: stretch; }
+  #app .activity-5 .habitat-focus { grid-column: 1; grid-row: 1; height: 48px; min-height: 0; max-height: none; margin: 0; }
+  #app .activity-5 .habitat-focus > img { width: 100%; height: 48px; }
+  #app .activity-5 .habitat-focus p { display: none; }
+  #app .activity-5 .learning-scene > .chain-title { grid-column: 2; grid-row: 1; align-self: center; }
+  #app .activity-5 .learning-scene > .link-board { grid-column: 1 / -1; grid-row: 2; height: 100%; min-height: 0; }
+  #app .activity-5 .learning-scene > :is(.rule-result, .reason-cards) { grid-column: 1 / -1; grid-row: 3; }
+  #app .activity-5 .chain-title { font-size: 16px; }
+  #app .activity-5 .link-board .btn { min-height: 64px; font-size: 16px; padding: 5px; gap: 2px; }
+  #app .activity-5 .link-board .btn small { font-size: 16px; }
+  #app .activity-5 .link-board .btn[data-action="habitat"] > svg { display: none; }
+  #app .activity-5 .link-board .btn[data-action="select-plant"] { position: relative; }
+  #app .activity-5 .link-board .btn[data-action="select-plant"] > svg { position: absolute; right: 6px; top: 6px; }
+  #app .activity-5 .reason-cards { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 6px; }
+  #app .activity-5 .reason-cards > p { grid-column: 1 / -1; font-size: 16px; }
+  #app .activity-5 .reason-cards .btn { min-height: 64px; font-size: 16px; }
+  #app :is(.activity-6, .activity-7) .learning-scene { display: grid; grid-template-columns: minmax(0,1fr) 220px; align-content: stretch; }
+  #app :is(.activity-6, .activity-7) .learning-scene > .learning-tabs { grid-column: 1 / -1; }
+  #app :is(.activity-6, .activity-7) .garden-legend { grid-column: 1; grid-row: 2; font-size: 16px; }
+  #app :is(.activity-6, .activity-7) .garden-frame[data-spatial] { grid-column: 1; grid-row: 3 / 6; min-height: 192px; height: 100%; }
+  #app :is(.activity-6, .activity-7) .direct-hint { grid-column: 2; grid-row: 2; font-size: 16px; }
+  #app :is(.activity-6, .activity-7) .learning-scene > :is(.center, .reason-cards) { grid-column: 2; grid-row: 3; }
+  #app :is(.activity-6, .activity-7) .learning-scene > details { grid-column: 2; grid-row: 4; }
+  #app :is(.activity-6, .activity-7) .reason-cards { display: grid; gap: 6px; }
+  #app :is(.activity-6, .activity-7) .reason-cards .btn { font-size: 16px; }
+  #app .exploration-activity .part-card { min-height: 76px; }
+  #app .exploration-activity .part-card img { height: 38px; }
+  #app .exploration-activity .lotus-demo { height: 100px; }
+  #app .exploration-activity :is(.design-layout,.test-layout) > .learning-note h2 { font-size: 22px; line-height: 1.25; margin-bottom: 8px; }
+  #app .exploration-activity :is(.design-layout,.test-layout) > .learning-note p { margin: 4px 0; line-height: 1.4; }
+  #app .exploration-activity :is(.design-layout,.test-layout) > .learning-note small { font-size: 16px; line-height: 1.35; }
+  #app .exploration-activity .test-layout .learning-note .picture-parts { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+  #app .exploration-activity .test-layout .learning-note .part-pair { display: grid; gap: 6px; }
+  #app .exploration-activity .test-layout .learning-note .part-card { min-height: 68px; padding: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  #app .exploration-activity .test-layout .learning-note .part-card img { height: 28px; }
+  #app .exploration-activity .test-layout .learning-note .part-card strong { font-size: 16px; line-height: 1.2; }
+  #app .exploration-activity .test-layout .learning-note :is(h3,legend) { font-size: 18px; line-height: 1.3; margin: 4px 0; }
+  #app .exploration-activity .test-layout .learning-note :is(p,.microcopy) { font-size: 16px; line-height: 1.4; }
+  #app .exploration-activity .test-layout .learning-scene:has(.test-comparison) { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); grid-template-rows: minmax(145px,1fr) auto auto auto; align-content: stretch; gap: 8px; }
+  #app .exploration-activity .test-layout .learning-scene:has(.test-comparison) .water-demo { grid-column: 1; grid-row: 1; min-height: 0; height: 100%; }
+  #app .exploration-activity .test-layout .learning-scene:has(.test-comparison) .water-demo .compact-bag { min-height: 0; }
+  #app .exploration-activity .test-layout .learning-scene:has(.test-comparison) .test-conditions { grid-column: 1; grid-row: 2; padding: 3px; font-size: 16px; line-height: 1.3; }
+  #app .exploration-activity .test-layout .learning-scene:has(.test-comparison) > .learning-tabs { grid-column: 1; grid-row: 3; flex-wrap: nowrap; gap: 4px; }
+  #app .exploration-activity .test-layout .learning-scene:has(.test-comparison) > .learning-tabs .btn { font-size: 16px; padding: 7px 8px; }
+  #app .exploration-activity .test-layout .learning-scene:has(.test-comparison) .test-comparison { grid-column: 2; grid-row: 1 / 4; display: grid; grid-template-columns: 1fr; align-content: stretch; gap: 8px; min-height: 0; }
+  #app .exploration-activity .test-layout .learning-scene:has(.test-comparison) .test-record { padding: 8px; }
+  #app .exploration-activity .test-layout .learning-scene:has(.test-comparison) .test-record :is(strong,span,p) { font-size: 16px; line-height: 1.35; }
+  #app .exploration-activity .test-layout .learning-scene:has(.test-comparison) .test-record p { margin: 4px 0 0; }
+  #app .exploration-activity .test-layout .learning-scene:has(.test-comparison) > .reason-cards { grid-column: 1 / -1; grid-row: 4; }
+  #app .exploration-activity .test-layout .learning-scene:has(.test-comparison) > .reason-cards :is(p,.btn) { font-size: 16px; line-height: 1.35; }
+  #app .exploration-activity .test-layout .learning-scene:has(.test-comparison) .notebook-result { width: 66px; height: 104px; right: 6px; bottom: 5px; }
+  #app .exploration-activity .test-layout .learning-scene:has(.test-comparison) .notebook-result img { height: 54px; }
+  #app .exploration-activity .test-layout .learning-scene:has(.test-comparison) .notebook-result span { font-size: 16px; line-height: 1.15; white-space: normal; text-align: center; }
+  #app .tablet-final .cactus-picture { max-height: 140px; }
+  #app .tablet-final .learning-scene { padding: 12px; }
+  #app .tablet-final .learning-scene h2 { font-size: 20px; line-height: 1.3; }
+  #app .tablet-final .learning-scene > p { font-size: 18px; line-height: 1.35; }
+  #app .map-navigation-copy strong { display: none; }
+  #app .stage-map .map-title p { display: none; }
+  #app .map-next-card { max-width: 400px; }
+  #app .map-next-card h2 { font-size: 21px; }
+  #app .map-next-card p { display: none; }
+  #app .map-next-card > .btn { min-height: 50px; font-size: 17px; }
+}
+
+@media (min-width: 761px) and (max-width: 1050px) {
+  #app .home-copy { width: 56%; max-width: 56%; padding-left: 5%; }
+  #app .hero-friends { right: 3%; bottom: 6%; }
+  #app .hero-friends .mascot-wrap.large { width: 130px; height: 170px; }
+  #app .exploration-activity :is(.design-layout, .test-layout) { grid-template-columns: minmax(0,1fr) 240px; gap: 12px; }
+  #app .exploration-activity .learning-scene { padding-inline: 12px; }
+  #app .activity-5 .learning-scene { display: grid; grid-template-columns: 64px minmax(0,1fr); grid-template-rows: 48px minmax(0,1fr) auto; align-content: stretch; }
+  #app .activity-5 .habitat-focus { grid-column: 1; grid-row: 1; height: 48px; min-height: 0; max-height: none; margin: 0; }
+  #app .activity-5 .habitat-focus > img { width: 100%; height: 48px; }
+  #app .activity-5 .habitat-focus p { display: none; }
+  #app .activity-5 .learning-scene > .chain-title { grid-column: 2; grid-row: 1; align-self: center; }
+  #app .activity-5 .learning-scene > .link-board { grid-column: 1 / -1; grid-row: 2; height: 100%; min-height: 0; }
+  #app .activity-5 .learning-scene > :is(.rule-result,.reason-cards) { grid-column: 1 / -1; grid-row: 3; }
+  #app .activity-5 .reason-cards { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 6px; }
+  #app .activity-5 .reason-cards > p { grid-column: 1 / -1; }
+  #app .activity-9 .spatial-controls { left: 6px; right: auto; justify-content: flex-start; }
+  #app .activity-9 .spatial-controls button:not([data-view="flat"]) { display: none; }
+  #app .activity-9 .water-paths text { display: none; }
+  #app .exploration-activity.activity-9 .test-layout .learning-scene .notebook-result { top: 8px; right: 6px; bottom: auto; width: 60px; height: auto; min-height: 88px; padding: 2px; }
+  #app .exploration-activity.activity-9 .test-layout .learning-scene .notebook-result img { height: 46px; }
+  #app .exploration-activity.activity-9 .test-layout .learning-scene .notebook-result span { width: 100%; font-size: 16px; line-height: 1.1; white-space: normal; text-align: center; }
+  #app .map-navigation-copy strong { display: none; }
+  #app .map-navigation-copy { max-width: 125px; }
+  #app .map-next-card { gap: 8px 12px; max-width: 410px; }
+  #app .map-next-card h2 { font-size: 22px; }
+  #app .map-next-card p { display: none; }
+  #app .map-next-card > .btn { font-size: 17px; }
+  #app .tablet-report .report-card { padding: 14px 10px; }
+}
+
+@media (min-width: 1500px) and (min-height: 850px) {
+  :root { --hud-size: 60px; --hud-top: 100px; --hud-edge: 20px; --frame-gap: 24px; --frame-footer: 88px; --frame-text: 24px; }
+  #app .topbar .icon-btn svg { width: 30px; height: 30px; }
+  #app .field-guide h1 { left: 185px; right: 185px; max-width: calc(100% - 370px); }
+  #app .exploration-activity .learning-scene { padding: 24px 32px; gap: 16px; }
+  #app .exploration-activity .learning-scene .btn { min-height: 60px; padding: 12px 20px; }
+  #app .exploration-activity .learning-footer .btn { min-height: 60px; padding-inline: 28px; }
+  #app .exploration-activity .specimen-pick { min-height: 72px; }
+  #app .exploration-activity .specimen-pick img { height: 58px; }
+  #app .exploration-activity .link-board .btn { min-height: 88px; }
+  #app .map-dpad { grid-template-columns: repeat(3, 60px); grid-template-rows: repeat(2, 60px); }
+  #app .map-direction { min-height: 60px; min-width: 60px; }
+}
+
+@media (max-width: 760px) {
+  #app .home-copy { max-width: 80%; width: 80%; padding: var(--hud-top) 0 0 6%; }
+  #app .hero-friends { bottom: 4%; right: 3%; }
+  #app .hero-friends .mascot-wrap.large { width: 105px; height: 145px; }
+  #app .home .hero-friends .mascot-wrap.large { width: 130px; height: 180px; }
+  #app .home-scene::after { background: linear-gradient(90deg,#fffceeec,#fffceeb5 60%,#fffcee20); }
+  #app .exploration-activity { height: auto; min-height: 100dvh; display: flex; flex-direction: column; padding-top: var(--hud-top); overflow: visible; }
+  #app .field-guide { display: grid; grid-template-columns: 80px minmax(0,1fr); gap: 12px; padding: 6px 0 16px; }
+  #app .field-guide h1 { position: static; grid-column: 2; width: 100%; max-width: none; margin: 0; font-size: 24px; padding: 8px; }
+  #app .guide-mascot { grid-column: 1; grid-row: 1 / 3; height: 125px; }
+  #app .guide-bubble { grid-column: 2; padding: 10px; }
+  #app .guide-bubble::after { display: none; }
+  #app .guide-partner { grid-column: 1; grid-row: 3; font-size: 14px; white-space: normal; text-align: center; }
+  #app .mission-journey-root { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 3px; width: 100%; margin-bottom: 12px; }
+  #app .mission-step { flex-direction: column; gap: 4px; min-width: 0; padding: 7px 3px; font-size: 16px; }
+  #app .mission-step b { width: 24px; height: 24px; }
+  #app .exploration-activity > .learning-layout { height: auto; width: 100%; }
+  #app .exploration-activity .learning-scene { min-height: 420px; height: auto; overflow: visible; }
+  #app .exploration-activity :is(.design-layout, .test-layout) { grid-template-columns: 1fr; }
+  #app .exploration-activity .learning-footer { padding: 16px 0; }
+  #app .learning-footer > div { flex-wrap: wrap; }
+  #app .learning-footer > div > .primary { flex: 1 0 100%; margin: 0; white-space: normal; }
+  #app .mission-objective { align-items: flex-start; flex-direction: column; gap: 4px; }
+  #app .mission-objective > span { font-size: 20px; }
+  #app .field-mission .mission-journey { grid-template-columns: repeat(3,minmax(0,1fr)); }
+  #app .field-mission .mission-step { padding: 6px; font-size: 16px; }
+  #app .field-mission .mission-workspace { min-height: 0; }
+  #app .field-leaf-tray, #app .field-restoration { grid-template-columns: 1fr; }
+  #app .field-specimen { padding: 12px 8px; }
+  #app .field-specimen > .field-leaf-picture { height: 200px; }
+  #app .field-season-pairs { grid-template-columns: 1fr; }
+  #app .field-sort-bins { gap: 10px; }
+  #app .field-sort-bin { padding: 10px; }
+  #app .field-sort-bin > strong { font-size: 20px; }
+  #app .field-leaf-token { padding: 6px 10px; }
+  #app .field-leaf-token .field-leaf-picture { width: 65px; height: 65px; }
+  #app .field-frame-tray, #app .field-timeline { gap: 6px; }
+  #app .field-frame { padding: 6px; font-size: 16px; }
+  #app .field-frame :is(svg,.season-atlas), #app .field-time-slot :is(svg,.season-atlas) { height: 84px; }
+  #app .field-time-slot { min-height: 140px; padding: 8px 5px; font-size: 16px; }
+  #app .field-bag-parts { grid-template-columns: 1fr; }
+  #app .field-bag-parts > div { display: grid; grid-template-columns: 1fr 1fr; }
+  #app .field-bag-parts > div > strong { grid-column: 1 / -1; }
+  #app .field-bag-assembly { grid-template-columns: 1fr; }
+  #app .mission-4 .mission-workspace:has(> .field-bag-parts) { display: flex; flex-direction: column; }
+  #app .mission-4 .field-bag-parts { width: 100%; order: 2; }
+  #app .mission-4 .field-bag-assembly { width: 100%; order: 1; }
+  #app .field-bag-assembly > .bag-art { height: 210px; }
+  #app .field-trials { grid-template-columns: 1fr; }
+  #app .field-tank-model > span { font-size: 16px; white-space: normal; text-align: center; }
+  #app .field-mission > .mission-feedback { align-items: flex-start; }
+  #app .stage-map { min-height: 100dvh; }
+  #app .stage-map-viewport { inset: 0; }
+  #app .map-hud { inset: var(--hud-top) 12px auto; }
+  #app .stage-map .map-title { padding: 10px 12px; }
+  #app .stage-map .map-title h1 { font-size: 22px; }
+  #app .stage-map .map-title :is(.map-eyebrow,p) { display: none; }
+  #app .stage-map .map-seeds { position: static; display: block; max-width: 150px; padding: 8px; }
+  #app .stage-map .seed-progress { flex-direction: column-reverse; gap: 5px; }
+  #app .stage-map .map-seeds > .btn { font-size: 16px; padding: 8px; }
+  #app .stage-map .seed-progress strong { font-size: 16px; }
+  #app .stage-map .map-progress-caption { display: none; }
+  #app .stage-map .seed-dot { width: 20px; height: 25px; }
+  #app .stage-map .world-node[data-id="0"] .world-label { bottom: calc(-10px / var(--map-scale)); left: calc(14px / var(--map-scale)); }
+  #app .stage-map .world-node[data-id="4"] .world-label { left: calc(-26px / var(--map-scale)); }
+  #app .map-bottom .map-navigation { flex-direction: row; padding: 8px; }
+  #app .map-navigation-copy { display: flex; max-width: 110px; }
+  #app .map-navigation-copy :is(strong,span) { display: none; }
+  #app .map-navigation-copy .btn { padding: 6px; line-height: 1.25; white-space: normal; text-align: center; }
+  #app .map-next-card { display: flex; flex-direction: column; gap: 8px; width: 100%; padding: 10px; }
+  #app .stage-map .map-bottom { flex-direction: column-reverse; align-items: stretch; gap: 8px; }
+  #app .map-dpad { grid-template-columns: repeat(4, 48px); grid-template-rows: 48px; }
+  #app .map-dpad .map-direction { grid-row: 1; grid-column: auto; }
+  #app :is(.tablet-report, .tablet-final, .ending) { height: auto; min-height: 100dvh; padding-inline: 16px; }
+  #app :is(.tablet-report, .tablet-final) .page-heading, #app .ending-top { max-width: 100%; }
+  #app .tablet-final .learning-layout { grid-template-columns: 1fr; }
+  #app .ending-restored { height: 250px; margin: 16px 0; }
+  #app .ending { display: flex; flex-direction: column; }
+  #app .ending-top { order: 0; }
+  #app .ending-restored { order: 1; flex-shrink: 0; width: 100%; }
+  #app .ending-results { order: 2; }
+  #app .ending .certificate { order: 3; }
+  #app .ending-actions { order: 4; }
+  #app .ending .ending-top { margin-top: 0; }
+  body .settings-volume { grid-template-columns: 1fr auto; }
+  body .settings-volume input[type="range"] { grid-column: 1 / -1; grid-row: 2; }
+  body .expedition-brief { grid-template-columns: 80px minmax(0,1fr); gap: 14px; }
+  body .brief-leafy { width: 80px; height: 130px; }
+  body .expedition-brief h3 { font-size: 22px; }
+  body .expedition-tool-grid { grid-template-columns: 1fr; }
+  body .expedition-tool { padding: 12px; }
+}
+
+/* Large text can use vertical space instead of shrinking accessible text. */
+body.large-text #app :is(.exploration-activity, .tablet-report, .tablet-final, .ending) { height: auto; min-height: 100dvh; overflow: visible; }
+body.large-text #app .exploration-activity { grid-template-rows: auto minmax(600px, auto) auto; }
+body.large-text #app .exploration-activity .learning-scene { overflow: visible; }
+@media print {
+  body:is([data-screen="final"],[data-screen="ending"]) #app { overflow: visible; }
+  #app :is(.tablet-report, .tablet-final, .ending) { height: auto; min-height: 0; padding: 24px; }
+  #app .ending { display: block; }
+  #app .ending-restored { height: 220px; margin: 16px 0; }
+  #app .ending .certificate { overflow: visible; }
+  #app .ending-top { max-width: 100%; }
+}

@@ -16,6 +16,8 @@ export const STANDARDS_DISCLAIMER='이 게임만으로 성취기준 전체를 �
 
 export const TEXT={
  title:'설정',
+ music:'배경 음악',musicVolume:'배경 음악 크기',musicAbsent:'이 탐구에는 배경 음악이 없어요. 관찰에 집중하며 효과음만 들을 수 있어요.',
+ map:'탐험 지도',journal:'연구 노트',activityNotes:'이번 활동의 기록',activityHelp:'이번 활동 도움말',
  sfx:'효과음',on:'켜짐',off:'꺼짐',
  largeText:'전자칠판용 큰 글자',fullscreen:'전체화면 전환',
  intro:'이 탐험을 하는 이유 다시 보기',
@@ -23,22 +25,22 @@ export const TEXT={
  saveFailed:'자동 저장을 사용할 수 없어요. 브라우저 저장 설정을 확인해 주세요.',
  reset:'탐구 기록 초기화',close:'닫기',
  resetTitle:'탐구 기록을 초기화할까요?',
- resetBody:'이 기기에 저장된 잎 관찰·분류 기록, 계절 사진 기록, 잎자루 실험 기록, 내가 만든 정원과 꽃길, 가방 설계와 시험 기록, 모은 빛씨앗, 큰 글자 설정이 모두 지워져요. 효과음 설정은 그대로 남아요.',
+ resetBody:'이 기기에 저장된 잎 관찰·분류 기록, 계절 사진 기록, 잎자루 실험 기록, 내가 만든 정원과 꽃길, 가방 설계와 시험 기록, 모은 빛씨앗, 큰 글자 설정이 모두 지워져요. 소리 설정은 그대로 남아요.',
  resetCancel:'취소',resetConfirm:'기록 지우기',
-teacherNote:'수업 시연용이에요. 다시 누르면 닫히고 학생의 원래 진행으로 돌아가요.',
+teacherNote:'교사용 미리보기는 학생 기록에 반영되지 않아요. 해금을 종료하거나 새로고침하면 학생의 원래 진행으로 돌아가요.',
  teacherTools:'버튼 하나로 다섯 미션의 모든 단계를 한꺼번에 열어요. 학습 완료 기록은 자동으로 채워지지 않아요.',
- unlock:'모든 단계 한 번에 열기',unlockOn:'모두 열림 · 다시 누르면 닫기',
+ unlock:'전체 단계 해금 · 한 번에 열기',unlockOn:'전체 단계 해금 종료',
 };
 
 const APP_INFO=[
  ['초록정원 연구','잎·계절·환경·정원·발명 다섯 탐구를 하고, 관찰한 특징을 근거로 식물을 설명하는 힘을 연습해요.'],
- ['미션 보상','탐구를 마칠 때마다 빛씨앗을 모아 잠든 연구 장소를 깨우고, 다섯 개를 모으면 초록정원을 깨워요.'],
+ ['미션 보상','현장 임무와 연구 기록을 마치면 도구와 빛씨앗을 받아요. 모은 도구로 다음 탐구의 단서를 꺼내고, 다섯 장소를 모두 깨우면 나의 정원과 가방을 전시해요.'],
  ['남는 배움','처음 생각·관찰과 실험 근거·바뀐 생각·새 식물에 적용한 판단이 연구 노트에 남아요.'],
 ];
 const STUDENT_GUIDE=[
- '연구 시작하기를 누르고 탐험 지도에서 열린 연구 장소를 골라요.',
- '그림을 확대하고, 식물을 나누고, 직접 실험한 뒤 그렇게 생각한 까닭을 골라요.',
- '탐구를 마치면 빛씨앗을 받고, 마친 장소는 지도에서 깨어나요. 기록은 이 기기에 자동 저장돼요.',
+ '연구 시작하기를 누르고 리피와 길을 따라 다음 연구 장소로 가요.',
+ '리피의 부탁을 읽고 세 가지 현장 임무를 해요. 끌어 옮기고, 순서를 잇고, 조립하고, 시험한 뒤 발견을 연구 노트에 담아요.',
+ '탐구를 마치면 장소가 깨어나고 도구와 빛씨앗을 받아요. 탐험 도구를 열면 모은 도구로 다음 단서를 꺼낼 수 있어요. 기록은 이 기기에 자동 저장돼요.',
  '터치로 대상을 고른 뒤 놓을 곳을 눌러요. 키보드는 Tab으로 옮기고 Enter로 골라요.',
  '단면과 확대 그림은 원리를 보여 주려고 단순하게 나타낸 모형이에요. 실제 크기와는 달라요.',
 ];
@@ -73,7 +75,7 @@ export function standardsSection(list=STANDARDS){
  if(!list.length)return '';
  return fold('standards','성취기준',`<p>${CURRICULUM}과 연계한 탐구 보조 활동이에요. ${STANDARDS_DISCLAIMER}</p><ul class="standards-list">${list.map(([code,text])=>`<li><strong>[${code}]</strong> ${text}</li>`).join('')}</ul>`);
 }
-export const appInfoSection=()=>fold('info','앱 정보 · 배움과 보상',`<dl class="settings-info">${APP_INFO.map(([k,v])=>`<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl><p class="settings-credit">${CREDIT_LINE}</p>`);
+export const appInfoSection=(tools='')=>fold('info','앱 정보 · 배움과 보상',`<dl class="settings-info">${APP_INFO.map(([k,v])=>`<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl><p class="settings-credit">${CREDIT_LINE}</p>${tools}`);
 export const studentSection=()=>fold('student','학생용 가이드',lines(STUDENT_GUIDE));
 // teacherTools: the one-tap unlock-all demo tool, built by app.js.
 export const teacherSection=teacherTools=>fold('teacher','교사용 가이드',lines(TEACHER_GUIDE)+standardsSection()+fold('tools','교사용 도구',teacherTools));

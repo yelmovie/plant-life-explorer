@@ -1,6 +1,6 @@
 # 초록정원 연구기지 · 0.5
 
-식물 관찰에서 정원 설계와 발명 개선까지 이어지는 5개 미션·10개 활동 교육용 웹게임. 0.5에서는 길을 따라 탐험하는 지도, 두 기준 분류 실행, 두 식물의 겨울·봄 사진, 예상과 공기 방울 실험, 직접 칠하는 정원, 한 부품 비교 시험을 연결한다. 잎·잎자루·정원·가방은 로컬 Three.js로 만든 입체 학습 모형이며 그림과 버튼 대안도 제공한다. 실제 GLB 에셋이나 생육·유체 시뮬레이션은 포함하지 않는다.
+식물 관찰에서 정원 설계와 발명 개선까지 이어지는 5개 미션·10개 활동 교육용 웹게임. 0.5에서는 길을 따라 탐험하는 지도, 두 기준 분류 실행, 두 식물의 겨울·봄 사진, 예상과 공기 방울 실험, 직접 칠하는 정원, 한 부품 비교 시험을 연결한다. 잎·잎자루·정원·가방은 로컬 Three.js로 만든 입체 학습 모형이며 그림과 버튼 대안도 제공한다. 잎자루 전체·단면과 알로에는 로컬 GLB 모형을 사용한다. 생육·유체 시뮬레이션은 포함하지 않는다.
 
 ## 실행과 납품
 
@@ -20,21 +20,24 @@ npm run preview
 ## 파일 안내
 
 - `src/app.js`: 화면과 사용자 동작, 저장 연결, 서비스워커 등록.
-- `src/settings-content.js`: 설정 화면 문구 전부(앱 버전 `APP_VERSION`, 교사용 확인 코드 `TEACHER_CODE`, 성취기준 `STANDARDS`).
-- `src/audio.js`: 효과음과 소리 켜기/끄기(기록과 별도 저장 키).
+- `src/settings-content.js`: 설정 화면 문구 전부(앱 버전 `APP_VERSION`, 성취기준 `STANDARDS`).
+- `src/audio.js`: 효과음·빠른 음소거·소리 설정 보존. 배경 음악 파일은 없고 해당 설정은 비활성화된다.
 - `sw.js`, `manifest.webmanifest`, `assets/icons/`: 오프라인 캐시와 설치형 앱(PWA).
 - `src/model.js`: 미션 조건·저장 복원·정원·시험 판정.
 - `src/asset-catalog.js`: 생성 이미지의 고정 키·설명·표시 함수, 보상 썸네일 목록(`THUMBS`).
 - `src/art.js`: SVG 도식과 표본·가방 그림 배치.
 - `src/rewards.js`: 완료 기록으로 계산하는 빛씨앗, 복구 시설 지도, 꽃길 선택.
+- `src/stage-map.js`, `src/stage-map.css`: 길을 따르는 지도 이동, 단계 안내, 전체 지도·리피 추적 보기. 교사용 전체 해금은 메모리에서만 미리 보고 종료·새로고침 시 학생 기록으로 돌아간다.
 - `src/invention.js`: 그림 부품, 빗물 시험, 실패 원인과 비교 기록.
 - `src/inquiry.js`: 장소별 의뢰와 환경·특징·생활 연결 자료, 분류 확인.
 - `src/learning.js`: 관찰 증거·계절 사진·환경 연결·보고·새 상황 적용 화면.
 - `src/spatial.js`, `src/fieldwork.css`: 입체 관찰·정원·가방과 그림 대안. Three.js r181의 MIT 라이선스는 `assets/three-license.txt`.
-- `src/style.css`, `src/visuals.css`, `src/adventure.css`: 기본 디자인, 이미지 중심 지도·보상·발명 화면과 반응형.
+- `src/style.css`, `src/visuals.css`, `src/adventure.css`: 기본 디자인. `src/layout.css`는 전체 화면 틀과 태블릿별 최종 배치 규칙이다. 자세한 값은 `docs/DESIGN-SYSTEM.md`.
 - `assets/generated/`: 원본 PNG와 화면용 WebP. `assets/CREDITS.md`: 출처.
 - `docs/ASSET-PROMPTS-20261014.json`: 이미지 생성 프롬프트 기록.
-- `docs/reviews/FINAL-CHECK-20261014.md`: 통합 검증 및 남은 현장 검수.
+- `docs/reviews/FINAL-CHECK-20261020.md`: 23항목 점검·수정·남은 현장 검수.
+- `docs/reviews/design-20261020/`: 화면 크기별 캡처와 실측 JSON.
+- `docs/기능향상기-20261020.md`: 이번 디자인과 설정 개선 내용.
 - `docs/reviews/viewport-results.json`, `docs/reviews/screenshots/`: 실제 브라우저 검사 결과.
 
 ## 이미지 교체
@@ -49,7 +52,7 @@ Git에는 코드·테스트·문서·실행용 WebP를 보관한다. `dist/`는 
 
 진행은 현재 주소·브라우저의 localStorage에 자동 저장된다. 다른 기기와 동기화하지 않으며 브라우저 데이터를 지우면 기록이 사라진다. 계정·개인정보 입력·외부 추적 호출은 없다.
 
-설정 화면은 iscream-settings 순서를 따른다: 효과음 켜기/끄기(기록 초기화 뒤에도 유지)·큰 글자·전체화면 → 이 탐험을 하는 이유 다시 보기·엔딩 다시 보기(완료 뒤) → 앱 정보 · 학생용 가이드 · 교사용 가이드(성취기준, 교사용 도구) · 이미지·소리·저작권 고지(자료 출처) → 기록 초기화(확인 단계)·닫기. 교사용 도구는 확인 코드(`TEACHER_CODE`) 뒤에 있으며 보안 기능이 아니다. 전체 열기는 화면 미리보기이며 완료 기록을 만들지 않는다. 단면과 가방 시험은 원리를 설명하는 학습 모형이다.
+설정 화면은 iscream-settings 순서를 따른다: 배경음·효과음 스위치와 배경음 음량 → 시작 이야기·엔딩 다시 보기(완료 뒤) → 앱 정보·배움과 보상·학생/교사 가이드·자료 출처 → 기록 초기화(확인 단계)·닫기. 배경음 파일이 없으면 해당 스위치는 비활성화된다. 교사용 도구의 전체 열기는 화면 미리보기이며 학생의 완료·보상·저장을 바꾸지 않는다. 단면과 가방 시험은 원리를 설명하는 학습 모형이다.
 
 버전을 올릴 때는 `package.json`과 `src/settings-content.js`의 `APP_VERSION`을 함께 바꾼다(테스트·빌드가 일치를 검사한다).
 
@@ -83,3 +86,22 @@ Git에는 코드·테스트·문서·실행용 WebP를 보관한다. `dist/`는 
 | `_source/` | Meshy 원본 GLB, Meshy 입력 그림, 설계 대화 원본 그림 | 제외 |
 | `_reference/` | 참고 교재(`files/`)·샘플 화면(`samplepages/`) | 제외 |
 | `_unused/` | 안 쓰는 그림·옛 납품 zip·예전 배포 잔여물(지우지 않고 보관) | 일부 |
+
+
+## 리피의 연결 탐험 (2026-10-20)
+
+다섯 장소마다 3단계 현장 임무와 기존 관찰·설명 기록을 연결했다. 표본 끌기/분류, 겨울과 봄 연결/사진 순서, 예상과 뜨기 비교, 환경·식물 배치 후 비 시험, 가방 부품 조립·한 부품 비교를 수행한다. 드래그와 선택 후 놓기·키보드는 같은 증거를 만든다. 새로 시작하는 탐구는 현장 임무까지 마쳐야 보상을 받고, 기존 완료 기록은 보존한다.
+
+`src/field-missions-state.js`는 증거·판정, `src/field-missions.js`는 현장 화면·포인터, `src/expedition.js`는 리피 의뢰·도구·다음 탐구 단서를 맡는다. 도구와 빛씨앗은 실제 완료에서 계산하며 반복 열기로 늘지 않는다. 새 WebP 표본·수조·입체단면·보상·정원 이미지를 실제 화면에 적용했다. 원본과 job·프롬프트·해시는 `docs/ASSET-PROVENANCE-20261020.json`에 보존한다.
+
+- 학습·보상 설계: [EXPEDITION-PLAN-20261020.md](docs/EXPEDITION-PLAN-20261020.md)
+- 최종 검증: [FINAL-CHECK-20261020-2.md](docs/reviews/FINAL-CHECK-20261020-2.md)
+- [인트로 영상 프롬프트와 참조 이미지](https://chatgpt.com/space/page_f1ad1e0ce5088191afbc32894d6ac15d)
+- [아웃트로 영상 프롬프트와 참조 이미지](https://chatgpt.com/space/page_0d0c543af28c819181ccc39320034665)
+
+영상은 아직 생성·적용하지 않았다. 위 두 캔버스는 무나레이션·무대사·무배경음, 후편집 자막과 드문 효과음 기준이다. 수노 음악은 후편집에서 별도 한 트랙으로 넣는다.
+
+
+## 운영 배포
+
+[초록정원 연구기지](https://leafy-garden.pages.dev) · [배포 방법](docs/DEPLOYMENT.md). Cloudflare Pages의 leafy-garden 프로젝트에 검증한 dist를 직접 업로드한다.

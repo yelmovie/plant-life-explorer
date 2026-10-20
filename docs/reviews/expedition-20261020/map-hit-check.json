@@ -1,0 +1,383 @@
+{
+  "errors": [],
+  "rows": [
+    {
+      "width": 873,
+      "height": 580,
+      "overview": "true",
+      "overflow": false,
+      "labels": [
+        {
+          "id": "0",
+          "hit": true,
+          "blockedBy": "",
+          "rect": [
+            60,
+            370,
+            126,
+            62
+          ]
+        },
+        {
+          "id": "1",
+          "hit": true,
+          "blockedBy": "",
+          "rect": [
+            155,
+            258,
+            128,
+            62
+          ]
+        },
+        {
+          "id": "2",
+          "hit": true,
+          "blockedBy": "",
+          "rect": [
+            357,
+            148,
+            141,
+            62
+          ]
+        },
+        {
+          "id": "3",
+          "hit": true,
+          "blockedBy": "",
+          "rect": [
+            619,
+            269,
+            156,
+            62
+          ]
+        },
+        {
+          "id": "4",
+          "hit": true,
+          "blockedBy": "",
+          "rect": [
+            677,
+            107,
+            128,
+            62
+          ]
+        }
+      ]
+    },
+    {
+      "width": 906,
+      "height": 755,
+      "overview": "true",
+      "overflow": false,
+      "labels": [
+        {
+          "id": "0",
+          "hit": true,
+          "blockedBy": "",
+          "rect": [
+            64,
+            465,
+            126,
+            62
+          ]
+        },
+        {
+          "id": "1",
+          "hit": true,
+          "blockedBy": "",
+          "rect": [
+            163,
+            346,
+            128,
+            62
+          ]
+        },
+        {
+          "id": "2",
+          "hit": true,
+          "blockedBy": "",
+          "rect": [
+            374,
+            231,
+            141,
+            62
+          ]
+        },
+        {
+          "id": "3",
+          "hit": true,
+          "blockedBy": "",
+          "rect": [
+            647,
+            358,
+            156,
+            62
+          ]
+        },
+        {
+          "id": "4",
+          "hit": true,
+          "blockedBy": "",
+          "rect": [
+            706,
+            188,
+            128,
+            62
+          ]
+        }
+      ]
+    },
+    {
+      "width": 1280,
+      "height": 800,
+      "overview": "true",
+      "overflow": false,
+      "labels": [
+        {
+          "id": "0",
+          "hit": true,
+          "blockedBy": "",
+          "rect": [
+            145,
+            548,
+            126,
+            62
+          ]
+        },
+        {
+          "id": "1",
+          "hit": true,
+          "blockedBy": "",
+          "rect": [
+            276,
+            370,
+            128,
+            62
+          ]
+        },
+        {
+          "id": "2",
+          "hit": true,
+          "blockedBy": "",
+          "rect": [
+            557,
+            218,
+            141,
+            62
+          ]
+        },
+        {
+          "id": "3",
+          "hit": true,
+          "blockedBy": "",
+          "rect": [
+            922,
+            386,
+            157,
+            62
+          ]
+        },
+        {
+          "id": "4",
+          "hit": true,
+          "blockedBy": "",
+          "rect": [
+            996,
+            162,
+            129,
+            62
+          ]
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "overview": "true",
+      "overflow": false,
+      "labels": [
+        {
+          "id": "0",
+          "hit": true,
+          "blockedBy": "",
+          "rect": [
+            171,
+            629,
+            126,
+            62
+          ]
+        },
+        {
+          "id": "1",
+          "hit": true,
+          "blockedBy": "",
+          "rect": [
+            318,
+            421,
+            128,
+            62
+          ]
+        },
+        {
+          "id": "2",
+          "hit": true,
+          "blockedBy": "",
+          "rect": [
+            636,
+            250,
+            141,
+            62
+          ]
+        },
+        {
+          "id": "3",
+          "hit": true,
+          "blockedBy": "",
+          "rect": [
+            1046,
+            439,
+            157,
+            62
+          ]
+        },
+        {
+          "id": "4",
+          "hit": true,
+          "blockedBy": "",
+          "rect": [
+            1128,
+            187,
+            129,
+            62
+          ]
+        }
+      ]
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "overview": "true",
+      "overflow": false,
+      "labels": [
+        {
+          "id": "0",
+          "hit": true,
+          "blockedBy": "",
+          "rect": [
+            313,
+            775,
+            127,
+            63
+          ]
+        },
+        {
+          "id": "1",
+          "hit": true,
+          "blockedBy": "",
+          "rect": [
+            491,
+            513,
+            129,
+            63
+          ]
+        },
+        {
+          "id": "2",
+          "hit": true,
+          "blockedBy": "",
+          "rect": [
+            873,
+            308,
+            142,
+            63
+          ]
+        },
+        {
+          "id": "3",
+          "hit": true,
+          "blockedBy": "",
+          "rect": [
+            1367,
+            535,
+            157,
+            63
+          ]
+        },
+        {
+          "id": "4",
+          "hit": true,
+          "blockedBy": "",
+          "rect": [
+            1462,
+            232,
+            129,
+            63
+          ]
+        }
+      ]
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "overview": "true",
+      "overflow": false,
+      "labels": [
+        {
+          "id": "0",
+          "hit": true,
+          "blockedBy": "",
+          "rect": [
+            27,
+            435,
+            115,
+            59
+          ]
+        },
+        {
+          "id": "1",
+          "hit": true,
+          "blockedBy": "",
+          "rect": [
+            35,
+            372,
+            117,
+            59
+          ]
+        },
+        {
+          "id": "2",
+          "hit": true,
+          "blockedBy": "",
+          "rect": [
+            119,
+            324,
+            129,
+            59
+          ]
+        },
+        {
+          "id": "3",
+          "hit": true,
+          "blockedBy": "",
+          "rect": [
+            228,
+            377,
+            144,
+            59
+          ]
+        },
+        {
+          "id": "4",
+          "hit": true,
+          "blockedBy": "",
+          "rect": [
+            271,
+            307,
+            118,
+            59
+          ]
+        }
+      ]
+    }
+  ]
+}

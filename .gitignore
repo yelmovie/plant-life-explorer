@@ -30,3 +30,7 @@ docs/reviews/shared-design-transcript-*.md
 
 # 중복 사본(원본은 _source/meshy-input)
 _unused/duplicates-*/
+
+# Local verification captures and downloaded curriculum originals
+docs/reviews/**/*.png
+docs/sources/*.hwp

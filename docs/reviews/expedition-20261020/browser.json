@@ -1,0 +1,66 @@
+{
+  "started": "2026-10-20T14:28:09.950Z",
+  "url": "http://127.0.0.1:4328",
+  "viewport": {
+    "width": 1280,
+    "height": 800
+  },
+  "fixture": "Isolated version 1 profile; only previous missions completed; current and future false; field evidence empty",
+  "inputs": {
+    "pointerDrags": 5,
+    "taps": 71,
+    "keyboardPlacements": 16
+  },
+  "missions": [
+    {
+      "mission": 1,
+      "stages": 3,
+      "wrongFeedback": "리피: 폭보다 길이가 훨씬 길어. 이 그림에는 큰 톱니가 없어. 지금 기준은 톱니가 있는지야.",
+      "ready": true,
+      "refreshPreserved": true,
+      "coreCompletionUnchanged": true,
+      "brokenImages": []
+    },
+    {
+      "mission": 2,
+      "stages": 3,
+      "wrongFeedback": "리피: 땅 위가 시들어도 땅속에 살아 있던 뿌리에서 새싹이 나와.",
+      "ready": true,
+      "refreshPreserved": true,
+      "coreCompletionUnchanged": true,
+      "brokenImages": []
+    },
+    {
+      "mission": 3,
+      "stages": 3,
+      "wrongFeedback": "수면과 수조 바닥 중 모형이 멈춘 곳을 다시 봐.",
+      "ready": true,
+      "refreshPreserved": true,
+      "coreCompletionUnchanged": true,
+      "brokenImages": []
+    },
+    {
+      "mission": 4,
+      "stages": 3,
+      "wrongFeedback": "자리의 빗물 단서를 봐. 오래 고여 있어, 고르게 배어들어, 아니면 빠르게 빠져?",
+      "retestAfterEdit": true,
+      "ready": true,
+      "refreshPreserved": true,
+      "coreCompletionUnchanged": true,
+      "brokenImages": []
+    },
+    {
+      "mission": 5,
+      "stages": 3,
+      "wrongFeedback": "덮개는 같아. 바뀐 겉면과 물방울 움직임을 봐.",
+      "ready": true,
+      "refreshPreserved": true,
+      "coreCompletionUnchanged": true,
+      "brokenImages": []
+    }
+  ],
+  "pageErrors": [],
+  "failures": [],
+  "finished": "2026-10-20T14:28:45.899Z",
+  "passed": true
+}

@@ -1,0 +1,57 @@
+{
+  "errors": [],
+  "checks": [
+    {
+      "width": 1280,
+      "height": 800,
+      "screen": "home",
+      "rendered": "home",
+      "overflow": false,
+      "endingImage": null
+    },
+    {
+      "width": 1280,
+      "height": 800,
+      "screen": "map",
+      "rendered": "map",
+      "overflow": false,
+      "endingImage": null
+    },
+    {
+      "width": 1280,
+      "height": 800,
+      "screen": "ending",
+      "rendered": "ending",
+      "overflow": false,
+      "endingImage": [
+        629,
+        293,
+        true
+      ]
+    },
+    {
+      "width": 873,
+      "height": 580,
+      "screen": "ending",
+      "rendered": "ending",
+      "overflow": false,
+      "endingImage": [
+        416,
+        171,
+        true
+      ]
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "screen": "ending",
+      "rendered": "ending",
+      "overflow": false,
+      "endingImage": [
+        339,
+        246,
+        true
+      ]
+    }
+  ]
+}

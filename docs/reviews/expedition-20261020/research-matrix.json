@@ -1,0 +1,336 @@
+{
+  "errors": [],
+  "checks": [
+    {
+      "width": 873,
+      "height": 580,
+      "page": 0,
+      "overflow": false,
+      "footerVisible": true,
+      "scene": [
+        368,
+        404
+      ]
+    },
+    {
+      "width": 873,
+      "height": 580,
+      "page": 1,
+      "overflow": false,
+      "footerVisible": true,
+      "scene": [
+        368,
+        368
+      ]
+    },
+    {
+      "width": 873,
+      "height": 580,
+      "page": 2,
+      "overflow": false,
+      "footerVisible": true,
+      "scene": [
+        368,
+        368
+      ]
+    },
+    {
+      "width": 873,
+      "height": 580,
+      "page": 3,
+      "overflow": false,
+      "footerVisible": true,
+      "scene": [
+        368,
+        368
+      ]
+    },
+    {
+      "width": 873,
+      "height": 580,
+      "page": 4,
+      "overflow": false,
+      "footerVisible": true,
+      "scene": [
+        368,
+        368
+      ]
+    },
+    {
+      "width": 873,
+      "height": 580,
+      "page": 5,
+      "overflow": false,
+      "footerVisible": true,
+      "scene": [
+        368,
+        368
+      ]
+    },
+    {
+      "width": 873,
+      "height": 580,
+      "page": 6,
+      "overflow": false,
+      "footerVisible": true,
+      "scene": [
+        368,
+        368
+      ]
+    },
+    {
+      "width": 873,
+      "height": 580,
+      "page": 7,
+      "overflow": false,
+      "footerVisible": true,
+      "scene": [
+        368,
+        368
+      ]
+    },
+    {
+      "width": 873,
+      "height": 580,
+      "page": 8,
+      "overflow": false,
+      "footerVisible": true,
+      "scene": [
+        368,
+        368
+      ]
+    },
+    {
+      "width": 873,
+      "height": 580,
+      "page": 9,
+      "overflow": false,
+      "footerVisible": true,
+      "scene": [
+        368,
+        368
+      ]
+    },
+    {
+      "width": 1280,
+      "height": 800,
+      "page": 0,
+      "overflow": false,
+      "footerVisible": true,
+      "scene": [
+        572,
+        572
+      ]
+    },
+    {
+      "width": 1280,
+      "height": 800,
+      "page": 1,
+      "overflow": false,
+      "footerVisible": true,
+      "scene": [
+        572,
+        572
+      ]
+    },
+    {
+      "width": 1280,
+      "height": 800,
+      "page": 2,
+      "overflow": false,
+      "footerVisible": true,
+      "scene": [
+        572,
+        572
+      ]
+    },
+    {
+      "width": 1280,
+      "height": 800,
+      "page": 3,
+      "overflow": false,
+      "footerVisible": true,
+      "scene": [
+        572,
+        572
+      ]
+    },
+    {
+      "width": 1280,
+      "height": 800,
+      "page": 4,
+      "overflow": false,
+      "footerVisible": true,
+      "scene": [
+        572,
+        572
+      ]
+    },
+    {
+      "width": 1280,
+      "height": 800,
+      "page": 5,
+      "overflow": false,
+      "footerVisible": true,
+      "scene": [
+        572,
+        572
+      ]
+    },
+    {
+      "width": 1280,
+      "height": 800,
+      "page": 6,
+      "overflow": false,
+      "footerVisible": true,
+      "scene": [
+        572,
+        572
+      ]
+    },
+    {
+      "width": 1280,
+      "height": 800,
+      "page": 7,
+      "overflow": false,
+      "footerVisible": true,
+      "scene": [
+        572,
+        572
+      ]
+    },
+    {
+      "width": 1280,
+      "height": 800,
+      "page": 8,
+      "overflow": false,
+      "footerVisible": true,
+      "scene": [
+        572,
+        572
+      ]
+    },
+    {
+      "width": 1280,
+      "height": 800,
+      "page": 9,
+      "overflow": false,
+      "footerVisible": true,
+      "scene": [
+        572,
+        572
+      ]
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "page": 0,
+      "overflow": false,
+      "footerVisible": true,
+      "scene": [
+        609,
+        609
+      ]
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "page": 1,
+      "overflow": false,
+      "footerVisible": true,
+      "scene": [
+        565,
+        565
+      ]
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "page": 2,
+      "overflow": false,
+      "footerVisible": true,
+      "scene": [
+        524,
+        524
+      ]
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "page": 3,
+      "overflow": false,
+      "footerVisible": true,
+      "scene": [
+        420,
+        420
+      ]
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "page": 4,
+      "overflow": false,
+      "footerVisible": true,
+      "scene": [
+        457,
+        457
+      ]
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "page": 5,
+      "overflow": false,
+      "footerVisible": true,
+      "scene": [
+        679,
+        679
+      ]
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "page": 6,
+      "overflow": false,
+      "footerVisible": true,
+      "scene": [
+        595,
+        595
+      ]
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "page": 7,
+      "overflow": false,
+      "footerVisible": true,
+      "scene": [
+        421,
+        421
+      ]
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "page": 8,
+      "overflow": false,
+      "footerVisible": true,
+      "scene": [
+        443,
+        443
+      ]
+    },
+    {
+      "width": 375,
+      "height": 812,
+      "page": 9,
+      "overflow": false,
+      "footerVisible": true,
+      "scene": [
+        420,
+        420
+      ]
+    }
+  ],
+  "settlingNote": "The initial 1280×800 page 1 footer measurement occurred during scene entry. A dedicated 600 ms settled recheck measured main 1280×800, footer y=728/h=72/bottom=800, all three footer buttons within y=735..787, and document width 1280."
+}

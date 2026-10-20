@@ -1,3 +1,4 @@
+import {normalizeFieldEvidence,fieldMissionReady} from './field-missions-state.js';
 export const STORAGE_KEY = 'green-garden-mvp-v2';
 export const LEGACY_STORAGE_KEY = 'green-garden-mvp-v1';
 export const PLANTS = [
@@ -62,7 +63,7 @@ export const PAGES = [
 ];
 export const SEASONS=['봄','여름','가을','겨울'];
 export function freshState() {
-  return {version:2,legacyCompleted:[],legacyFinished:false,leafEvidence:{},groupsByRule:{edge:{},narrow:{}},classificationEvidence:{},seasonPhotos:{},seasonExplanation:'',seasonExplained:[],habitatFeatures:{},experimentAnswer:'',gardenReviewed:false,testExplanation:null,testPrediction:'',seasonPrediction:{},undergroundSeen:[],misses:Array(5).fill(0),stamps:{direct:[],fixed:[]},sharing:{status:'pending',question:'',response:''},highlight:0,screen:'home',page:0,completed:Array(10).fill(false),observation:{cherry:[],ginkgo:[],grass:[]},rule:'edge',groups:{},seasonPlant:'cherry',season:1,underground:false,seasonalRecords:[],linkedEvidence:[],experiment:{step:0,compared:false,prediction:''},habitats:{},reasons:{},terrain:Array(24).fill('empty'),garden:{},gardenReasons:[],design:{surface:'plain',cover:'open',linked:false},tests:[],reportSubmitted:[],finalChecks:{classification:false,habitat:false,garden:false,invention:false},finished:false,gardenTheme:'pink',largeText:false,soundEnabled:true,adminUnlocked:false};
+  return {version:2,fieldEvidence:normalizeFieldEvidence(null),journeyRequired:Array(5).fill(false),legacyCompleted:[],legacyFinished:false,leafEvidence:{},groupsByRule:{edge:{},narrow:{}},classificationEvidence:{},seasonPhotos:{},seasonExplanation:'',seasonExplained:[],habitatFeatures:{},experimentAnswer:'',gardenReviewed:false,testExplanation:null,testPrediction:'',seasonPrediction:{},undergroundSeen:[],misses:Array(5).fill(0),stamps:{direct:[],fixed:[]},sharing:{status:'pending',question:'',response:''},highlight:0,screen:'home',page:0,completed:Array(10).fill(false),observation:{cherry:[],ginkgo:[],grass:[]},rule:'edge',groups:{},seasonPlant:'cherry',season:1,underground:false,seasonalRecords:[],linkedEvidence:[],experiment:{step:0,compared:false,prediction:''},habitats:{},reasons:{},terrain:Array(24).fill('empty'),garden:{},gardenReasons:[],design:{surface:'plain',cover:'open',linked:false},tests:[],reportSubmitted:[],finalChecks:{classification:false,habitat:false,garden:false,invention:false},finished:false,gardenTheme:'pink',largeText:false,soundEnabled:true,adminUnlocked:false};
 }
 export function presetTerrain(){return Array.from({length:24},(_,i)=>['water','grass','dry'][Math.floor((i%6)/2)]);}
 export function evidenceCount(s){return MISSIONS.filter((_,i)=>s.completed[i*2]&&s.completed[i*2+1]).length;}
@@ -106,6 +107,7 @@ export function recordFeature(s,plant,region,answer){
 }
 export function classificationComplete(s,rule){const groups=rule===s.rule?s.groups:s.groupsByRule[rule];return PLANTS.every(p=>groups[p.id]===(p[rule]?'yes':'no'))&&PLANTS.some(p=>p.id===s.classificationEvidence[rule]&&s.observation[p.id].includes(rule==='edge'?'edge':'shape'));}
 export function pageReady(s,p){
+  const mission=Math.floor(p/2);if(p%2&&!s.completed[p]&&s.journeyRequired?.[mission]&&!fieldMissionReady(s,mission))return false;
   switch(p){
     case 0:return PLANTS.every(x=>['shape','edge'].every(f=>s.leafEvidence[x.id]?.[f]?.answer===(f==='shape'?x.id:x.edge?'yes':'no')));
     case 1:return pageReady(s,0)&&['edge','narrow'].every(rule=>classificationComplete(s,rule));
@@ -127,6 +129,8 @@ export function restoreState(raw){
   try {
     const v=JSON.parse(raw); if(!v||![1,2].includes(v.version))return s;
     const member=(x,a)=>a.includes(x);
+    s.fieldEvidence=normalizeFieldEvidence(v.fieldEvidence);
+    s.journeyRequired=s.journeyRequired.map((_,i)=>v.journeyRequired?.[i]===true);
     if(member(v.screen,['home','map','activity','report','final','ending']))s.screen=v.screen;
     if(Number.isInteger(v.page)&&v.page>=0&&v.page<10)s.page=v.page;
     if(Array.isArray(v.completed)&&v.completed.length===10)s.completed=v.completed.map(x=>x===true);

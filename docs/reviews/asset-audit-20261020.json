@@ -1,0 +1,1347 @@
+{
+  "date": "2026-10-20",
+  "scope": "assets/ inventory; current source static search only; not browser network verification",
+  "groups": {
+    "png": {
+      "count": 50,
+      "bytes": 91124421
+    },
+    "webp": {
+      "count": 63,
+      "bytes": 11078648
+    },
+    "md": {
+      "count": 2,
+      "bytes": 9114
+    },
+    "txt": {
+      "count": 3,
+      "bytes": 9974
+    },
+    "woff2": {
+      "count": 8,
+      "bytes": 1151272
+    },
+    "glb": {
+      "count": 3,
+      "bytes": 2174596
+    }
+  },
+  "catalogKeys": 56,
+  "missingCatalog": [],
+  "duplicateGroups": [],
+  "files": [
+    {
+      "path": "assets/title.png",
+      "bytes": 950779,
+      "type": "png",
+      "sha256": "0d8615ac55f8ac27a21a0362d6e7bd4cae21c5f0addfd987f1c1b3aa34d5d53a",
+      "width": 1672,
+      "height": 941,
+      "hasAlpha": true,
+      "modifiedAt": "2026-09-23T11:08:00.000Z"
+    },
+    {
+      "path": "assets/characters.png",
+      "bytes": 1718700,
+      "type": "png",
+      "sha256": "c39b17689020a9b9588d1292c6c2547ff0d1cced58190e2854cece37139f95b2",
+      "width": 1672,
+      "height": 941,
+      "hasAlpha": false,
+      "modifiedAt": "2026-09-23T11:08:00.000Z"
+    },
+    {
+      "path": "assets/generated/water_hyacinth_whole.png",
+      "bytes": 1257260,
+      "type": "png",
+      "sha256": "1efe54eb00e25a2525f407a2f668824eaca3d724627286e04f3bfaca25b8665e",
+      "width": 1214,
+      "height": 1295,
+      "hasAlpha": true,
+      "modifiedAt": "2026-10-14T13:24:34.000Z"
+    },
+    {
+      "path": "assets/generated/research_bag_body.png",
+      "bytes": 1817473,
+      "type": "png",
+      "sha256": "131ed46ebf27795e1df53a3f912c1fe0c6c96aec6623fc5d44107282d571c8f5",
+      "width": 1536,
+      "height": 1024,
+      "hasAlpha": true,
+      "modifiedAt": "2026-10-14T13:25:36.000Z"
+    },
+    {
+      "path": "assets/generated/lotus_leaf_whole.png",
+      "bytes": 1234637,
+      "type": "png",
+      "sha256": "2d29a371c8639945ba6a0827c2c0e8a91958de1052f27cc2a6c21e2202edce67",
+      "width": 1312,
+      "height": 1199,
+      "hasAlpha": true,
+      "modifiedAt": "2026-10-14T13:26:02.000Z"
+    },
+    {
+      "path": "assets/generated/plant_lab_background.png",
+      "bytes": 1565595,
+      "type": "png",
+      "sha256": "c7242952885ea6f2f03da84e098823f138ab1294b352e1a94ae9105325cdcec8",
+      "width": 1672,
+      "height": 941,
+      "hasAlpha": false,
+      "modifiedAt": "2026-10-14T13:26:22.000Z"
+    },
+    {
+      "path": "assets/generated/hyacinth_petiole_whole.png",
+      "bytes": 687634,
+      "type": "png",
+      "sha256": "179803f4dced6d573f911efb58b30c17da47bb75af1249245b288d750f98a6e5",
+      "width": 1312,
+      "height": 1199,
+      "hasAlpha": true,
+      "modifiedAt": "2026-10-14T13:30:06.000Z"
+    },
+    {
+      "path": "assets/generated/aloe_leaf_cutaway.png",
+      "bytes": 1694261,
+      "type": "png",
+      "sha256": "d19b925d8b1580090352c3b1cc71669a9a862a39b8705b75acc46dc5809eb32a",
+      "width": 1536,
+      "height": 1024,
+      "hasAlpha": true,
+      "modifiedAt": "2026-10-14T13:30:50.000Z"
+    },
+    {
+      "path": "assets/generated/hyacinth_petiole_cutaway.png",
+      "bytes": 814720,
+      "type": "png",
+      "sha256": "c18c47d644b97f132695d51773bc49e811fb193d7dc7b044e30886e715bcde8c",
+      "width": 1312,
+      "height": 1199,
+      "hasAlpha": true,
+      "modifiedAt": "2026-10-14T13:36:30.000Z"
+    },
+    {
+      "path": "assets/generated/lotus_surface_diagram.png",
+      "bytes": 1399650,
+      "type": "png",
+      "sha256": "364d9988916b71deb47713d4e34ac5a442f85aecc40791913afa78cc54805451",
+      "width": 1312,
+      "height": 1199,
+      "hasAlpha": true,
+      "modifiedAt": "2026-10-14T13:31:50.000Z"
+    },
+    {
+      "path": "assets/generated/cherry_leaf.png",
+      "bytes": 1143827,
+      "type": "png",
+      "sha256": "298aa5ac47ade9e9b73129ba9b9f27d1e2bedd9387bd704225f2500fae0a0f7d",
+      "width": 1254,
+      "height": 1254,
+      "hasAlpha": true,
+      "modifiedAt": "2026-10-14T13:34:20.000Z"
+    },
+    {
+      "path": "assets/generated/ginkgo_leaf.png",
+      "bytes": 1132064,
+      "type": "png",
+      "sha256": "798d1d998d419bc03a0908edd16c7ae4fc605f2efb5c3fecc9101a2c8ed3861d",
+      "width": 1254,
+      "height": 1254,
+      "hasAlpha": true,
+      "modifiedAt": "2026-10-14T13:32:34.000Z"
+    },
+    {
+      "path": "assets/generated/grass_leaf.png",
+      "bytes": 271745,
+      "type": "png",
+      "sha256": "a7aa84859ec17be7a1906a861ac3a84d88a7142b0507e67acef933b5559d78fb",
+      "width": 1254,
+      "height": 1254,
+      "hasAlpha": true,
+      "modifiedAt": "2026-10-14T13:34:54.000Z"
+    },
+    {
+      "path": "assets/generated/aloe_plant.png",
+      "bytes": 1092630,
+      "type": "png",
+      "sha256": "2d34e8053fe1946f819643f9d488a453939f85db93c0e128a4d86d1b747b2517",
+      "width": 1254,
+      "height": 1254,
+      "hasAlpha": true,
+      "modifiedAt": "2026-10-14T13:33:08.000Z"
+    },
+    {
+      "path": "assets/generated/cherry_tree.png",
+      "bytes": 1585097,
+      "type": "png",
+      "sha256": "31a396dadceb7e85278a35d0c0f2c1ac932eb7d7b5f0461a78faae1e0d6ac6eb",
+      "width": 1254,
+      "height": 1254,
+      "hasAlpha": true,
+      "modifiedAt": "2026-10-14T13:33:52.000Z"
+    },
+    {
+      "path": "assets/generated/garden_hero.png",
+      "bytes": 2382779,
+      "type": "png",
+      "sha256": "d4f67dcef2bd2bfcb3619c7bb513284daa5a5233058019a8e37f33d67fd6d80c",
+      "width": 1672,
+      "height": 941,
+      "hasAlpha": false,
+      "modifiedAt": "2026-10-14T13:35:14.000Z"
+    },
+    {
+      "path": "assets/generated/research_bag_closed.png",
+      "bytes": 2534179,
+      "type": "png",
+      "sha256": "3fbf93c4455f6ec6cff0dbe4476aaaa9c285fe4e00d700591ea10068c9423fb5",
+      "width": 1536,
+      "height": 1024,
+      "hasAlpha": true,
+      "modifiedAt": "2026-10-14T13:44:52.000Z"
+    },
+    {
+      "path": "assets/generated/aloe_leaf_cutaway.webp",
+      "bytes": 129932,
+      "type": "webp",
+      "sha256": "35ce5d8d1277fdde470572c35932ad390e5a691b9196ddf1905f88e6b73d855d",
+      "width": 1536,
+      "height": 1024,
+      "hasAlpha": true,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-14T13:45:50.000Z"
+    },
+    {
+      "path": "assets/generated/aloe_plant.webp",
+      "bytes": 195838,
+      "type": "webp",
+      "sha256": "fc18fa3d7c0cc49d06d223ba1d63a44765a4314b2c89bfc275cb3c57fad6b75e",
+      "width": 1254,
+      "height": 1254,
+      "hasAlpha": true,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-14T13:46:00.000Z"
+    },
+    {
+      "path": "assets/generated/cherry_leaf.webp",
+      "bytes": 172302,
+      "type": "webp",
+      "sha256": "e03eb8828ace5d0d1668b9daf3c8959d609cb2325603949966b1d57de63ba66c",
+      "width": 1254,
+      "height": 1254,
+      "hasAlpha": true,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-14T13:46:06.000Z"
+    },
+    {
+      "path": "assets/generated/cherry_tree.webp",
+      "bytes": 438072,
+      "type": "webp",
+      "sha256": "5ea93ed6e3f3a2ac1e790add418b4c209fe9143ae29ba10f4722f83635449e27",
+      "width": 1254,
+      "height": 1254,
+      "hasAlpha": true,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-14T13:46:24.000Z"
+    },
+    {
+      "path": "assets/generated/garden_hero.webp",
+      "bytes": 298168,
+      "type": "webp",
+      "sha256": "0003e1c1faeeb5a7acb16abb89fe5184a484bdaa9495de472b45dbd284aa1e01",
+      "width": 1672,
+      "height": 941,
+      "hasAlpha": false,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-14T13:46:24.000Z"
+    },
+    {
+      "path": "assets/generated/ginkgo_leaf.webp",
+      "bytes": 163890,
+      "type": "webp",
+      "sha256": "35fd9d3d6a28986cebf61a66747287441709537fc06c1b924b4827ece4a02efd",
+      "width": 1254,
+      "height": 1254,
+      "hasAlpha": true,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-14T13:46:34.000Z"
+    },
+    {
+      "path": "assets/generated/grass_leaf.webp",
+      "bytes": 54746,
+      "type": "webp",
+      "sha256": "ba7798e30353e11875e375f50d71a476d7bdd3c1afe461df1bc4cf89ec753a1c",
+      "width": 1254,
+      "height": 1254,
+      "hasAlpha": true,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-14T13:46:36.000Z"
+    },
+    {
+      "path": "assets/generated/hyacinth_petiole_cutaway.webp",
+      "bytes": 112136,
+      "type": "webp",
+      "sha256": "32698932f3a84006a9530d110a8c955df7a8bf4584cea05e1b0b8797b49b4074",
+      "width": 1312,
+      "height": 1199,
+      "hasAlpha": true,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-14T13:46:42.000Z"
+    },
+    {
+      "path": "assets/generated/hyacinth_petiole_whole.webp",
+      "bytes": 100262,
+      "type": "webp",
+      "sha256": "55c27c58ed8f6e98e271150991eb559020a939d9e68bc37a5a42613ea0bcb4dc",
+      "width": 1312,
+      "height": 1199,
+      "hasAlpha": true,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-14T13:46:50.000Z"
+    },
+    {
+      "path": "assets/generated/lotus_leaf_whole.webp",
+      "bytes": 141798,
+      "type": "webp",
+      "sha256": "73cc008c9cf2a56a0f05b306c5d9fa8723dcdd195a3d8d3d07bd1fb4a6e49fa0",
+      "width": 1312,
+      "height": 1199,
+      "hasAlpha": true,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-14T13:46:58.000Z"
+    },
+    {
+      "path": "assets/generated/lotus_surface_diagram.webp",
+      "bytes": 157708,
+      "type": "webp",
+      "sha256": "3e814b37b8895623ba657b79696aa1ca7ea22a4d59cd0c93d26b61f1409b38f0",
+      "width": 1312,
+      "height": 1199,
+      "hasAlpha": true,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-14T13:47:04.000Z"
+    },
+    {
+      "path": "assets/generated/plant_lab_background.webp",
+      "bytes": 113304,
+      "type": "webp",
+      "sha256": "9d80d389d9c206b68d446672edca8067b5d060ad714d1ec67292e97a9b597165",
+      "width": 1672,
+      "height": 941,
+      "hasAlpha": false,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-14T13:47:04.000Z"
+    },
+    {
+      "path": "assets/generated/research_bag_body.webp",
+      "bytes": 159782,
+      "type": "webp",
+      "sha256": "4c66c69511d6743a85b510c218f42296ec825c444a7948d3edf82f1de3e7267f",
+      "width": 1536,
+      "height": 1024,
+      "hasAlpha": true,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-14T13:47:14.000Z"
+    },
+    {
+      "path": "assets/generated/research_bag_closed.webp",
+      "bytes": 319368,
+      "type": "webp",
+      "sha256": "c75c9b78653c44ed688f19f7375c2df55c45cd33b0d83fd2f6793c507ed16d43",
+      "width": 1536,
+      "height": 1024,
+      "hasAlpha": true,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-14T13:47:26.000Z"
+    },
+    {
+      "path": "assets/generated/water_hyacinth_whole.webp",
+      "bytes": 261094,
+      "type": "webp",
+      "sha256": "f229be8cad23df2ddfdc56208d7d8a732066a070673a7a1ba72f0b4f739f8ff3",
+      "width": 1214,
+      "height": 1295,
+      "hasAlpha": true,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-14T13:47:48.000Z"
+    },
+    {
+      "path": "assets/generated/mascot_leaf.png",
+      "bytes": 820150,
+      "type": "png",
+      "sha256": "cfce179d439fecc68178d48fabba95db8b70172cfc86b0a7ec991e096a0576d1",
+      "width": 1227,
+      "height": 1282,
+      "hasAlpha": true,
+      "modifiedAt": "2026-10-15T12:36:02.000Z"
+    },
+    {
+      "path": "assets/generated/mascot_water.png",
+      "bytes": 714475,
+      "type": "png",
+      "sha256": "26df8157977a2a28c6d384295931444f948c844a0261cf41bf5f2eb5a7d619eb",
+      "width": 1223,
+      "height": 1286,
+      "hasAlpha": true,
+      "modifiedAt": "2026-10-15T12:36:44.000Z"
+    },
+    {
+      "path": "assets/generated/mascot_flower.png",
+      "bytes": 953198,
+      "type": "png",
+      "sha256": "7c510a047e5ae269999fc0a2351c80fb8863756e36a7a5eb9ee266268385592a",
+      "width": 1245,
+      "height": 1263,
+      "hasAlpha": true,
+      "modifiedAt": "2026-10-15T12:37:26.000Z"
+    },
+    {
+      "path": "assets/generated/reward_observatory.png",
+      "bytes": 2475781,
+      "type": "png",
+      "sha256": "0dcc8ac416eca0344d35593515e2b4cb56335f81015f134d356d1f3eda07ef2b",
+      "width": 1312,
+      "height": 1199,
+      "hasAlpha": true,
+      "modifiedAt": "2026-10-15T12:38:50.000Z"
+    },
+    {
+      "path": "assets/generated/reward_seasons.png",
+      "bytes": 1961868,
+      "type": "png",
+      "sha256": "15527033f755a6648ac48ca0c7f9d417e79747ca6928d1300dcb24e1de556ef9",
+      "width": 1312,
+      "height": 1199,
+      "hasAlpha": true,
+      "modifiedAt": "2026-10-15T12:39:36.000Z"
+    },
+    {
+      "path": "assets/generated/reward_water.png",
+      "bytes": 2360252,
+      "type": "png",
+      "sha256": "0e6d292171eb3c131f3387276680dc342e7c27ab52f9596caa51a927e1b03f09",
+      "width": 1312,
+      "height": 1199,
+      "hasAlpha": true,
+      "modifiedAt": "2026-10-15T12:40:26.000Z"
+    },
+    {
+      "path": "assets/generated/reward_garden.png",
+      "bytes": 2207302,
+      "type": "png",
+      "sha256": "fb52ea94d7076ef89e3b0a99448e415e1b040edb3687699f453088913f089895",
+      "width": 1312,
+      "height": 1199,
+      "hasAlpha": true,
+      "modifiedAt": "2026-10-15T12:41:12.000Z"
+    },
+    {
+      "path": "assets/generated/reward_workshop.png",
+      "bytes": 2180022,
+      "type": "png",
+      "sha256": "1c27bbadbf120fb7d9be39836bc2bae35813527652a15ee328f97a38c954ae7e",
+      "width": 1374,
+      "height": 1145,
+      "hasAlpha": true,
+      "modifiedAt": "2026-10-15T12:41:56.000Z"
+    },
+    {
+      "path": "assets/generated/notebook_dry.png",
+      "bytes": 1453852,
+      "type": "png",
+      "sha256": "0d756836f261a85f7d38a3032e634eed670d9b58f15c61f8e26c1c606324e0a2",
+      "width": 1254,
+      "height": 1254,
+      "hasAlpha": true,
+      "modifiedAt": "2026-10-15T12:40:30.000Z"
+    },
+    {
+      "path": "assets/generated/notebook_wet.png",
+      "bytes": 1609358,
+      "type": "png",
+      "sha256": "3bedc43cd904ffc81cbd95f262d7a49783ffbea92a7a57461bebd6c558c2e7fd",
+      "width": 1254,
+      "height": 1254,
+      "hasAlpha": true,
+      "modifiedAt": "2026-10-15T12:41:10.000Z"
+    },
+    {
+      "path": "assets/generated/bag_lotus_open.png",
+      "bytes": 2579989,
+      "type": "png",
+      "sha256": "89d2f158f1d2b9d2518f8a6940dbd0fefa9d092ffce88e68e077216a336e8544",
+      "width": 1536,
+      "height": 1024,
+      "hasAlpha": true,
+      "modifiedAt": "2026-10-15T12:40:24.000Z"
+    },
+    {
+      "path": "assets/generated/bag_lotus_closed.png",
+      "bytes": 2778379,
+      "type": "png",
+      "sha256": "9b255c7363844965fe939375adf0b702abcef1bf50e6b1283977120e4a0d20d4",
+      "width": 1536,
+      "height": 1024,
+      "hasAlpha": true,
+      "modifiedAt": "2026-10-15T12:40:54.000Z"
+    },
+    {
+      "path": "assets/generated/bag_lotus_closed.webp",
+      "bytes": 362180,
+      "type": "webp",
+      "sha256": "c494c67eb833b1648647f405198b37a4144cf857c2bb91be99bdea01d3b997e0",
+      "width": 1536,
+      "height": 1024,
+      "hasAlpha": true,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-15T12:48:32.000Z"
+    },
+    {
+      "path": "assets/generated/bag_lotus_open.webp",
+      "bytes": 311654,
+      "type": "webp",
+      "sha256": "c0ba999dce7e94c4fd3a9b33f54d38555f0b90487b02d6dc77dc3865407b3e73",
+      "width": 1536,
+      "height": 1024,
+      "hasAlpha": true,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-15T12:48:48.000Z"
+    },
+    {
+      "path": "assets/generated/mascot_flower.webp",
+      "bytes": 109374,
+      "type": "webp",
+      "sha256": "b0abb31ec1038c3828f048b647b6cdf9add263dcb4b92f07a8188629c487ea40",
+      "width": 1245,
+      "height": 1263,
+      "hasAlpha": true,
+      "reference": "dynamic-mascot-key",
+      "referenceEvidence": "src/app.js mascot(kind): mascot_${kind}",
+      "modifiedAt": "2026-10-15T12:48:54.000Z"
+    },
+    {
+      "path": "assets/generated/mascot_leaf.webp",
+      "bytes": 109810,
+      "type": "webp",
+      "sha256": "e0cd03a53118ecb952d17cfe6e3c083845decb2810fcb717137328d1f41b2d53",
+      "width": 1227,
+      "height": 1282,
+      "hasAlpha": true,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-15T12:49:02.000Z"
+    },
+    {
+      "path": "assets/generated/mascot_water.webp",
+      "bytes": 93770,
+      "type": "webp",
+      "sha256": "8910455ac9170d0be3acc756d5764d69f50256a94b42f6b11413414bf2ee3789",
+      "width": 1223,
+      "height": 1286,
+      "hasAlpha": true,
+      "reference": "dynamic-mascot-key",
+      "referenceEvidence": "src/app.js mascot(kind): mascot_${kind}",
+      "modifiedAt": "2026-10-15T12:49:14.000Z"
+    },
+    {
+      "path": "assets/generated/notebook_dry.webp",
+      "bytes": 200406,
+      "type": "webp",
+      "sha256": "275d747aecb5ea4474814abb6fac5915371db78847b2b7274786be8a14caaf2b",
+      "width": 1254,
+      "height": 1254,
+      "hasAlpha": true,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-15T12:49:30.000Z"
+    },
+    {
+      "path": "assets/generated/notebook_wet.webp",
+      "bytes": 248834,
+      "type": "webp",
+      "sha256": "1c592a2fcc1535833e98fe5995a84d705c0c0780633f9fa294e379dd2c587471",
+      "width": 1254,
+      "height": 1254,
+      "hasAlpha": true,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-15T12:49:46.000Z"
+    },
+    {
+      "path": "assets/generated/reward_garden.webp",
+      "bytes": 460564,
+      "type": "webp",
+      "sha256": "647e7986af5fe3ff2c1efca4e5f9db4562ba86f368cbe3740791f747b07ae8fc",
+      "width": 1312,
+      "height": 1199,
+      "hasAlpha": true,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-15T12:50:08.000Z"
+    },
+    {
+      "path": "assets/generated/reward_observatory.webp",
+      "bytes": 451754,
+      "type": "webp",
+      "sha256": "064e57627aa152a508bfab0135ff3cc0802772910708c4aa043ef9968d8e1640",
+      "width": 1312,
+      "height": 1199,
+      "hasAlpha": true,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-15T12:50:20.000Z"
+    },
+    {
+      "path": "assets/generated/reward_seasons.webp",
+      "bytes": 356730,
+      "type": "webp",
+      "sha256": "a44a3408c23412f89def6fedb539871fffd498365cea1dea695fd1b7b0c5438f",
+      "width": 1312,
+      "height": 1199,
+      "hasAlpha": true,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-15T12:50:28.000Z"
+    },
+    {
+      "path": "assets/generated/reward_water.webp",
+      "bytes": 457328,
+      "type": "webp",
+      "sha256": "6ac52a78394be1bf7934dc5fb359a26437c659bfb231750379e87d6400a2edfc",
+      "width": 1312,
+      "height": 1199,
+      "hasAlpha": true,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-15T12:50:38.000Z"
+    },
+    {
+      "path": "assets/generated/reward_workshop.webp",
+      "bytes": 345250,
+      "type": "webp",
+      "sha256": "f612694142e9e94be7a282077bf862e2b7f6f2d99eb4cbb18e63603410ada21b",
+      "width": 1374,
+      "height": 1145,
+      "hasAlpha": true,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-15T12:50:50.000Z"
+    },
+    {
+      "path": "assets/generated/greenhouse_studio_v1.png",
+      "bytes": 2288920,
+      "type": "png",
+      "sha256": "4188f25528729192156de782ca241ad71957eb6ddb830a70a3180c228500118b",
+      "width": 1536,
+      "height": 1024,
+      "hasAlpha": false,
+      "modifiedAt": "2026-10-18T11:17:18.000Z"
+    },
+    {
+      "path": "assets/generated/greenhouse_studio_v1.webp",
+      "bytes": 259178,
+      "type": "webp",
+      "sha256": "d40ca92c644998c3661f95695681e1a7179d97432363779c41da709a369227a1",
+      "width": 1536,
+      "height": 1024,
+      "hasAlpha": false,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-18T11:19:02.000Z"
+    },
+    {
+      "path": "assets/generated/cherry_seasons_v2.png",
+      "bytes": 3941447,
+      "type": "png",
+      "sha256": "8a28d1ed785875845274742bbde3558ad49e5a46a790ab748c4d3cd96ca8dcac",
+      "width": 1536,
+      "height": 1024,
+      "hasAlpha": false,
+      "modifiedAt": "2026-10-18T13:12:52.000Z"
+    },
+    {
+      "path": "assets/generated/workshop_studio_v2.png",
+      "bytes": 2577047,
+      "type": "png",
+      "sha256": "539efe6e4cf17798cd41edc5f41f0f10b9e29ba300ce25d3d2343cc3d7b42337",
+      "width": 1536,
+      "height": 1024,
+      "hasAlpha": false,
+      "modifiedAt": "2026-10-18T13:12:18.000Z"
+    },
+    {
+      "path": "assets/generated/sowthistle_seasons_v2.png",
+      "bytes": 3383557,
+      "type": "png",
+      "sha256": "b31c7550cd4bcee40c7983ad576b7015843b88ef3d7540f067fa71a18a47b8f6",
+      "width": 1536,
+      "height": 1024,
+      "hasAlpha": false,
+      "modifiedAt": "2026-10-18T13:13:28.000Z"
+    },
+    {
+      "path": "assets/generated/map_trail_v2.png",
+      "bytes": 4093700,
+      "type": "png",
+      "sha256": "e8dbded48c03caed78a313c0217a809d88dec96207166c248b8f209a7f567484",
+      "width": 1536,
+      "height": 1024,
+      "hasAlpha": false,
+      "modifiedAt": "2026-10-18T13:14:12.000Z"
+    },
+    {
+      "path": "assets/generated/cherry_seasons_v2.webp",
+      "bytes": 718726,
+      "type": "webp",
+      "sha256": "734704d011582e96922aaf8c3fb271b45a4bb66eb458e2517c7beb28092db7fd",
+      "width": 1536,
+      "height": 1024,
+      "hasAlpha": false,
+      "reference": "dynamic-season-key",
+      "referenceEvidence": "src/art.js seasonArt(): ${plant}_seasons_v2",
+      "modifiedAt": "2026-10-18T13:16:36.000Z"
+    },
+    {
+      "path": "assets/generated/map_trail_v2.webp",
+      "bytes": 780704,
+      "type": "webp",
+      "sha256": "66ad8302eb7f8118b37b0002d0f19f292c340ce7b65338773cda33c0c3446d29",
+      "width": 1536,
+      "height": 1024,
+      "hasAlpha": false,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-18T13:16:38.000Z"
+    },
+    {
+      "path": "assets/generated/sowthistle_seasons_v2.webp",
+      "bytes": 538918,
+      "type": "webp",
+      "sha256": "d2d56d63ee66b8a1e79186542d2c50e5811f7521bef9642ed4d598462cd41d09",
+      "width": 1536,
+      "height": 1024,
+      "hasAlpha": false,
+      "reference": "dynamic-season-key",
+      "referenceEvidence": "src/art.js seasonArt(): ${plant}_seasons_v2",
+      "modifiedAt": "2026-10-18T13:16:40.000Z"
+    },
+    {
+      "path": "assets/generated/workshop_studio_v2.webp",
+      "bytes": 323024,
+      "type": "webp",
+      "sha256": "848cd4c05fb8845365564fc2b2ae002830a6abd5006541484dec5ab6c1e1a0bb",
+      "width": 1536,
+      "height": 1024,
+      "hasAlpha": false,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-18T13:16:40.000Z"
+    },
+    {
+      "path": "assets/generated/reward_observatory_thumb.webp",
+      "bytes": 16426,
+      "type": "webp",
+      "sha256": "bd970e983385355affea7cf6091b0c8484a77c31b6ac55639a02cc8c869ec837",
+      "width": 240,
+      "height": 219,
+      "hasAlpha": true,
+      "reference": "dynamic-thumbnail-key",
+      "modifiedAt": "2026-10-19T10:34:52.000Z"
+    },
+    {
+      "path": "assets/generated/reward_seasons_thumb.webp",
+      "bytes": 12822,
+      "type": "webp",
+      "sha256": "74dc73cc2ecb6f992d2806238d2c1179e2743e7f4e8f9f4cb1cd38e145d9d7a5",
+      "width": 240,
+      "height": 219,
+      "hasAlpha": true,
+      "reference": "dynamic-thumbnail-key",
+      "modifiedAt": "2026-10-19T10:34:52.000Z"
+    },
+    {
+      "path": "assets/generated/reward_water_thumb.webp",
+      "bytes": 18794,
+      "type": "webp",
+      "sha256": "d349b6cac88b2e9fff507dd7b25450ae8ef4923dad44f27f2a02a138b27d4c90",
+      "width": 240,
+      "height": 219,
+      "hasAlpha": true,
+      "reference": "dynamic-thumbnail-key",
+      "modifiedAt": "2026-10-19T10:34:52.000Z"
+    },
+    {
+      "path": "assets/generated/reward_garden_thumb.webp",
+      "bytes": 17978,
+      "type": "webp",
+      "sha256": "a6670b0e68b69a8da1294fcea5b4b46a0cba1014e6082ebedc228133262391a6",
+      "width": 240,
+      "height": 219,
+      "hasAlpha": true,
+      "reference": "dynamic-thumbnail-key",
+      "modifiedAt": "2026-10-19T10:34:52.000Z"
+    },
+    {
+      "path": "assets/generated/reward_workshop_thumb.webp",
+      "bytes": 13422,
+      "type": "webp",
+      "sha256": "ddabe7ad777198b528611574a96083c5b464d94cfac2bf8266cfa4440d4ac9ae",
+      "width": 240,
+      "height": 200,
+      "hasAlpha": true,
+      "reference": "dynamic-thumbnail-key",
+      "modifiedAt": "2026-10-19T10:34:52.000Z"
+    },
+    {
+      "path": "assets/generated/bg_m1_1_scan.png",
+      "bytes": 1833926,
+      "type": "png",
+      "sha256": "68a8f885f907fdeef8918016d1019ad86e343789d070eef4ec5fcbffb52cc105",
+      "width": 1672,
+      "height": 941,
+      "hasAlpha": false,
+      "modifiedAt": "2026-10-19T10:43:02.000Z"
+    },
+    {
+      "path": "assets/generated/bg_m1_1_scan.webp",
+      "bytes": 96092,
+      "type": "webp",
+      "sha256": "65eeac17bc3f59e775eddc48766ed7d4f122299d45bfc41c2c615c379474f522",
+      "width": 1600,
+      "height": 900,
+      "hasAlpha": false,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-19T10:43:02.000Z"
+    },
+    {
+      "path": "assets/generated/bg_m1_2_sort.png",
+      "bytes": 2070783,
+      "type": "png",
+      "sha256": "c3b2393e5a870e56152c8367bea702de755d46063caae21d2d39af215c270d59",
+      "width": 1672,
+      "height": 941,
+      "hasAlpha": false,
+      "modifiedAt": "2026-10-19T10:43:04.000Z"
+    },
+    {
+      "path": "assets/generated/bg_m1_2_sort.webp",
+      "bytes": 105466,
+      "type": "webp",
+      "sha256": "b7388e8e5c22c4e45faa32fcbc132a3bf894d841065c0ed970807e39f94f823d",
+      "width": 1600,
+      "height": 900,
+      "hasAlpha": false,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-19T10:43:04.000Z"
+    },
+    {
+      "path": "assets/generated/bg_m2_1_seasons.png",
+      "bytes": 2576470,
+      "type": "png",
+      "sha256": "c742f04ee46c40ce9691d3d39e8ed89a80158cbc933b85327da016e9776f83a9",
+      "width": 1672,
+      "height": 941,
+      "hasAlpha": false,
+      "modifiedAt": "2026-10-19T10:43:04.000Z"
+    },
+    {
+      "path": "assets/generated/bg_m2_1_seasons.webp",
+      "bytes": 218668,
+      "type": "webp",
+      "sha256": "096be7a64942cc92221e9e0eb2416fa1b94f4dccdf0beefe14a740eac3f8ab3f",
+      "width": 1600,
+      "height": 900,
+      "hasAlpha": false,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-19T10:43:04.000Z"
+    },
+    {
+      "path": "assets/generated/bg_m2_2_evidence.png",
+      "bytes": 2006897,
+      "type": "png",
+      "sha256": "e50e4171bfd53ad272d810f6336cb8b931e1f25ed4bc8f426223d8619b2a1d9c",
+      "width": 1672,
+      "height": 941,
+      "hasAlpha": false,
+      "modifiedAt": "2026-10-19T10:43:04.000Z"
+    },
+    {
+      "path": "assets/generated/bg_m2_2_evidence.webp",
+      "bytes": 115520,
+      "type": "webp",
+      "sha256": "03cca4d3f57ea7094804f07bff0c7d35a92376bb27d347b81497651cfee08b86",
+      "width": 1600,
+      "height": 900,
+      "hasAlpha": false,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-19T10:43:04.000Z"
+    },
+    {
+      "path": "assets/generated/bg_m3_1_chamber.png",
+      "bytes": 2351086,
+      "type": "png",
+      "sha256": "e9af73124a92c2a2116ab1b70599cd719730e3c0f945296cc454b1a5b37dc5f1",
+      "width": 1672,
+      "height": 941,
+      "hasAlpha": false,
+      "modifiedAt": "2026-10-19T10:43:06.000Z"
+    },
+    {
+      "path": "assets/generated/bg_m3_1_chamber.webp",
+      "bytes": 184036,
+      "type": "webp",
+      "sha256": "98e864dcd6f1baefbcd7ba1f4fa852a09cb8fffd84a9d44311fc67c28edbaa42",
+      "width": 1600,
+      "height": 900,
+      "hasAlpha": false,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-19T10:43:06.000Z"
+    },
+    {
+      "path": "assets/generated/bg_m3_2_habitat.png",
+      "bytes": 2136928,
+      "type": "png",
+      "sha256": "fc4a2ab8954eec724c19519b6ec37f85b183727513e10098154e9389ca75530c",
+      "width": 1672,
+      "height": 941,
+      "hasAlpha": false,
+      "modifiedAt": "2026-10-19T10:43:06.000Z"
+    },
+    {
+      "path": "assets/generated/bg_m3_2_habitat.webp",
+      "bytes": 153860,
+      "type": "webp",
+      "sha256": "8cda23a75810c9307ae45712300ed9e81472fcb57ee5daf7c3e3826f85927a71",
+      "width": 1600,
+      "height": 900,
+      "hasAlpha": false,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-19T10:43:06.000Z"
+    },
+    {
+      "path": "assets/generated/bg_m4_1_terrain.png",
+      "bytes": 2160822,
+      "type": "png",
+      "sha256": "db573b759c5f8a29beb1eebbfaf7874e7cdad7945edc3d4ce7c32941ecd56710",
+      "width": 1672,
+      "height": 941,
+      "hasAlpha": false,
+      "modifiedAt": "2026-10-19T10:43:06.000Z"
+    },
+    {
+      "path": "assets/generated/bg_m4_1_terrain.webp",
+      "bytes": 122742,
+      "type": "webp",
+      "sha256": "1f0c8b60abf47f33a164558c00cbc02f4de822c782d71fbc811f2608f2073b78",
+      "width": 1600,
+      "height": 900,
+      "hasAlpha": false,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-19T10:43:06.000Z"
+    },
+    {
+      "path": "assets/generated/bg_m4_2_garden.png",
+      "bytes": 2318847,
+      "type": "png",
+      "sha256": "debc054e41644bb47d6195313a715b22ad3c244ba23521aefcc102eec2465dd7",
+      "width": 1672,
+      "height": 941,
+      "hasAlpha": false,
+      "modifiedAt": "2026-10-19T10:43:06.000Z"
+    },
+    {
+      "path": "assets/generated/bg_m4_2_garden.webp",
+      "bytes": 178938,
+      "type": "webp",
+      "sha256": "23683b4b2bc5701a4fb90c4d03df7acff5881393ff34a96f338f7e910ba5fd21",
+      "width": 1600,
+      "height": 900,
+      "hasAlpha": false,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-19T10:43:08.000Z"
+    },
+    {
+      "path": "assets/generated/bg_m5_1_idea.png",
+      "bytes": 2407341,
+      "type": "png",
+      "sha256": "7da44f7d6cb466ed78900de16f20e607b9bcfad370d7029d8474348a41f34ef5",
+      "width": 1672,
+      "height": 941,
+      "hasAlpha": false,
+      "modifiedAt": "2026-10-19T10:43:08.000Z"
+    },
+    {
+      "path": "assets/generated/bg_m5_1_idea.webp",
+      "bytes": 174850,
+      "type": "webp",
+      "sha256": "ec4593b9ca50a9c33c0d015ae4ca87823095955b23bd97aaeaf93275d03e8b62",
+      "width": 1600,
+      "height": 900,
+      "hasAlpha": false,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-19T10:43:08.000Z"
+    },
+    {
+      "path": "assets/generated/bg_m5_2_test.png",
+      "bytes": 2161536,
+      "type": "png",
+      "sha256": "3174f75fca3b53987dc273f5e3412f38f68e38b450382adf583dd39c5671a85d",
+      "width": 1672,
+      "height": 941,
+      "hasAlpha": false,
+      "modifiedAt": "2026-10-19T10:43:08.000Z"
+    },
+    {
+      "path": "assets/generated/bg_m5_2_test.webp",
+      "bytes": 140012,
+      "type": "webp",
+      "sha256": "b018f8b31fdb1c7f1e44cdb66def85d0468852125ed50d5c78ef6cbe56d66a5e",
+      "width": 1600,
+      "height": 900,
+      "hasAlpha": false,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-19T10:43:08.000Z"
+    },
+    {
+      "path": "assets/generated/mood_sheet.png",
+      "bytes": 1820098,
+      "type": "png",
+      "sha256": "bd1f02a542e83962f93f18d646e5eff55f277d06aea5f6df8e35a4e591854a7c",
+      "width": 1672,
+      "height": 941,
+      "hasAlpha": true,
+      "modifiedAt": "2026-10-19T10:43:10.000Z"
+    },
+    {
+      "path": "assets/generated/mood_leaf_idle.webp",
+      "bytes": 22226,
+      "type": "webp",
+      "sha256": "5869bae5a9e93f7bf26a6423bda56309bcbb45f152d8f587e0563ed736787b7b",
+      "width": 192,
+      "height": 300,
+      "hasAlpha": true,
+      "reference": "dynamic-mood-key",
+      "modifiedAt": "2026-10-19T10:43:24.000Z"
+    },
+    {
+      "path": "assets/generated/mood_leaf_happy.webp",
+      "bytes": 20576,
+      "type": "webp",
+      "sha256": "e0fdeef7ec6440e0c9a12721778244bf2692dfeed857dd9cd1018a1bb9fea182",
+      "width": 188,
+      "height": 300,
+      "hasAlpha": true,
+      "reference": "dynamic-mood-key",
+      "modifiedAt": "2026-10-19T10:43:26.000Z"
+    },
+    {
+      "path": "assets/generated/mood_leaf_think.webp",
+      "bytes": 20796,
+      "type": "webp",
+      "sha256": "c0cc1337e42408830c34ff8a38c5ce1de43b7316893db677eeb87e8a7148f29d",
+      "width": 188,
+      "height": 300,
+      "hasAlpha": true,
+      "reference": "dynamic-mood-key",
+      "modifiedAt": "2026-10-19T10:43:28.000Z"
+    },
+    {
+      "path": "assets/generated/mood_leaf_surprise.webp",
+      "bytes": 19886,
+      "type": "webp",
+      "sha256": "b5dbed8967149460c9e3f6bbf24c238cfd1915e6e0dec355ff1317bfe05ed37b",
+      "width": 176,
+      "height": 300,
+      "hasAlpha": true,
+      "reference": "dynamic-mood-key",
+      "modifiedAt": "2026-10-19T10:43:30.000Z"
+    },
+    {
+      "path": "assets/generated/mood_water_idle.webp",
+      "bytes": 17668,
+      "type": "webp",
+      "sha256": "916aa9a6cc8dbeb5bba4a55d63772799135fad76e4331c64eb9e0db638d88116",
+      "width": 202,
+      "height": 300,
+      "hasAlpha": true,
+      "reference": "dynamic-mood-key",
+      "modifiedAt": "2026-10-19T10:43:32.000Z"
+    },
+    {
+      "path": "assets/generated/mood_water_happy.webp",
+      "bytes": 18668,
+      "type": "webp",
+      "sha256": "b47ac0e0d62ac61f22474541bdc7f8b4669740497c0ab4295b388176051b53d4",
+      "width": 209,
+      "height": 300,
+      "hasAlpha": true,
+      "reference": "dynamic-mood-key",
+      "modifiedAt": "2026-10-19T10:43:34.000Z"
+    },
+    {
+      "path": "assets/generated/mood_water_think.webp",
+      "bytes": 17906,
+      "type": "webp",
+      "sha256": "b0c58676bb90e18a447be61673acb57bcd2fedb07e0139bd8af749bf4e663e91",
+      "width": 188,
+      "height": 300,
+      "hasAlpha": true,
+      "reference": "dynamic-mood-key",
+      "modifiedAt": "2026-10-19T10:43:36.000Z"
+    },
+    {
+      "path": "assets/generated/mood_water_surprise.webp",
+      "bytes": 23850,
+      "type": "webp",
+      "sha256": "16601b20411f5930b10dd5cd038c8a3636bcdce10b9ff713570ba2186a941ca8",
+      "width": 216,
+      "height": 300,
+      "hasAlpha": true,
+      "reference": "dynamic-mood-key",
+      "modifiedAt": "2026-10-19T10:43:40.000Z"
+    },
+    {
+      "path": "assets/generated/mood_flower_idle.webp",
+      "bytes": 19726,
+      "type": "webp",
+      "sha256": "a2ddfe48f0cc2b8700863ca71f5e7c707f72d5c0ca9d9a822a206c4555af1e76",
+      "width": 217,
+      "height": 300,
+      "hasAlpha": true,
+      "reference": "dynamic-mood-key",
+      "modifiedAt": "2026-10-19T10:43:44.000Z"
+    },
+    {
+      "path": "assets/generated/mood_flower_happy.webp",
+      "bytes": 18970,
+      "type": "webp",
+      "sha256": "10b609f656fc99bb9b7328c178eaadf951bc01bf419bd1f05d67b6b05cb48ee1",
+      "width": 194,
+      "height": 300,
+      "hasAlpha": true,
+      "reference": "dynamic-mood-key",
+      "modifiedAt": "2026-10-19T10:43:46.000Z"
+    },
+    {
+      "path": "assets/generated/mood_flower_think.webp",
+      "bytes": 18308,
+      "type": "webp",
+      "sha256": "3f49578f6803696795039d2725ce6822e7d72e7e9524e0353b4e45e06d4890f9",
+      "width": 184,
+      "height": 300,
+      "hasAlpha": true,
+      "reference": "dynamic-mood-key",
+      "modifiedAt": "2026-10-19T10:43:48.000Z"
+    },
+    {
+      "path": "assets/generated/mood_flower_surprise.webp",
+      "bytes": 17788,
+      "type": "webp",
+      "sha256": "2f5019125ec3220a158cd58fc83ab6e2db6613865cf244ebe441ec9f58a4314d",
+      "width": 173,
+      "height": 300,
+      "hasAlpha": true,
+      "reference": "dynamic-mood-key",
+      "modifiedAt": "2026-10-19T10:43:50.000Z"
+    },
+    {
+      "path": "assets/generated/stamp_direct.png",
+      "bytes": 1648980,
+      "type": "png",
+      "sha256": "410fb4bbab2488bae7abdf7cab8b14792c4d07c3caf5ccbffda611c9d0138b67",
+      "width": 1024,
+      "height": 1024,
+      "hasAlpha": true,
+      "modifiedAt": "2026-10-19T10:46:20.000Z"
+    },
+    {
+      "path": "assets/generated/stamp_direct.webp",
+      "bytes": 25834,
+      "type": "webp",
+      "sha256": "d442390609d6bcfe94ba04838fceefbaec7bdc42f78da12b4eff4f0df6bda7b4",
+      "width": 320,
+      "height": 330,
+      "hasAlpha": true,
+      "reference": "dynamic-stamp-key",
+      "referenceEvidence": "src/rewards.js: stamp_ + missionStamps key",
+      "modifiedAt": "2026-10-19T10:46:28.000Z"
+    },
+    {
+      "path": "assets/generated/stamp_fixed.png",
+      "bytes": 1637522,
+      "type": "png",
+      "sha256": "43bff0ae2e6a5bdb632304b91f0d2d7003ccc176183c78edc67fb7fd9b36731f",
+      "width": 1024,
+      "height": 1024,
+      "hasAlpha": true,
+      "modifiedAt": "2026-10-19T10:46:28.000Z"
+    },
+    {
+      "path": "assets/generated/stamp_fixed.webp",
+      "bytes": 24564,
+      "type": "webp",
+      "sha256": "aaa47a1a912332dbd48f58e2cd398ad3d70d04209eaec4fe51b0acb5a8040bc5",
+      "width": 320,
+      "height": 318,
+      "hasAlpha": true,
+      "reference": "dynamic-stamp-key",
+      "referenceEvidence": "src/rewards.js: stamp_ + missionStamps key",
+      "modifiedAt": "2026-10-19T10:46:34.000Z"
+    },
+    {
+      "path": "assets/generated/stamp_complete.png",
+      "bytes": 2095535,
+      "type": "png",
+      "sha256": "80c422d3ebcf2aa62df42adb0459605d52d747407c95359fb9f89ce1ddb05718",
+      "width": 1024,
+      "height": 1024,
+      "hasAlpha": true,
+      "modifiedAt": "2026-10-19T10:46:34.000Z"
+    },
+    {
+      "path": "assets/generated/stamp_complete.webp",
+      "bytes": 86786,
+      "type": "webp",
+      "sha256": "a4597d794ac8439b9b20ed2af3fa65165bdac1bb72ade9f6192af8b786e033c7",
+      "width": 480,
+      "height": 480,
+      "hasAlpha": true,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-19T10:46:40.000Z"
+    },
+    {
+      "path": "assets/CREDITS.md",
+      "bytes": 7962,
+      "type": "md",
+      "sha256": "0930292026250fb0473f3b64dd53fd6c75fbaaa18a3942c39dbadc90cb425994",
+      "modifiedAt": "2026-10-20T13:08:22.000Z"
+    },
+    {
+      "path": "assets/title.webp",
+      "bytes": 188866,
+      "type": "webp",
+      "sha256": "123ef2ca61baa1f23165026245c3b990012de878ada7539044e57b49a952c83f",
+      "width": 1672,
+      "height": 941,
+      "hasAlpha": true,
+      "reference": "runtime-static-or-key",
+      "modifiedAt": "2026-10-14T13:47:56.000Z"
+    },
+    {
+      "path": "assets/three-license.txt",
+      "bytes": 1081,
+      "type": "txt",
+      "sha256": "bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601",
+      "modifiedAt": "2026-10-17T13:58:00.000Z"
+    },
+    {
+      "path": "assets/icons/icon-192.png",
+      "bytes": 34929,
+      "type": "png",
+      "sha256": "6012a7a018c745c9952d1f235d5f4f5c0f0118017bf8e087d703d4b9064e2acc",
+      "width": 192,
+      "height": 192,
+      "hasAlpha": true,
+      "modifiedAt": "2026-10-19T10:34:52.000Z"
+    },
+    {
+      "path": "assets/icons/icon-512.png",
+      "bytes": 200394,
+      "type": "png",
+      "sha256": "6adce39be0ee24995f9fb4288820ff0db42d6a154ee539774468008b211e2525",
+      "width": 512,
+      "height": 512,
+      "hasAlpha": true,
+      "modifiedAt": "2026-10-19T10:34:52.000Z"
+    },
+    {
+      "path": "assets/fonts/Jua-OFL.txt",
+      "bytes": 4474,
+      "type": "txt",
+      "sha256": "75de1deee2759c8ab2c576ae9233078552ad2c02dda3a07822042ad402d4f86a",
+      "modifiedAt": "2026-10-19T10:36:30.000Z"
+    },
+    {
+      "path": "assets/fonts/Pretendard-OFL.txt",
+      "bytes": 4419,
+      "type": "txt",
+      "sha256": "b04538c9abec39a3db75108cf0af0fd9c77032fe8aa2cf38345b4d250e98e38e",
+      "modifiedAt": "2026-10-19T10:36:30.000Z"
+    },
+    {
+      "path": "assets/fonts/source/Pretendard-Bold.subset.woff2",
+      "bytes": 270784,
+      "type": "woff2",
+      "sha256": "78eb71c33101ee7d4f8d1b777d193a12d00f8a296e712a8c417cf27abe946397",
+      "modifiedAt": "2026-10-19T10:36:30.000Z"
+    },
+    {
+      "path": "assets/fonts/source/Pretendard-Regular.subset.woff2",
+      "bytes": 267096,
+      "type": "woff2",
+      "sha256": "01dd73155fdfab7ce9b25224523e85a96927e21aef97f21957d41f1bfa7e3878",
+      "modifiedAt": "2026-10-19T10:36:30.000Z"
+    },
+    {
+      "path": "assets/fonts/source/jua-korean-400.woff2",
+      "bytes": 368172,
+      "type": "woff2",
+      "sha256": "b5c280f7c75d6634c3011682ab7787b73b8cfc4acaee4b70fa7aad228adf7d70",
+      "modifiedAt": "2026-10-19T10:36:30.000Z"
+    },
+    {
+      "path": "assets/fonts/source/jua-latin-400.woff2",
+      "bytes": 16620,
+      "type": "woff2",
+      "sha256": "a317499f46a11810207ace4e5fdf04c9949250abeb914a1e713c391e4606c4f2",
+      "modifiedAt": "2026-10-19T10:36:30.000Z"
+    },
+    {
+      "path": "assets/fonts/gg-display-ko.woff2",
+      "bytes": 98340,
+      "type": "woff2",
+      "sha256": "51cf0eae031844404b9fd938d4c8d090ecb18f4056d592e1c81d19b7eef55d76",
+      "modifiedAt": "2026-10-19T11:03:50.000Z"
+    },
+    {
+      "path": "assets/fonts/gg-display-latin.woff2",
+      "bytes": 16488,
+      "type": "woff2",
+      "sha256": "7f68c784d376e7c806cdfcdd932b4ea5039b030e007912b9695bb4ce95602fb8",
+      "modifiedAt": "2026-10-19T11:03:50.000Z"
+    },
+    {
+      "path": "assets/fonts/gg-text-regular.woff2",
+      "bytes": 56776,
+      "type": "woff2",
+      "sha256": "ff0f56d15f4902c8cf4e68af30b34b3640c5402d26bb5e6f26932025c39a9a2d",
+      "modifiedAt": "2026-10-19T11:03:52.000Z"
+    },
+    {
+      "path": "assets/fonts/gg-text-bold.woff2",
+      "bytes": 56996,
+      "type": "woff2",
+      "sha256": "fd430d76f6db2066041d5dc673a2e550aa80f653db16041b14815b78f1eea156",
+      "modifiedAt": "2026-10-19T11:03:56.000Z"
+    },
+    {
+      "path": "assets/models/petiole_whole.glb",
+      "bytes": 598820,
+      "type": "glb",
+      "sha256": "d3e33886c04b6bfd7724d499a879fb40e2c8bccdcac7044a998acd43670445f0",
+      "modifiedAt": "2026-10-19T11:44:40.000Z"
+    },
+    {
+      "path": "assets/models/petiole_cut.glb",
+      "bytes": 959988,
+      "type": "glb",
+      "sha256": "ff43fd57f464c20be8e1dbf4d35ff9b3b0da5f319b0f2a41dd560749da7ac574",
+      "modifiedAt": "2026-10-19T11:45:42.000Z"
+    },
+    {
+      "path": "assets/models/plant_aloe.glb",
+      "bytes": 615788,
+      "type": "glb",
+      "sha256": "7587b3fc2ab377cd9ae8e34eeee8da20d3d79804ef27ffe9c80af8c76ed287b2",
+      "modifiedAt": "2026-10-19T11:47:18.000Z"
+    },
+    {
+      "path": "assets/models/README.md",
+      "bytes": 1152,
+      "type": "md",
+      "sha256": "e12035546c42d593e6099b5d8906fba90adf2c2440fc7b78f7226c2c24c53939",
+      "modifiedAt": "2026-10-19T11:55:24.000Z"
+    }
+  ],
+  "runtimeFontBytes": 228600
+}

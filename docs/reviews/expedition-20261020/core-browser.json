@@ -1,0 +1,181 @@
+{
+  "checks": [
+    "Home story, actual path map, locked destination explanation, modal movement blocking",
+    "Empty field cannot advance with the main button",
+    "Two core completion buttons award exactly one seed/tool; restored place, next unlock, usable tool clue and reload persist",
+    "Teacher preview manipulation and reload do not alter the saved student record",
+    "Volumetric petiole: incorrect prediction is accepted; cut, submerge, press and interpret air bubbles"
+  ],
+  "errors": [],
+  "fixture": "Core evidence only is prepared in an isolated profile; complete/reward/map/tools use real UI.",
+  "load": {
+    "navigation": [
+      {
+        "load": 570.8999999985099,
+        "dom": 478
+      }
+    ],
+    "paint": [
+      {
+        "name": "first-paint",
+        "time": 312
+      },
+      {
+        "name": "first-contentful-paint",
+        "time": 312
+      }
+    ],
+    "resources": [
+      {
+        "url": "http://127.0.0.1:4328/src/style.css",
+        "transfer": 49553,
+        "duration": 96.5
+      },
+      {
+        "url": "http://127.0.0.1:4328/src/visuals.css",
+        "transfer": 12293,
+        "duration": 94.40000000223517
+      },
+      {
+        "url": "http://127.0.0.1:4328/src/adventure.css",
+        "transfer": 20001,
+        "duration": 94.60000000149012
+      },
+      {
+        "url": "http://127.0.0.1:4328/src/tablet.css",
+        "transfer": 12513,
+        "duration": 95.09999999776483
+      },
+      {
+        "url": "http://127.0.0.1:4328/src/fieldwork.css",
+        "transfer": 6944,
+        "duration": 120.29999999701977
+      },
+      {
+        "url": "http://127.0.0.1:4328/src/exploration.css",
+        "transfer": 15276,
+        "duration": 122.19999999925494
+      },
+      {
+        "url": "http://127.0.0.1:4328/src/polish.css",
+        "transfer": 65171,
+        "duration": 123.90000000223517
+      },
+      {
+        "url": "http://127.0.0.1:4328/src/layout.css",
+        "transfer": 60673,
+        "duration": 120.5
+      },
+      {
+        "url": "http://127.0.0.1:4328/src/stage-map.css",
+        "transfer": 12094,
+        "duration": 124.19999999925494
+      },
+      {
+        "url": "http://127.0.0.1:4328/src/app.js",
+        "transfer": 37825,
+        "duration": 177.19999999925494
+      },
+      {
+        "url": "http://127.0.0.1:4328/assets/fonts/gg-text-regular.woff2",
+        "transfer": 57076,
+        "duration": 48.5
+      },
+      {
+        "url": "http://127.0.0.1:4328/src/inquiry.js",
+        "transfer": 3356,
+        "duration": 45.30000000074506
+      },
+      {
+        "url": "http://127.0.0.1:4328/src/asset-catalog.js",
+        "transfer": 7497,
+        "duration": 45.399999998509884
+      },
+      {
+        "url": "http://127.0.0.1:4328/src/model.js",
+        "transfer": 16677,
+        "duration": 50.30000000074506
+      },
+      {
+        "url": "http://127.0.0.1:4328/src/art.js",
+        "transfer": 4138,
+        "duration": 44.899999998509884
+      },
+      {
+        "url": "http://127.0.0.1:4328/src/rewards.js",
+        "transfer": 7321,
+        "duration": 50.30000000074506
+      },
+      {
+        "url": "http://127.0.0.1:4328/src/stage-map.js",
+        "transfer": 8088,
+        "duration": 50.399999998509884
+      },
+      {
+        "url": "http://127.0.0.1:4328/src/field-missions.js",
+        "transfer": 20747,
+        "duration": 106.39999999850988
+      },
+      {
+        "url": "http://127.0.0.1:4328/src/field-missions-state.js",
+        "transfer": 13680,
+        "duration": 83.80000000074506
+      },
+      {
+        "url": "http://127.0.0.1:4328/src/expedition.js",
+        "transfer": 6881,
+        "duration": 82.80000000074506
+      },
+      {
+        "url": "http://127.0.0.1:4328/src/audio.js",
+        "transfer": 4380,
+        "duration": 83.69999999925494
+      },
+      {
+        "url": "http://127.0.0.1:4328/src/settings-content.js",
+        "transfer": 7875,
+        "duration": 83.5
+      },
+      {
+        "url": "http://127.0.0.1:4328/src/learning.js",
+        "transfer": 38211,
+        "duration": 112
+      },
+      {
+        "url": "http://127.0.0.1:4328/src/invention.js",
+        "transfer": 7861,
+        "duration": 25
+      },
+      {
+        "url": "http://127.0.0.1:4328/assets/title.webp",
+        "transfer": 189166,
+        "duration": 15
+      },
+      {
+        "url": "http://127.0.0.1:4328/assets/generated/expedition_hero_20261020.webp",
+        "transfer": 480068,
+        "duration": 29.600000001490116
+      },
+      {
+        "url": "http://127.0.0.1:4328/assets/generated/mascot_leaf.webp",
+        "transfer": 110110,
+        "duration": 17
+      },
+      {
+        "url": "http://127.0.0.1:4328/assets/fonts/gg-text-bold.woff2",
+        "transfer": 57296,
+        "duration": 68.80000000074506
+      },
+      {
+        "url": "http://127.0.0.1:4328/assets/fonts/gg-display-ko.woff2",
+        "transfer": 98640,
+        "duration": 74.5
+      },
+      {
+        "url": "http://127.0.0.1:4328/assets/fonts/gg-display-latin.woff2",
+        "transfer": 16788,
+        "duration": 42.600000001490116
+      }
+    ]
+  }
+}

@@ -1,0 +1,2160 @@
+{
+  "method": "Isolated QA fixture for rendering. Prepared records do not represent a student outcome.",
+  "activities": [
+    {
+      "profile": "873x580",
+      "p": 0,
+      "docH": 580,
+      "docW": 873,
+      "footer": [
+        {
+          "bottom": 571,
+          "right": 117,
+          "t": "지도"
+        },
+        {
+          "bottom": 571,
+          "right": 861,
+          "t": "다음 활동"
+        }
+      ],
+      "h": 580,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 442,
+          "kind": "learning-scene",
+          "scroll": 442
+        }
+      ],
+      "small": [],
+      "title": "잎을 살펴봐요",
+      "w": 873
+    },
+    {
+      "profile": "873x580",
+      "p": 1,
+      "docH": 580,
+      "docW": 873,
+      "footer": [
+        {
+          "bottom": 571,
+          "right": 138,
+          "t": "앞 활동"
+        },
+        {
+          "bottom": 571,
+          "right": 861,
+          "t": "빛씨앗 받기"
+        }
+      ],
+      "h": 580,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 442,
+          "kind": "learning-scene",
+          "scroll": 442
+        }
+      ],
+      "small": [],
+      "title": "잎을 나누어 봐요",
+      "w": 873
+    },
+    {
+      "profile": "873x580",
+      "p": 2,
+      "docH": 580,
+      "docW": 873,
+      "footer": [
+        {
+          "bottom": 571,
+          "right": 117,
+          "t": "지도"
+        },
+        {
+          "bottom": 571,
+          "right": 861,
+          "t": "다음 활동"
+        }
+      ],
+      "h": 580,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 442,
+          "kind": "learning-scene",
+          "scroll": 442
+        }
+      ],
+      "small": [],
+      "title": "계절을 바꿔 봐요",
+      "w": 873
+    },
+    {
+      "profile": "873x580",
+      "p": 3,
+      "docH": 580,
+      "docW": 873,
+      "footer": [
+        {
+          "bottom": 571,
+          "right": 138,
+          "t": "앞 활동"
+        },
+        {
+          "bottom": 571,
+          "right": 861,
+          "t": "빛씨앗 받기"
+        }
+      ],
+      "h": 580,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 442,
+          "kind": "learning-scene",
+          "scroll": 442
+        }
+      ],
+      "small": [],
+      "title": "겨울과 봄을 비교해요",
+      "w": 873
+    },
+    {
+      "profile": "873x580",
+      "p": 4,
+      "docH": 580,
+      "docW": 873,
+      "footer": [
+        {
+          "bottom": 571,
+          "right": 117,
+          "t": "지도"
+        },
+        {
+          "bottom": 571,
+          "right": 861,
+          "t": "다음 활동"
+        }
+      ],
+      "h": 580,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 442,
+          "kind": "learning-scene",
+          "scroll": 442
+        }
+      ],
+      "small": [],
+      "title": "잎자루를 살펴봐요",
+      "w": 873
+    },
+    {
+      "profile": "873x580",
+      "p": 5,
+      "docH": 580,
+      "docW": 873,
+      "footer": [
+        {
+          "bottom": 571,
+          "right": 138,
+          "t": "앞 활동"
+        },
+        {
+          "bottom": 571,
+          "right": 861,
+          "t": "빛씨앗 받기"
+        }
+      ],
+      "h": 580,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 442,
+          "kind": "learning-scene",
+          "scroll": 442
+        }
+      ],
+      "small": [],
+      "title": "식물이 사는 곳",
+      "w": 873
+    },
+    {
+      "profile": "873x580",
+      "p": 6,
+      "docH": 580,
+      "docW": 873,
+      "footer": [
+        {
+          "bottom": 571,
+          "right": 117,
+          "t": "지도"
+        },
+        {
+          "bottom": 571,
+          "right": 861,
+          "t": "다음 활동"
+        }
+      ],
+      "h": 580,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 442,
+          "kind": "learning-scene",
+          "scroll": 442
+        }
+      ],
+      "small": [],
+      "title": "정원 꾸미기",
+      "w": 873
+    },
+    {
+      "profile": "873x580",
+      "p": 7,
+      "docH": 580,
+      "docW": 873,
+      "footer": [
+        {
+          "bottom": 571,
+          "right": 138,
+          "t": "앞 활동"
+        },
+        {
+          "bottom": 571,
+          "right": 861,
+          "t": "빛씨앗 받기"
+        }
+      ],
+      "h": 580,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 442,
+          "kind": "learning-scene",
+          "scroll": 442
+        }
+      ],
+      "small": [],
+      "title": "정원에 식물을 심어요",
+      "w": 873
+    },
+    {
+      "profile": "873x580",
+      "p": 8,
+      "docH": 580,
+      "docW": 873,
+      "footer": [
+        {
+          "bottom": 571,
+          "right": 117,
+          "t": "지도"
+        },
+        {
+          "bottom": 571,
+          "right": 861,
+          "t": "시험하러 가기"
+        }
+      ],
+      "h": 580,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 442,
+          "kind": "learning-scene",
+          "scroll": 442
+        },
+        {
+          "h": 307,
+          "kind": "learning-note lotus-note idea-linked",
+          "scroll": 307
+        }
+      ],
+      "small": [],
+      "title": "나의 탐험 가방 만들기",
+      "w": 873
+    },
+    {
+      "profile": "873x580",
+      "p": 9,
+      "docH": 580,
+      "docW": 873,
+      "footer": [
+        {
+          "bottom": 571,
+          "right": 138,
+          "t": "앞 활동"
+        },
+        {
+          "bottom": 571,
+          "right": 861,
+          "t": "빛씨앗 받기"
+        }
+      ],
+      "h": 580,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 442,
+          "kind": "learning-scene",
+          "scroll": 442
+        },
+        {
+          "h": 325,
+          "kind": "learning-note",
+          "scroll": 325
+        }
+      ],
+      "small": [],
+      "title": "비 뿌리고 비교해요",
+      "w": 873
+    },
+    {
+      "profile": "906x755",
+      "p": 0,
+      "docH": 755,
+      "docW": 906,
+      "footer": [
+        {
+          "bottom": 739,
+          "right": 121,
+          "t": "지도"
+        },
+        {
+          "bottom": 739,
+          "right": 890,
+          "t": "다음 활동"
+        }
+      ],
+      "h": 755,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 596,
+          "kind": "learning-scene",
+          "scroll": 596
+        }
+      ],
+      "small": [],
+      "title": "잎을 살펴봐요",
+      "w": 906
+    },
+    {
+      "profile": "906x755",
+      "p": 1,
+      "docH": 755,
+      "docW": 906,
+      "footer": [
+        {
+          "bottom": 739,
+          "right": 142,
+          "t": "앞 활동"
+        },
+        {
+          "bottom": 739,
+          "right": 890,
+          "t": "빛씨앗 받기"
+        }
+      ],
+      "h": 755,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 596,
+          "kind": "learning-scene",
+          "scroll": 596
+        }
+      ],
+      "small": [],
+      "title": "잎을 나누어 봐요",
+      "w": 906
+    },
+    {
+      "profile": "906x755",
+      "p": 2,
+      "docH": 755,
+      "docW": 906,
+      "footer": [
+        {
+          "bottom": 739,
+          "right": 121,
+          "t": "지도"
+        },
+        {
+          "bottom": 739,
+          "right": 890,
+          "t": "다음 활동"
+        }
+      ],
+      "h": 755,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 596,
+          "kind": "learning-scene",
+          "scroll": 596
+        }
+      ],
+      "small": [],
+      "title": "계절을 바꿔 봐요",
+      "w": 906
+    },
+    {
+      "profile": "906x755",
+      "p": 3,
+      "docH": 755,
+      "docW": 906,
+      "footer": [
+        {
+          "bottom": 739,
+          "right": 142,
+          "t": "앞 활동"
+        },
+        {
+          "bottom": 739,
+          "right": 890,
+          "t": "빛씨앗 받기"
+        }
+      ],
+      "h": 755,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 596,
+          "kind": "learning-scene",
+          "scroll": 596
+        }
+      ],
+      "small": [],
+      "title": "겨울과 봄을 비교해요",
+      "w": 906
+    },
+    {
+      "profile": "906x755",
+      "p": 4,
+      "docH": 755,
+      "docW": 906,
+      "footer": [
+        {
+          "bottom": 739,
+          "right": 121,
+          "t": "지도"
+        },
+        {
+          "bottom": 739,
+          "right": 890,
+          "t": "다음 활동"
+        }
+      ],
+      "h": 755,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 596,
+          "kind": "learning-scene",
+          "scroll": 596
+        }
+      ],
+      "small": [],
+      "title": "잎자루를 살펴봐요",
+      "w": 906
+    },
+    {
+      "profile": "906x755",
+      "p": 5,
+      "docH": 755,
+      "docW": 906,
+      "footer": [
+        {
+          "bottom": 739,
+          "right": 142,
+          "t": "앞 활동"
+        },
+        {
+          "bottom": 739,
+          "right": 890,
+          "t": "빛씨앗 받기"
+        }
+      ],
+      "h": 755,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 596,
+          "kind": "learning-scene",
+          "scroll": 596
+        }
+      ],
+      "small": [],
+      "title": "식물이 사는 곳",
+      "w": 906
+    },
+    {
+      "profile": "906x755",
+      "p": 6,
+      "docH": 755,
+      "docW": 906,
+      "footer": [
+        {
+          "bottom": 739,
+          "right": 121,
+          "t": "지도"
+        },
+        {
+          "bottom": 739,
+          "right": 890,
+          "t": "다음 활동"
+        }
+      ],
+      "h": 755,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 596,
+          "kind": "learning-scene",
+          "scroll": 596
+        }
+      ],
+      "small": [],
+      "title": "정원 꾸미기",
+      "w": 906
+    },
+    {
+      "profile": "906x755",
+      "p": 7,
+      "docH": 755,
+      "docW": 906,
+      "footer": [
+        {
+          "bottom": 739,
+          "right": 142,
+          "t": "앞 활동"
+        },
+        {
+          "bottom": 739,
+          "right": 890,
+          "t": "빛씨앗 받기"
+        }
+      ],
+      "h": 755,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 596,
+          "kind": "learning-scene",
+          "scroll": 596
+        }
+      ],
+      "small": [],
+      "title": "정원에 식물을 심어요",
+      "w": 906
+    },
+    {
+      "profile": "906x755",
+      "p": 8,
+      "docH": 755,
+      "docW": 906,
+      "footer": [
+        {
+          "bottom": 739,
+          "right": 121,
+          "t": "지도"
+        },
+        {
+          "bottom": 739,
+          "right": 890,
+          "t": "시험하러 가기"
+        }
+      ],
+      "h": 755,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 596,
+          "kind": "learning-scene",
+          "scroll": 596
+        },
+        {
+          "h": 306,
+          "kind": "learning-note lotus-note idea-linked",
+          "scroll": 306
+        }
+      ],
+      "small": [],
+      "title": "나의 탐험 가방 만들기",
+      "w": 906
+    },
+    {
+      "profile": "906x755",
+      "p": 9,
+      "docH": 755,
+      "docW": 906,
+      "footer": [
+        {
+          "bottom": 739,
+          "right": 142,
+          "t": "앞 활동"
+        },
+        {
+          "bottom": 739,
+          "right": 890,
+          "t": "빛씨앗 받기"
+        }
+      ],
+      "h": 755,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 596,
+          "kind": "learning-scene",
+          "scroll": 596
+        },
+        {
+          "h": 551,
+          "kind": "learning-note",
+          "scroll": 551
+        }
+      ],
+      "small": [],
+      "title": "비 뿌리고 비교해요",
+      "w": 906
+    },
+    {
+      "profile": "1280x800",
+      "p": 0,
+      "docH": 800,
+      "docW": 1280,
+      "footer": [
+        {
+          "bottom": 784,
+          "right": 122,
+          "t": "지도"
+        },
+        {
+          "bottom": 784,
+          "right": 1264,
+          "t": "다음 활동"
+        }
+      ],
+      "h": 800,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 640,
+          "kind": "learning-scene",
+          "scroll": 640
+        }
+      ],
+      "small": [],
+      "title": "잎을 살펴봐요",
+      "w": 1280
+    },
+    {
+      "profile": "1280x800",
+      "p": 1,
+      "docH": 800,
+      "docW": 1280,
+      "footer": [
+        {
+          "bottom": 784,
+          "right": 144,
+          "t": "앞 활동"
+        },
+        {
+          "bottom": 784,
+          "right": 1264,
+          "t": "빛씨앗 받기"
+        }
+      ],
+      "h": 800,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 640,
+          "kind": "learning-scene",
+          "scroll": 640
+        }
+      ],
+      "small": [],
+      "title": "잎을 나누어 봐요",
+      "w": 1280
+    },
+    {
+      "profile": "1280x800",
+      "p": 2,
+      "docH": 800,
+      "docW": 1280,
+      "footer": [
+        {
+          "bottom": 784,
+          "right": 122,
+          "t": "지도"
+        },
+        {
+          "bottom": 784,
+          "right": 1264,
+          "t": "다음 활동"
+        }
+      ],
+      "h": 800,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 640,
+          "kind": "learning-scene",
+          "scroll": 640
+        }
+      ],
+      "small": [],
+      "title": "계절을 바꿔 봐요",
+      "w": 1280
+    },
+    {
+      "profile": "1280x800",
+      "p": 3,
+      "docH": 800,
+      "docW": 1280,
+      "footer": [
+        {
+          "bottom": 784,
+          "right": 144,
+          "t": "앞 활동"
+        },
+        {
+          "bottom": 784,
+          "right": 1264,
+          "t": "빛씨앗 받기"
+        }
+      ],
+      "h": 800,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 640,
+          "kind": "learning-scene",
+          "scroll": 640
+        }
+      ],
+      "small": [],
+      "title": "겨울과 봄을 비교해요",
+      "w": 1280
+    },
+    {
+      "profile": "1280x800",
+      "p": 4,
+      "docH": 800,
+      "docW": 1280,
+      "footer": [
+        {
+          "bottom": 784,
+          "right": 122,
+          "t": "지도"
+        },
+        {
+          "bottom": 784,
+          "right": 1264,
+          "t": "다음 활동"
+        }
+      ],
+      "h": 800,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 640,
+          "kind": "learning-scene",
+          "scroll": 640
+        }
+      ],
+      "small": [],
+      "title": "잎자루를 살펴봐요",
+      "w": 1280
+    },
+    {
+      "profile": "1280x800",
+      "p": 5,
+      "docH": 800,
+      "docW": 1280,
+      "footer": [
+        {
+          "bottom": 784,
+          "right": 144,
+          "t": "앞 활동"
+        },
+        {
+          "bottom": 784,
+          "right": 1264,
+          "t": "빛씨앗 받기"
+        }
+      ],
+      "h": 800,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 640,
+          "kind": "learning-scene",
+          "scroll": 640
+        }
+      ],
+      "small": [],
+      "title": "식물이 사는 곳",
+      "w": 1280
+    },
+    {
+      "profile": "1280x800",
+      "p": 6,
+      "docH": 800,
+      "docW": 1280,
+      "footer": [
+        {
+          "bottom": 784,
+          "right": 122,
+          "t": "지도"
+        },
+        {
+          "bottom": 784,
+          "right": 1264,
+          "t": "다음 활동"
+        }
+      ],
+      "h": 800,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 640,
+          "kind": "learning-scene",
+          "scroll": 640
+        }
+      ],
+      "small": [],
+      "title": "정원 꾸미기",
+      "w": 1280
+    },
+    {
+      "profile": "1280x800",
+      "p": 7,
+      "docH": 800,
+      "docW": 1280,
+      "footer": [
+        {
+          "bottom": 784,
+          "right": 144,
+          "t": "앞 활동"
+        },
+        {
+          "bottom": 784,
+          "right": 1264,
+          "t": "빛씨앗 받기"
+        }
+      ],
+      "h": 800,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 640,
+          "kind": "learning-scene",
+          "scroll": 640
+        }
+      ],
+      "small": [],
+      "title": "정원에 식물을 심어요",
+      "w": 1280
+    },
+    {
+      "profile": "1280x800",
+      "p": 8,
+      "docH": 800,
+      "docW": 1280,
+      "footer": [
+        {
+          "bottom": 784,
+          "right": 122,
+          "t": "지도"
+        },
+        {
+          "bottom": 784,
+          "right": 1264,
+          "t": "시험하러 가기"
+        }
+      ],
+      "h": 800,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 640,
+          "kind": "learning-scene",
+          "scroll": 640
+        },
+        {
+          "h": 320,
+          "kind": "learning-note lotus-note idea-linked",
+          "scroll": 320
+        }
+      ],
+      "small": [],
+      "title": "나의 탐험 가방 만들기",
+      "w": 1280
+    },
+    {
+      "profile": "1280x800",
+      "p": 9,
+      "docH": 800,
+      "docW": 1280,
+      "footer": [
+        {
+          "bottom": 784,
+          "right": 144,
+          "t": "앞 활동"
+        },
+        {
+          "bottom": 784,
+          "right": 1264,
+          "t": "빛씨앗 받기"
+        }
+      ],
+      "h": 800,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 640,
+          "kind": "learning-scene",
+          "scroll": 640
+        },
+        {
+          "h": 541,
+          "kind": "learning-note",
+          "scroll": 541
+        }
+      ],
+      "small": [],
+      "title": "비 뿌리고 비교해요",
+      "w": 1280
+    },
+    {
+      "profile": "1920x1080",
+      "p": 0,
+      "docH": 1080,
+      "docW": 1920,
+      "footer": [
+        {
+          "bottom": 1064,
+          "right": 153,
+          "t": "지도"
+        },
+        {
+          "bottom": 1064,
+          "right": 1896,
+          "t": "다음 활동"
+        }
+      ],
+      "h": 1080,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 892,
+          "kind": "learning-scene",
+          "scroll": 892
+        }
+      ],
+      "small": [],
+      "title": "잎을 살펴봐요",
+      "w": 1920
+    },
+    {
+      "profile": "1920x1080",
+      "p": 1,
+      "docH": 1080,
+      "docW": 1920,
+      "footer": [
+        {
+          "bottom": 1064,
+          "right": 181,
+          "t": "앞 활동"
+        },
+        {
+          "bottom": 1064,
+          "right": 1896,
+          "t": "빛씨앗 받기"
+        }
+      ],
+      "h": 1080,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 892,
+          "kind": "learning-scene",
+          "scroll": 892
+        }
+      ],
+      "small": [],
+      "title": "잎을 나누어 봐요",
+      "w": 1920
+    },
+    {
+      "profile": "1920x1080",
+      "p": 2,
+      "docH": 1080,
+      "docW": 1920,
+      "footer": [
+        {
+          "bottom": 1064,
+          "right": 153,
+          "t": "지도"
+        },
+        {
+          "bottom": 1064,
+          "right": 1896,
+          "t": "다음 활동"
+        }
+      ],
+      "h": 1080,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 892,
+          "kind": "learning-scene",
+          "scroll": 892
+        }
+      ],
+      "small": [],
+      "title": "계절을 바꿔 봐요",
+      "w": 1920
+    },
+    {
+      "profile": "1920x1080",
+      "p": 3,
+      "docH": 1080,
+      "docW": 1920,
+      "footer": [
+        {
+          "bottom": 1064,
+          "right": 181,
+          "t": "앞 활동"
+        },
+        {
+          "bottom": 1064,
+          "right": 1896,
+          "t": "빛씨앗 받기"
+        }
+      ],
+      "h": 1080,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 892,
+          "kind": "learning-scene",
+          "scroll": 892
+        }
+      ],
+      "small": [],
+      "title": "겨울과 봄을 비교해요",
+      "w": 1920
+    },
+    {
+      "profile": "1920x1080",
+      "p": 4,
+      "docH": 1080,
+      "docW": 1920,
+      "footer": [
+        {
+          "bottom": 1064,
+          "right": 153,
+          "t": "지도"
+        },
+        {
+          "bottom": 1064,
+          "right": 1896,
+          "t": "다음 활동"
+        }
+      ],
+      "h": 1080,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 892,
+          "kind": "learning-scene",
+          "scroll": 892
+        }
+      ],
+      "small": [],
+      "title": "잎자루를 살펴봐요",
+      "w": 1920
+    },
+    {
+      "profile": "1920x1080",
+      "p": 5,
+      "docH": 1080,
+      "docW": 1920,
+      "footer": [
+        {
+          "bottom": 1064,
+          "right": 181,
+          "t": "앞 활동"
+        },
+        {
+          "bottom": 1064,
+          "right": 1896,
+          "t": "빛씨앗 받기"
+        }
+      ],
+      "h": 1080,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 892,
+          "kind": "learning-scene",
+          "scroll": 892
+        }
+      ],
+      "small": [],
+      "title": "식물이 사는 곳",
+      "w": 1920
+    },
+    {
+      "profile": "1920x1080",
+      "p": 6,
+      "docH": 1080,
+      "docW": 1920,
+      "footer": [
+        {
+          "bottom": 1064,
+          "right": 153,
+          "t": "지도"
+        },
+        {
+          "bottom": 1064,
+          "right": 1896,
+          "t": "다음 활동"
+        }
+      ],
+      "h": 1080,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 892,
+          "kind": "learning-scene",
+          "scroll": 892
+        }
+      ],
+      "small": [],
+      "title": "정원 꾸미기",
+      "w": 1920
+    },
+    {
+      "profile": "1920x1080",
+      "p": 7,
+      "docH": 1080,
+      "docW": 1920,
+      "footer": [
+        {
+          "bottom": 1064,
+          "right": 181,
+          "t": "앞 활동"
+        },
+        {
+          "bottom": 1064,
+          "right": 1896,
+          "t": "빛씨앗 받기"
+        }
+      ],
+      "h": 1080,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 892,
+          "kind": "learning-scene",
+          "scroll": 892
+        }
+      ],
+      "small": [],
+      "title": "정원에 식물을 심어요",
+      "w": 1920
+    },
+    {
+      "profile": "1920x1080",
+      "p": 8,
+      "docH": 1080,
+      "docW": 1920,
+      "footer": [
+        {
+          "bottom": 1064,
+          "right": 153,
+          "t": "지도"
+        },
+        {
+          "bottom": 1064,
+          "right": 1896,
+          "t": "시험하러 가기"
+        }
+      ],
+      "h": 1080,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 892,
+          "kind": "learning-scene",
+          "scroll": 892
+        },
+        {
+          "h": 340,
+          "kind": "learning-note lotus-note idea-linked",
+          "scroll": 340
+        }
+      ],
+      "small": [],
+      "title": "나의 탐험 가방 만들기",
+      "w": 1920
+    },
+    {
+      "profile": "1920x1080",
+      "p": 9,
+      "docH": 1080,
+      "docW": 1920,
+      "footer": [
+        {
+          "bottom": 1064,
+          "right": 181,
+          "t": "앞 활동"
+        },
+        {
+          "bottom": 1064,
+          "right": 1896,
+          "t": "빛씨앗 받기"
+        }
+      ],
+      "h": 1080,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 892,
+          "kind": "learning-scene",
+          "scroll": 892
+        },
+        {
+          "h": 567,
+          "kind": "learning-note",
+          "scroll": 567
+        }
+      ],
+      "small": [],
+      "title": "비 뿌리고 비교해요",
+      "w": 1920
+    },
+    {
+      "profile": "1024x768",
+      "p": 0,
+      "docH": 768,
+      "docW": 1024,
+      "footer": [
+        {
+          "bottom": 752,
+          "right": 121,
+          "t": "지도"
+        },
+        {
+          "bottom": 752,
+          "right": 1008,
+          "t": "다음 활동"
+        }
+      ],
+      "h": 768,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 609,
+          "kind": "learning-scene",
+          "scroll": 609
+        }
+      ],
+      "small": [],
+      "title": "잎을 살펴봐요",
+      "w": 1024
+    },
+    {
+      "profile": "1024x768",
+      "p": 2,
+      "docH": 768,
+      "docW": 1024,
+      "footer": [
+        {
+          "bottom": 752,
+          "right": 121,
+          "t": "지도"
+        },
+        {
+          "bottom": 752,
+          "right": 1008,
+          "t": "다음 활동"
+        }
+      ],
+      "h": 768,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 609,
+          "kind": "learning-scene",
+          "scroll": 609
+        }
+      ],
+      "small": [],
+      "title": "계절을 바꿔 봐요",
+      "w": 1024
+    },
+    {
+      "profile": "1024x768",
+      "p": 5,
+      "docH": 768,
+      "docW": 1024,
+      "footer": [
+        {
+          "bottom": 752,
+          "right": 142,
+          "t": "앞 활동"
+        },
+        {
+          "bottom": 752,
+          "right": 1008,
+          "t": "빛씨앗 받기"
+        }
+      ],
+      "h": 768,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 609,
+          "kind": "learning-scene",
+          "scroll": 609
+        }
+      ],
+      "small": [],
+      "title": "식물이 사는 곳",
+      "w": 1024
+    },
+    {
+      "profile": "1024x768",
+      "p": 8,
+      "docH": 768,
+      "docW": 1024,
+      "footer": [
+        {
+          "bottom": 752,
+          "right": 121,
+          "t": "지도"
+        },
+        {
+          "bottom": 752,
+          "right": 1008,
+          "t": "시험하러 가기"
+        }
+      ],
+      "h": 768,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 609,
+          "kind": "learning-scene",
+          "scroll": 609
+        },
+        {
+          "h": 306,
+          "kind": "learning-note lotus-note idea-linked",
+          "scroll": 306
+        }
+      ],
+      "small": [],
+      "title": "나의 탐험 가방 만들기",
+      "w": 1024
+    },
+    {
+      "profile": "1024x768",
+      "p": 9,
+      "docH": 768,
+      "docW": 1024,
+      "footer": [
+        {
+          "bottom": 752,
+          "right": 142,
+          "t": "앞 활동"
+        },
+        {
+          "bottom": 752,
+          "right": 1008,
+          "t": "빛씨앗 받기"
+        }
+      ],
+      "h": 768,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 609,
+          "kind": "learning-scene",
+          "scroll": 609
+        },
+        {
+          "h": 528,
+          "kind": "learning-note",
+          "scroll": 528
+        }
+      ],
+      "small": [],
+      "title": "비 뿌리고 비교해요",
+      "w": 1024
+    },
+    {
+      "profile": "1440x900",
+      "p": 0,
+      "docH": 900,
+      "docW": 1440,
+      "footer": [
+        {
+          "bottom": 884,
+          "right": 126,
+          "t": "지도"
+        },
+        {
+          "bottom": 884,
+          "right": 1424,
+          "t": "다음 활동"
+        }
+      ],
+      "h": 900,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 737,
+          "kind": "learning-scene",
+          "scroll": 737
+        }
+      ],
+      "small": [],
+      "title": "잎을 살펴봐요",
+      "w": 1440
+    },
+    {
+      "profile": "1440x900",
+      "p": 2,
+      "docH": 900,
+      "docW": 1440,
+      "footer": [
+        {
+          "bottom": 884,
+          "right": 126,
+          "t": "지도"
+        },
+        {
+          "bottom": 884,
+          "right": 1424,
+          "t": "다음 활동"
+        }
+      ],
+      "h": 900,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 737,
+          "kind": "learning-scene",
+          "scroll": 737
+        }
+      ],
+      "small": [],
+      "title": "계절을 바꿔 봐요",
+      "w": 1440
+    },
+    {
+      "profile": "1440x900",
+      "p": 5,
+      "docH": 900,
+      "docW": 1440,
+      "footer": [
+        {
+          "bottom": 884,
+          "right": 150,
+          "t": "앞 활동"
+        },
+        {
+          "bottom": 884,
+          "right": 1424,
+          "t": "빛씨앗 받기"
+        }
+      ],
+      "h": 900,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 737,
+          "kind": "learning-scene",
+          "scroll": 737
+        }
+      ],
+      "small": [],
+      "title": "식물이 사는 곳",
+      "w": 1440
+    },
+    {
+      "profile": "1440x900",
+      "p": 8,
+      "docH": 900,
+      "docW": 1440,
+      "footer": [
+        {
+          "bottom": 884,
+          "right": 126,
+          "t": "지도"
+        },
+        {
+          "bottom": 884,
+          "right": 1424,
+          "t": "시험하러 가기"
+        }
+      ],
+      "h": 900,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 737,
+          "kind": "learning-scene",
+          "scroll": 737
+        },
+        {
+          "h": 330,
+          "kind": "learning-note lotus-note idea-linked",
+          "scroll": 330
+        }
+      ],
+      "small": [],
+      "title": "나의 탐험 가방 만들기",
+      "w": 1440
+    },
+    {
+      "profile": "1440x900",
+      "p": 9,
+      "docH": 900,
+      "docW": 1440,
+      "footer": [
+        {
+          "bottom": 884,
+          "right": 150,
+          "t": "앞 활동"
+        },
+        {
+          "bottom": 884,
+          "right": 1424,
+          "t": "빛씨앗 받기"
+        }
+      ],
+      "h": 900,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 737,
+          "kind": "learning-scene",
+          "scroll": 737
+        },
+        {
+          "h": 558,
+          "kind": "learning-note",
+          "scroll": 558
+        }
+      ],
+      "small": [],
+      "title": "비 뿌리고 비교해요",
+      "w": 1440
+    },
+    {
+      "profile": "375x812",
+      "p": 0,
+      "docH": 961,
+      "docW": 360,
+      "footer": [
+        {
+          "bottom": 945,
+          "right": 121,
+          "t": "지도"
+        },
+        {
+          "bottom": 945,
+          "right": 344,
+          "t": "다음 활동"
+        }
+      ],
+      "h": 812,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 634,
+          "kind": "learning-scene",
+          "scroll": 634
+        }
+      ],
+      "small": [],
+      "title": "잎을 살펴봐요",
+      "w": 375
+    },
+    {
+      "profile": "375x812",
+      "p": 9,
+      "docH": 1685,
+      "docW": 360,
+      "footer": [
+        {
+          "bottom": 1669,
+          "right": 142,
+          "t": "앞 활동"
+        },
+        {
+          "bottom": 1669,
+          "right": 344,
+          "t": "빛씨앗 받기"
+        }
+      ],
+      "h": 812,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 801,
+          "kind": "learning-scene",
+          "scroll": 801
+        },
+        {
+          "h": 540,
+          "kind": "learning-note",
+          "scroll": 540
+        }
+      ],
+      "small": [],
+      "title": "비 뿌리고 비교해요",
+      "w": 375
+    },
+    {
+      "profile": "768x1024",
+      "p": 0,
+      "docH": 1024,
+      "docW": 768,
+      "footer": [
+        {
+          "bottom": 1013,
+          "right": 121,
+          "t": "지도"
+        },
+        {
+          "bottom": 1013,
+          "right": 752,
+          "t": "다음 활동"
+        }
+      ],
+      "h": 1024,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 870,
+          "kind": "learning-scene",
+          "scroll": 870
+        }
+      ],
+      "small": [],
+      "title": "잎을 살펴봐요",
+      "w": 768
+    },
+    {
+      "profile": "768x1024",
+      "p": 9,
+      "docH": 1024,
+      "docW": 768,
+      "footer": [
+        {
+          "bottom": 1013,
+          "right": 142,
+          "t": "앞 활동"
+        },
+        {
+          "bottom": 1013,
+          "right": 752,
+          "t": "빛씨앗 받기"
+        }
+      ],
+      "h": 1024,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 870,
+          "kind": "learning-scene",
+          "scroll": 870
+        },
+        {
+          "h": 540,
+          "kind": "learning-note",
+          "scroll": 540
+        }
+      ],
+      "small": [],
+      "title": "비 뿌리고 비교해요",
+      "w": 768
+    },
+    {
+      "profile": "1280x720",
+      "p": 9,
+      "docH": 720,
+      "docW": 1280,
+      "footer": [
+        {
+          "bottom": 704,
+          "right": 144,
+          "t": "앞 활동"
+        },
+        {
+          "bottom": 704,
+          "right": 1264,
+          "t": "빛씨앗 받기"
+        }
+      ],
+      "h": 720,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 560,
+          "kind": "learning-scene",
+          "scroll": 560
+        },
+        {
+          "h": 537,
+          "kind": "learning-note",
+          "scroll": 537
+        }
+      ],
+      "small": [],
+      "title": "비 뿌리고 비교해요",
+      "w": 1280
+    }
+  ],
+  "routes": [
+    {
+      "profile": "873x580",
+      "screen": "home",
+      "docH": 580,
+      "docW": 873,
+      "footer": [],
+      "h": 580,
+      "missing": [],
+      "scenes": [],
+      "small": [],
+      "w": 873
+    },
+    {
+      "profile": "873x580",
+      "screen": "map",
+      "docH": 580,
+      "docW": 873,
+      "footer": [],
+      "h": 580,
+      "missing": [],
+      "scenes": [],
+      "small": [],
+      "title": "초록정원 탐험길",
+      "w": 873
+    },
+    {
+      "profile": "873x580",
+      "screen": "report",
+      "docH": 580,
+      "docW": 873,
+      "footer": [],
+      "h": 580,
+      "missing": [],
+      "scenes": [],
+      "small": [],
+      "title": "나의 발견을 소개해요",
+      "w": 873
+    },
+    {
+      "profile": "873x580",
+      "screen": "final",
+      "docH": 580,
+      "docW": 873,
+      "footer": [],
+      "h": 580,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 323,
+          "kind": "learning-scene",
+          "scroll": 323
+        },
+        {
+          "h": 176,
+          "kind": "learning-note",
+          "scroll": 176
+        }
+      ],
+      "small": [],
+      "title": "새 식물에도 써 볼까요?",
+      "w": 873
+    },
+    {
+      "profile": "873x580",
+      "screen": "ending",
+      "docH": 580,
+      "docW": 873,
+      "footer": [],
+      "h": 580,
+      "missing": [],
+      "scenes": [],
+      "small": [],
+      "title": "초록정원을 깨웠어!",
+      "w": 873
+    },
+    {
+      "profile": "906x755",
+      "screen": "home",
+      "docH": 755,
+      "docW": 906,
+      "footer": [],
+      "h": 755,
+      "missing": [],
+      "scenes": [],
+      "small": [],
+      "w": 906
+    },
+    {
+      "profile": "906x755",
+      "screen": "map",
+      "docH": 755,
+      "docW": 906,
+      "footer": [],
+      "h": 755,
+      "missing": [],
+      "scenes": [],
+      "small": [],
+      "title": "초록정원 탐험길",
+      "w": 906
+    },
+    {
+      "profile": "906x755",
+      "screen": "report",
+      "docH": 755,
+      "docW": 906,
+      "footer": [],
+      "h": 755,
+      "missing": [],
+      "scenes": [],
+      "small": [],
+      "title": "나의 발견을 소개해요",
+      "w": 906
+    },
+    {
+      "profile": "906x755",
+      "screen": "final",
+      "docH": 755,
+      "docW": 906,
+      "footer": [],
+      "h": 755,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 496,
+          "kind": "learning-scene",
+          "scroll": 496
+        },
+        {
+          "h": 496,
+          "kind": "learning-note",
+          "scroll": 496
+        }
+      ],
+      "small": [],
+      "title": "새 식물에도 써 볼까요?",
+      "w": 906
+    },
+    {
+      "profile": "906x755",
+      "screen": "ending",
+      "docH": 755,
+      "docW": 906,
+      "footer": [],
+      "h": 755,
+      "missing": [],
+      "scenes": [],
+      "small": [],
+      "title": "초록정원을 깨웠어!",
+      "w": 906
+    },
+    {
+      "profile": "1280x800",
+      "screen": "home",
+      "docH": 800,
+      "docW": 1280,
+      "footer": [],
+      "h": 800,
+      "missing": [],
+      "scenes": [],
+      "small": [],
+      "w": 1280
+    },
+    {
+      "profile": "1280x800",
+      "screen": "map",
+      "docH": 800,
+      "docW": 1280,
+      "footer": [],
+      "h": 800,
+      "missing": [],
+      "scenes": [],
+      "small": [],
+      "title": "초록정원 탐험길",
+      "w": 1280
+    },
+    {
+      "profile": "1280x800",
+      "screen": "report",
+      "docH": 800,
+      "docW": 1280,
+      "footer": [],
+      "h": 800,
+      "missing": [],
+      "scenes": [],
+      "small": [],
+      "title": "나의 발견을 소개해요",
+      "w": 1280
+    },
+    {
+      "profile": "1280x800",
+      "screen": "final",
+      "docH": 800,
+      "docW": 1280,
+      "footer": [],
+      "h": 800,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 536,
+          "kind": "learning-scene",
+          "scroll": 536
+        },
+        {
+          "h": 536,
+          "kind": "learning-note",
+          "scroll": 536
+        }
+      ],
+      "small": [],
+      "title": "새 식물에도 써 볼까요?",
+      "w": 1280
+    },
+    {
+      "profile": "1280x800",
+      "screen": "ending",
+      "docH": 800,
+      "docW": 1280,
+      "footer": [],
+      "h": 800,
+      "missing": [],
+      "scenes": [],
+      "small": [],
+      "title": "초록정원을 깨웠어!",
+      "w": 1280
+    },
+    {
+      "profile": "1920x1080",
+      "screen": "home",
+      "docH": 1080,
+      "docW": 1920,
+      "footer": [],
+      "h": 1080,
+      "missing": [],
+      "scenes": [],
+      "small": [],
+      "w": 1920
+    },
+    {
+      "profile": "1920x1080",
+      "screen": "map",
+      "docH": 1080,
+      "docW": 1920,
+      "footer": [],
+      "h": 1080,
+      "missing": [],
+      "scenes": [],
+      "small": [],
+      "title": "초록정원 탐험길",
+      "w": 1920
+    },
+    {
+      "profile": "1920x1080",
+      "screen": "report",
+      "docH": 1080,
+      "docW": 1920,
+      "footer": [],
+      "h": 1080,
+      "missing": [],
+      "scenes": [],
+      "small": [],
+      "title": "나의 발견을 소개해요",
+      "w": 1920
+    },
+    {
+      "profile": "1920x1080",
+      "screen": "final",
+      "docH": 1080,
+      "docW": 1920,
+      "footer": [],
+      "h": 1080,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 773,
+          "kind": "learning-scene",
+          "scroll": 773
+        },
+        {
+          "h": 773,
+          "kind": "learning-note",
+          "scroll": 773
+        }
+      ],
+      "small": [],
+      "title": "새 식물에도 써 볼까요?",
+      "w": 1920
+    },
+    {
+      "profile": "1920x1080",
+      "screen": "ending",
+      "docH": 1080,
+      "docW": 1920,
+      "footer": [],
+      "h": 1080,
+      "missing": [],
+      "scenes": [],
+      "small": [],
+      "title": "초록정원을 깨웠어!",
+      "w": 1920
+    }
+  ],
+  "extraStates": [
+    {
+      "state": "winter-prediction",
+      "docH": 580,
+      "docW": 873,
+      "footer": [
+        {
+          "bottom": 571,
+          "right": 117,
+          "t": "지도"
+        },
+        {
+          "bottom": 571,
+          "right": 861,
+          "t": "다음 활동"
+        }
+      ],
+      "h": 580,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 442,
+          "kind": "learning-scene",
+          "scroll": 442
+        }
+      ],
+      "small": [],
+      "title": "계절을 바꿔 봐요",
+      "w": 873
+    },
+    {
+      "state": "bag-before-idea",
+      "docH": 580,
+      "docW": 873,
+      "footer": [
+        {
+          "bottom": 571,
+          "right": 117,
+          "t": "지도"
+        },
+        {
+          "bottom": 571,
+          "right": 861,
+          "t": "시험하러 가기"
+        }
+      ],
+      "h": 580,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 442,
+          "kind": "learning-scene",
+          "scroll": 442
+        },
+        {
+          "h": 395,
+          "kind": "learning-note lotus-note ",
+          "scroll": 395
+        }
+      ],
+      "small": [],
+      "title": "나의 탐험 가방 만들기",
+      "w": 873
+    },
+    {
+      "state": "bag-before-prediction",
+      "docH": 580,
+      "docW": 873,
+      "footer": [
+        {
+          "bottom": 571,
+          "right": 117,
+          "t": "지도"
+        },
+        {
+          "bottom": 571,
+          "right": 861,
+          "t": "시험하러 가기"
+        }
+      ],
+      "h": 580,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 442,
+          "kind": "learning-scene",
+          "scroll": 442
+        },
+        {
+          "h": 307,
+          "kind": "learning-note lotus-note idea-linked",
+          "scroll": 307
+        }
+      ],
+      "small": [],
+      "title": "나의 탐험 가방 만들기",
+      "w": 873
+    },
+    {
+      "state": "classification-proof",
+      "docH": 580,
+      "docW": 873,
+      "footer": [
+        {
+          "bottom": 571,
+          "right": 138,
+          "t": "앞 활동"
+        },
+        {
+          "bottom": 571,
+          "right": 861,
+          "t": "빛씨앗 받기"
+        }
+      ],
+      "h": 580,
+      "missing": [],
+      "scenes": [
+        {
+          "h": 442,
+          "kind": "learning-scene",
+          "scroll": 445
+        }
+      ],
+      "small": [],
+      "title": "잎을 나누어 봐요",
+      "w": 873
+    }
+  ]
+}

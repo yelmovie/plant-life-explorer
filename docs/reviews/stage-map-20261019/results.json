@@ -1,0 +1,400 @@
+{
+  "date": "2026-10-19",
+  "checks": [
+    "잠긴 건물 터치 → 선행 탐구 안내 → 길 이동 → 정상 입장, 팝업 동안 지도 키 차단",
+    "두 활동 완료 버튼 → 빛씨앗 1개 → 다음 단계 해금 → 새로고침 보존 → 다음 미션 입장",
+    "비밀번호 없는 전체 해금 → 마지막 미션 조작·엔딩 미리보기 → 종료·새로고침 후 학생 저장본 동일",
+    "방향키 이동·설정 입력 차단·Escape·방향판 pointercancel 후 이동 정지",
+    "태블릿 대표 크기 5종: 가로 넘침 없음, 주요 대상 가림 없음, 터치 영역 최소 44px",
+    "지도 이미지 로딩 실패 → 다시 불러오기 → 학습 기록 보존"
+  ],
+  "layouts": [
+    {
+      "width": 1024,
+      "height": 768,
+      "overflow": false,
+      "controls": [
+        {
+          "name": "1표본 온실다음 탐구",
+          "width": 125.8037109375,
+          "height": 58.5977783203125,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "2계절 꽃돔 잠겨 있어",
+          "width": 127.52197265625,
+          "height": 58.5977783203125,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "3물길 실험실 잠겨 있어",
+          "width": 140.66162109375,
+          "height": 58.5977783203125,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "4나의 연구정원 잠겨 있어",
+          "width": 156.3533935546875,
+          "height": 58.5977783203125,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "5발명 공방 잠겨 있어",
+          "width": 128.1705322265625,
+          "height": 58.5977783203125,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "↑",
+          "width": 48,
+          "height": 48,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "←",
+          "width": 48,
+          "height": 48,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "↓",
+          "width": 48,
+          "height": 48,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "→",
+          "width": 48,
+          "height": 48,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "표본 온실로 가기",
+          "width": 168.71875,
+          "height": 54,
+          "visible": true,
+          "uncovered": true
+        }
+      ]
+    },
+    {
+      "width": 1180,
+      "height": 820,
+      "overflow": false,
+      "controls": [
+        {
+          "name": "1표본 온실다음 탐구",
+          "width": 125.92242431640625,
+          "height": 58.726318359375,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "2계절 꽃돔 잠겨 있어",
+          "width": 127.63665771484375,
+          "height": 58.726318359375,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "3물길 실험실 잠겨 있어",
+          "width": 140.77911376953125,
+          "height": 58.726318359375,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "4나의 연구정원 잠겨 있어",
+          "width": 156.4744873046875,
+          "height": 58.726318359375,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "5발명 공방 잠겨 있어",
+          "width": 128.291015625,
+          "height": 58.726318359375,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "↑",
+          "width": 48,
+          "height": 48,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "←",
+          "width": 48,
+          "height": 48,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "↓",
+          "width": 48,
+          "height": 48,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "→",
+          "width": 48,
+          "height": 48,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "표본 온실로 가기",
+          "width": 174.875,
+          "height": 54,
+          "visible": true,
+          "uncovered": true
+        }
+      ]
+    },
+    {
+      "width": 1280,
+      "height": 800,
+      "overflow": false,
+      "controls": [
+        {
+          "name": "1표본 온실다음 탐구",
+          "width": 125.86083984375,
+          "height": 58.6708984375,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "2계절 꽃돔 잠겨 있어",
+          "width": 127.5806884765625,
+          "height": 58.6708984375,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "3물길 실험실 잠겨 있어",
+          "width": 140.7156982421875,
+          "height": 58.6708984375,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "4나의 연구정원 잠겨 있어",
+          "width": 156.3992919921875,
+          "height": 58.6708984375,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "5발명 공방 잠겨 있어",
+          "width": 128.2222900390625,
+          "height": 58.6708984375,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "↑",
+          "width": 48,
+          "height": 48,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "←",
+          "width": 48,
+          "height": 48,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "↓",
+          "width": 48,
+          "height": 48,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "→",
+          "width": 48,
+          "height": 48,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "표본 온실로 가기",
+          "width": 174.875,
+          "height": 54,
+          "visible": true,
+          "uncovered": true
+        }
+      ]
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "overflow": false,
+      "controls": [
+        {
+          "name": "1표본 온실다음 탐구",
+          "width": 115.359375,
+          "height": 56,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "2계절 꽃돔 잠겨 있어",
+          "width": 116.96875,
+          "height": 56,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "3물길 실험실 잠겨 있어",
+          "width": 129.34375,
+          "height": 56,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "4나의 연구정원 잠겨 있어",
+          "width": 144.109375,
+          "height": 56,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "5발명 공방 잠겨 있어",
+          "width": 117.578125,
+          "height": 56,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "↑",
+          "width": 48,
+          "height": 48,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "←",
+          "width": 48,
+          "height": 48,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "↓",
+          "width": 48,
+          "height": 48,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "→",
+          "width": 48,
+          "height": 48,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "표본 온실로 가기",
+          "width": 516,
+          "height": 54,
+          "visible": true,
+          "uncovered": true
+        }
+      ]
+    },
+    {
+      "width": 820,
+      "height": 1180,
+      "overflow": false,
+      "controls": [
+        {
+          "name": "1표본 온실다음 탐구",
+          "width": 114.39494323730469,
+          "height": 55.99627685546875,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "2계절 꽃돔 잠겨 있어",
+          "width": 116.01318359375,
+          "height": 55.9962158203125,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "3물길 실험실 잠겨 있어",
+          "width": 128.38360595703125,
+          "height": 55.996307373046875,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "4나의 연구정원 잠겨 있어",
+          "width": 143.14794921875,
+          "height": 55.996337890625,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "5발명 공방 잠겨 있어",
+          "width": 116.62213134765625,
+          "height": 55.99627685546875,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "↑",
+          "width": 48,
+          "height": 48,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "←",
+          "width": 48,
+          "height": 48,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "↓",
+          "width": 48,
+          "height": 48,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "→",
+          "width": 48,
+          "height": 48,
+          "visible": true,
+          "uncovered": true
+        },
+        {
+          "name": "표본 온실로 가기",
+          "width": 568,
+          "height": 54,
+          "visible": true,
+          "uncovered": true
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "inputs": "Chromium 자동화: 마우스·키보드·터치 에뮬레이션·합성 pointercancel. 실제 기기 터치는 미검증."
+}

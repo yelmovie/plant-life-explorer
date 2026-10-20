@@ -57,7 +57,7 @@ for (const file of files) {
 const hash = createHash('sha1');
 for (const file of files) hash.update(file).update(await readFile(path.join(root, file)));
 const shell = ['/', ...files.filter(file => file !== 'sw.js' && !file.startsWith('src/vendor/') && !file.startsWith('assets/icons/') && !file.startsWith('assets/models/') && !/\.(?:md|txt)$/i.test(file)
-  && (!file.startsWith('assets/generated/') || /\/(?:garden_hero|mascot_[a-z]+|map_trail_v2|reward_[a-z]+_thumb)\.webp$/.test(file))).map(file => `/${file}`)];
+  && (!file.startsWith('assets/generated/') || /\/(?:expedition_hero_20261020|mascot_[a-z]+|map_trail_v2|reward_[a-z]+_thumb)\.webp$/.test(file))).map(file => `/${file}`)];
 const swPath = path.join(output, 'sw.js');
 let sw = await readFile(swPath, 'utf8');
 const versioned = sw.replace(/const CACHE_VERSION='[^']*';/, `const CACHE_VERSION='${version}-${hash.digest('hex').slice(0, 8)}';`).replace(/const APP_SHELL=\[[^\]]*\];/, `const APP_SHELL=${JSON.stringify(shell)};`);

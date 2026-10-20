@@ -1,0 +1,14 @@
+<!doctype html><html lang="ko"><meta charset="utf-8"><title>로컬 로딩 실측</title>
+<style>body{font:16px system-ui;margin:16px}iframe{width:100%;height:500px;border:1px solid #bbb}pre{white-space:pre-wrap}</style>
+<h1>로컬 첫 화면 실측</h1><pre id="result">측정 중</pre><iframe title="실제 앱 첫 화면" src="/?load-review"></iframe>
+<script>
+const frame=document.querySelector('iframe');
+frame.addEventListener('load',async()=>{
+ await frame.contentDocument.fonts.ready;
+ requestAnimationFrame(()=>requestAnimationFrame(()=>{
+  const w=frame.contentWindow,p=w.performance,n=p.getEntriesByType('navigation')[0],r=p.getEntriesByType('resource');
+  const result={appRendered:!!frame.contentDocument.querySelector('#app main'),viewport:{width:w.innerWidth,height:w.innerHeight},loadMs:Math.round(n.loadEventEnd),domReadyMs:Math.round(n.domContentLoadedEventEnd),readyAndFontsMs:Math.round(p.now()),paint:p.getEntriesByType('paint').map(v=>({name:v.name,ms:Math.round(v.startTime)})),requestCount:r.length+1,transferBytes:r.reduce((s,v)=>s+v.transferSize,0)+n.transferSize,encodedBytes:r.reduce((s,v)=>s+v.encodedBodySize,0)+n.encodedBodySize,external:r.filter(v=>new URL(v.name).origin!==location.origin).map(v=>v.name)};
+  document.querySelector('#result').textContent=JSON.stringify(result,null,2);
+ }));
+});
+</script></html>
