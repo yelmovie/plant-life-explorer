@@ -1,0 +1,1248 @@
+{
+  "version": 2,
+  "learningRecords": [
+    {
+      "known": true,
+      "hints": 1,
+      "responses": {
+        "field:sort:edge:maple": {
+          "label": "단풍나무 · 톱니 분류",
+          "first": "톱니 없음",
+          "last": "톱니 있음",
+          "attempts": 2,
+          "wrong": 1,
+          "changes": 1,
+          "firstCorrect": false,
+          "correct": true,
+          "phase": "application",
+          "firstHelp": 0
+        },
+        "field:sort:edge:pine": {
+          "label": "소나무 · 톱니 분류",
+          "first": "톱니 없음",
+          "last": "톱니 없음",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "application",
+          "firstHelp": 1
+        },
+        "field:sort:edge:camellia": {
+          "label": "동백나무 · 톱니 분류",
+          "first": "톱니 있음",
+          "last": "톱니 있음",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "application",
+          "firstHelp": 1
+        },
+        "field:sort:narrow:maple": {
+          "label": "단풍나무 · 모양 분류",
+          "first": "다른 모양",
+          "last": "다른 모양",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "application",
+          "firstHelp": 1
+        },
+        "field:sort:narrow:pine": {
+          "label": "소나무 · 모양 분류",
+          "first": "길쭉함",
+          "last": "길쭉함",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "application",
+          "firstHelp": 1
+        },
+        "field:sort:narrow:camellia": {
+          "label": "동백나무 · 모양 분류",
+          "first": "다른 모양",
+          "last": "다른 모양",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "application",
+          "firstHelp": 1
+        },
+        "core:leaf:cherry:shape": {
+          "label": "벚나무 · 모양",
+          "first": "은행나무",
+          "last": "벚나무",
+          "attempts": 2,
+          "wrong": 1,
+          "changes": 1,
+          "firstCorrect": false,
+          "correct": true,
+          "phase": "observation",
+          "firstHelp": 1
+        },
+        "core:leaf:cherry:edge": {
+          "label": "벚나무 · 가장자리",
+          "first": "큰 톱니 있음",
+          "last": "큰 톱니 있음",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "observation",
+          "firstHelp": 1
+        },
+        "core:leaf:ginkgo:shape": {
+          "label": "은행나무 · 모양",
+          "first": "은행나무",
+          "last": "은행나무",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "observation",
+          "firstHelp": 1
+        },
+        "core:leaf:ginkgo:edge": {
+          "label": "은행나무 · 가장자리",
+          "first": "큰 톱니 없음",
+          "last": "큰 톱니 없음",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "observation",
+          "firstHelp": 1
+        },
+        "core:leaf:grass:shape": {
+          "label": "강아지풀 · 모양",
+          "first": "강아지풀",
+          "last": "강아지풀",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "observation",
+          "firstHelp": 1
+        },
+        "core:leaf:grass:edge": {
+          "label": "강아지풀 · 가장자리",
+          "first": "큰 톱니 없음",
+          "last": "큰 톱니 없음",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "observation",
+          "firstHelp": 1
+        },
+        "core:classify:edge": {
+          "label": "잎 분류 · 톱니",
+          "first": "벚나무: 톱니 있음 / 은행나무: 톱니 없음 / 강아지풀: 톱니 없음",
+          "last": "벚나무: 톱니 있음 / 은행나무: 톱니 없음 / 강아지풀: 톱니 없음",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "application",
+          "firstHelp": 1
+        },
+        "core:proof:edge": {
+          "label": "분류 근거",
+          "first": "벚나무 · 가장자리",
+          "last": "벚나무 · 가장자리",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "application",
+          "firstHelp": 1
+        },
+        "core:classify:narrow": {
+          "label": "잎 분류 · 모양",
+          "first": "벚나무: 다른 모양 / 은행나무: 다른 모양 / 강아지풀: 길쭉함",
+          "last": "벚나무: 다른 모양 / 은행나무: 다른 모양 / 강아지풀: 길쭉함",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "application",
+          "firstHelp": 1
+        },
+        "core:proof:narrow": {
+          "label": "분류 근거",
+          "first": "강아지풀 · 모양",
+          "last": "강아지풀 · 모양",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "application",
+          "firstHelp": 1
+        }
+      }
+    },
+    {
+      "known": true,
+      "hints": 1,
+      "responses": {
+        "field:season-predict:tree": {
+          "label": "벚나무 겨울 예상",
+          "first": "아무것도 없음",
+          "last": "뿌리가 남음",
+          "attempts": 3,
+          "wrong": 1,
+          "changes": 1,
+          "firstCorrect": false,
+          "correct": true,
+          "phase": "prediction",
+          "firstHelp": 0
+        },
+        "field:season-predict:herb": {
+          "label": "씀바귀 겨울 예상",
+          "first": "아무것도 없음",
+          "last": "뿌리가 남음",
+          "attempts": 3,
+          "wrong": 1,
+          "changes": 1,
+          "firstCorrect": false,
+          "correct": true,
+          "phase": "prediction",
+          "firstHelp": 0
+        },
+        "field:season-link:tree": {
+          "label": "벚나무 살아 있던 부분",
+          "first": "새로 나온 잎",
+          "last": "줄기와 뿌리",
+          "attempts": 2,
+          "wrong": 1,
+          "changes": 1,
+          "firstCorrect": false,
+          "correct": true,
+          "phase": "observation",
+          "firstHelp": 0
+        },
+        "field:season-link:herb": {
+          "label": "씀바귀 살아 있던 부분",
+          "first": "뿌리",
+          "last": "뿌리",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "observation",
+          "firstHelp": 1
+        },
+        "field:season-order:tree:0": {
+          "label": "나무 사진 1번째 자리",
+          "first": "잎이 없는 모습",
+          "last": "잎이 없는 모습",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "observation",
+          "firstHelp": 1
+        },
+        "field:season-order:tree:1": {
+          "label": "나무 사진 2번째 자리",
+          "first": "새눈·새싹 모습",
+          "last": "새눈·새싹 모습",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "observation",
+          "firstHelp": 1
+        },
+        "field:season-order:tree:2": {
+          "label": "나무 사진 3번째 자리",
+          "first": "잎과 꽃이 자란 모습",
+          "last": "잎과 꽃이 자란 모습",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "observation",
+          "firstHelp": 1
+        },
+        "field:season-clue:tree": {
+          "label": "벚나무 그림에서 고른 근거",
+          "first": "같은 가지에서 새눈이 돋음",
+          "last": "같은 가지에서 새눈이 돋음",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "observation",
+          "firstHelp": 1
+        },
+        "field:season-order:herb:0": {
+          "label": "풀 사진 1번째 자리",
+          "first": "잎이 없는 모습",
+          "last": "잎이 없는 모습",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "observation",
+          "firstHelp": 1
+        },
+        "field:season-order:herb:1": {
+          "label": "풀 사진 2번째 자리",
+          "first": "새눈·새싹 모습",
+          "last": "새눈·새싹 모습",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "observation",
+          "firstHelp": 1
+        },
+        "field:season-order:herb:2": {
+          "label": "풀 사진 3번째 자리",
+          "first": "잎과 꽃이 자란 모습",
+          "last": "잎과 꽃이 자란 모습",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "observation",
+          "firstHelp": 1
+        },
+        "field:season-clue:herb": {
+          "label": "씀바귀 그림에서 고른 근거",
+          "first": "땅속 뿌리에서 새싹이 돋음",
+          "last": "땅속 뿌리에서 새싹이 돋음",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "observation",
+          "firstHelp": 1
+        },
+        "core:season-reason:cherry": {
+          "label": "벚나무 겨울과 봄 연결",
+          "first": "살아 있던 부분에서 다시 자람",
+          "last": "살아 있던 부분에서 다시 자람",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "observation",
+          "firstHelp": 1
+        },
+        "core:season-reason:sowthistle": {
+          "label": "씀바귀 겨울과 봄 연결",
+          "first": "살아 있던 부분에서 다시 자람",
+          "last": "살아 있던 부분에서 다시 자람",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "observation",
+          "firstHelp": 1
+        }
+      }
+    },
+    {
+      "known": true,
+      "hints": 1,
+      "responses": {
+        "field:float-predict:air": {
+          "label": "공기 공간 모형 예상",
+          "first": "가라앉음",
+          "last": "뜸",
+          "attempts": 2,
+          "wrong": 1,
+          "changes": 1,
+          "firstCorrect": false,
+          "correct": true,
+          "phase": "prediction",
+          "firstHelp": 0
+        },
+        "field:float-predict:solid": {
+          "label": "속을 채운 모형 예상",
+          "first": "뜸",
+          "last": "가라앉음",
+          "attempts": 2,
+          "wrong": 1,
+          "changes": 1,
+          "firstCorrect": false,
+          "correct": true,
+          "phase": "prediction",
+          "firstHelp": 0
+        },
+        "field:float-observed:air": {
+          "label": "공기 공간 모형 관찰",
+          "first": "가라앉음",
+          "last": "뜸",
+          "attempts": 2,
+          "wrong": 1,
+          "changes": 1,
+          "firstCorrect": false,
+          "correct": true,
+          "phase": "observation",
+          "firstHelp": 0
+        },
+        "field:float-observed:solid": {
+          "label": "속을 채운 모형 관찰",
+          "first": "가라앉음",
+          "last": "가라앉음",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "observation",
+          "firstHelp": 1
+        },
+        "field:float-reason": {
+          "label": "뜨는 결과와 공기 공간 연결",
+          "first": "공기 공간 모형",
+          "last": "공기 공간 모형",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "observation",
+          "firstHelp": 1
+        },
+        "core:experiment-predict": {
+          "label": "물속 잎자루 예상",
+          "first": "아무것도 없음",
+          "last": "공기 방울이 나옴",
+          "attempts": 2,
+          "wrong": 1,
+          "changes": 1,
+          "firstCorrect": false,
+          "correct": true,
+          "phase": "prediction",
+          "firstHelp": 1
+        },
+        "core:experiment-answer": {
+          "label": "누른 잎자루에서 나온 방울",
+          "first": "공기",
+          "last": "공기",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "observation",
+          "firstHelp": 1
+        },
+        "core:habitat:hyacinth": {
+          "label": "부레옥잠의 환경",
+          "first": "물가",
+          "last": "물가",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "application",
+          "firstHelp": 1
+        },
+        "core:feature:hyacinth": {
+          "label": "부레옥잠의 특징",
+          "first": "부레옥잠",
+          "last": "부레옥잠",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "application",
+          "firstHelp": 1
+        },
+        "core:reason:hyacinth": {
+          "label": "부레옥잠의 생활에 도움",
+          "first": "부레옥잠",
+          "last": "부레옥잠",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "application",
+          "firstHelp": 1
+        },
+        "core:habitat:aloe": {
+          "label": "알로에의 환경",
+          "first": "건조 구역",
+          "last": "건조 구역",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "application",
+          "firstHelp": 1
+        },
+        "core:feature:aloe": {
+          "label": "알로에의 특징",
+          "first": "알로에",
+          "last": "알로에",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "application",
+          "firstHelp": 1
+        },
+        "core:reason:aloe": {
+          "label": "알로에의 생활에 도움",
+          "first": "알로에",
+          "last": "알로에",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "application",
+          "firstHelp": 1
+        },
+        "core:habitat:cherry": {
+          "label": "벚나무의 환경",
+          "first": "강아지풀",
+          "last": "강아지풀",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "application",
+          "firstHelp": 1
+        },
+        "core:feature:cherry": {
+          "label": "벚나무의 특징",
+          "first": "벚나무",
+          "last": "벚나무",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "application",
+          "firstHelp": 1
+        },
+        "core:reason:cherry": {
+          "label": "벚나무의 생활에 도움",
+          "first": "벚나무",
+          "last": "벚나무",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "application",
+          "firstHelp": 1
+        }
+      }
+    },
+    {
+      "known": true,
+      "hints": 1,
+      "responses": {
+        "field:environment:pond": {
+          "label": "물이 고이는 자리의 환경",
+          "first": "건조 구역",
+          "last": "물가",
+          "attempts": 2,
+          "wrong": 1,
+          "changes": 1,
+          "firstCorrect": false,
+          "correct": true,
+          "phase": "application",
+          "firstHelp": 0
+        },
+        "field:environment:meadow": {
+          "label": "물이 배어드는 자리의 환경",
+          "first": "강아지풀",
+          "last": "강아지풀",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "application",
+          "firstHelp": 1
+        },
+        "field:environment:ridge": {
+          "label": "물이 빠지는 자리의 환경",
+          "first": "건조 구역",
+          "last": "건조 구역",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "application",
+          "firstHelp": 1
+        },
+        "field:plant:hyacinth": {
+          "label": "부레옥잠을 심을 자리",
+          "first": "물이 빠지는 자리",
+          "last": "물이 고이는 자리",
+          "attempts": 2,
+          "wrong": 1,
+          "changes": 1,
+          "firstCorrect": false,
+          "correct": true,
+          "phase": "application",
+          "firstHelp": 1
+        },
+        "field:plant:cherry": {
+          "label": "벚나무을 심을 자리",
+          "first": "물이 배어드는 자리",
+          "last": "물이 배어드는 자리",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "application",
+          "firstHelp": 1
+        },
+        "field:plant:aloe": {
+          "label": "알로에을 심을 자리",
+          "first": "물이 빠지는 자리",
+          "last": "물이 빠지는 자리",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "application",
+          "firstHelp": 1
+        },
+        "core:plant:hyacinth": {
+          "label": "부레옥잠을 심을 자리",
+          "first": "물가",
+          "last": "물가",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "application",
+          "firstHelp": 1
+        },
+        "core:plant:cherry": {
+          "label": "벚나무을 심을 자리",
+          "first": "풀밭",
+          "last": "풀밭",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "application",
+          "firstHelp": 1
+        },
+        "core:plant:aloe": {
+          "label": "알로에을 심을 자리",
+          "first": "건조 구역",
+          "last": "건조 구역",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "application",
+          "firstHelp": 1
+        },
+        "core:garden:hyacinth": {
+          "label": "부레옥잠을 심은 까닭",
+          "first": "부레옥잠",
+          "last": "부레옥잠",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "application",
+          "firstHelp": 1
+        },
+        "core:garden:cherry": {
+          "label": "벚나무을 심은 까닭",
+          "first": "벚나무",
+          "last": "벚나무",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "application",
+          "firstHelp": 1
+        },
+        "core:garden:aloe": {
+          "label": "알로에을 심은 까닭",
+          "first": "알로에",
+          "last": "알로에",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "application",
+          "firstHelp": 1
+        },
+        "final:habitat": {
+          "label": "새 상황 · 선인장이 사는 곳",
+          "first": "물가",
+          "last": "건조 구역",
+          "attempts": 2,
+          "wrong": 1,
+          "changes": 1,
+          "firstCorrect": false,
+          "correct": true,
+          "phase": "application",
+          "firstHelp": 1
+        }
+      }
+    },
+    {
+      "known": true,
+      "hints": 1,
+      "responses": {
+        "field:bag-prediction": {
+          "label": "비 오는 가방 예상",
+          "first": "겉면만 바꾸면 됨",
+          "last": "입구로 오는 비도 막아야 함",
+          "attempts": 2,
+          "wrong": 1,
+          "changes": 1,
+          "firstCorrect": false,
+          "correct": true,
+          "phase": "prediction",
+          "firstHelp": 0
+        },
+        "field:bag-compare:lotus:flap:flap": {
+          "label": "시험에서 바뀐 부품",
+          "first": "겉면",
+          "last": "바깥 주머니 덮개",
+          "attempts": 2,
+          "wrong": 1,
+          "changes": 1,
+          "firstCorrect": false,
+          "correct": true,
+          "phase": "observation",
+          "firstHelp": 0
+        },
+        "core:design-answer": {
+          "label": "연잎의 특징을 쓰는 방법",
+          "first": "겉면의 물방울이 굴러감",
+          "last": "겉면의 물방울이 굴러감",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "observation",
+          "firstHelp": 1
+        },
+        "core:test:lotus:open": {
+          "label": "비교한 가방의 바뀐 부품",
+          "first": "입구 덮개",
+          "last": "입구 덮개",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "observation",
+          "firstHelp": 1
+        },
+        "core:test:plain:open": {
+          "label": "비교한 가방의 바뀐 부품",
+          "first": "겉면",
+          "last": "겉면",
+          "attempts": 1,
+          "wrong": 0,
+          "changes": 0,
+          "firstCorrect": true,
+          "correct": true,
+          "phase": "observation",
+          "firstHelp": 1
+        }
+      }
+    }
+  ],
+  "fieldBridges": [
+    true,
+    true,
+    true,
+    true,
+    true
+  ],
+  "notebook": [
+    {
+      "read": false,
+      "answer": null,
+      "firstAnswer": null,
+      "attempts": 0
+    },
+    {
+      "read": false,
+      "answer": null,
+      "firstAnswer": null,
+      "attempts": 0
+    },
+    {
+      "read": false,
+      "answer": null,
+      "firstAnswer": null,
+      "attempts": 0
+    },
+    {
+      "read": false,
+      "answer": null,
+      "firstAnswer": null,
+      "attempts": 0
+    },
+    {
+      "read": true,
+      "answer": 1,
+      "firstAnswer": 0,
+      "attempts": 2
+    }
+  ],
+  "fieldEvidence": {
+    "version": 1,
+    "leaves": {
+      "scans": {
+        "maple": [
+          "shape",
+          "edge"
+        ],
+        "pine": [
+          "shape",
+          "edge"
+        ],
+        "camellia": [
+          "shape",
+          "edge"
+        ]
+      },
+      "edge": {
+        "maple": "yes",
+        "pine": "no",
+        "camellia": "yes"
+      },
+      "narrow": {
+        "maple": "no",
+        "pine": "yes",
+        "camellia": "no"
+      }
+    },
+    "seasons": {
+      "predictions": {
+        "tree": "none",
+        "herb": "none"
+      },
+      "clues": {
+        "tree": "branches",
+        "herb": "rootbud"
+      },
+      "links": {
+        "tree": "trunk",
+        "herb": "root"
+      },
+      "tree": [
+        "winter",
+        "bud",
+        "spring"
+      ],
+      "herb": [
+        "winter",
+        "bud",
+        "spring"
+      ]
+    },
+    "float": {
+      "predictions": {
+        "air": "sink",
+        "solid": "float"
+      },
+      "tested": [
+        "air",
+        "solid"
+      ],
+      "observed": {
+        "air": "float",
+        "solid": "sink"
+      },
+      "reason": "air"
+    },
+    "garden": {
+      "environments": {
+        "pond": "water",
+        "meadow": "grass",
+        "ridge": "dry"
+      },
+      "plants": {
+        "hyacinth": "pond",
+        "cherry": "meadow",
+        "aloe": "ridge"
+      },
+      "testedKey": "water:grass:dry|pond:meadow:ridge"
+    },
+    "bag": {
+      "prediction": "surface",
+      "comparisons": {
+        "pocket": {
+          "before": "lotus:flap:open",
+          "after": "lotus:flap:flap",
+          "part": "pocket"
+        }
+      },
+      "design": {
+        "surface": "lotus",
+        "cover": "flap",
+        "pocket": "flap"
+      },
+      "assembled": [
+        "surface",
+        "cover",
+        "pocket"
+      ],
+      "tests": [
+        {
+          "surface": "lotus",
+          "cover": "flap",
+          "pocket": "open",
+          "key": "lotus:flap:open",
+          "rolls": true,
+          "notebookDry": true,
+          "pocketDry": false
+        },
+        {
+          "surface": "lotus",
+          "cover": "flap",
+          "pocket": "flap",
+          "key": "lotus:flap:flap",
+          "rolls": true,
+          "notebookDry": true,
+          "pocketDry": true
+        }
+      ],
+      "compared": {
+        "before": "lotus:flap:open",
+        "after": "lotus:flap:flap",
+        "part": "pocket"
+      },
+      "delivered": "lotus:flap:flap"
+    }
+  },
+  "journeyRequired": [
+    true,
+    true,
+    true,
+    true,
+    true
+  ],
+  "legacyCompleted": [],
+  "legacyFinished": false,
+  "leafEvidence": {
+    "cherry": {
+      "shape": {
+        "answer": "cherry",
+        "asset": "cherry",
+        "region": "shape"
+      },
+      "edge": {
+        "answer": "yes",
+        "asset": "cherry",
+        "region": "edge"
+      }
+    },
+    "ginkgo": {
+      "shape": {
+        "answer": "ginkgo",
+        "asset": "ginkgo",
+        "region": "shape"
+      },
+      "edge": {
+        "answer": "no",
+        "asset": "ginkgo",
+        "region": "edge"
+      }
+    },
+    "grass": {
+      "shape": {
+        "answer": "grass",
+        "asset": "grass",
+        "region": "shape"
+      },
+      "edge": {
+        "answer": "no",
+        "asset": "grass",
+        "region": "edge"
+      }
+    }
+  },
+  "groupsByRule": {
+    "edge": {
+      "cherry": "yes",
+      "ginkgo": "no",
+      "grass": "no"
+    },
+    "narrow": {
+      "cherry": "no",
+      "ginkgo": "no",
+      "grass": "yes"
+    }
+  },
+  "classificationEvidence": {
+    "edge": "cherry",
+    "narrow": "grass"
+  },
+  "seasonPhotos": {
+    "cherry:3": {
+      "underground": true
+    },
+    "cherry:0": {
+      "underground": true
+    },
+    "sowthistle:3": {
+      "underground": true
+    },
+    "sowthistle:0": {
+      "underground": true
+    }
+  },
+  "seasonExplanation": "sowthistle",
+  "seasonExplained": [
+    "cherry",
+    "sowthistle"
+  ],
+  "habitatFeatures": {
+    "hyacinth": "hyacinth",
+    "aloe": "aloe",
+    "cherry": "cherry"
+  },
+  "experimentAnswer": "air",
+  "gardenReviewed": true,
+  "testExplanation": null,
+  "inventionRevision": 2,
+  "inventionExplanations": {
+    "surface": {
+      "key": "plain:open",
+      "before": "lotus:open",
+      "part": "surface"
+    },
+    "cover": {
+      "key": "lotus:open",
+      "before": "lotus:flap",
+      "part": "cover"
+    }
+  },
+  "testPrediction": "surface",
+  "activeTestKey": "lotus:flap",
+  "seasonPrediction": {
+    "cherry": "none",
+    "sowthistle": "none"
+  },
+  "undergroundSeen": [
+    "cherry",
+    "sowthistle"
+  ],
+  "misses": [
+    1,
+    0,
+    0,
+    0,
+    0
+  ],
+  "stamps": {
+    "direct": [],
+    "fixed": [],
+    "helped": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "unknown": []
+  },
+  "sharing": {
+    "status": "later",
+    "question": "",
+    "response": ""
+  },
+  "highlight": 0,
+  "screen": "report",
+  "page": 9,
+  "completed": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+  ],
+  "observation": {
+    "cherry": [
+      "shape",
+      "edge"
+    ],
+    "ginkgo": [
+      "shape",
+      "edge"
+    ],
+    "grass": [
+      "shape",
+      "edge"
+    ]
+  },
+  "rule": "narrow",
+  "groups": {
+    "cherry": "no",
+    "ginkgo": "no",
+    "grass": "yes"
+  },
+  "seasonPlant": "sowthistle",
+  "season": 0,
+  "underground": false,
+  "seasonalRecords": [
+    "cherry:3",
+    "cherry:0",
+    "sowthistle:3",
+    "sowthistle:0"
+  ],
+  "linkedEvidence": [
+    "cherry:3",
+    "cherry:0",
+    "sowthistle:3",
+    "sowthistle:0"
+  ],
+  "experiment": {
+    "step": 5,
+    "compared": false,
+    "prediction": "none"
+  },
+  "habitats": {
+    "hyacinth": "water",
+    "aloe": "dry",
+    "cherry": "grass"
+  },
+  "reasons": {
+    "hyacinth": "hyacinth",
+    "aloe": "aloe",
+    "cherry": "cherry"
+  },
+  "terrain": [
+    "water",
+    "water",
+    "grass",
+    "grass",
+    "dry",
+    "dry",
+    "water",
+    "empty",
+    "grass",
+    "empty",
+    "dry",
+    "empty",
+    "empty",
+    "empty",
+    "empty",
+    "empty",
+    "empty",
+    "empty",
+    "empty",
+    "empty",
+    "empty",
+    "empty",
+    "empty",
+    "empty"
+  ],
+  "garden": {
+    "hyacinth": 0,
+    "aloe": 4,
+    "cherry": 2
+  },
+  "gardenReasons": [
+    "hyacinth",
+    "cherry",
+    "aloe"
+  ],
+  "design": {
+    "surface": "lotus",
+    "cover": "flap",
+    "linked": true,
+    "observed": true
+  },
+  "tests": [
+    {
+      "key": "lotus:flap",
+      "surface": "lotus",
+      "cover": "flap",
+      "clean": true,
+      "dry": true
+    },
+    {
+      "key": "lotus:open",
+      "surface": "lotus",
+      "cover": "open",
+      "clean": true,
+      "dry": false
+    },
+    {
+      "key": "plain:open",
+      "surface": "plain",
+      "cover": "open",
+      "clean": false,
+      "dry": false
+    }
+  ],
+  "reportSubmitted": [],
+  "finalChecks": {
+    "classification": false,
+    "habitat": true,
+    "garden": false,
+    "invention": false
+  },
+  "finished": true,
+  "gardenTheme": "pink",
+  "largeText": false,
+  "soundEnabled": true,
+  "adminUnlocked": false
+}

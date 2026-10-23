@@ -19,7 +19,7 @@ test('새 표본은 관찰 두 곳과 두 가지 기준의 실제 배치가 모�
  assert.equal(fieldMissionReady(s,0),true);assert.match(renderFieldMission(s,u,0),/현장 복구 성공/);
 });
 test('계절 사진의 잘못된 연결과 중복 사진 순서는 증거가 되지 않는다',()=>{
- const {s,drop}=setup(2);drop('season:tree','link:tree:leaf');drop('season:herb','link:herb:root');
+ const {s,drop,act}=setup(2);act('field-season-clue','tree:branches');act('field-season-clue','herb:rootbud');drop('season:tree','link:tree:leaf');drop('season:herb','link:herb:root');
  for(const k of ['tree','herb'])for(const [i,p] of ['winter','bud','spring'].entries())drop(`frame:${k}:${p}`,`order:${k}:${i}`);
  assert.equal(fieldMissionReady(s,1),false);drop('season:tree','link:tree:trunk');assert.equal(fieldMissionReady(s,1),true);
  drop('frame:herb:winter','order:herb:2');assert.equal(fieldMissionReady(s,1),false);

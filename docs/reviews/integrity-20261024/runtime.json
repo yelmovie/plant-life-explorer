@@ -1,0 +1,93 @@
+{
+  "started": "2026-10-23T17:20:56.251Z",
+  "storage": [
+    {
+      "case": "{broken",
+      "originalPreservedAfterActionsAndReload": true
+    },
+    {
+      "case": "null",
+      "originalPreservedAfterActionsAndReload": true
+    },
+    {
+      "case": "{\"version\":2,\"completed\":[]}",
+      "originalPreservedAfterActionsAndReload": true
+    },
+    {
+      "case": "{\"version\":99,\"learningRecords\":[{\"known\":true,\"hi",
+      "originalPreservedAfterActionsAndReload": true
+    },
+    {
+      "case": "explicit last-good recovery",
+      "completedPreserved": true,
+      "unreadableOriginalArchived": true
+    },
+    {
+      "case": "quota failure on activity",
+      "persistentBanner": true,
+      "originalPreserved": true,
+      "retryClearsBanner": true
+    },
+    {
+      "case": "second tab updates while reset confirmation is open",
+      "latestProgressPreserved": true,
+      "staleResetBlocked": true
+    }
+  ],
+  "webgl": [
+    {
+      "kind": "leaf",
+      "supported": true,
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "canvas": {
+        "x": 185.59375,
+        "y": 226,
+        "width": 966.40625,
+        "height": 243
+      },
+      "rotateAndZoom": true,
+      "pictureToggle": true
+    },
+    {
+      "kind": "lab",
+      "supported": true,
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "canvas": {
+        "x": 185.59375,
+        "y": 156,
+        "width": 966.40625,
+        "height": 281
+      },
+      "rotateAndZoom": true,
+      "pictureToggle": true
+    },
+    {
+      "kind": "garden",
+      "supported": true,
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "canvas": {
+        "x": 173.59375,
+        "y": 262,
+        "width": 990.40625,
+        "height": 294
+      },
+      "rotateAndZoom": true,
+      "pictureToggle": true
+    },
+    {
+      "kind": "bag",
+      "supported": true,
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "canvas": {
+        "x": 173.59375,
+        "y": 191.796875,
+        "width": 560.4375,
+        "height": 230
+      },
+      "rotateAndZoom": true,
+      "pictureToggle": true
+    }
+  ],
+  "errors": [],
+  "finished": "2026-10-23T17:23:19.532Z"
+}

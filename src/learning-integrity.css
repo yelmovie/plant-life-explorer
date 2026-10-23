@@ -1,0 +1,76 @@
+/* Keep record feedback and recovery controls in the document, away from tabs. */
+.save-status { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:8px 16px; padding:10px 16px; color:#573d19; background:#fff0c7; border-bottom:2px solid #b58836; }
+.save-status span { max-width:850px; }
+.save-status .btn { min-height:48px; }
+#app .activity-feedback, #app .activity-purpose, #app .next-condition,
+#app .field-request, #app .mission-workspace > .microcopy,
+#app .exploration-activity :is(.direct-hint,.chain-title,.season-caption,.rule-result,.evidence-bridge) {
+  color:#243e30; background:#fffdf1; border-radius:12px; padding:10px 14px; line-height:1.5;
+}
+#app .activity-feedback { margin:0 0 10px; border:2px solid #8da977; }
+#app .activity-purpose { margin-top:10px; font-size:16px; }
+#app .activity-purpose summary { min-height:44px; display:flex; align-items:center; cursor:pointer; }
+#app .activity-purpose p { margin:0; }
+#app .exploration-activity .learning-footer { flex-wrap:wrap; }
+#app .next-condition { flex:1 0 100%; margin:0 0 5px; font-size:16px; }
+#app .learning-footer > div { flex-wrap:wrap; }
+#app .learning-footer .btn { white-space:normal; }
+#app .field-token, #app .plant-card, #app .garden-cell { touch-action:pan-y pinch-zoom; }
+#app .field-token { cursor:grab; }
+#app .field-target, #app .mission-tool, #app .mission-step, #app .part-card,
+#app .learning-tabs .btn, #app .reason-cards .btn { min-height:48px; min-width:48px; }
+#app .field-repair-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+#app .field-season-predictions { background:#fffdf1; padding:16px; border-radius:16px; }
+#app .field-season-predictions section { margin-bottom:18px; }
+#app .field-bag-parts, #app .picture-parts { word-break:keep-all; overflow-wrap:break-word; }
+#app .exploration-activity .picture-parts { grid-template-columns:1fr; }
+#app .exploration-activity .picture-parts .part-pair { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+#app .exploration-activity .picture-parts .part-card { min-width:0; height:auto; min-height:104px; padding:8px; }
+#app .exploration-activity .picture-parts .part-card strong { font-size:17px; line-height:1.45; word-break:keep-all; }
+#app .exploration-activity .picture-parts .part-card img { height:56px; }
+#app .exploration-activity :is(.design-layout,.test-layout) { grid-template-columns:minmax(280px,1fr) minmax(300px,42%); }
+#app .exploration-activity :is(.design-layout,.test-layout) > .learning-note { background:#fffdf1; }
+.bag-art { position:relative; }
+.bag-pocket-detail { position:absolute; width:38%; height:56%; left:36%; top:37%; z-index:3; overflow:visible; }
+.bag-part-label { position:absolute; color:#253e30; background:#fffdf1; border:1px solid #789265; padding:3px 6px; border-radius:7px; font-size:14px; z-index:4; }
+.surface-label { left:13%; top:58%; }
+.cover-label { left:38%; top:18%; }
+.field-trial-card .bag-pocket-detail { width:38%; height:56%; }
+.field-trial-card .bag-art { min-height:150px; }
+.student-record { padding:12px; margin-bottom:12px; background:#fffdf4; border:1px solid #d4dfc9; border-radius:12px; }
+.student-record ul { padding-left:20px; margin:6px 0; }
+.student-record li { margin:6px 0; line-height:1.55; overflow-wrap:anywhere; }
+.note-content-summary { background:#edf3e5; padding:12px; border-radius:12px; }
+.note-content-summary summary { min-height:44px; cursor:pointer; }
+.note-quiz .btn { min-height:48px; }
+#app .stamp-badge.helped, #app .stamp-badge.unknown { background:#f5f1df; }
+@media (max-width:1100px) {
+  #app .exploration-activity :is(.design-layout,.test-layout) { grid-template-columns:minmax(240px,1fr) minmax(280px,43%); gap:10px; }
+}
+@media (max-width:900px), (orientation:portrait), (max-height:620px) {
+  html body.activity-open { overflow:auto; }
+  #app .exploration-activity { height:auto; min-height:100dvh; overflow:visible; }
+  #app .exploration-activity :is(.design-layout,.test-layout) { display:grid; grid-template-columns:1fr; height:auto; }
+  #app .exploration-activity :is(.design-layout,.test-layout) > :is(.learning-scene,.learning-note) { height:auto; max-height:none; overflow:visible; }
+  #app .exploration-activity .picture-parts { grid-template-columns:1fr; }
+  #app .exploration-activity .learning-footer { position:static; height:auto; }
+  #app .field-bag-parts { grid-template-columns:1fr; }
+}
+@media (max-width:420px) {
+  #app .exploration-activity .picture-parts .part-pair { grid-template-columns:1fr; }
+}
+.large-text #app .exploration-activity :is(.design-layout,.test-layout) { grid-template-columns:1fr; }
+.large-text #app .exploration-activity { height:auto; min-height:100dvh; }
+.large-text #app .exploration-activity :is(.learning-scene,.learning-note) { height:auto; max-height:none; overflow:visible; }
+
+#app .exploration-activity { grid-template-rows:60px minmax(0,1fr) auto; }
+#app .field-guide { justify-content:flex-start; overflow-y:auto; }
+#app .guide-mascot { flex-shrink:1; min-height:70px; }
+#app .guide-bubble { flex-shrink:0; }
+
+#app :is(.activity-8,.activity-9) .learning-scene { overflow-y:auto; }
+#app .activity-8 .compact-bag[data-spatial] { flex:0 0 230px; height:230px; min-height:230px; }
+#app .activity-9 .test-layout > .learning-scene { grid-template-rows:minmax(230px,1fr) auto auto auto; }
+#app .activity-9 .water-demo { min-height:230px; }
+#app .timeline { padding:12px; background:#fffdf1; border-radius:14px; }
+#app .final-feedback { padding:12px 16px; margin:8px 0; background:#fffdf1; border-radius:12px; }

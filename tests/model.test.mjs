@@ -1,3 +1,4 @@
+import {recordResponse} from '../src/learning-records.js';
 import {completeInvention} from './invention-fixture.mjs';
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
@@ -95,12 +96,12 @@ test('맞지 않는 환경과 이으면 단서가 나오고 헛다리로 남는�
  learningAction(s,u,'habitat','dry');assert.equal(s.misses[2],1);
 });
 test('스탬프 두 종은 첫 완료 때 한 번만 찍히고 완료한 미션의 헛다리는 늘지 않는다',()=>{
- const s=freshState();assert.equal(awardStamp(s,0),'direct');addMiss(s,1);assert.equal(awardStamp(s,1),'fixed');
+ const s=freshState();recordResponse(s,0,'test','맞음',true,'관찰');recordResponse(s,1,'test','수정',true,'관찰');assert.equal(awardStamp(s,0),'direct');addMiss(s,1);assert.equal(awardStamp(s,1),'fixed');
  s.completed[0]=s.completed[1]=true;assert.equal(awardStamp(s,0),null);addMiss(s,0);assert.equal(s.misses[0],0);assert.deepEqual(missionStamps(s,0),['direct']);
 });
 test('예전 저장(새 필드 없음)은 기본값으로, 새 기록은 왕복 보존한다',()=>{
  const old=freshState();for(const k of ['misses','stamps','testPrediction','seasonPrediction','undergroundSeen'])delete old[k];old.completed[0]=old.completed[1]=true;
- const r=restoreState(JSON.stringify(old));assert.deepEqual(r.misses,[0,0,0,0,0]);assert.deepEqual(r.stamps,{direct:[],fixed:[]});assert.equal(r.testPrediction,'');
+ const r=restoreState(JSON.stringify(old));assert.deepEqual(r.misses,[0,0,0,0,0]);assert.deepEqual(r.stamps,{direct:[],fixed:[],helped:[],unknown:[]});assert.equal(r.testPrediction,'');
  r.stamps.direct=[0,3];r.misses[2]=2;r.seasonPrediction.cherry='roots';r.undergroundSeen=['cherry','sowthistle'];
  const back=restoreState(JSON.stringify(r));assert.deepEqual(back.stamps.direct,[0]);assert.equal(back.misses[2],2);assert.deepEqual(back.undergroundSeen,['cherry']);
 });

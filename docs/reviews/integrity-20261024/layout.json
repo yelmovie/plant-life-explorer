@@ -1,0 +1,785 @@
+{
+  "started": "2026-10-23T17:12:09.883Z",
+  "fixture": "Actual fresh UI completion replayed in separate browser profiles; no real user data",
+  "layouts": [
+    {
+      "size": [
+        1180,
+        820
+      ],
+      "name": "leaves",
+      "documentWidth": 1180,
+      "viewport": 1180,
+      "small": [],
+      "bags": [],
+      "cards": [],
+      "passed": true
+    },
+    {
+      "size": [
+        1180,
+        820
+      ],
+      "name": "seasons",
+      "documentWidth": 1180,
+      "viewport": 1180,
+      "small": [],
+      "bags": [],
+      "cards": [],
+      "passed": true
+    },
+    {
+      "size": [
+        1180,
+        820
+      ],
+      "name": "lab",
+      "documentWidth": 1180,
+      "viewport": 1180,
+      "small": [],
+      "bags": [],
+      "cards": [],
+      "passed": true
+    },
+    {
+      "size": [
+        1180,
+        820
+      ],
+      "name": "garden",
+      "documentWidth": 1180,
+      "viewport": 1180,
+      "small": [],
+      "bags": [],
+      "cards": [],
+      "passed": true
+    },
+    {
+      "size": [
+        1180,
+        820
+      ],
+      "name": "design",
+      "documentWidth": 1180,
+      "viewport": 1180,
+      "small": [],
+      "bags": [
+        {
+          "width": 560.4375,
+          "height": 184,
+          "x": 173.59375,
+          "y": 191.796875
+        }
+      ],
+      "cards": [
+        {
+          "width": 275.21875,
+          "height": 107.640625,
+          "x": 173.59375,
+          "y": 467.390625
+        },
+        {
+          "width": 275.21875,
+          "height": 107.640625,
+          "x": 458.8125,
+          "y": 467.390625
+        },
+        {
+          "width": 275.21875,
+          "height": 107.640625,
+          "x": 173.59375,
+          "y": 624.625
+        },
+        {
+          "width": 275.21875,
+          "height": 107.640625,
+          "x": 458.8125,
+          "y": 624.625
+        }
+      ],
+      "passed": true
+    },
+    {
+      "size": [
+        1180,
+        820
+      ],
+      "name": "tests",
+      "documentWidth": 1180,
+      "viewport": 1180,
+      "small": [],
+      "bags": [
+        {
+          "width": 560.4375,
+          "height": 184,
+          "x": 173.59375,
+          "y": 148
+        }
+      ],
+      "cards": [
+        {
+          "width": 183.984375,
+          "height": 78,
+          "x": 767.03125,
+          "y": 284.59375
+        },
+        {
+          "width": 183.984375,
+          "height": 78,
+          "x": 961.015625,
+          "y": 284.59375
+        },
+        {
+          "width": 183.984375,
+          "height": 78,
+          "x": 767.03125,
+          "y": 403.1875
+        },
+        {
+          "width": 183.984375,
+          "height": 78,
+          "x": 961.015625,
+          "y": 403.1875
+        }
+      ],
+      "passed": true
+    },
+    {
+      "size": [
+        1180,
+        820
+      ],
+      "name": "field-bag",
+      "documentWidth": 1180,
+      "viewport": 1180,
+      "small": [],
+      "bags": [
+        {
+          "width": 526.890625,
+          "height": 235,
+          "x": 181.59375,
+          "y": 270.796875
+        }
+      ],
+      "cards": [],
+      "passed": true
+    },
+    {
+      "size": [
+        1180,
+        820
+      ],
+      "name": "notebook",
+      "documentWidth": 1180,
+      "viewport": 1180,
+      "small": [],
+      "bags": [],
+      "cards": [],
+      "passed": true
+    },
+    {
+      "size": [
+        1180,
+        820
+      ],
+      "name": "ending",
+      "documentWidth": 1180,
+      "viewport": 1180,
+      "small": [],
+      "bags": [],
+      "cards": [],
+      "passed": true
+    },
+    {
+      "size": [
+        1024,
+        768
+      ],
+      "name": "leaves",
+      "documentWidth": 1024,
+      "viewport": 1024,
+      "small": [],
+      "bags": [],
+      "cards": [],
+      "passed": true
+    },
+    {
+      "size": [
+        1024,
+        768
+      ],
+      "name": "seasons",
+      "documentWidth": 1024,
+      "viewport": 1024,
+      "small": [],
+      "bags": [],
+      "cards": [],
+      "passed": true
+    },
+    {
+      "size": [
+        1024,
+        768
+      ],
+      "name": "lab",
+      "documentWidth": 1024,
+      "viewport": 1024,
+      "small": [],
+      "bags": [],
+      "cards": [],
+      "passed": true
+    },
+    {
+      "size": [
+        1024,
+        768
+      ],
+      "name": "garden",
+      "documentWidth": 1024,
+      "viewport": 1024,
+      "small": [],
+      "bags": [],
+      "cards": [],
+      "passed": true
+    },
+    {
+      "size": [
+        1024,
+        768
+      ],
+      "name": "design",
+      "documentWidth": 1024,
+      "viewport": 1024,
+      "small": [],
+      "bags": [
+        {
+          "width": 473.375,
+          "height": 184,
+          "x": 160,
+          "y": 191.796875
+        }
+      ],
+      "cards": [
+        {
+          "width": 231.6875,
+          "height": 107.640625,
+          "x": 160,
+          "y": 467.390625
+        },
+        {
+          "width": 231.6875,
+          "height": 107.640625,
+          "x": 401.6875,
+          "y": 467.390625
+        },
+        {
+          "width": 231.6875,
+          "height": 107.640625,
+          "x": 160,
+          "y": 624.625
+        },
+        {
+          "width": 231.6875,
+          "height": 107.640625,
+          "x": 401.6875,
+          "y": 624.625
+        }
+      ],
+      "passed": true
+    },
+    {
+      "size": [
+        1024,
+        768
+      ],
+      "name": "tests",
+      "documentWidth": 1024,
+      "viewport": 1024,
+      "small": [],
+      "bags": [
+        {
+          "width": 473.375,
+          "height": 184,
+          "x": 160,
+          "y": 148
+        }
+      ],
+      "cards": [
+        {
+          "width": 164.3125,
+          "height": 78,
+          "x": 656.375,
+          "y": 242.59375
+        },
+        {
+          "width": 164.3125,
+          "height": 78,
+          "x": 830.6875,
+          "y": 242.59375
+        },
+        {
+          "width": 164.3125,
+          "height": 78,
+          "x": 656.375,
+          "y": 361.1875
+        },
+        {
+          "width": 164.3125,
+          "height": 78,
+          "x": 830.6875,
+          "y": 361.1875
+        }
+      ],
+      "passed": true
+    },
+    {
+      "size": [
+        1024,
+        768
+      ],
+      "name": "field-bag",
+      "documentWidth": 1024,
+      "viewport": 1024,
+      "small": [],
+      "bags": [
+        {
+          "width": 447.765625,
+          "height": 235,
+          "x": 168,
+          "y": 270.796875
+        }
+      ],
+      "cards": [],
+      "passed": true
+    },
+    {
+      "size": [
+        1024,
+        768
+      ],
+      "name": "notebook",
+      "documentWidth": 1024,
+      "viewport": 1024,
+      "small": [],
+      "bags": [],
+      "cards": [],
+      "passed": true
+    },
+    {
+      "size": [
+        1024,
+        768
+      ],
+      "name": "ending",
+      "documentWidth": 1024,
+      "viewport": 1024,
+      "small": [],
+      "bags": [],
+      "cards": [],
+      "passed": true
+    },
+    {
+      "size": [
+        780,
+        833
+      ],
+      "name": "leaves",
+      "documentWidth": 780,
+      "viewport": 780,
+      "small": [],
+      "bags": [],
+      "cards": [],
+      "passed": true
+    },
+    {
+      "size": [
+        780,
+        833
+      ],
+      "name": "seasons",
+      "documentWidth": 780,
+      "viewport": 780,
+      "small": [],
+      "bags": [],
+      "cards": [],
+      "passed": true
+    },
+    {
+      "size": [
+        780,
+        833
+      ],
+      "name": "lab",
+      "documentWidth": 780,
+      "viewport": 780,
+      "small": [],
+      "bags": [],
+      "cards": [],
+      "passed": true
+    },
+    {
+      "size": [
+        780,
+        833
+      ],
+      "name": "garden",
+      "documentWidth": 780,
+      "viewport": 780,
+      "small": [],
+      "bags": [],
+      "cards": [],
+      "passed": true
+    },
+    {
+      "size": [
+        780,
+        833
+      ],
+      "name": "design",
+      "documentWidth": 780,
+      "viewport": 780,
+      "small": [],
+      "bags": [
+        {
+          "width": 604.00146484375,
+          "height": 184.00042724609375,
+          "x": 159.9994659423828,
+          "y": 191.79733276367188
+        }
+      ],
+      "cards": [
+        {
+          "width": 297.000732421875,
+          "height": 107.64083862304688,
+          "x": 159.9994659423828,
+          "y": 467.3917541503906
+        },
+        {
+          "width": 297.000732421875,
+          "height": 107.64083862304688,
+          "x": 467.00018310546875,
+          "y": 467.3917541503906
+        },
+        {
+          "width": 297.000732421875,
+          "height": 107.64093017578125,
+          "x": 159.9994659423828,
+          "y": 624.62646484375
+        },
+        {
+          "width": 297.000732421875,
+          "height": 107.64093017578125,
+          "x": 467.00018310546875,
+          "y": 624.62646484375
+        }
+      ],
+      "passed": true
+    },
+    {
+      "size": [
+        780,
+        833
+      ],
+      "name": "tests",
+      "documentWidth": 780,
+      "viewport": 780,
+      "small": [],
+      "bags": [
+        {
+          "width": 604,
+          "height": 402.65625,
+          "x": 160,
+          "y": -597
+        }
+      ],
+      "cards": [
+        {
+          "width": 278,
+          "height": 112,
+          "x": 179,
+          "y": 325.296875
+        },
+        {
+          "width": 278,
+          "height": 112,
+          "x": 467,
+          "y": 325.296875
+        },
+        {
+          "width": 278,
+          "height": 112,
+          "x": 179,
+          "y": 484.890625
+        },
+        {
+          "width": 278,
+          "height": 112,
+          "x": 467,
+          "y": 484.890625
+        }
+      ],
+      "passed": true
+    },
+    {
+      "size": [
+        780,
+        833
+      ],
+      "name": "field-bag",
+      "documentWidth": 780,
+      "viewport": 780,
+      "small": [],
+      "bags": [
+        {
+          "width": 292,
+          "height": 235,
+          "x": 168,
+          "y": 317.59375
+        }
+      ],
+      "cards": [],
+      "passed": true
+    },
+    {
+      "size": [
+        780,
+        833
+      ],
+      "name": "notebook",
+      "documentWidth": 780,
+      "viewport": 780,
+      "small": [],
+      "bags": [],
+      "cards": [],
+      "passed": true
+    },
+    {
+      "size": [
+        780,
+        833
+      ],
+      "name": "ending",
+      "documentWidth": 780,
+      "viewport": 780,
+      "small": [],
+      "bags": [],
+      "cards": [],
+      "passed": true
+    },
+    {
+      "size": [
+        768,
+        1024
+      ],
+      "name": "leaves",
+      "documentWidth": 768,
+      "viewport": 768,
+      "small": [],
+      "bags": [],
+      "cards": [],
+      "passed": true
+    },
+    {
+      "size": [
+        768,
+        1024
+      ],
+      "name": "seasons",
+      "documentWidth": 768,
+      "viewport": 768,
+      "small": [],
+      "bags": [],
+      "cards": [],
+      "passed": true
+    },
+    {
+      "size": [
+        768,
+        1024
+      ],
+      "name": "lab",
+      "documentWidth": 768,
+      "viewport": 768,
+      "small": [],
+      "bags": [],
+      "cards": [],
+      "passed": true
+    },
+    {
+      "size": [
+        768,
+        1024
+      ],
+      "name": "garden",
+      "documentWidth": 768,
+      "viewport": 768,
+      "small": [],
+      "bags": [],
+      "cards": [],
+      "passed": true
+    },
+    {
+      "size": [
+        768,
+        1024
+      ],
+      "name": "design",
+      "documentWidth": 768,
+      "viewport": 768,
+      "small": [],
+      "bags": [
+        {
+          "width": 592.00146484375,
+          "height": 184.00047302246094,
+          "x": 159.99942016601562,
+          "y": 191.79734802246094
+        }
+      ],
+      "cards": [
+        {
+          "width": 291.000732421875,
+          "height": 107.64093017578125,
+          "x": 159.99942016601562,
+          "y": 467.39178466796875
+        },
+        {
+          "width": 291.000732421875,
+          "height": 107.64093017578125,
+          "x": 461.00018310546875,
+          "y": 467.39178466796875
+        },
+        {
+          "width": 291.000732421875,
+          "height": 107.640869140625,
+          "x": 159.99942016601562,
+          "y": 624.6265869140625
+        },
+        {
+          "width": 291.000732421875,
+          "height": 107.640869140625,
+          "x": 461.00018310546875,
+          "y": 624.6265869140625
+        }
+      ],
+      "passed": true
+    },
+    {
+      "size": [
+        768,
+        1024
+      ],
+      "name": "tests",
+      "documentWidth": 768,
+      "viewport": 768,
+      "small": [],
+      "bags": [
+        {
+          "width": 592,
+          "height": 394.65625,
+          "x": 160,
+          "y": -398
+        }
+      ],
+      "cards": [
+        {
+          "width": 272,
+          "height": 112,
+          "x": 179,
+          "y": 516.296875
+        },
+        {
+          "width": 272,
+          "height": 112,
+          "x": 461,
+          "y": 516.296875
+        },
+        {
+          "width": 272,
+          "height": 112,
+          "x": 179,
+          "y": 675.890625
+        },
+        {
+          "width": 272,
+          "height": 112,
+          "x": 461,
+          "y": 675.890625
+        }
+      ],
+      "passed": true
+    },
+    {
+      "size": [
+        768,
+        1024
+      ],
+      "name": "field-bag",
+      "documentWidth": 768,
+      "viewport": 768,
+      "small": [],
+      "bags": [
+        {
+          "width": 280,
+          "height": 235,
+          "x": 168,
+          "y": 232.59375
+        }
+      ],
+      "cards": [],
+      "passed": true
+    },
+    {
+      "size": [
+        768,
+        1024
+      ],
+      "name": "notebook",
+      "documentWidth": 768,
+      "viewport": 768,
+      "small": [],
+      "bags": [],
+      "cards": [],
+      "passed": true
+    },
+    {
+      "size": [
+        768,
+        1024
+      ],
+      "name": "ending",
+      "documentWidth": 768,
+      "viewport": 768,
+      "small": [],
+      "bags": [],
+      "cards": [],
+      "passed": true
+    },
+    {
+      "size": [
+        1180,
+        580
+      ],
+      "name": "large-text-rotation",
+      "passed": true
+    },
+    {
+      "size": [
+        768,
+        1024
+      ],
+      "name": "large-text-rotation",
+      "passed": true
+    },
+    {
+      "size": [
+        1024,
+        768
+      ],
+      "name": "large-text-rotation",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "failures": [],
+  "finished": "2026-10-23T17:12:58.183Z"
+}

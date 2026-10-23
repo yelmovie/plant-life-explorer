@@ -1,3 +1,4 @@
+import {emptyLearningRecords,normalizeLearningRecords,learningStamp,normalizeNotebook} from './learning-records.js';
 import {normalizeFieldEvidence,fieldMissionReady} from './field-missions-state.js';
 export const STORAGE_KEY = 'green-garden-mvp-v2';
 export const LEGACY_STORAGE_KEY = 'green-garden-mvp-v1';
@@ -63,7 +64,7 @@ export const PAGES = [
 ];
 export const SEASONS=['봄','여름','가을','겨울'];
 export function freshState() {
-  return {version:2,fieldEvidence:normalizeFieldEvidence(null),journeyRequired:Array(5).fill(false),legacyCompleted:[],legacyFinished:false,leafEvidence:{},groupsByRule:{edge:{},narrow:{}},classificationEvidence:{},seasonPhotos:{},seasonExplanation:'',seasonExplained:[],habitatFeatures:{},experimentAnswer:'',gardenReviewed:false,testExplanation:null,inventionRevision:2,inventionExplanations:{},testPrediction:'',seasonPrediction:{},undergroundSeen:[],misses:Array(5).fill(0),stamps:{direct:[],fixed:[]},sharing:{status:'pending',question:'',response:''},highlight:0,screen:'home',page:0,completed:Array(10).fill(false),observation:{cherry:[],ginkgo:[],grass:[]},rule:'edge',groups:{},seasonPlant:'cherry',season:1,underground:false,seasonalRecords:[],linkedEvidence:[],experiment:{step:0,compared:false,prediction:''},habitats:{},reasons:{},terrain:Array(24).fill('empty'),garden:{},gardenReasons:[],design:{surface:'plain',cover:'open',linked:false},tests:[],reportSubmitted:[],finalChecks:{classification:false,habitat:false,garden:false,invention:false},finished:false,gardenTheme:'pink',largeText:false,soundEnabled:true,adminUnlocked:false};
+  return {version:2,learningRecords:emptyLearningRecords(),fieldBridges:Array(5).fill(false),notebook:normalizeNotebook(),fieldEvidence:normalizeFieldEvidence(null),journeyRequired:Array(5).fill(false),legacyCompleted:[],legacyFinished:false,leafEvidence:{},groupsByRule:{edge:{},narrow:{}},classificationEvidence:{},seasonPhotos:{},seasonExplanation:'',seasonExplained:[],habitatFeatures:{},experimentAnswer:'',gardenReviewed:false,testExplanation:null,inventionRevision:2,inventionExplanations:{},testPrediction:'',activeTestKey:'',seasonPrediction:{},undergroundSeen:[],misses:Array(5).fill(0),stamps:{direct:[],fixed:[],helped:[],unknown:[]},sharing:{status:'pending',question:'',response:''},highlight:0,screen:'home',page:0,completed:Array(10).fill(false),observation:{cherry:[],ginkgo:[],grass:[]},rule:'edge',groups:{},seasonPlant:'cherry',season:1,underground:false,seasonalRecords:[],linkedEvidence:[],experiment:{step:0,compared:false,prediction:''},habitats:{},reasons:{},terrain:Array(24).fill('empty'),garden:{},gardenReasons:[],design:{surface:'plain',cover:'open',linked:false},tests:[],reportSubmitted:[],finalChecks:{classification:false,habitat:false,garden:false,invention:false},finished:false,gardenTheme:'pink',largeText:false,soundEnabled:true,adminUnlocked:false};
 }
 export function presetTerrain(){return Array.from({length:24},(_,i)=>['water','grass','dry'][Math.floor((i%6)/2)]);}
 export function evidenceCount(s){return MISSIONS.filter((_,i)=>s.completed[i*2]&&s.completed[i*2+1]).length;}
@@ -85,18 +86,19 @@ export const RULE_FEATURE={edge:'edge',narrow:'shape'};
 export function proofFits(rule,feature){return RULE_FEATURE[rule]===feature;}
 // Stamps (equal praise, not grades): 'direct' = found without a wrong pick, 'fixed' = fixed after wrong picks.
 // Given once, on the mission's first completion. Completed results and rewards are never cleared.
-export const STAMP_KINDS=['direct','fixed'];
+export const STAMP_KINDS=['direct','fixed','helped','unknown'];
 export function addMiss(s,i){if(!missionDone(s,i))s.misses[i]=(s.misses[i]||0)+1;}
-export function missionStamps(s,i){return STAMP_KINDS.filter(k=>s.stamps[k].includes(i));}
+export function missionStamps(s,i){if(!s.learningRecords?.[i]?.known)return missionDone(s,i)?['unknown']:[];const kinds=STAMP_KINDS.filter(k=>s.stamps[k]?.includes(i));return kinds.length?kinds:missionDone(s,i)?[learningStamp(s,i)]:[];}
 export function awardStamp(s,i){
   if(missionDone(s,i)||missionStamps(s,i).length)return null;
-  const kind=s.misses[i]?'fixed':'direct';s.stamps[kind].push(i);return kind;
+  const kind=learningStamp(s,i);(s.stamps[kind]??=[]).push(i);return kind;
 }
 export function gardenPlaced(s){return HABITAT_PLANTS.every(p=>Number.isInteger(s.garden[p.id])&&s.terrain[s.garden[p.id]]===p.habitat)&&new Set(Object.values(s.garden)).size===3;}
 export function gardenValid(s){return gardenPlaced(s)&&HABITAT_PLANTS.every(p=>s.gardenReasons.includes(p.id));}
+export function currentTrial(s){const key=designKey(s.design);return s.activeTestKey===key?s.tests.findLast(t=>t.key===key):s.tests.at(-1)?.key===key?s.tests.at(-1):null;}
 export function comparisonPair(s){
-  const last=s.tests.at(-1);if(!last||last.key!==designKey(s.design))return null;
-  const before=s.tests.slice(0,-1).reverse().find(t=>Number(t.surface!==last.surface)+Number(t.cover!==last.cover)===1);
+  const last=currentTrial(s);if(!last)return null;
+  const before=s.tests.filter(t=>t!==last).slice().reverse().find(t=>Number(t.surface!==last.surface)+Number(t.cover!==last.cover)===1);
   return before?{before,last,part:before.surface!==last.surface?'surface':'cover'}:null;
 }
 export function inventionEvidence(s){
@@ -105,9 +107,8 @@ export function inventionEvidence(s){
 }
 export function testValid(s){
  const pair=comparisonPair(s),current=!!pair&&s.design.linked&&s.design.surface==='lotus'&&s.testExplanation?.key===pair.last.key&&s.testExplanation?.before===pair.before.key&&s.testExplanation?.part===pair.part;
- if(!current)return false;
- if(s.inventionRevision===1)return true;
- const evidence=inventionEvidence(s);return s.design.cover==='flap'&&evidence.surface&&evidence.cover;
+ if(s.inventionRevision===1)return current;
+ const evidence=inventionEvidence(s);return !!currentTrial(s)&&s.design.linked&&s.design.surface==='lotus'&&s.design.cover==='flap'&&evidence.surface&&evidence.cover;
 }
 export function recordFeature(s,plant,region,answer){
   const p=PLANTS.find(x=>x.id===plant);if(!p||!['shape','edge'].includes(region))return false;
@@ -138,6 +139,9 @@ export function restoreState(raw){
   const s=freshState();
   try {
     const v=JSON.parse(raw); if(!v||![1,2].includes(v.version))return s;
+    s.learningRecords=normalizeLearningRecords(v.learningRecords);
+    s.notebook=normalizeNotebook(v.notebook);
+    s.fieldBridges=s.fieldBridges.map((_,i)=>v.fieldBridges?.[i]===true);
     const member=(x,a)=>a.includes(x);
     s.inventionRevision=v.inventionRevision===1?1:v.inventionRevision===2?2:v.completed?.[9]?1:2;
     s.fieldEvidence=normalizeFieldEvidence(v.fieldEvidence);
@@ -169,6 +173,7 @@ export function restoreState(raw){
     s.design.linked=v.design?.linked===true;
     if(v.design?.observed===true||s.design.linked)s.design.observed=true;
     if(Array.isArray(v.tests))s.tests=v.tests.filter(t=>t&&member(t.surface,['plain','lotus'])&&member(t.cover,['open','flap'])).slice(-30).map(testDesign);
+    if(v.activeTestKey===designKey(s.design)&&s.tests.some(t=>t.key===v.activeTestKey))s.activeTestKey=v.activeTestKey;
     if(Array.isArray(v.reportSubmitted))s.reportSubmitted=[...new Set(v.reportSubmitted.filter(i=>Number.isInteger(i)&&i>=0&&i<MISSIONS.length&&missionDone(s,i)))];
     if(member(v.testPrediction,['surface','cover']))s.testPrediction=v.testPrediction;
     for(const p of ['cherry','sowthistle'])if(member(v.seasonPrediction?.[p],['roots','none']))s.seasonPrediction[p]=v.seasonPrediction[p];

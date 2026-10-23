@@ -40,14 +40,14 @@ test('잠긴 장소와 미완료 버튼은 disabled 대신 이유를 가진 aria
 });
 test('스탬프 두 종은 같은 칭찬으로 보이고 미션마다 배울 것·생활 연결이 있다',()=>{
  const s=freshState();s.completed[0]=s.completed[1]=s.completed[2]=s.completed[3]=true;s.stamps={direct:[0],fixed:[1]};
- const board=stampBoard(s);assert.match(board,/한 번에 찾았어/);assert.match(board,/고쳐서 찾았어/);assert.doesNotMatch(board,/무결점|점수|등급/);
- assert.ok(QUESTS.every(q=>q.learn&&q.life));assert.ok(REWARDS.every(r=>/^이제 나는 .+수 있어\.$/.test(r.why)));
+ const board=stampBoard(s);assert.match(board,/스스로 찾았어/);assert.match(board,/관찰하고 고쳤어/);assert.doesNotMatch(board,/무결점|점수|등급/);
+ assert.ok(QUESTS.every(q=>q.learn&&q.life));assert.ok(REWARDS.every(r=>/기록|정원/.test(r.why)));assert.ok(REWARDS.every(r=>!r.why.includes('나는')));
 });
-test('모든 활동·보고·엔딩 화면이 오류 없이 그려지고 엔딩은 능력 진술로 끝난다',()=>{
+test('모든 활동·보고·엔딩 화면이 오류 없이 그려지고 엔딩은 완료와 이해를 구분한다',()=>{
  const s=freshState(),u={plant:'cherry',region:'shape',zoom:1,rotation:0,selected:'hyacinth',undo:[]};
  for(let p=0;p<10;p++){s.page=p;assert.ok(renderActivity(s,u,()=>'').length>100);}
  s.season=3;s.page=2;assert.match(renderActivity(s,u,()=>''),/겨울 땅속에는 무엇이 남아 있을까/);
  s.page=5;s.habitats.hyacinth='grass';const board=renderActivity(s,u,()=>'');assert.match(board,/<line /);assert.match(board,/stroke-dasharray/);
  assert.ok(renderReport(s).length&&renderFinal(s,()=>'').length);
- const end=renderEnding(s,()=>'');assert.match(end,/나는 이제 [^<]+ 수 있어\.<\/strong><\/p><\/div>/);assert.doesNotMatch(end,/📷|○/);
+ const end=renderEnding(s,()=>'');assert.match(end,/이해한 내용은 연구노트의 선택과 관찰 근거/);assert.doesNotMatch(end,/📷|○/);
 });

@@ -1,5 +1,6 @@
 import { readdir, readFile, writeFile, mkdir, copyFile, stat } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { ASSETS, THUMBS } from '../src/asset-catalog.js';
@@ -28,7 +29,7 @@ const assets = (await walk('assets')).filter(file => /\.webp$/i.test(file) || /(
   || /^assets\/icons\/[^/]+\.png$/i.test(file) || /^assets\/models\/[^/]+\.glb$/i.test(file) || /^assets\/audio\/[^/]+\.mp3$/i.test(file) || /^assets\/videos\/[^/]+\.mp4$/i.test(file) || /^assets\/fonts\/[^/]+(?:\.woff2|-OFL\.txt)$/i.test(file));
 const pwa = ['sw.js', 'manifest.webmanifest'];
 const files = ['index.html', ...pwa, ...source, ...assets];
-const allowed = new Set(files);
+const allowed = new Set([...files,'build-info.json']);
 for (const key of Object.keys(ASSETS)) {
   const asset = `assets/generated/${key}.webp`;
   if (!allowed.has(asset)) throw new Error(`Missing catalog image: ${asset}. Run npm run assets:optimize after all PNGs arrive.`);
@@ -64,4 +65,8 @@ const versioned = sw.replace(/const CACHE_VERSION='[^']*';/, `const CACHE_VERSIO
 if (versioned === sw || !versioned.includes(`'${version}-`)) throw new Error('sw.js CACHE_VERSION/APP_SHELL markers not found.');
 await writeFile(swPath, versioned);
 bytes += Buffer.byteLength(versioned) - Buffer.byteLength(sw);
+const git=(...args)=>execFileSync('git',['-c',`safe.directory=${root.replaceAll('\\','/')}`,...args],{cwd:root,encoding:'utf8'}).trim();
+const manifest={version,commit:git('rev-parse','HEAD'),branch:git('branch','--show-current'),dirty:!!git('status','--porcelain'),builtAt:new Date().toISOString(),files:[]};
+for(const file of files){const content=await readFile(path.join(output,file));manifest.files.push({path:file,bytes:content.length,sha256:createHash('sha256').update(content).digest('hex')});}
+await writeFile(path.join(output,'build-info.json'),JSON.stringify(manifest,null,2));
 console.log(JSON.stringify({directory: output, version, files: files.length, assets: assets.length, precache: shell.length, bytes, hosting: 'site root', excluded: ['source PNGs', 'docs', 'tests', 'scripts', 'server.mjs']}));
