@@ -1,0 +1,238 @@
+{
+  "started": "2026-10-23T17:32:53.655Z",
+  "url": "https://leafy-garden.pages.dev",
+  "commit": "49683310189e91a9944c2fe2612789cd57cfb4aa",
+  "builtAt": "2026-10-23T17:31:49.000Z",
+  "files": [
+    {
+      "path": "index.html",
+      "bytes": 1741,
+      "matched": true
+    },
+    {
+      "path": "sw.js",
+      "bytes": 3103,
+      "matched": true
+    },
+    {
+      "path": "manifest.webmanifest",
+      "bytes": 485,
+      "matched": true
+    },
+    {
+      "path": "src/style.css",
+      "bytes": 49253,
+      "matched": true
+    },
+    {
+      "path": "src/audio.js",
+      "bytes": 5885,
+      "matched": true
+    },
+    {
+      "path": "src/asset-catalog.js",
+      "bytes": 7692,
+      "matched": true
+    },
+    {
+      "path": "src/visuals.css",
+      "bytes": 11993,
+      "matched": true
+    },
+    {
+      "path": "src/adventure.css",
+      "bytes": 19701,
+      "matched": true
+    },
+    {
+      "path": "src/tablet.css",
+      "bytes": 12213,
+      "matched": true
+    },
+    {
+      "path": "src/exploration.css",
+      "bytes": 14976,
+      "matched": true
+    },
+    {
+      "path": "src/inquiry.js",
+      "bytes": 3056,
+      "matched": true
+    },
+    {
+      "path": "src/vendor/three/three.module.min.js",
+      "bytes": 355138,
+      "matched": true
+    },
+    {
+      "path": "src/vendor/three/three.core.min.js",
+      "bytes": 380264,
+      "matched": true
+    },
+    {
+      "path": "src/vendor/three/addons/loaders/GLTFLoader.js",
+      "bytes": 114903,
+      "matched": true
+    },
+    {
+      "path": "src/vendor/three/addons/utils/BufferGeometryUtils.js",
+      "bytes": 35559,
+      "matched": true
+    },
+    {
+      "path": "src/fieldwork.css",
+      "bytes": 6644,
+      "matched": true
+    },
+    {
+      "path": "src/polish.css",
+      "bytes": 64875,
+      "matched": true
+    },
+    {
+      "path": "src/spatial.js",
+      "bytes": 15566,
+      "matched": true
+    },
+    {
+      "path": "src/stage-map.js",
+      "bytes": 7788,
+      "matched": true
+    },
+    {
+      "path": "src/stage-map.css",
+      "bytes": 11794,
+      "matched": true
+    },
+    {
+      "path": "src/layout.css",
+      "bytes": 60373,
+      "matched": true
+    },
+    {
+      "path": "src/expedition.js",
+      "bytes": 6534,
+      "matched": true
+    },
+    {
+      "path": "src/story-data.js",
+      "bytes": 1660,
+      "matched": true
+    },
+    {
+      "path": "src/story.js",
+      "bytes": 7763,
+      "matched": true
+    },
+    {
+      "path": "src/story.css",
+      "bytes": 3821,
+      "matched": true
+    },
+    {
+      "path": "src/scene-refinements.css",
+      "bytes": 37356,
+      "matched": true
+    },
+    {
+      "path": "src/runtime-support.js",
+      "bytes": 410,
+      "matched": true
+    },
+    {
+      "path": "src/app.js",
+      "bytes": 43886,
+      "matched": true
+    },
+    {
+      "path": "src/art.js",
+      "bytes": 5202,
+      "matched": true
+    },
+    {
+      "path": "src/field-bridge.js",
+      "bytes": 2539,
+      "matched": true
+    },
+    {
+      "path": "src/field-missions-state.js",
+      "bytes": 16245,
+      "matched": true
+    },
+    {
+      "path": "src/field-missions.js",
+      "bytes": 22332,
+      "matched": true
+    },
+    {
+      "path": "src/invention.js",
+      "bytes": 9871,
+      "matched": true
+    },
+    {
+      "path": "src/learning-integrity.css",
+      "bytes": 5629,
+      "matched": true
+    },
+    {
+      "path": "src/learning-records.js",
+      "bytes": 2636,
+      "matched": true
+    },
+    {
+      "path": "src/learning.js",
+      "bytes": 40102,
+      "matched": true
+    },
+    {
+      "path": "src/model.js",
+      "bytes": 18725,
+      "matched": true
+    },
+    {
+      "path": "src/research-notebook.js",
+      "bytes": 11466,
+      "matched": true
+    },
+    {
+      "path": "src/response-tracking.js",
+      "bytes": 8188,
+      "matched": true
+    },
+    {
+      "path": "src/rewards.js",
+      "bytes": 7395,
+      "matched": true
+    },
+    {
+      "path": "src/safe-storage.js",
+      "bytes": 3740,
+      "matched": true
+    },
+    {
+      "path": "src/settings-content.js",
+      "bytes": 8313,
+      "matched": true
+    }
+  ],
+  "legacy": [
+    {
+      "version": 1,
+      "completedPreserved": 10,
+      "finishedPreserved": true,
+      "missingResponses": "unknown",
+      "oldKeyPreserved": true,
+      "saveWarning": false
+    },
+    {
+      "version": 2,
+      "completedPreserved": 10,
+      "finishedPreserved": true,
+      "missingResponses": "unknown",
+      "oldKeyPreserved": "same v2 key migrated",
+      "saveWarning": false
+    }
+  ],
+  "errors": [],
+  "finished": "2026-10-23T17:33:23.691Z"
+}

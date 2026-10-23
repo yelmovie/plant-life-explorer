@@ -17,6 +17,21 @@ wrangler pages deploy dist --project-name leafy-garden --branch main
 
 ## 최근 배포 — 2026-10-24
 
+- 기능 커밋: `49683310189e91a9944c2fe2612789cd57cfb4aa` (`main`, GitHub push 완료)
+- 배포 ID: `a6a01f92-7c09-4f64-bb27-c30dd23b17f4`
+- 배포 주소: https://a6a01f92.leafy-garden.pages.dev
+- 운영 주소: https://leafy-garden.pages.dev
+- 배포 완료: **2026-10-24 02:32 KST** (`2026-10-23T17:32:35.456655Z`).
+- 빌드 정보: `2026-10-23T17:31:49.000Z`, `main`, `dirty=false`, **138파일·96에셋·32,087,708바이트**와 별도 `build-info.json`.
+- 배포 전 JavaScript **35개 문법 검사**, **93/93 테스트**, 화면 **39개 조건**, 저장 **7개 시나리오**, 소프트웨어 WebGL **4종**을 통과했다.
+- 운영 주소의 `build-info.json` 파일 목록·해시 정보가 배포 빌드와 완전히 일치했다. 에셋을 제외한 실행 파일 **42개**를 별도로 받아 SHA-256과 바이트 수가 모두 일치함을 확인했다.
+- 격리한 Chrome에서 구버전 v1/v2 가짜 기록의 완료 **10개**와 엔딩을 보존하고, 없는 응답은 `unknown`으로 남기는 것을 확인했다. 저장 경고와 페이지 오류는 없었다.
+- 운영 주소에서 새 기록으로 **5개 현장 임무 → 10개 본 탐구 → 최종 선인장 적용 문제 → 엔딩 → 연구노트**를 실제 UI로 완주했다. 장소별 새로고침 보존, 오답→힌트→수정 기록, 첫 예상 보존, 주머니만 바꾼 비교, 기존 가방 시험 재사용, 노트의 홈 복귀·재접속 보존을 확인했다. 페이지 오류 **0건**.
+- 근거: `docs/reviews/integrity-20261024/production/verification.json`, `journey.json`, `completed-test-record.json`. 상세: `docs/reviews/LEARNING-INTEGRITY-20261024.md`.
+- 실물 iPad Safari·Android Chrome, 태블릿 GPU 성능·학교망·실제 학생 수업은 미검증이다. Chrome의 터치 에뮬레이션과 소프트웨어 GPU 결과가 이 조건의 통과를 뜻하지 않는다.
+
+## 이전 배포 — 2026-10-24
+
 - 기능 커밋: `85d934d` (`main`, GitHub push 완료)
 - 배포 주소: https://71b22591.leafy-garden.pages.dev
 - 운영 주소: https://leafy-garden.pages.dev
