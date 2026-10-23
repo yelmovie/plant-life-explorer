@@ -1,4 +1,5 @@
 import {QUESTS} from './inquiry.js';
+import {mountSpatialSafely} from './runtime-support.js';
 import {ASSETS,assetImage} from './asset-catalog.js';
 import {STORAGE_KEY,LEGACY_STORAGE_KEY,PLANTS,HABITAT_PLANTS,HABITATS,MISSIONS,PAGES,SEASONS,freshState,restoreState,evidenceCount,missionDone,openMission,pageReady,gardenValid,designKey,testDesign,testValid,canFinish,PAGE_ROUTES,routeIndex,previousRoute} from './model.js';
 import {icon,leafArt,plantArt,seasonArt,bagArt,heroArt} from './art.js';
@@ -19,7 +20,7 @@ try{const stored=JSON.parse(localStorage.getItem(STORAGE_KEY)??localStorage.getI
 if(state.screen==='activity'&&!missionDone(state,Math.floor(state.page/2)))state.journeyRequired[Math.floor(state.page/2)]=true;
 if(!soundStored()&&state.soundEnabled===false)setSound(false);
 let ui={plant:'cherry',zoom:1,rotation:0,selected:'cherry',map:Math.min(4,evidenceCount(state)),brush:'water',undo:[],finalTab:0,testing:false,paused:false,region:'shape',bubbling:false};
-let spatialModule,spatialEpoch=0,lastScreen;
+let spatialModule,spatialEpoch=0,lastScreen,spatialFailureShown=false;
 let toastTimer,paintActive=false,paintLast=-1,testRun=0;
 const $=(s)=>document.querySelector(s);
 const btn=(label,action,cls='',attrs='')=>`<button class="btn ${cls}" data-action="${action}" ${attrs}>${label}</button>`;
@@ -53,7 +54,17 @@ function activity(){return renderActivity(state,ui,gardenGrid);}
 function report(){return renderReport(state,ui);}
 function finalPage(){return renderFinal(state,gardenGrid);}
 function ending(){return renderEnding(state,gardenGrid);}
-function render(){playMusic(state.screen==='ending'?'ending':'main');const previousGarden=app.querySelector('[data-spatial="garden"].spatial-ready');fieldCleanup?.();fieldCleanup=null;mapController?.destroy();mapController=null;if(!previousGarden)spatialModule?.unmountSpatial();const epoch=++spatialEpoch;document.body.dataset.screen=state.screen;document.body.classList.toggle('activity-open',state.screen==='activity');const focus=document.activeElement;const focusId=focus?.id;const focusAction=focus?.dataset?.action,focusData=focus?.dataset?.id;document.body.classList.toggle('large-text',state.largeText);app.innerHTML=header()+({home,map:mapPage,activity,report,final:finalPage,ending}[state.screen]||home)();if(state.screen!==lastScreen){lastScreen=state.screen;const main=app.querySelector('main');if(main){main.classList.add('screen-enter');main.addEventListener('animationend',e=>{if(e.target===main)main.classList.remove('screen-enter');});}}bindDrag();bindPinch();const fieldHost=app.querySelector('.field-mission');if(fieldHost)fieldCleanup=mountFieldInteractions(fieldHost,state,ui,action);if(state.screen==='map')mapController=mountStageMap(app.querySelector('.stage-map'),ui,i=>action('map-arrive',String(i)));const host=app.querySelector('[data-spatial]');const reused=previousGarden&&host?.dataset.spatial==='garden'&&spatialModule?.reuseGarden(host,state,ui);if(previousGarden&&!reused)spatialModule?.unmountSpatial();if(host&&!reused)import('./spatial.js').then(module=>{spatialModule=module;if(epoch===spatialEpoch&&host.isConnected)module.mountSpatial(host,state,ui,action,cells=>{ui.undo.push({terrain:[...state.terrain],garden:{...state.garden},reasons:[...state.gardenReasons]});for(const i of cells)paintCell(i,false);render();});}).catch(()=>{host.dataset.spatialUnavailable='true';});const target=focusId?document.getElementById(focusId):focusAction?app.querySelector(`[data-action="${CSS.escape(focusAction)}"]${focusData!==undefined?`[data-id="${CSS.escape(focusData)}"]`:''}`):null;target?.focus({preventScroll:true});}
+function showSpatialFallback(host){
+ spatialModule?.unmountSpatial();
+ host.querySelectorAll('.spatial-layer,.spatial-controls').forEach(node=>node.remove());
+ host.classList.remove('spatial-ready');host.classList.add('spatial-flat');
+ host.dataset.spatialUnavailable='true';
+ const controls=document.createElement('div');controls.className='spatial-controls';
+ controls.innerHTML='<button type="button" data-action="spatial-retry" data-view="flat" title="그림으로 탐구를 이어가거나 입체 자료를 다시 불러올 수 있어.">입체 재시도</button>';
+ host.append(controls);
+ if(!spatialFailureShown){spatialFailureShown=true;toast('입체 자료를 불러오지 못했어. 그림으로 같은 탐구를 이어갈 수 있어.');}
+}
+function render(){playMusic(state.screen==='ending'?'ending':'main');const previousGarden=app.querySelector('[data-spatial="garden"].spatial-ready');fieldCleanup?.();fieldCleanup=null;mapController?.destroy();mapController=null;if(!previousGarden)spatialModule?.unmountSpatial();const epoch=++spatialEpoch;document.body.dataset.screen=state.screen;document.body.classList.toggle('activity-open',state.screen==='activity');const focus=document.activeElement;const focusId=focus?.id;const focusAction=focus?.dataset?.action,focusData=focus?.dataset?.id;document.body.classList.toggle('large-text',state.largeText);app.innerHTML=header()+({home,map:mapPage,activity,report,final:finalPage,ending}[state.screen]||home)();if(state.screen!==lastScreen){lastScreen=state.screen;const main=app.querySelector('main');if(main){main.classList.add('screen-enter');main.addEventListener('animationend',e=>{if(e.target===main)main.classList.remove('screen-enter');});}}bindDrag();bindPinch();const fieldHost=app.querySelector('.field-mission');if(fieldHost)fieldCleanup=mountFieldInteractions(fieldHost,state,ui,action);if(state.screen==='map')mapController=mountStageMap(app.querySelector('.stage-map'),ui,i=>action('map-arrive',String(i)));const host=app.querySelector('[data-spatial]');const reused=previousGarden&&host?.dataset.spatial==='garden'&&spatialModule?.reuseGarden(host,state,ui);if(previousGarden&&!reused)spatialModule?.unmountSpatial();if(host&&!reused)mountSpatialSafely(()=>import('./spatial.js'),()=>epoch===spatialEpoch&&host.isConnected,module=>{spatialModule=module;module.mountSpatial(host,state,ui,action,cells=>{ui.undo.push({terrain:[...state.terrain],garden:{...state.garden},reasons:[...state.gardenReasons]});for(const i of cells)paintCell(i,false);render();});if(host.dataset.spatialUnavailable==='true'&&!host.classList.contains('spatial-ready'))throw new Error('Spatial renderer unavailable');},()=>showSpatialFallback(host));const target=focusId?document.getElementById(focusId):focusAction?app.querySelector(`[data-action="${CSS.escape(focusAction)}"]${focusData!==undefined?`[data-id="${CSS.escape(focusData)}"]`:''}`):null;target?.focus({preventScroll:true});}
 
 function journal(){modal('나의 연구 노트',`${seedProgress(state)}<div class="collection-row">${REWARDS.map((r,i)=>`<button class="collection-item ${missionDone(state,i)?'owned':''}" data-action="reward-detail" data-id="${i}" ${missionDone(state,i)?'':'disabled'}>${assetImage(r.asset,'',true)}<span>${missionDone(state,i)?r.name:'아직 잠든 곳'}</span></button>`).join('')}</div>${stampBoard(state)}<div class="journal-list">${MISSIONS.map((m,i)=>`<section><h3>${icon(missionDone(state,i)?'check':'lock',20)} ${m.evidence}</h3><p>${missionDone(state,i)?['벚나무·은행나무·강아지풀의 잎을 관찰하고 내가 정한 기준으로 나눴어.','겨울에 살아 있는 부분과 다음 봄 새로 자라는 모습을 연결했어.','부레옥잠의 잎자루 속 공기를 실험하고 세 식물의 환경을 연결했어.','물가·풀밭·건조 구역을 만들고 식물을 알맞게 심었어.',`가방을 ${state.tests.length}번 시험하며 바꾼 부품의 역할을 비교했어.`][i]:'이 미션을 마치면 연구 결과가 여기에 남아.'}</p></section>`).join('')}<div class="journal-details"><h3>지금까지 모은 관찰</h3>${PLANTS.map(p=>`<p><strong>${p.name}</strong> ${state.observation[p.id].map(f=>f==='shape'?p.shape:p.edgeText).join(' · ')||'아직 관찰 전'}</p>`).join('')}</div></div>`);}
 // Settings follow the iscream-settings order; wording lives in settings-content.js.
@@ -137,6 +148,7 @@ async function action(a,id,el){
  case 'map-locked-next':dialog.close();mapController?.goTo(Number(id));return;
  case 'map-overview':mapController?.toggleOverview();return;
  case 'map-retry':render();return;
+ case 'spatial-retry':spatialFailureShown=false;render();return;
  case 'select-mission':if(openMission(state,Number(id))){ui.map=Number(id);nav('map');}return;
  case 'enter-mission':if(!openMission(state,ui.map)){explainLockedMission(ui.map);return;}dialog.close();startPage(ui.map*2+(state.completed[ui.map*2]&&!state.completed[ui.map*2+1]?1:0));return;
  case 'specimen':ui.plant=id;ui.region='shape';ui.zoom=1;ui.rotation=0;render();return;
@@ -193,7 +205,7 @@ save();render();
 // Failed assets keep an accessible description instead of a broken image icon.
 document.addEventListener('error',e=>{const img=e.target;if(img instanceof HTMLImageElement&&img.dataset.asset){if(img.dataset.asset==='map_trail_v2'&&state.screen==='map'){mapController?.stop();img.remove();const failed=document.createElement('div');failed.className='map-load-error';failed.setAttribute('role','status');failed.innerHTML='<p>탐험 지도를 불러오지 못했어.<br>탐구 기록은 그대로 남아 있어.</p>'+btn('지도 다시 불러오기','map-retry','primary');app.querySelector('.stage-map')?.append(failed);return;}const replacement=document.createElement('span');replacement.className='asset-fallback';replacement.setAttribute('role','img');replacement.setAttribute('aria-label',img.alt);replacement.textContent=ASSETS[img.dataset.asset]?.[0]||'관찰 그림';img.replaceWith(replacement);}},true);
 
-// Offline badge: classroom Wi-Fi drops do not stop play because records live in localStorage.
+// Records stay local. Offline media still depend on previously cached resources.
 const syncOnline=()=>{const badge=$('.offline-badge');if(badge)badge.hidden=navigator.onLine!==false;};
 addEventListener('online',syncOnline);addEventListener('offline',syncOnline);
 // Skipped on localhost so cache-first files never hide live edits; add ?sw to test it locally.

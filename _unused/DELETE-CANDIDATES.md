@@ -1,4 +1,4 @@
-# 삭제 후보 목록 (2026-10-20 확인)
+# 삭제 후보 목록 (2026-10-24 갱신)
 
 이 폴더의 파일은 지우지 않고 옮겨만 뒀다. 확인 뒤 사용자가 직접 지운다.
 
@@ -26,3 +26,17 @@
 - `assets/characters.png`: 화면에서는 사용하지 않지만 `scripts/optimize-assets.mjs`의 고정 입력 경로다.
 - `assets/fonts/source/*.woff2`: `scripts/subset-fonts.py`의 글꼴 서브셋 제작 원본이다. 배포 빌드에서는 제외된다.
 - `assets/generated/greenhouse_studio_v1.webp`, `plant_lab_background.webp`: 현재 CSS에 참조가 남아 있다. 새 배경이 덮어쓰는 화면이 있어도 런타임 전환·대체 경로를 확인하기 전 이동하지 않는다.
+
+## 2026-10-23 정리분 확인
+
+기존 `docs/reviews/ASSET-AUDIO-CHECK-20261023.md`와 `ASSET-ORGANIZATION-20261023.json`의 이동·동일성 기록을 재사용했다. 2026-10-24에는 아래 4개 현 위치·크기만 대조했으며 전체 에셋을 다시 이동하거나 삭제하지 않았다.
+
+| 현재 경로 | 용량 | 미사용·중복 근거 |
+|---|---:|---|
+| `_unused/assets/generated/expedition_leafy_sheet_20261020.webp` | 124,190 B | 캐릭터 참조 합본. 현재 카탈로그·JS·CSS·HTML 정적 참조 없음. 원본 PNG는 제작 자료로 보존 |
+| `_unused/assets/generated/expedition_trail_20261020.webp` | 755,994 B | 실행 참조 없는 탐험 지도 후보. 현재 지도는 기존 활성 배경·지도 데이터 사용 |
+| `_unused/assets/generated/expedition_tools_atlas_20261020.webp` | 562,270 B | 합본 대신 분리된 도구 5장을 사용. 합본은 실행 참조 없음 |
+| `_unused/assets/generated/expedition_field_leaf_atlas_20261020.webp` | 417,058 B | 합본 대신 분리된 잎 표본 3장을 사용. 합본은 실행 참조 없음 |
+| `_unused/dist-leftovers/20261023/assets/generated/` 위 4종 | 합계 1,859,512 B | 이전 dist의 동일 SHA-256 사본. 이동 당시 해시는 정리 JSON에 기록 |
+
+위 4종은 **삭제 가능성을 검토하는 보관본**이다. 입력 원본·제작 이력까지 함께 삭제해도 된다는 뜻은 아니다. `_source/generated-images/`, `_source/branding/`, `_source/meshy-input/`, `_source/videos/`는 재편집·납품 근거이므로 삭제를 권하지 않는다.

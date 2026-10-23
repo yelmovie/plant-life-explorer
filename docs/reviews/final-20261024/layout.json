@@ -1,0 +1,3260 @@
+[
+  {
+    "label": "메인",
+    "scene": "home",
+    "page": "home",
+    "viewport": [
+      1280,
+      800
+    ],
+    "document": [
+      1280,
+      800
+    ],
+    "loadMs": 411.20000000298023,
+    "fcpMs": 164,
+    "requests": 36,
+    "transferBytes": 1515997,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": []
+  },
+  {
+    "label": "활동 1",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-0",
+    "viewport": [
+      1280,
+      800
+    ],
+    "document": [
+      1280,
+      800
+    ],
+    "loadMs": 223.60000000149012,
+    "fcpMs": 92,
+    "requests": 44,
+    "transferBytes": 2321291,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [
+      {
+        "tag": "BUTTON",
+        "text": "돌리기",
+        "class": "btn soft"
+      }
+    ],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 564,
+        "scroll": 564
+      }
+    ]
+  },
+  {
+    "label": "활동 2",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-1",
+    "viewport": [
+      1280,
+      800
+    ],
+    "document": [
+      1280,
+      800
+    ],
+    "loadMs": 214.10000000149012,
+    "fcpMs": 92,
+    "requests": 38,
+    "transferBytes": 1256783,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 564,
+        "scroll": 564
+      }
+    ]
+  },
+  {
+    "label": "활동 3",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-2",
+    "viewport": [
+      1280,
+      800
+    ],
+    "document": [
+      1280,
+      800
+    ],
+    "loadMs": 198.60000000149012,
+    "fcpMs": 120,
+    "requests": 36,
+    "transferBytes": 1695523,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 564,
+        "scroll": 564
+      }
+    ]
+  },
+  {
+    "label": "활동 4",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-3",
+    "viewport": [
+      1280,
+      800
+    ],
+    "document": [
+      1280,
+      800
+    ],
+    "loadMs": 182.59999999776483,
+    "fcpMs": 88,
+    "requests": 36,
+    "transferBytes": 1594025,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 564,
+        "scroll": 564
+      }
+    ]
+  },
+  {
+    "label": "활동 5",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-4",
+    "viewport": [
+      1280,
+      800
+    ],
+    "document": [
+      1280,
+      800
+    ],
+    "loadMs": 194.69999999925494,
+    "fcpMs": 88,
+    "requests": 41,
+    "transferBytes": 2037731,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 564,
+        "scroll": 564
+      }
+    ]
+  },
+  {
+    "label": "활동 6",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-5",
+    "viewport": [
+      1280,
+      800
+    ],
+    "document": [
+      1280,
+      800
+    ],
+    "loadMs": 214.69999999925494,
+    "fcpMs": 88,
+    "requests": 36,
+    "transferBytes": 1351711,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 564,
+        "scroll": 564
+      }
+    ]
+  },
+  {
+    "label": "활동 7",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-6 screen-enter",
+    "viewport": [
+      1280,
+      800
+    ],
+    "document": [
+      1280,
+      800
+    ],
+    "loadMs": 544.1999999992549,
+    "fcpMs": 140,
+    "requests": 46,
+    "transferBytes": 3995259,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 564,
+        "scroll": 564
+      }
+    ]
+  },
+  {
+    "label": "활동 8",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-7 screen-enter",
+    "viewport": [
+      1280,
+      800
+    ],
+    "document": [
+      1280,
+      800
+    ],
+    "loadMs": 744.8999999985099,
+    "fcpMs": 236,
+    "requests": 46,
+    "transferBytes": 4051455,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 564,
+        "scroll": 564
+      }
+    ]
+  },
+  {
+    "label": "활동 9",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-8",
+    "viewport": [
+      1280,
+      800
+    ],
+    "document": [
+      1280,
+      800
+    ],
+    "loadMs": 495.79999999701977,
+    "fcpMs": 136,
+    "requests": 44,
+    "transferBytes": 2989793,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [
+      {
+        "tag": "BUTTON",
+        "text": "겉면의 물방울이 잘 굴러가요",
+        "class": "btn selected"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "열린 입구도 저절로 막혀요",
+        "class": "btn soft"
+      }
+    ],
+    "images": [
+      "http://127.0.0.1:4326/assets/generated/lotus_leaf_whole.webp"
+    ],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 564,
+        "scroll": 564
+      },
+      {
+        "class": "learning-note lotus-note idea-linked",
+        "height": 417,
+        "scroll": 417
+      }
+    ]
+  },
+  {
+    "label": "활동 10",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-9",
+    "viewport": [
+      1280,
+      800
+    ],
+    "document": [
+      1280,
+      800
+    ],
+    "loadMs": 1176.800000000745,
+    "fcpMs": 616,
+    "requests": 41,
+    "transferBytes": 2259488,
+    "external": [],
+    "smallControls": [],
+    "smallText": [
+      {
+        "tag": "SPAN",
+        "text": "가방 안 수첩",
+        "class": "",
+        "px": 14
+      }
+    ],
+    "outside": [],
+    "images": [
+      "http://127.0.0.1:4326/assets/generated/research_bag_body.webp",
+      "http://127.0.0.1:4326/assets/generated/bag_lotus_open.webp",
+      "http://127.0.0.1:4326/assets/generated/research_bag_body.webp",
+      "http://127.0.0.1:4326/assets/generated/research_bag_closed.webp",
+      "http://127.0.0.1:4326/assets/generated/research_bag_body.webp",
+      "http://127.0.0.1:4326/assets/generated/bag_lotus_open.webp",
+      "http://127.0.0.1:4326/assets/generated/bag_lotus_closed.webp"
+    ],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 564,
+        "scroll": 564
+      },
+      {
+        "class": "learning-note",
+        "height": 513,
+        "scroll": 513
+      }
+    ]
+  },
+  {
+    "label": "현장 1",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-0 field-mission-view screen-enter",
+    "viewport": [
+      1280,
+      800
+    ],
+    "document": [
+      1280,
+      800
+    ],
+    "loadMs": 251.69999999925494,
+    "fcpMs": 104,
+    "requests": 39,
+    "transferBytes": 1090171,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [
+      {
+        "tag": "SUMMARY",
+        "text": "키보드로 조작하기",
+        "class": ""
+      }
+    ],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 564,
+        "scroll": 698
+      }
+    ]
+  },
+  {
+    "label": "현장 2",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-2 field-mission-view screen-enter",
+    "viewport": [
+      1280,
+      800
+    ],
+    "document": [
+      1280,
+      800
+    ],
+    "loadMs": 209.5,
+    "fcpMs": 84,
+    "requests": 37,
+    "transferBytes": 2198541,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 564,
+        "scroll": 623
+      }
+    ]
+  },
+  {
+    "label": "현장 3",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-4 field-mission-view screen-enter",
+    "viewport": [
+      1280,
+      800
+    ],
+    "document": [
+      1280,
+      800
+    ],
+    "loadMs": 647.8999999985099,
+    "fcpMs": 220,
+    "requests": 35,
+    "transferBytes": 905665,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 564,
+        "scroll": 655
+      }
+    ]
+  },
+  {
+    "label": "현장 4",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-6 field-mission-view screen-enter",
+    "viewport": [
+      1280,
+      800
+    ],
+    "document": [
+      1280,
+      800
+    ],
+    "loadMs": 232.39999999850988,
+    "fcpMs": 108,
+    "requests": 35,
+    "transferBytes": 844371,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 564,
+        "scroll": 619
+      }
+    ]
+  },
+  {
+    "label": "현장 5",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-8 field-mission-view screen-enter",
+    "viewport": [
+      1280,
+      800
+    ],
+    "document": [
+      1280,
+      800
+    ],
+    "loadMs": 516.7000000029802,
+    "fcpMs": 288,
+    "requests": 37,
+    "transferBytes": 1115507,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 564,
+        "scroll": 634
+      }
+    ]
+  },
+  {
+    "label": "연구노트",
+    "scene": "report",
+    "page": "report-page tablet-report notebook-overview screen-enter",
+    "viewport": [
+      1280,
+      800
+    ],
+    "document": [
+      1280,
+      800
+    ],
+    "loadMs": 336.5,
+    "fcpMs": 124,
+    "requests": 39,
+    "transferBytes": 2760381,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": []
+  },
+  {
+    "label": "마지막 적용",
+    "scene": "final",
+    "page": "final-page tablet-final",
+    "viewport": [
+      1280,
+      800
+    ],
+    "document": [
+      1280,
+      800
+    ],
+    "loadMs": 174.29999999701977,
+    "fcpMs": 76,
+    "requests": 34,
+    "transferBytes": 890828,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 525,
+        "scroll": 525
+      },
+      {
+        "class": "learning-note",
+        "height": 184,
+        "scroll": 184
+      }
+    ]
+  },
+  {
+    "label": "엔딩",
+    "scene": "ending",
+    "page": "ending ending-celebration screen-enter",
+    "viewport": [
+      1280,
+      800
+    ],
+    "document": [
+      1280,
+      800
+    ],
+    "loadMs": 336.19999999925494,
+    "fcpMs": 96,
+    "requests": 36,
+    "transferBytes": 1748008,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": []
+  },
+  {
+    "label": "지도",
+    "scene": "map",
+    "page": "expedition-map stage-map",
+    "viewport": [
+      1280,
+      800
+    ],
+    "document": [
+      1280,
+      800
+    ],
+    "loadMs": 246,
+    "fcpMs": 76,
+    "requests": 40,
+    "transferBytes": 3700908,
+    "external": [],
+    "smallControls": [],
+    "smallText": [
+      {
+        "tag": "SPAN",
+        "text": "다섯 번의 발견, 하나의 초록정원",
+        "class": "map-eyebrow",
+        "px": 12
+      }
+    ],
+    "outside": [
+      {
+        "tag": "BUTTON",
+        "text": "5. 발명 공방 아직 잠김",
+        "class": "world-node sleeping locked   "
+      }
+    ],
+    "images": [],
+    "panels": []
+  },
+  {
+    "label": "메인",
+    "scene": "home",
+    "page": "home",
+    "viewport": [
+      873,
+      580
+    ],
+    "document": [
+      873,
+      580
+    ],
+    "loadMs": 436.69999999925494,
+    "fcpMs": 296,
+    "requests": 36,
+    "transferBytes": 1528458,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": []
+  },
+  {
+    "label": "활동 1",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-0",
+    "viewport": [
+      873,
+      580
+    ],
+    "document": [
+      873,
+      580
+    ],
+    "loadMs": 292.80000000074506,
+    "fcpMs": 112,
+    "requests": 44,
+    "transferBytes": 2333752,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [
+      {
+        "tag": "BUTTON",
+        "text": "돌리기",
+        "class": "btn soft"
+      }
+    ],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 352,
+        "scroll": 404
+      }
+    ]
+  },
+  {
+    "label": "활동 2",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-1",
+    "viewport": [
+      873,
+      580
+    ],
+    "document": [
+      873,
+      580
+    ],
+    "loadMs": 209.10000000149012,
+    "fcpMs": 100,
+    "requests": 38,
+    "transferBytes": 1269244,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 352,
+        "scroll": 352
+      }
+    ]
+  },
+  {
+    "label": "활동 3",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-2",
+    "viewport": [
+      873,
+      580
+    ],
+    "document": [
+      873,
+      580
+    ],
+    "loadMs": 177.30000000074506,
+    "fcpMs": 80,
+    "requests": 35,
+    "transferBytes": 1647544,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 352,
+        "scroll": 352
+      }
+    ]
+  },
+  {
+    "label": "활동 4",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-3",
+    "viewport": [
+      873,
+      580
+    ],
+    "document": [
+      873,
+      580
+    ],
+    "loadMs": 198.80000000074506,
+    "fcpMs": 80,
+    "requests": 36,
+    "transferBytes": 1606486,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 352,
+        "scroll": 352
+      }
+    ]
+  },
+  {
+    "label": "활동 5",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-4",
+    "viewport": [
+      873,
+      580
+    ],
+    "document": [
+      873,
+      580
+    ],
+    "loadMs": 297.5,
+    "fcpMs": 136,
+    "requests": 41,
+    "transferBytes": 2050192,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 352,
+        "scroll": 386
+      }
+    ]
+  },
+  {
+    "label": "활동 6",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-5",
+    "viewport": [
+      873,
+      580
+    ],
+    "document": [
+      873,
+      580
+    ],
+    "loadMs": 248.80000000074506,
+    "fcpMs": 100,
+    "requests": 36,
+    "transferBytes": 1364172,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 352,
+        "scroll": 352
+      }
+    ]
+  },
+  {
+    "label": "활동 7",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-6 screen-enter",
+    "viewport": [
+      873,
+      580
+    ],
+    "document": [
+      873,
+      580
+    ],
+    "loadMs": 259.5,
+    "fcpMs": 104,
+    "requests": 46,
+    "transferBytes": 4007720,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 352,
+        "scroll": 352
+      }
+    ]
+  },
+  {
+    "label": "활동 8",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-7 screen-enter",
+    "viewport": [
+      873,
+      580
+    ],
+    "document": [
+      873,
+      580
+    ],
+    "loadMs": 283.1000000014901,
+    "fcpMs": 108,
+    "requests": 46,
+    "transferBytes": 4063916,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 352,
+        "scroll": 352
+      }
+    ]
+  },
+  {
+    "label": "활동 9",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-8",
+    "viewport": [
+      873,
+      580
+    ],
+    "document": [
+      873,
+      580
+    ],
+    "loadMs": 302.30000000074506,
+    "fcpMs": 124,
+    "requests": 44,
+    "transferBytes": 3002254,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [
+      {
+        "tag": "BUTTON",
+        "text": "두 표면에 물방울 떨어뜨리기",
+        "class": "btn soft"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "표면의 비밀 확대",
+        "class": "btn soft"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "겉면의 물방울이 잘 굴러가요",
+        "class": "btn selected"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "열린 입구도 저절로 막혀요",
+        "class": "btn soft"
+      }
+    ],
+    "images": [
+      "http://127.0.0.1:4326/assets/generated/lotus_leaf_whole.webp"
+    ],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 352,
+        "scroll": 352
+      },
+      {
+        "class": "learning-note lotus-note idea-linked",
+        "height": 350,
+        "scroll": 385
+      }
+    ]
+  },
+  {
+    "label": "활동 10",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-9",
+    "viewport": [
+      873,
+      580
+    ],
+    "document": [
+      873,
+      580
+    ],
+    "loadMs": 258.69999999925494,
+    "fcpMs": 136,
+    "requests": 43,
+    "transferBytes": 2688372,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [
+      {
+        "tag": "SUMMARY",
+        "text": "내 예상과 시험 기록 3회",
+        "class": ""
+      }
+    ],
+    "images": [
+      "http://127.0.0.1:4326/assets/generated/research_bag_body.webp",
+      "http://127.0.0.1:4326/assets/generated/bag_lotus_open.webp",
+      "http://127.0.0.1:4326/assets/generated/research_bag_body.webp",
+      "http://127.0.0.1:4326/assets/generated/research_bag_closed.webp",
+      "http://127.0.0.1:4326/assets/generated/research_bag_body.webp",
+      "http://127.0.0.1:4326/assets/generated/bag_lotus_open.webp",
+      "http://127.0.0.1:4326/assets/generated/bag_lotus_closed.webp"
+    ],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 352,
+        "scroll": 352
+      },
+      {
+        "class": "learning-note",
+        "height": 350,
+        "scroll": 559
+      }
+    ]
+  },
+  {
+    "label": "현장 1",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-0 field-mission-view screen-enter",
+    "viewport": [
+      873,
+      580
+    ],
+    "document": [
+      873,
+      580
+    ],
+    "loadMs": 199.19999999925494,
+    "fcpMs": 96,
+    "requests": 38,
+    "transferBytes": 1042192,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [
+      {
+        "tag": "BUTTON",
+        "text": "잎 전체",
+        "class": "field-target field-hotspot"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "가장자리 확대",
+        "class": "field-target field-hotspot"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "잎 전체",
+        "class": "field-target field-hotspot"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "가장자리 확대",
+        "class": "field-target field-hotspot"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "잎 전체",
+        "class": "field-target field-hotspot"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "가장자리 확대",
+        "class": "field-target field-hotspot"
+      },
+      {
+        "tag": "SUMMARY",
+        "text": "키보드로 조작하기",
+        "class": ""
+      }
+    ],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 352,
+        "scroll": 684
+      }
+    ]
+  },
+  {
+    "label": "현장 2",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-2 field-mission-view screen-enter",
+    "viewport": [
+      873,
+      580
+    ],
+    "document": [
+      873,
+      580
+    ],
+    "loadMs": 204.5,
+    "fcpMs": 76,
+    "requests": 37,
+    "transferBytes": 2207858,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [
+      {
+        "tag": "SUMMARY",
+        "text": "키보드로 조작하기",
+        "class": ""
+      }
+    ],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 352,
+        "scroll": 578
+      }
+    ]
+  },
+  {
+    "label": "현장 3",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-4 field-mission-view screen-enter",
+    "viewport": [
+      873,
+      580
+    ],
+    "document": [
+      873,
+      580
+    ],
+    "loadMs": 152.09999999776483,
+    "fcpMs": 88,
+    "requests": 35,
+    "transferBytes": 914982,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [
+      {
+        "tag": "SUMMARY",
+        "text": "키보드로 조작하기",
+        "class": ""
+      }
+    ],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 352,
+        "scroll": 660
+      }
+    ]
+  },
+  {
+    "label": "현장 4",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-6 field-mission-view screen-enter",
+    "viewport": [
+      873,
+      580
+    ],
+    "document": [
+      873,
+      580
+    ],
+    "loadMs": 177.60000000149012,
+    "fcpMs": 92,
+    "requests": 35,
+    "transferBytes": 853688,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [
+      {
+        "tag": "SUMMARY",
+        "text": "키보드로 조작하기",
+        "class": ""
+      }
+    ],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 352,
+        "scroll": 590
+      }
+    ]
+  },
+  {
+    "label": "현장 5",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-8 field-mission-view screen-enter",
+    "viewport": [
+      873,
+      580
+    ],
+    "document": [
+      873,
+      580
+    ],
+    "loadMs": 274.5,
+    "fcpMs": 108,
+    "requests": 36,
+    "transferBytes": 1067528,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [
+      {
+        "tag": "SUMMARY",
+        "text": "키보드로 조작하기",
+        "class": ""
+      }
+    ],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 352,
+        "scroll": 581
+      }
+    ]
+  },
+  {
+    "label": "연구노트",
+    "scene": "report",
+    "page": "report-page tablet-report notebook-overview screen-enter",
+    "viewport": [
+      873,
+      580
+    ],
+    "document": [
+      873,
+      580
+    ],
+    "loadMs": 227.39999999850988,
+    "fcpMs": 92,
+    "requests": 39,
+    "transferBytes": 2772842,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": []
+  },
+  {
+    "label": "마지막 적용",
+    "scene": "final",
+    "page": "final-page tablet-final",
+    "viewport": [
+      873,
+      580
+    ],
+    "document": [
+      873,
+      580
+    ],
+    "loadMs": 231.5,
+    "fcpMs": 84,
+    "requests": 34,
+    "transferBytes": 903274,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 317,
+        "scroll": 317
+      },
+      {
+        "class": "learning-note",
+        "height": 176,
+        "scroll": 176
+      }
+    ]
+  },
+  {
+    "label": "엔딩",
+    "scene": "ending",
+    "page": "ending ending-celebration screen-enter",
+    "viewport": [
+      873,
+      580
+    ],
+    "document": [
+      873,
+      580
+    ],
+    "loadMs": 182,
+    "fcpMs": 96,
+    "requests": 36,
+    "transferBytes": 1760454,
+    "external": [],
+    "smallControls": [],
+    "smallText": [
+      {
+        "tag": "SPAN",
+        "text": "다섯 번의 발견, 하나의 초록정원",
+        "class": "",
+        "px": 14
+      }
+    ],
+    "outside": [],
+    "images": [],
+    "panels": []
+  },
+  {
+    "label": "지도",
+    "scene": "map",
+    "page": "expedition-map stage-map",
+    "viewport": [
+      873,
+      580
+    ],
+    "document": [
+      873,
+      580
+    ],
+    "loadMs": 243.20000000298023,
+    "fcpMs": 120,
+    "requests": 40,
+    "transferBytes": 3713354,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": []
+  },
+  {
+    "label": "메인",
+    "scene": "home",
+    "page": "home",
+    "viewport": [
+      906,
+      755
+    ],
+    "document": [
+      906,
+      755
+    ],
+    "loadMs": 580.4000000022352,
+    "fcpMs": 412,
+    "requests": 36,
+    "transferBytes": 1528458,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": []
+  },
+  {
+    "label": "활동 1",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-0",
+    "viewport": [
+      906,
+      755
+    ],
+    "document": [
+      906,
+      755
+    ],
+    "loadMs": 214,
+    "fcpMs": 104,
+    "requests": 44,
+    "transferBytes": 2333752,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [
+      {
+        "tag": "BUTTON",
+        "text": "돌리기",
+        "class": "btn soft"
+      }
+    ],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 519,
+        "scroll": 519
+      }
+    ]
+  },
+  {
+    "label": "활동 2",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-1",
+    "viewport": [
+      906,
+      755
+    ],
+    "document": [
+      906,
+      755
+    ],
+    "loadMs": 224.80000000074506,
+    "fcpMs": 120,
+    "requests": 38,
+    "transferBytes": 1269244,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 519,
+        "scroll": 519
+      }
+    ]
+  },
+  {
+    "label": "활동 3",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-2",
+    "viewport": [
+      906,
+      755
+    ],
+    "document": [
+      906,
+      755
+    ],
+    "loadMs": 181.69999999925494,
+    "fcpMs": 108,
+    "requests": 35,
+    "transferBytes": 1647544,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 519,
+        "scroll": 519
+      }
+    ]
+  },
+  {
+    "label": "활동 4",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-3",
+    "viewport": [
+      906,
+      755
+    ],
+    "document": [
+      906,
+      755
+    ],
+    "loadMs": 183.20000000298023,
+    "fcpMs": 88,
+    "requests": 36,
+    "transferBytes": 1606630,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 519,
+        "scroll": 519
+      }
+    ]
+  },
+  {
+    "label": "활동 5",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-4",
+    "viewport": [
+      906,
+      755
+    ],
+    "document": [
+      906,
+      755
+    ],
+    "loadMs": 183.19999999925494,
+    "fcpMs": 92,
+    "requests": 41,
+    "transferBytes": 2050336,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 519,
+        "scroll": 519
+      }
+    ]
+  },
+  {
+    "label": "활동 6",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-5",
+    "viewport": [
+      906,
+      755
+    ],
+    "document": [
+      906,
+      755
+    ],
+    "loadMs": 185.5,
+    "fcpMs": 88,
+    "requests": 36,
+    "transferBytes": 1364316,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 519,
+        "scroll": 519
+      }
+    ]
+  },
+  {
+    "label": "활동 7",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-6 screen-enter",
+    "viewport": [
+      906,
+      755
+    ],
+    "document": [
+      906,
+      755
+    ],
+    "loadMs": 199.89999999850988,
+    "fcpMs": 88,
+    "requests": 46,
+    "transferBytes": 4007864,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 519,
+        "scroll": 519
+      }
+    ]
+  },
+  {
+    "label": "활동 8",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-7 screen-enter",
+    "viewport": [
+      906,
+      755
+    ],
+    "document": [
+      906,
+      755
+    ],
+    "loadMs": 217.40000000223517,
+    "fcpMs": 104,
+    "requests": 46,
+    "transferBytes": 4064060,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 519,
+        "scroll": 519
+      }
+    ]
+  },
+  {
+    "label": "활동 9",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-8",
+    "viewport": [
+      906,
+      755
+    ],
+    "document": [
+      906,
+      755
+    ],
+    "loadMs": 212.39999999850988,
+    "fcpMs": 108,
+    "requests": 44,
+    "transferBytes": 3002398,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [
+      {
+        "tag": "BUTTON",
+        "text": "표면의 비밀 확대",
+        "class": "btn soft"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "겉면의 물방울이 잘 굴러가요",
+        "class": "btn selected"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "열린 입구도 저절로 막혀요",
+        "class": "btn soft"
+      }
+    ],
+    "images": [
+      "http://127.0.0.1:4326/assets/generated/lotus_leaf_whole.webp"
+    ],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 519,
+        "scroll": 519
+      },
+      {
+        "class": "learning-note lotus-note idea-linked",
+        "height": 405,
+        "scroll": 405
+      }
+    ]
+  },
+  {
+    "label": "활동 10",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-9",
+    "viewport": [
+      906,
+      755
+    ],
+    "document": [
+      906,
+      755
+    ],
+    "loadMs": 283.19999999925494,
+    "fcpMs": 128,
+    "requests": 43,
+    "transferBytes": 2688516,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [
+      {
+        "tag": "SUMMARY",
+        "text": "내 예상과 시험 기록 3회",
+        "class": ""
+      }
+    ],
+    "images": [
+      "http://127.0.0.1:4326/assets/generated/research_bag_body.webp",
+      "http://127.0.0.1:4326/assets/generated/bag_lotus_open.webp",
+      "http://127.0.0.1:4326/assets/generated/research_bag_body.webp",
+      "http://127.0.0.1:4326/assets/generated/research_bag_closed.webp",
+      "http://127.0.0.1:4326/assets/generated/research_bag_body.webp",
+      "http://127.0.0.1:4326/assets/generated/bag_lotus_open.webp",
+      "http://127.0.0.1:4326/assets/generated/bag_lotus_closed.webp"
+    ],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 519,
+        "scroll": 541
+      },
+      {
+        "class": "learning-note",
+        "height": 517,
+        "scroll": 626
+      }
+    ]
+  },
+  {
+    "label": "현장 1",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-0 field-mission-view screen-enter",
+    "viewport": [
+      906,
+      755
+    ],
+    "document": [
+      906,
+      755
+    ],
+    "loadMs": 248.30000000074506,
+    "fcpMs": 92,
+    "requests": 38,
+    "transferBytes": 1042336,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [
+      {
+        "tag": "SUMMARY",
+        "text": "키보드로 조작하기",
+        "class": ""
+      }
+    ],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 519,
+        "scroll": 735
+      }
+    ]
+  },
+  {
+    "label": "현장 2",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-2 field-mission-view screen-enter",
+    "viewport": [
+      906,
+      755
+    ],
+    "document": [
+      906,
+      755
+    ],
+    "loadMs": 207.79999999701977,
+    "fcpMs": 104,
+    "requests": 37,
+    "transferBytes": 2208002,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 519,
+        "scroll": 623
+      }
+    ]
+  },
+  {
+    "label": "현장 3",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-4 field-mission-view screen-enter",
+    "viewport": [
+      906,
+      755
+    ],
+    "document": [
+      906,
+      755
+    ],
+    "loadMs": 197.69999999925494,
+    "fcpMs": 124,
+    "requests": 35,
+    "transferBytes": 915126,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 519,
+        "scroll": 677
+      }
+    ]
+  },
+  {
+    "label": "현장 4",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-6 field-mission-view screen-enter",
+    "viewport": [
+      906,
+      755
+    ],
+    "document": [
+      906,
+      755
+    ],
+    "loadMs": 226.80000000074506,
+    "fcpMs": 116,
+    "requests": 35,
+    "transferBytes": 853832,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 519,
+        "scroll": 619
+      }
+    ]
+  },
+  {
+    "label": "현장 5",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-8 field-mission-view screen-enter",
+    "viewport": [
+      906,
+      755
+    ],
+    "document": [
+      906,
+      755
+    ],
+    "loadMs": 176.70000000298023,
+    "fcpMs": 88,
+    "requests": 36,
+    "transferBytes": 1067672,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [
+      {
+        "tag": "SUMMARY",
+        "text": "키보드로 조작하기",
+        "class": ""
+      }
+    ],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 519,
+        "scroll": 657
+      }
+    ]
+  },
+  {
+    "label": "연구노트",
+    "scene": "report",
+    "page": "report-page tablet-report notebook-overview screen-enter",
+    "viewport": [
+      906,
+      755
+    ],
+    "document": [
+      906,
+      755
+    ],
+    "loadMs": 187.09999999776483,
+    "fcpMs": 92,
+    "requests": 39,
+    "transferBytes": 2772986,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": []
+  },
+  {
+    "label": "마지막 적용",
+    "scene": "final",
+    "page": "final-page tablet-final",
+    "viewport": [
+      906,
+      755
+    ],
+    "document": [
+      906,
+      755
+    ],
+    "loadMs": 175.60000000149012,
+    "fcpMs": 84,
+    "requests": 34,
+    "transferBytes": 903418,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 484,
+        "scroll": 484
+      },
+      {
+        "class": "learning-note",
+        "height": 176,
+        "scroll": 176
+      }
+    ]
+  },
+  {
+    "label": "엔딩",
+    "scene": "ending",
+    "page": "ending ending-celebration screen-enter",
+    "viewport": [
+      906,
+      755
+    ],
+    "document": [
+      906,
+      755
+    ],
+    "loadMs": 179.30000000074506,
+    "fcpMs": 88,
+    "requests": 36,
+    "transferBytes": 1760598,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": []
+  },
+  {
+    "label": "지도",
+    "scene": "map",
+    "page": "expedition-map stage-map",
+    "viewport": [
+      906,
+      755
+    ],
+    "document": [
+      906,
+      755
+    ],
+    "loadMs": 333.19999999925494,
+    "fcpMs": 96,
+    "requests": 40,
+    "transferBytes": 3713498,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [
+      {
+        "tag": "BUTTON",
+        "text": "4. 나의 연구정원 아직 잠김",
+        "class": "world-node sleeping locked   "
+      },
+      {
+        "tag": "BUTTON",
+        "text": "5. 발명 공방 아직 잠김",
+        "class": "world-node sleeping locked   "
+      }
+    ],
+    "images": [],
+    "panels": []
+  },
+  {
+    "label": "메인",
+    "scene": "home",
+    "page": "home",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "document": [
+      1920,
+      1080
+    ],
+    "loadMs": 552.2999999970198,
+    "fcpMs": 356,
+    "requests": 36,
+    "transferBytes": 1528830,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": []
+  },
+  {
+    "label": "활동 1",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-0",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "document": [
+      1920,
+      1080
+    ],
+    "loadMs": 260.80000000074506,
+    "fcpMs": 100,
+    "requests": 44,
+    "transferBytes": 2334124,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [
+      {
+        "tag": "BUTTON",
+        "text": "돌리기",
+        "class": "btn soft"
+      }
+    ],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 816,
+        "scroll": 816
+      }
+    ]
+  },
+  {
+    "label": "활동 2",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-1",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "document": [
+      1920,
+      1080
+    ],
+    "loadMs": 374.8999999985099,
+    "fcpMs": 104,
+    "requests": 38,
+    "transferBytes": 1269616,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 816,
+        "scroll": 816
+      }
+    ]
+  },
+  {
+    "label": "활동 3",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-2",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "document": [
+      1920,
+      1080
+    ],
+    "loadMs": 224.39999999850988,
+    "fcpMs": 84,
+    "requests": 35,
+    "transferBytes": 1647840,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 816,
+        "scroll": 816
+      }
+    ]
+  },
+  {
+    "label": "활동 4",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-3",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "document": [
+      1920,
+      1080
+    ],
+    "loadMs": 220.89999999850988,
+    "fcpMs": 124,
+    "requests": 36,
+    "transferBytes": 1606858,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 816,
+        "scroll": 816
+      }
+    ]
+  },
+  {
+    "label": "활동 5",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-4",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "document": [
+      1920,
+      1080
+    ],
+    "loadMs": 201.80000000074506,
+    "fcpMs": 88,
+    "requests": 41,
+    "transferBytes": 2050564,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 816,
+        "scroll": 816
+      }
+    ]
+  },
+  {
+    "label": "활동 6",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-5",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "document": [
+      1920,
+      1080
+    ],
+    "loadMs": 331.80000000074506,
+    "fcpMs": 152,
+    "requests": 36,
+    "transferBytes": 1364544,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 816,
+        "scroll": 816
+      }
+    ]
+  },
+  {
+    "label": "활동 7",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-6 screen-enter",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "document": [
+      1920,
+      1080
+    ],
+    "loadMs": 346.8999999985099,
+    "fcpMs": 132,
+    "requests": 46,
+    "transferBytes": 4008092,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 816,
+        "scroll": 816
+      }
+    ]
+  },
+  {
+    "label": "활동 8",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-7 screen-enter",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "document": [
+      1920,
+      1080
+    ],
+    "loadMs": 476.9000000022352,
+    "fcpMs": 188,
+    "requests": 46,
+    "transferBytes": 4064288,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 816,
+        "scroll": 816
+      }
+    ]
+  },
+  {
+    "label": "활동 9",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-8",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "document": [
+      1920,
+      1080
+    ],
+    "loadMs": 311.5999999977648,
+    "fcpMs": 116,
+    "requests": 44,
+    "transferBytes": 3002626,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [
+      "http://127.0.0.1:4326/assets/generated/lotus_leaf_whole.webp"
+    ],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 816,
+        "scroll": 816
+      },
+      {
+        "class": "learning-note lotus-note idea-linked",
+        "height": 434,
+        "scroll": 434
+      }
+    ]
+  },
+  {
+    "label": "활동 10",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-9",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "document": [
+      1920,
+      1080
+    ],
+    "loadMs": 630.5,
+    "fcpMs": 400,
+    "requests": 43,
+    "transferBytes": 2688744,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [
+      "http://127.0.0.1:4326/assets/generated/research_bag_body.webp",
+      "http://127.0.0.1:4326/assets/generated/bag_lotus_open.webp",
+      "http://127.0.0.1:4326/assets/generated/research_bag_body.webp",
+      "http://127.0.0.1:4326/assets/generated/research_bag_closed.webp",
+      "http://127.0.0.1:4326/assets/generated/research_bag_body.webp",
+      "http://127.0.0.1:4326/assets/generated/bag_lotus_open.webp",
+      "http://127.0.0.1:4326/assets/generated/bag_lotus_closed.webp"
+    ],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 816,
+        "scroll": 816
+      },
+      {
+        "class": "learning-note",
+        "height": 549,
+        "scroll": 549
+      }
+    ]
+  },
+  {
+    "label": "현장 1",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-0 field-mission-view screen-enter",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "document": [
+      1920,
+      1080
+    ],
+    "loadMs": 326.5,
+    "fcpMs": 144,
+    "requests": 38,
+    "transferBytes": 1042488,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 816,
+        "scroll": 816
+      }
+    ]
+  },
+  {
+    "label": "현장 2",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-2 field-mission-view screen-enter",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "document": [
+      1920,
+      1080
+    ],
+    "loadMs": 237.69999999925494,
+    "fcpMs": 116,
+    "requests": 37,
+    "transferBytes": 2208154,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 816,
+        "scroll": 816
+      }
+    ]
+  },
+  {
+    "label": "현장 3",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-4 field-mission-view screen-enter",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "document": [
+      1920,
+      1080
+    ],
+    "loadMs": 195.69999999925494,
+    "fcpMs": 88,
+    "requests": 35,
+    "transferBytes": 915278,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 816,
+        "scroll": 816
+      }
+    ]
+  },
+  {
+    "label": "현장 4",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-6 field-mission-view screen-enter",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "document": [
+      1920,
+      1080
+    ],
+    "loadMs": 188.19999999925494,
+    "fcpMs": 92,
+    "requests": 35,
+    "transferBytes": 853984,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 816,
+        "scroll": 816
+      }
+    ]
+  },
+  {
+    "label": "현장 5",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-8 field-mission-view screen-enter",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "document": [
+      1920,
+      1080
+    ],
+    "loadMs": 192.90000000223517,
+    "fcpMs": 120,
+    "requests": 36,
+    "transferBytes": 1067824,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 816,
+        "scroll": 816
+      }
+    ]
+  },
+  {
+    "label": "연구노트",
+    "scene": "report",
+    "page": "report-page tablet-report notebook-overview screen-enter",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "document": [
+      1920,
+      1080
+    ],
+    "loadMs": 225,
+    "fcpMs": 88,
+    "requests": 39,
+    "transferBytes": 2773214,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": []
+  },
+  {
+    "label": "마지막 적용",
+    "scene": "final",
+    "page": "final-page tablet-final",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "document": [
+      1920,
+      1080
+    ],
+    "loadMs": 169.80000000074506,
+    "fcpMs": 84,
+    "requests": 34,
+    "transferBytes": 903646,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 764,
+        "scroll": 764
+      },
+      {
+        "class": "learning-note",
+        "height": 184,
+        "scroll": 184
+      }
+    ]
+  },
+  {
+    "label": "엔딩",
+    "scene": "ending",
+    "page": "ending ending-celebration screen-enter",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "document": [
+      1920,
+      1080
+    ],
+    "loadMs": 446.1000000014901,
+    "fcpMs": 120,
+    "requests": 36,
+    "transferBytes": 1760826,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": []
+  },
+  {
+    "label": "지도",
+    "scene": "map",
+    "page": "expedition-map stage-map",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "document": [
+      1920,
+      1080
+    ],
+    "loadMs": 736.3999999985099,
+    "fcpMs": 144,
+    "requests": 40,
+    "transferBytes": 3713726,
+    "external": [],
+    "smallControls": [],
+    "smallText": [
+      {
+        "tag": "SPAN",
+        "text": "1표본 온실다음 탐구",
+        "class": "world-label",
+        "px": 13.6
+      },
+      {
+        "tag": "SPAN",
+        "text": "표본 온실다음 탐구",
+        "class": "",
+        "px": 13.6
+      },
+      {
+        "tag": "SMALL",
+        "text": "다음 탐구",
+        "class": "",
+        "px": 11.2
+      },
+      {
+        "tag": "SPAN",
+        "text": "여기부터!",
+        "class": "world-next",
+        "px": 11.2
+      },
+      {
+        "tag": "SPAN",
+        "text": "2계절 꽃돔 잠겨 있어",
+        "class": "world-label",
+        "px": 13.6
+      },
+      {
+        "tag": "SPAN",
+        "text": "계절 꽃돔 잠겨 있어",
+        "class": "",
+        "px": 13.6
+      },
+      {
+        "tag": "SMALL",
+        "text": "잠겨 있어",
+        "class": "",
+        "px": 11.2
+      },
+      {
+        "tag": "SPAN",
+        "text": "3물길 실험실 잠겨 있어",
+        "class": "world-label",
+        "px": 13.6
+      },
+      {
+        "tag": "SPAN",
+        "text": "물길 실험실 잠겨 있어",
+        "class": "",
+        "px": 13.6
+      },
+      {
+        "tag": "SMALL",
+        "text": "잠겨 있어",
+        "class": "",
+        "px": 11.2
+      },
+      {
+        "tag": "SPAN",
+        "text": "4나의 연구정원 잠겨 있어",
+        "class": "world-label",
+        "px": 13.6
+      },
+      {
+        "tag": "SPAN",
+        "text": "나의 연구정원 잠겨 있어",
+        "class": "",
+        "px": 13.6
+      },
+      {
+        "tag": "SMALL",
+        "text": "잠겨 있어",
+        "class": "",
+        "px": 11.2
+      },
+      {
+        "tag": "SPAN",
+        "text": "5발명 공방 잠겨 있어",
+        "class": "world-label",
+        "px": 13.6
+      },
+      {
+        "tag": "SPAN",
+        "text": "발명 공방 잠겨 있어",
+        "class": "",
+        "px": 13.6
+      },
+      {
+        "tag": "SMALL",
+        "text": "잠겨 있어",
+        "class": "",
+        "px": 11.2
+      }
+    ],
+    "outside": [
+      {
+        "tag": "BUTTON",
+        "text": "3. 물길 실험실 아직 잠김",
+        "class": "world-node sleeping locked   "
+      },
+      {
+        "tag": "BUTTON",
+        "text": "5. 발명 공방 아직 잠김",
+        "class": "world-node sleeping locked   "
+      }
+    ],
+    "images": [],
+    "panels": []
+  },
+  {
+    "label": "메인",
+    "scene": "home",
+    "page": "home",
+    "viewport": [
+      1024,
+      768
+    ],
+    "document": [
+      1024,
+      768
+    ],
+    "loadMs": 572.0999999977648,
+    "fcpMs": 364,
+    "requests": 36,
+    "transferBytes": 1529015,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": []
+  },
+  {
+    "label": "활동 1",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-0",
+    "viewport": [
+      1024,
+      768
+    ],
+    "document": [
+      1024,
+      768
+    ],
+    "loadMs": 638.3000000007451,
+    "fcpMs": 160,
+    "requests": 44,
+    "transferBytes": 2334309,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [
+      {
+        "tag": "BUTTON",
+        "text": "돌리기",
+        "class": "btn soft"
+      }
+    ],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 532,
+        "scroll": 532
+      }
+    ]
+  },
+  {
+    "label": "활동 2",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-1",
+    "viewport": [
+      1024,
+      768
+    ],
+    "document": [
+      1024,
+      768
+    ],
+    "loadMs": 283.70000000298023,
+    "fcpMs": 132,
+    "requests": 38,
+    "transferBytes": 1269801,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 532,
+        "scroll": 532
+      }
+    ]
+  },
+  {
+    "label": "활동 3",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-2",
+    "viewport": [
+      1024,
+      768
+    ],
+    "document": [
+      1024,
+      768
+    ],
+    "loadMs": 262.79999999701977,
+    "fcpMs": 104,
+    "requests": 35,
+    "transferBytes": 1648025,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 532,
+        "scroll": 532
+      }
+    ]
+  },
+  {
+    "label": "활동 4",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-3",
+    "viewport": [
+      1024,
+      768
+    ],
+    "document": [
+      1024,
+      768
+    ],
+    "loadMs": 249.10000000149012,
+    "fcpMs": 104,
+    "requests": 36,
+    "transferBytes": 1607043,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 532,
+        "scroll": 532
+      }
+    ]
+  },
+  {
+    "label": "활동 5",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-4",
+    "viewport": [
+      1024,
+      768
+    ],
+    "document": [
+      1024,
+      768
+    ],
+    "loadMs": 289.1000000014901,
+    "fcpMs": 140,
+    "requests": 41,
+    "transferBytes": 2050749,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 532,
+        "scroll": 532
+      }
+    ]
+  },
+  {
+    "label": "활동 6",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-5",
+    "viewport": [
+      1024,
+      768
+    ],
+    "document": [
+      1024,
+      768
+    ],
+    "loadMs": 424.5,
+    "fcpMs": 124,
+    "requests": 36,
+    "transferBytes": 1364729,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 532,
+        "scroll": 532
+      }
+    ]
+  },
+  {
+    "label": "활동 7",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-6 screen-enter",
+    "viewport": [
+      1024,
+      768
+    ],
+    "document": [
+      1024,
+      768
+    ],
+    "loadMs": 261.30000000074506,
+    "fcpMs": 104,
+    "requests": 46,
+    "transferBytes": 4008277,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 532,
+        "scroll": 532
+      }
+    ]
+  },
+  {
+    "label": "활동 8",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-7 screen-enter",
+    "viewport": [
+      1024,
+      768
+    ],
+    "document": [
+      1024,
+      768
+    ],
+    "loadMs": 377,
+    "fcpMs": 120,
+    "requests": 46,
+    "transferBytes": 4064473,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 532,
+        "scroll": 532
+      }
+    ]
+  },
+  {
+    "label": "활동 9",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-8",
+    "viewport": [
+      1024,
+      768
+    ],
+    "document": [
+      1024,
+      768
+    ],
+    "loadMs": 364.1000000014901,
+    "fcpMs": 136,
+    "requests": 44,
+    "transferBytes": 3002811,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [
+      {
+        "tag": "BUTTON",
+        "text": "표면의 비밀 확대",
+        "class": "btn soft"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "겉면의 물방울이 잘 굴러가요",
+        "class": "btn selected"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "열린 입구도 저절로 막혀요",
+        "class": "btn soft"
+      }
+    ],
+    "images": [
+      "http://127.0.0.1:4326/assets/generated/lotus_leaf_whole.webp"
+    ],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 532,
+        "scroll": 532
+      },
+      {
+        "class": "learning-note lotus-note idea-linked",
+        "height": 405,
+        "scroll": 405
+      }
+    ]
+  },
+  {
+    "label": "활동 10",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-9",
+    "viewport": [
+      1024,
+      768
+    ],
+    "document": [
+      1024,
+      768
+    ],
+    "loadMs": 490.1000000014901,
+    "fcpMs": 132,
+    "requests": 43,
+    "transferBytes": 2688929,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [
+      "http://127.0.0.1:4326/assets/generated/research_bag_body.webp",
+      "http://127.0.0.1:4326/assets/generated/bag_lotus_open.webp",
+      "http://127.0.0.1:4326/assets/generated/research_bag_body.webp",
+      "http://127.0.0.1:4326/assets/generated/research_bag_closed.webp",
+      "http://127.0.0.1:4326/assets/generated/research_bag_body.webp",
+      "http://127.0.0.1:4326/assets/generated/bag_lotus_open.webp",
+      "http://127.0.0.1:4326/assets/generated/bag_lotus_closed.webp"
+    ],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 532,
+        "scroll": 532
+      },
+      {
+        "class": "learning-note",
+        "height": 526,
+        "scroll": 526
+      }
+    ]
+  },
+  {
+    "label": "현장 1",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-0 field-mission-view screen-enter",
+    "viewport": [
+      1024,
+      768
+    ],
+    "document": [
+      1024,
+      768
+    ],
+    "loadMs": 237.5,
+    "fcpMs": 124,
+    "requests": 38,
+    "transferBytes": 1042673,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [
+      {
+        "tag": "SUMMARY",
+        "text": "키보드로 조작하기",
+        "class": ""
+      }
+    ],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 532,
+        "scroll": 710
+      }
+    ]
+  },
+  {
+    "label": "현장 2",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-2 field-mission-view screen-enter",
+    "viewport": [
+      1024,
+      768
+    ],
+    "document": [
+      1024,
+      768
+    ],
+    "loadMs": 269,
+    "fcpMs": 120,
+    "requests": 37,
+    "transferBytes": 2208339,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 532,
+        "scroll": 623
+      }
+    ]
+  },
+  {
+    "label": "현장 3",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-4 field-mission-view screen-enter",
+    "viewport": [
+      1024,
+      768
+    ],
+    "document": [
+      1024,
+      768
+    ],
+    "loadMs": 190.30000000074506,
+    "fcpMs": 120,
+    "requests": 35,
+    "transferBytes": 915463,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 532,
+        "scroll": 655
+      }
+    ]
+  },
+  {
+    "label": "현장 4",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-6 field-mission-view screen-enter",
+    "viewport": [
+      1024,
+      768
+    ],
+    "document": [
+      1024,
+      768
+    ],
+    "loadMs": 205,
+    "fcpMs": 116,
+    "requests": 35,
+    "transferBytes": 854169,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 532,
+        "scroll": 619
+      }
+    ]
+  },
+  {
+    "label": "현장 5",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-8 field-mission-view screen-enter",
+    "viewport": [
+      1024,
+      768
+    ],
+    "document": [
+      1024,
+      768
+    ],
+    "loadMs": 196,
+    "fcpMs": 120,
+    "requests": 36,
+    "transferBytes": 1068009,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [
+      {
+        "tag": "SUMMARY",
+        "text": "키보드로 조작하기",
+        "class": ""
+      }
+    ],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 532,
+        "scroll": 657
+      }
+    ]
+  },
+  {
+    "label": "연구노트",
+    "scene": "report",
+    "page": "report-page tablet-report notebook-overview screen-enter",
+    "viewport": [
+      1024,
+      768
+    ],
+    "document": [
+      1024,
+      768
+    ],
+    "loadMs": 287.1000000014901,
+    "fcpMs": 128,
+    "requests": 39,
+    "transferBytes": 2773399,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": []
+  },
+  {
+    "label": "마지막 적용",
+    "scene": "final",
+    "page": "final-page tablet-final",
+    "viewport": [
+      1024,
+      768
+    ],
+    "document": [
+      1024,
+      768
+    ],
+    "loadMs": 484.19999999925494,
+    "fcpMs": 272,
+    "requests": 34,
+    "transferBytes": 903831,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 497,
+        "scroll": 497
+      },
+      {
+        "class": "learning-note",
+        "height": 176,
+        "scroll": 176
+      }
+    ]
+  },
+  {
+    "label": "엔딩",
+    "scene": "ending",
+    "page": "ending ending-celebration screen-enter",
+    "viewport": [
+      1024,
+      768
+    ],
+    "document": [
+      1024,
+      768
+    ],
+    "loadMs": 289.80000000074506,
+    "fcpMs": 128,
+    "requests": 36,
+    "transferBytes": 1761011,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": []
+  },
+  {
+    "label": "지도",
+    "scene": "map",
+    "page": "expedition-map stage-map",
+    "viewport": [
+      1024,
+      768
+    ],
+    "document": [
+      1024,
+      768
+    ],
+    "loadMs": 571.8999999985099,
+    "fcpMs": 232,
+    "requests": 40,
+    "transferBytes": 3713911,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [
+      {
+        "tag": "BUTTON",
+        "text": "4. 나의 연구정원 아직 잠김",
+        "class": "world-node sleeping locked   "
+      },
+      {
+        "tag": "BUTTON",
+        "text": "5. 발명 공방 아직 잠김",
+        "class": "world-node sleeping locked   "
+      }
+    ],
+    "images": [],
+    "panels": []
+  }
+]

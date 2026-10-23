@@ -1,0 +1,52 @@
+{
+  "date": "2026-10-24",
+  "timezone": "Asia/Seoul",
+  "project": "초록정원 연구기지",
+  "version": "0.5.0",
+  "sequence": [
+    {
+      "command": "C:/Users/bongb/AppData/Local/Programs/Python/Python314/python.exe scripts/subset-fonts.py",
+      "exit_code": 0,
+      "fonts_bytes": {
+        "gg-display-ko.woff2": 104584,
+        "gg-display-latin.woff2": 16468,
+        "gg-text-bold.woff2": 60224,
+        "gg-text-regular.woff2": 59908
+      }
+    },
+    {
+      "command": "npm run check",
+      "exit_code": 0,
+      "javascript_files": 31
+    },
+    {
+      "command": "npm test",
+      "exit_code": 0,
+      "tests": 80,
+      "passed": 80,
+      "failed": 0,
+      "skipped": 0,
+      "duration_ms": 2704.4229
+    },
+    {
+      "command": "npm run build",
+      "exit_code": 0,
+      "files": 133,
+      "assets": 96,
+      "precache": 50,
+      "bytes": 32047055,
+      "directory": "D:/iscreammedia_sc34/3 leave/dist"
+    },
+    {
+      "command": "git -c safe.directory='D:/iscreammedia_sc34/3 leave' diff --check",
+      "exit_code": 0,
+      "whitespace_errors": 0,
+      "notes": "Git emitted LF-to-CRLF normalization warnings only."
+    }
+  ],
+  "last_pass_scope": "Repeated check -> test -> build after expedition.js wording alignment. Fonts were retained from the immediately preceding successful subset pass; no new glyphs were introduced.",
+  "source_changes_during_verification": false,
+  "permitted_outputs": "Four regenerated WOFF2 fonts, dist build outputs, and this verification report.",
+  "browser_verification": "Root agent handles browser checks separately.",
+  "deployment_performed": false
+}

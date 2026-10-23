@@ -8,7 +8,7 @@
   --frame-gap: 16px;
   --frame-footer: 72px;
   --frame-guide: clamp(128px, 12vw, 164px);
-  --frame-text: clamp(18px, 1.45vw, 22px);
+  --frame-text: clamp(20px, 1.45vw, 24px);
   --frame-title: clamp(25px, 2.2vw, 36px);
   --frame-paper: #fffcef;
   --frame-tint: transparent;

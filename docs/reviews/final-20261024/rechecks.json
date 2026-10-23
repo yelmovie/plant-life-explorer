@@ -1,0 +1,463 @@
+[
+  {
+    "label": "지도 글자 배율 최종",
+    "scene": "map",
+    "page": "expedition-map stage-map",
+    "viewport": [
+      873,
+      580
+    ],
+    "document": [
+      873,
+      580
+    ],
+    "loadMs": 647.6999999992549,
+    "fcpMs": 224,
+    "requests": 40,
+    "transferBytes": 3713911,
+    "external": [],
+    "smallControls": [],
+    "smallText": [
+      {
+        "tag": "BUTTON",
+        "text": "1. 표본 온실 탐구 가능",
+        "class": "world-node sleeping available next-stop chosen ",
+        "px": 11.3671875
+      },
+      {
+        "tag": "BUTTON",
+        "text": "2. 계절 꽃돔 아직 잠김",
+        "class": "world-node sleeping locked   ",
+        "px": 11.3671875
+      },
+      {
+        "tag": "BUTTON",
+        "text": "3. 물길 실험실 아직 잠김",
+        "class": "world-node sleeping locked   ",
+        "px": 11.3671875
+      },
+      {
+        "tag": "BUTTON",
+        "text": "4. 나의 연구정원 아직 잠김",
+        "class": "world-node sleeping locked   ",
+        "px": 11.3671875
+      },
+      {
+        "tag": "BUTTON",
+        "text": "5. 발명 공방 아직 잠김",
+        "class": "world-node sleeping locked   ",
+        "px": 11.3671875
+      }
+    ],
+    "outside": [],
+    "images": [],
+    "panels": []
+  },
+  {
+    "label": "지도 글자 배율 최종",
+    "scene": "map",
+    "page": "expedition-map stage-map screen-enter",
+    "viewport": [
+      906,
+      755
+    ],
+    "document": [
+      906,
+      755
+    ],
+    "loadMs": 0,
+    "fcpMs": 392,
+    "requests": 30,
+    "transferBytes": 567403,
+    "external": [],
+    "smallControls": [],
+    "smallText": [
+      {
+        "tag": "BUTTON",
+        "text": "1. 표본 온실 탐구 가능",
+        "class": "world-node sleeping available next-stop chosen ",
+        "px": 14.74609375
+      },
+      {
+        "tag": "BUTTON",
+        "text": "2. 계절 꽃돔 아직 잠김",
+        "class": "world-node sleeping locked   ",
+        "px": 14.74609375
+      },
+      {
+        "tag": "BUTTON",
+        "text": "3. 물길 실험실 아직 잠김",
+        "class": "world-node sleeping locked   ",
+        "px": 14.74609375
+      },
+      {
+        "tag": "BUTTON",
+        "text": "4. 나의 연구정원 아직 잠김",
+        "class": "world-node sleeping locked   ",
+        "px": 14.74609375
+      },
+      {
+        "tag": "BUTTON",
+        "text": "5. 발명 공방 아직 잠김",
+        "class": "world-node sleeping locked   ",
+        "px": 14.74609375
+      }
+    ],
+    "outside": [
+      {
+        "tag": "BUTTON",
+        "text": "4. 나의 연구정원 아직 잠김",
+        "class": "world-node sleeping locked   "
+      },
+      {
+        "tag": "BUTTON",
+        "text": "5. 발명 공방 아직 잠김",
+        "class": "world-node sleeping locked   "
+      }
+    ],
+    "images": [
+      "http://127.0.0.1:4326/assets/generated/map_trail_v2.webp",
+      "http://127.0.0.1:4326/assets/generated/reward_observatory.webp",
+      "http://127.0.0.1:4326/assets/generated/reward_seasons.webp",
+      "http://127.0.0.1:4326/assets/generated/reward_water.webp",
+      "http://127.0.0.1:4326/assets/generated/reward_garden.webp",
+      "http://127.0.0.1:4326/assets/generated/reward_workshop.webp"
+    ],
+    "panels": []
+  },
+  {
+    "label": "지도 글자 배율 최종",
+    "scene": "map",
+    "page": "expedition-map stage-map",
+    "viewport": [
+      1280,
+      800
+    ],
+    "document": [
+      1280,
+      800
+    ],
+    "loadMs": 430.5,
+    "fcpMs": 156,
+    "requests": 40,
+    "transferBytes": 3713911,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [
+      {
+        "tag": "BUTTON",
+        "text": "5. 발명 공방 아직 잠김",
+        "class": "world-node sleeping locked   "
+      }
+    ],
+    "images": [],
+    "panels": []
+  },
+  {
+    "label": "지도 글자 배율 최종",
+    "scene": "map",
+    "page": "expedition-map stage-map",
+    "viewport": [
+      1920,
+      1080
+    ],
+    "document": [
+      1920,
+      1080
+    ],
+    "loadMs": 521.5,
+    "fcpMs": 140,
+    "requests": 40,
+    "transferBytes": 3713911,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [
+      {
+        "tag": "BUTTON",
+        "text": "3. 물길 실험실 아직 잠김",
+        "class": "world-node sleeping locked   "
+      },
+      {
+        "tag": "BUTTON",
+        "text": "5. 발명 공방 아직 잠김",
+        "class": "world-node sleeping locked   "
+      }
+    ],
+    "images": [],
+    "panels": []
+  },
+  {
+    "label": "지도 글자 배율 최종",
+    "scene": "map",
+    "page": "expedition-map stage-map",
+    "viewport": [
+      1024,
+      768
+    ],
+    "document": [
+      1024,
+      768
+    ],
+    "loadMs": 293.6000000014901,
+    "fcpMs": 104,
+    "requests": 40,
+    "transferBytes": 3713911,
+    "external": [],
+    "smallControls": [],
+    "smallText": [
+      {
+        "tag": "BUTTON",
+        "text": "1. 표본 온실 탐구 가능",
+        "class": "world-node sleeping available next-stop chosen ",
+        "px": 15
+      },
+      {
+        "tag": "BUTTON",
+        "text": "2. 계절 꽃돔 아직 잠김",
+        "class": "world-node sleeping locked   ",
+        "px": 15
+      },
+      {
+        "tag": "BUTTON",
+        "text": "3. 물길 실험실 아직 잠김",
+        "class": "world-node sleeping locked   ",
+        "px": 15
+      },
+      {
+        "tag": "BUTTON",
+        "text": "4. 나의 연구정원 아직 잠김",
+        "class": "world-node sleeping locked   ",
+        "px": 15
+      },
+      {
+        "tag": "BUTTON",
+        "text": "5. 발명 공방 아직 잠김",
+        "class": "world-node sleeping locked   ",
+        "px": 15
+      }
+    ],
+    "outside": [
+      {
+        "tag": "BUTTON",
+        "text": "4. 나의 연구정원 아직 잠김",
+        "class": "world-node sleeping locked   "
+      },
+      {
+        "tag": "BUTTON",
+        "text": "5. 발명 공방 아직 잠김",
+        "class": "world-node sleeping locked   "
+      }
+    ],
+    "images": [],
+    "panels": []
+  },
+  {
+    "label": "활동 7",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-6 screen-enter",
+    "viewport": [
+      873,
+      580
+    ],
+    "document": [
+      873,
+      580
+    ],
+    "loadMs": 499.5,
+    "fcpMs": 276,
+    "requests": 46,
+    "transferBytes": 4010126,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 352,
+        "scroll": 378
+      }
+    ]
+  },
+  {
+    "label": "활동 8",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-7 screen-enter",
+    "viewport": [
+      873,
+      580
+    ],
+    "document": [
+      873,
+      580
+    ],
+    "loadMs": 254.89999999850988,
+    "fcpMs": 136,
+    "requests": 46,
+    "transferBytes": 4066322,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [
+      {
+        "tag": "BUTTON",
+        "text": "땅 모양 바꾸기",
+        "class": "btn soft"
+      }
+    ],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 352,
+        "scroll": 492
+      }
+    ]
+  },
+  {
+    "label": "메인",
+    "scene": "home",
+    "page": "home",
+    "viewport": [
+      768,
+      1024
+    ],
+    "document": [
+      768,
+      1024
+    ],
+    "loadMs": 514.3000000007451,
+    "fcpMs": 384,
+    "requests": 36,
+    "transferBytes": 1532008,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": []
+  },
+  {
+    "label": "활동 6",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-5",
+    "viewport": [
+      768,
+      1024
+    ],
+    "document": [
+      768,
+      1024
+    ],
+    "loadMs": 319.69999999925494,
+    "fcpMs": 104,
+    "requests": 36,
+    "transferBytes": 1367722,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 788,
+        "scroll": 788
+      }
+    ]
+  },
+  {
+    "label": "활동 10",
+    "scene": "activity",
+    "page": "activity tablet-activity exploration-activity activity-9",
+    "viewport": [
+      768,
+      1024
+    ],
+    "document": [
+      768,
+      1024
+    ],
+    "loadMs": 273.6000000014901,
+    "fcpMs": 104,
+    "requests": 43,
+    "transferBytes": 2691922,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [
+      {
+        "tag": "BUTTON",
+        "text": "겉면이 물방울·먼지를 보내요",
+        "class": "btn soft"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "덮개가 입구로 오는 비를 막아요",
+        "class": "btn selected"
+      }
+    ],
+    "images": [],
+    "panels": [
+      {
+        "class": "learning-scene",
+        "height": 788,
+        "scroll": 941
+      },
+      {
+        "class": "learning-note",
+        "height": 655,
+        "scroll": 655
+      }
+    ]
+  },
+  {
+    "label": "연구노트",
+    "scene": "report",
+    "page": "report-page tablet-report notebook-overview screen-enter",
+    "viewport": [
+      768,
+      1024
+    ],
+    "document": [
+      768,
+      1024
+    ],
+    "loadMs": 239.09999999776483,
+    "fcpMs": 96,
+    "requests": 39,
+    "transferBytes": 2776392,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": []
+  },
+  {
+    "label": "엔딩",
+    "scene": "ending",
+    "page": "ending ending-celebration screen-enter",
+    "viewport": [
+      768,
+      1024
+    ],
+    "document": [
+      768,
+      1024
+    ],
+    "loadMs": 206,
+    "fcpMs": 128,
+    "requests": 36,
+    "transferBytes": 1764004,
+    "external": [],
+    "smallControls": [],
+    "smallText": [],
+    "outside": [],
+    "images": [],
+    "panels": []
+  }
+]

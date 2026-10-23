@@ -1,0 +1,39 @@
+<!doctype html><html lang="ko"><meta charset="utf-8"><title>최종점검 전용 · 학생 기록과 분리</title>
+<style>body{margin:0;background:#233f31;color:white;font:16px system-ui}header{display:flex;gap:6px;flex-wrap:wrap;padding:8px}button,select{font:inherit;min-height:40px}iframe{display:block;border:0;background:#fff}pre{white-space:pre-wrap;margin:8px;max-width:1500px}</style>
+<header><strong>독립 QA · 준비된 기록은 실제 완주 증거가 아님</strong><select id="size"><option>1280,800</option><option>1024,768</option><option>906,755</option><option>873,580</option><option>1920,1080</option><option>1440,900</option><option>768,1024</option><option>375,812</option></select><button data-view="home">메인</button><button data-view="map">지도</button><button data-view="report">연구노트</button><button data-view="final">마지막 적용</button><button data-view="ending">엔딩</button><button id="measure">다시 측정</button><button id="restore">원래 QA 기록 복구</button></header><header id="activities"></header><iframe title="점검 중인 실제 앱"></iframe><pre id="metrics">화면을 골라 줘.</pre>
+<script type="module">
+import {freshState,presetTerrain,recordFeature,PLANTS,STORAGE_KEY,testDesign} from '/src/model.js';
+const original=localStorage.getItem(STORAGE_KEY),frame=document.querySelector('iframe');
+const activities=document.querySelector('#activities');
+for(let i=0;i<10;i++)activities.insertAdjacentHTML('beforeend',`<button data-view="page-${i}">활동 ${i+1}</button>`);
+for(let i=0;i<5;i++)activities.insertAdjacentHTML('beforeend',`<button data-view="field-${i}">현장 ${i+1}</button>`);
+function sample(kind){
+ const s=freshState();s.completed.fill(true);s.terrain=presetTerrain();s.garden={hyacinth:0,cherry:2,aloe:4};s.gardenReasons=['hyacinth','cherry','aloe'];s.gardenReviewed=true;
+ for(const p of PLANTS){recordFeature(s,p.id,'shape',p.id);recordFeature(s,p.id,'edge',p.edge?'yes':'no');}
+ s.experiment={step:4,compared:false,prediction:'bubbles'};s.experimentAnswer='air';s.seasonalRecords=['cherry:0','cherry:3','sowthistle:0','sowthistle:3'];for(const k of s.seasonalRecords)s.seasonPhotos[k]={underground:true};
+ s.design={surface:'lotus',cover:'flap',linked:true,observed:true};s.tests=[{surface:'plain',cover:'open'},{surface:'lotus',cover:'open'},s.design].map(testDesign);s.inventionExplanations={surface:{before:'plain:open',key:'lotus:open',part:'surface'},cover:{before:'lotus:open',key:'lotus:flap',part:'cover'}};s.testExplanation={...s.inventionExplanations.cover};s.sharing.status='later';s.finalChecks.habitat=true;
+ if(kind.startsWith('page-')){s.screen='activity';s.page=Number(kind.slice(5));}
+ else if(kind.startsWith('field-')){const m=Number(kind.slice(6));s.screen='activity';s.page=m*2;s.completed[m*2]=false;s.completed[m*2+1]=false;s.journeyRequired[m]=true;}
+ else s.screen=kind;
+ if(kind==='home'||kind==='map')return {...freshState(),screen:kind};
+ if(kind==='ending')s.finished=true;
+ return s;
+}
+let last;
+function resize(){const [w,h]=document.querySelector('select').value.split(',');frame.style.width=w+'px';frame.style.height=h+'px';measure();}
+function measure(){
+ const d=frame.contentDocument,w=frame.contentWindow;if(!d?.querySelector('#app'))return;
+ const visible=e=>{const r=e.getBoundingClientRect(),c=w.getComputedStyle(e);let fold=e.closest('details');while(fold){if(!fold.open&&!fold.querySelector(':scope > summary')?.contains(e))return false;fold=fold.parentElement?.closest('details');}return r.width>0&&r.height>0&&c.visibility!=='hidden'&&c.display!=='none'&&!e.closest('[hidden],[aria-hidden="true"],.sr-only');};
+ const fontPx=e=>parseFloat(w.getComputedStyle(e).fontSize)*(e.closest('.island-map')?Number(w.getComputedStyle(e.closest('.island-map')).getPropertyValue('--map-scale'))||1:1);
+ const label=e=>({tag:e.tagName,text:(e.getAttribute('aria-label')||e.textContent||'').trim().slice(0,55),class:e.className});
+ const controls=[...d.querySelectorAll('button,input,select,summary')].filter(visible),texts=[...d.querySelectorAll('p,button,small,h1,h2,h3,span')].filter(visible);
+ const nav=w.performance.getEntriesByType('navigation')[0],resources=w.performance.getEntriesByType('resource');
+ last={scene:d.body.dataset.screen,page:d.querySelector('main')?.className,viewport:[w.innerWidth,w.innerHeight],document:[d.documentElement.scrollWidth,d.documentElement.scrollHeight],loadMs:nav?.loadEventEnd,fcpMs:w.performance.getEntriesByName('first-contentful-paint')[0]?.startTime,requests:resources.length,transferBytes:(nav?.transferSize||0)+resources.reduce((a,r)=>a+r.transferSize,0),external:resources.filter(r=>new URL(r.name).origin!==w.location.origin).map(r=>r.name),smallControls:controls.filter(e=>{const r=e.getBoundingClientRect();return r.width<44||r.height<44;}).map(e=>({...label(e),size:[e.getBoundingClientRect().width,e.getBoundingClientRect().height]})),smallText:texts.filter(e=>fontPx(e)<15.99).map(e=>({...label(e),px:fontPx(e)})),outside:controls.filter(e=>{const r=e.getBoundingClientRect();return r.left<-.5||r.top<-.5||r.right>w.innerWidth+.5||r.bottom>w.innerHeight+.5;}).map(label),images:[...d.images].filter(visible).filter(e=>!e.complete||!e.naturalWidth).map(e=>e.src),panels:[...d.querySelectorAll('.learning-scene,.learning-note,dialog[open],.settings-body')].filter(visible).map(e=>({class:e.className,height:e.clientHeight,scroll:e.scrollHeight}))};
+ document.querySelector('#metrics').textContent=JSON.stringify(last,null,2);
+}
+resize();document.querySelector('select').addEventListener('change',resize);
+document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>{localStorage.setItem(STORAGE_KEY,JSON.stringify(sample(b.dataset.view)));frame.src='/?final-review='+b.dataset.view;}));
+frame.addEventListener('load',()=>{measure();frame.contentDocument?.fonts.ready.then(measure);frame.contentDocument?.querySelectorAll('img').forEach(e=>e.addEventListener('load',measure,{once:true}));});
+document.querySelector('#measure').addEventListener('click',measure);
+document.querySelector('#restore').addEventListener('click',()=>{if(original===null)localStorage.removeItem(STORAGE_KEY);else localStorage.setItem(STORAGE_KEY,original);frame.src='about:blank';document.querySelector('#metrics').textContent='원래 QA 기록으로 복구했어.';});
+</script></html>

@@ -1,5 +1,5 @@
 /* 2026-10-23: shared composition for the requested scenes, in the existing palette. */
-:root { --scene-copy: clamp(16px,1.35vw,20px); --scene-control: 48px; --scene-panel-gap: 12px; }
+:root { --scene-copy: var(--font-size-sm); --scene-control: 48px; --scene-panel-gap: 12px; }
 
 /* The invitation sits on the path; the left column holds one clear action. */
 #app .home-scene::after { background: linear-gradient(90deg,#fffbedde 0%,#fffbedb8 28%,#fffbed38 53%,transparent 72%); }
@@ -39,7 +39,7 @@
 #app .garden-modes .btn { padding: 6px 20px; font-size: 18px; }
 #app .garden-workbench .terrain-tools { min-height: 52px; }
 #app .garden-workbench .terrain-tools .btn { padding: 8px 18px; }
-#app .garden-workbench .garden-frame[data-spatial] { width: 100%; height: 100%; min-height: 0; max-height: none; margin: 0; padding: 0; background: transparent; border: 0; box-shadow: none; }
+#app .garden-workbench .garden-frame[data-spatial] { grid-column: auto; grid-row: auto; width: 100%; height: 100%; min-height: 0; max-height: none; margin: 0; padding: 0; background: transparent; border: 0; box-shadow: none; }
 #app .garden-workbench .garden-frame.spatial-flat { padding: 0 8px 54px !important; }
 #app .garden-workbench .garden-frame.spatial-flat .garden-grid { max-width: 820px; height: 100%; margin: auto; }
 #app .garden-workbench .garden-frame .spatial-controls { left: auto; right: 8px; top: 8px; bottom: auto; flex-direction: column; width: 66px; gap: 5px; }
@@ -84,8 +84,8 @@
 #app .surface-comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
 #app .surface-sample { position: relative; height: 136px; border: 1px solid #d6d9b6; border-radius: 14px; overflow: hidden; background: #f1f1dc; }
 #app .surface-sample > img { position: absolute; inset: 22px 2px 18px; width: calc(100% - 4px); height: calc(100% - 40px); object-fit: contain; }
-#app .surface-sample > span:first-child { position: absolute; top: 6px; left: 8px; font-weight: 700; z-index: 2; font-size: 15px; }
-#app .surface-sample.leaf-sample > span:nth-child(2) { position: absolute; top: 6px; left: 8px; font-size: 15px; font-weight: 700; }
+#app .surface-sample > span:first-child { position: absolute; top: 6px; left: 8px; font-weight: 700; z-index: 2; font-size: var(--font-size-xs); }
+#app .surface-sample.leaf-sample > span:nth-child(2) { position: absolute; top: 6px; left: 8px; font-size: var(--font-size-xs); font-weight: 700; }
 #app .cloth-sample { background: repeating-linear-gradient(90deg,#d9c7a3 0 2px,#e4d4b6 2px 5px); }
 #app .surface-outcome { position: absolute; left: 3px; right: 3px; bottom: 4px; padding: 3px; background: #fffceeeb; border-radius: 7px; text-align: center; font-size: 13px; }
 #app .sample-drop { position: absolute; left: 48%; top: 43%; width: 18px; height: 22px; border-radius: 60% 45% 55% 45%; background: radial-gradient(circle at 30% 25%,#fff 0 5%,#92e9f1 20%,#449eae 90%); box-shadow: 1px 3px 4px #244f5c55; opacity: 0; }
@@ -111,7 +111,7 @@
 #app .activity-9 .water-demo .compact-bag { width: 100%; height: 100%; min-height: 0; }
 #app .activity-9 .notebook-result { right: 2%; bottom: 46px; width: 20%; max-width: 105px; }
 #app .activity-9 .notebook-result img { width: 100%; height: 78px; object-fit: contain; }
-#app .activity-9 .notebook-result span { font-size: 14px; }
+#app .activity-9 .notebook-result span { font-size: var(--font-size-xs); }
 #app .test-control-row { display: flex; gap: 10px; align-items: center; justify-content: space-between; padding: 0 4px; }
 #app .test-control-row .test-conditions { font-size: 15px; background: #fffcebdc; border-radius: 12px; padding: 5px 10px; margin: 0; }
 #app .test-control-row .learning-tabs { margin: 0; gap: 6px; }
@@ -233,7 +233,7 @@ body .notebook-dialog .dialog-actions { display: flex; gap: 10px; margin-top: 14
   #app .activity-9 .test-layout > .learning-note .picture-parts .part-card strong { font-size: 14px; }
   #app .activity-9 .test-layout > .learning-note .picture-parts { gap: 6px; }
   #app .activity-9 .test-layout > .learning-note .picture-parts legend { font-size: 14px; margin-bottom: 3px; }
-  #app .activity-9 .test-layout > .learning-note .invention-feedback p { font-size: 15px; }
+  #app .activity-9 .test-layout > .learning-note .invention-feedback p { font-size: var(--font-size-sm); }
   #app .activity-9 .test-layout > .learning-note .invention-feedback h3 { font-size: 17px; }
   #app .activity-9 .invention-proof { margin-block: 8px; }
   #app .notebook-heading { padding: 6px 20px; }
@@ -305,4 +305,124 @@ body .notebook-dialog .dialog-actions { display: flex; gap: 10px; margin-top: 14
   #app .ending-celebration :is(.ending-background,.ending-celebration-title,.ending-actions,.ending-sparkles,.certificate) { display: none !important; }
   #app .ending-note { position: static; width: 85%; height: auto; margin: 0 auto; filter: none; }
   #app .ending-diary-image { height: auto; }
+}
+
+/* Final review: keep the activity frame stable while its evidence area scrolls. */
+#app .exploration-activity > .learning-layout,
+#app .exploration-activity .learning-scene,
+#app .field-mission,
+#app .mission-workspace { min-width: 0; max-width: 100%; }
+#app .field-mission-view .field-layout > .learning-scene {
+  display: block; overflow-x: hidden; overflow-y: auto; scrollbar-gutter: stable;
+}
+#app .field-mission-view.screen-enter { animation: none; transform: none; }
+#app .field-hotspots { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); }
+#app .field-hotspot { min-width: 0; padding-inline: 6px; line-height: 1.25; }
+#app .field-hotspot > svg { flex-shrink: 0; }
+#app .field-mission .mission-objective > span { min-width: 0; }
+#app .field-mission .mission-objective > small { flex-shrink: 0; }
+
+/* Text roles share the existing forest tokens, including compact evidence cards. */
+#app .exploration-activity :is(.mission-step,.mission-tool,.field-target,.field-hotspot),
+#app .exploration-activity .learning-scene .btn,
+#app :is(.activity-8,.activity-9) .learning-note :is(p,button),
+#app .garden-workbench .garden-modes .btn,
+#app .garden-feedback .reason-cards .btn,
+#app .comparison-question .btn,
+body :is(.tool-dialog,.notebook-dialog) .btn {
+  font-size: var(--font-size-sm);
+}
+#app .comparison-question .btn { font-size: var(--font-size-sm) !important; }
+#app :is(.garden-feedback .direct-hint,.field-specimen > p,.field-mission > .mission-feedback p),
+#app .notebook-heading p,
+body :is(.tool-dialog .expedition-tool > p,.tool-dialog .expedition-pack > p,.note-diary section p,.note-quiz > p) {
+  font-size: var(--font-size-sm);
+}
+#app :is(.home-kicker,.home-save-note,.home-discoveries span,.garden-plant-pick small,
+  .surface-sample > span,.surface-outcome,.notebook-result span,.test-control-row .test-conditions,
+  .test-record > span,.result-chip,.invention-proof span,.test-history,.idea-application > span,
+  .notebook-kicker,.note-number,.note-subtitle,.note-record),
+body :is(.tool-dialog .expedition-tool > span,.note-quiz .note-quiz-feedback) {
+  font-size: var(--font-size-xs);
+}
+#app :is(.lotus-micro p,.prediction-note) { font-size: var(--font-size-sm) !important; }
+#app .garden-workbench .garden-frame .spatial-controls button {
+  width: 100px; font-size: var(--font-size-sm); line-height: 1.25;
+}
+#app .garden-workbench .garden-frame .spatial-controls { width: 102px; }
+#app .picture-parts .part-card strong,
+#app .activity-9 .test-layout > .learning-note .picture-parts .part-card strong {
+  font-size: var(--font-size-sm);
+}
+#app .activity-9 .test-layout > .learning-note .picture-parts legend { font-size: var(--font-size-xs); }
+#app .ending-celebration .ending-actions .btn { font-size: var(--font-size-sm); }
+#app .ending-celebration-title > span { font-size: max(16px,1.3vw); }
+#app .stage-map .map-eyebrow { font-size: var(--font-size-xs); }
+#app .stage-map .world-label { font-size: calc(20px / var(--map-scale)); }
+#app .stage-map .world-label small,
+#app .stage-map .world-next { font-size: calc(16px / var(--map-scale)); }
+#app :is(.surface-outcome,.comparison-question > p,.note-excerpt,.notebook-next > span) {
+  font-size: var(--font-size-sm);
+}
+#app .notebook-cover > strong { font-size: max(20px,1.55vw); }
+#app .notebook-cover .note-open-label { font-size: var(--font-size-sm); }
+body .note-next-idea p { font-size: var(--font-size-sm); }
+
+/* A notebook cover is a short invitation; the full diary stays in its spread. */
+@media (min-width:761px) and (max-height:820px) {
+  #app .notebook-cover { padding: 12px 10px 10px 16px; }
+  #app .note-cover-art { min-height: 48px; margin: 6px 0; }
+  #app .notebook-cover > strong { line-height: 1.3; }
+  #app .notebook-cover .note-subtitle { display: none; }
+  #app .note-excerpt { line-height: 1.35; margin: 8px 0 4px; }
+  #app .note-record { padding: 5px 0; line-height: 1.3; }
+  #app .note-open-label { padding-top: 8px; line-height: 1.3; }
+}
+@media (min-width:761px) and (max-height:650px) {
+  #app .notebook-cover .note-excerpt { display: none; }
+}
+
+@media (min-width:761px) {
+  #app .exploration-activity { grid-template-rows: 60px minmax(0,1fr) minmax(var(--frame-footer),auto); }
+  #app .exploration-activity .learning-footer > div { min-width: 0; flex-wrap: wrap; align-items: center; }
+  #app .exploration-activity .learning-footer .btn { padding-inline: 12px; }
+  #app .field-mission-view .field-layout { height: 100%; min-height: 0; }
+  #app .field-mission-view .field-layout > .learning-scene { height: 100%; min-height: 0; }
+}
+@media (min-width:761px) and (max-height:650px) {
+  #app .field-mission-view { height: 100dvh; min-height: 0; }
+  #app .field-mission-view .field-layout { height: 100%; }
+  #app .field-mission-view .field-layout > .learning-scene { min-height: 0; }
+  #app .field-mission .mission-journey { gap: 4px; }
+  #app .field-mission .mission-step { padding: 6px; }
+  #app .field-mission .field-tools { gap: 6px; }
+  #app .mission-0 .field-specimen > .field-leaf-picture { height: 88px; }
+  #app :is(.activity-6,.activity-7) .learning-scene { overflow-x: hidden; overflow-y: auto; }
+  #app .garden-workbench { grid-template-rows: 48px 48px minmax(150px,1fr) auto; gap: 4px; }
+  #app .activity-7 .garden-workbench { grid-template-rows: 56px minmax(150px,1fr) auto 48px; }
+  #app .garden-workbench :is(.garden-modes,.terrain-tools) { min-height: 48px; gap: 6px; flex-wrap: nowrap; }
+  #app .garden-workbench :is(.garden-modes,.terrain-tools) .btn { min-height: 48px; padding: 6px 12px; white-space: nowrap; }
+  #app .garden-workbench .garden-plant-tray { min-height: 56px; gap: 6px; }
+  #app .garden-workbench .garden-plant-pick { min-height: 56px; padding-block: 3px; }
+  #app .garden-workbench .garden-plant-pick img { height: 48px; }
+  #app .garden-workbench .garden-frame[data-spatial] { min-height: 150px; }
+  #app .garden-workbench .garden-frame .spatial-layer { bottom: 54px; }
+  #app .garden-workbench .garden-frame .spatial-controls {
+    left: 6px; right: 6px; top: auto; bottom: 3px;
+    width: auto; flex-direction: row; gap: 6px;
+  }
+  #app .garden-workbench .garden-frame .spatial-controls button { width: 48px; height: 48px; padding: 6px; }
+  #app .garden-workbench .garden-frame .spatial-controls button[data-view="flat"] { width: 148px; white-space: nowrap; }
+  #app .garden-workbench .garden-feedback { gap: 4px; padding: 4px 6px; }
+  #app .garden-feedback .direct-hint { line-height: 1.3; }
+  #app .garden-feedback .garden-terrain-status { gap: 6px; flex-wrap: nowrap; justify-content: space-between; }
+  #app .garden-feedback .garden-terrain-status > span { padding: 3px 6px; white-space: nowrap; }
+  #app .garden-feedback .garden-terrain-status > .btn { min-height: 48px; padding: 6px 10px; white-space: nowrap; }
+  #app .garden-feedback .garden-placement-progress { gap: 6px 12px; }
+  #app .garden-workbench:has(.garden-frame.spatial-flat) { grid-template-rows: 48px 48px minmax(250px,1fr) auto; }
+  #app .activity-7 .garden-workbench:has(.garden-frame.spatial-flat) { grid-template-rows: 56px minmax(250px,1fr) auto 48px; }
+}
+@media (orientation:portrait), (max-width:760px) {
+  #app .field-hotspots { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  #app .exploration-activity .learning-footer > div { flex-wrap: wrap; }
 }

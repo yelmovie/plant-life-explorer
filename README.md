@@ -103,7 +103,7 @@ Git에는 코드·테스트·문서·실행용 WebP를 보관한다. `dist/`는 
 - [인트로 영상 프롬프트와 참조 이미지](https://chatgpt.com/space/page_f1ad1e0ce5088191afbc32894d6ac15d)
 - [아웃트로 영상 프롬프트와 참조 이미지](https://chatgpt.com/space/page_0d0c543af28c819181ccc39320034665)
 
-영상은 아직 생성·적용하지 않았다. 위 두 캔버스는 무나레이션·무대사·무배경음, 후편집 자막과 드문 효과음 기준이다. 수노 음악은 후편집에서 별도 한 트랙으로 넣는다.
+인트로·아웃트로는 `assets/videos/`의 웹용 H.264 영상과 `src/story-data.js`의 한국어 자막으로 연결했다. `assets/audio/`의 Suno 메인·엔딩 테마는 전역 플레이어 하나를 공유하며 영상 중에는 멈춘다. 제공 원본과 편집 자료는 `_source/`에 보존한다.
 
 
 ## 운영 배포
@@ -118,3 +118,10 @@ Git에는 코드·테스트·문서·실행용 WebP를 보관한다. `dist/`는 
 - `_source/branding/`: 제목·캐릭터 PNG 원본.
 - `_unused/assets/generated/`: 현재 화면·카탈로그에서 참조하지 않는 예전 합본 그림 4장.
 - `docs/reviews/ASSET-ORGANIZATION-20261023.json`: 파일 이동 전후 경로·크기·SHA-256. 원본은 삭제하지 않는다.
+
+## 최신 최종점검 (2026-10-24)
+
+- [23항목 성적표](docs/reviews/FINAL-CHECK-20261024.md) · [11점 개선 계획](docs/FINAL-UPGRADE-PLAN-20261024.md).
+- 3D 로딩 실패의 그림 대체·재시도는 `src/runtime-support.js`와 `src/app.js`에서 처리한다. 지연 응답은 현재 화면에만 적용한다.
+- 화면 크기 검증은 별도 포트의 `tests/final-review.html`에서 진행한다. 이 페이지는 검증용 기록을 준비하므로 학생이 사용하는 origin에서 열지 않는다. 준비 기록의 렌더 검증은 실제 학생 완주나 수업 효과 검증과 다르다.
+- 새 화면 문구를 바꾼 뒤에는 `python scripts/subset-fonts.py`로 글꼴을 갱신하고 `npm run check`, `npm test`, `npm run build`를 실행한다.
