@@ -1,0 +1,7 @@
+One isolated volumetric educational 3D model of a swollen water-hyacinth PETIOLE, with a longitudinal wedge cutaway.
+
+Follow the reference image's upright elongated pear-shaped stalk, natural green rind, short narrow stem ends, and recessed pale-green interior. Preserve a closed convex back and a fully rounded outer right flank. The swollen body's front-to-back depth must be about 65-80% of its maximum width. It must remain obviously thick when rotated 90 degrees. Do not reconstruct the image as a flat plane, thin relief, leaf blade, plaque, or billboard.
+
+Model the exposed spongy tissue and irregular air spaces as real three-dimensional cavity walls with visible depth. Use varied, interconnected air spaces separated by pale-green tissue; these are enlarged teaching features. No aligned rows of identical drilled holes, painted dots, black circles, or giant single hollow balloon. Keep the outer stalk smooth and rounded, with enough retained side and back material to show its swollen volume.
+
+Exactly one object. No separate leaf blade, roots, flower, water, background, pedestal, labels, letters, or extra objects. Neutral natural green materials. Deliver a textured GLB suitable for rotating and examining in a web-based science activity.

@@ -1,3 +1,4 @@
+import {completeInvention} from './invention-fixture.mjs';
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {freshState,restoreState,rewardCount,canChooseGardenTheme,testDesign,testValid} from '../src/model.js';
@@ -23,7 +24,7 @@ test('가방 네 조합의 결과와 한 부품 비교 안내',()=>{
   s.design={surface,cover,linked:true};const result=testDesign(s.design);s.tests=[result];
   assert.equal(result.clean,surface==='lotus');assert.equal(result.dry,cover==='flap');assert.equal(testValid(s),false);assert.match(inventionHint(s).text,/하나만/);
  }
- s.tests.unshift(testDesign({surface:'plain',cover:'flap'}));s.testExplanation={key:'lotus:flap',before:'plain:flap',part:'surface'};assert.equal(testValid(s),true);
+ s.tests.unshift(testDesign({surface:'plain',cover:'flap'}));s.testExplanation={key:'lotus:flap',before:'plain:flap',part:'surface'};assert.equal(testValid(s),false);completeInvention(s);assert.equal(testValid(s),true);
  s.design.cover='open';assert.equal(testValid(s),false);assert.match(inventionHint(s).title,/시험/);
 });
 

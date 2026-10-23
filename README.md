@@ -6,6 +6,10 @@
 
 Node.js 환경에서 `npm start` 후 http://127.0.0.1:4318 접속. 별도 패키지 설치는 필요 없다.
 
+시작 버튼은 전체 화면 인트로 영상 → 탐험 지도, 탐구 완료는 아웃트로 영상 → 탐구 기록으로 이어진다. 설정에서 두 영상을 다시 볼 수 있고, 엔딩은 완료 후에 열린다. `src/story-data.js`에서 장면별 한국어 자막과 시간을 관리한다. 영상에는 일시 정지·소리·자막·재생 위치·건너뛰기를 제공한다.
+
+`_source/videos/intro.mp4`·`outro.mp4`는 제공받은 원본이다. 실제 앱과 빌드는 `assets/videos/`의 720p H.264/AAC 웹용 영상과 첫 장면 포스터를 사용한다. 로컬 서버도 영상 구간 요청(HTTP Range)을 지원한다. 영상은 서비스워커 초기 캐시에서 제외하며, 불러오지 못해도 다음 화면으로 이동할 수 있다.
+
 ```text
 npm run check
 npm test
@@ -15,13 +19,13 @@ npm run preview
 
 `preview`는 같은 주소에서 dist만 제공한다. start와 동시에 쓸 때 PowerShell에서 `$env:PORT='4323'; npm run preview`로 포트를 바꾼다. 서버는 로컬에서만 열린다.
 
-배포 파일은 `dist/`이며 **폴더 안의 내용을 사이트 루트(/)**에 올린다. `/src`, `/assets` 절대경로를 사용하므로 하위 경로 배포는 경로 조정이 필요하다. 공개 배포와 실제 호스팅 검증은 아직 수행하지 않았다.
+배포 파일은 `dist/`이며 **폴더 안의 내용을 사이트 루트(/)**에 올린다. `/src`, `/assets` 절대경로를 사용하므로 하위 경로 배포는 경로 조정이 필요하다. 운영 주소는 https://leafy-garden.pages.dev 이며 배포 절차와 확인 내역은 `docs/DEPLOYMENT.md`에 기록한다.
 
 ## 파일 안내
 
 - `src/app.js`: 화면과 사용자 동작, 저장 연결, 서비스워커 등록.
 - `src/settings-content.js`: 설정 화면 문구 전부(앱 버전 `APP_VERSION`, 성취기준 `STANDARDS`).
-- `src/audio.js`: 효과음·빠른 음소거·소리 설정 보존. 배경 음악 파일은 없고 해당 설정은 비활성화된다.
+- `src/audio.js`: 효과음·빠른 음소거·소리 설정 보존. `assets/audio/`의 메인·엔딩 테마를 단일 플레이어로 재생하며, 영상 재생·탭 숨김 중에는 배경 음악이 멈춘다.
 - `sw.js`, `manifest.webmanifest`, `assets/icons/`: 오프라인 캐시와 설치형 앱(PWA).
 - `src/model.js`: 미션 조건·저장 복원·정원·시험 판정.
 - `src/asset-catalog.js`: 생성 이미지의 고정 키·설명·표시 함수, 보상 썸네일 목록(`THUMBS`).
@@ -105,3 +109,12 @@ Git에는 코드·테스트·문서·실행용 WebP를 보관한다. `dist/`는 
 ## 운영 배포
 
 [초록정원 연구기지](https://leafy-garden.pages.dev) · [배포 방법](docs/DEPLOYMENT.md). Cloudflare Pages의 leafy-garden 프로젝트에 검증한 dist를 직접 업로드한다.
+
+## 원본·실행 파일 정리 (2026-10-23)
+
+- `assets/audio/`: 앱에서 쓰는 메인·엔딩 MP3.
+- `assets/videos/`: 웹용 영상·포스터. 제공 원본은 `_source/videos/`.
+- `assets/generated/`: 실행용 WebP. 편집용 PNG는 `_source/generated-images/`.
+- `_source/branding/`: 제목·캐릭터 PNG 원본.
+- `_unused/assets/generated/`: 현재 화면·카탈로그에서 참조하지 않는 예전 합본 그림 4장.
+- `docs/reviews/ASSET-ORGANIZATION-20261023.json`: 파일 이동 전후 경로·크기·SHA-256. 원본은 삭제하지 않는다.

@@ -1,8 +1,10 @@
 // Stable asset keys keep the learning UI independent from its current 2D renderer.
 // A future 3D viewer can consume these same keys without changing saved research data.
 export const ASSETS = Object.freeze({
+ ending_diary_20261023:['나의 탐험 일기','오늘의 탐험 일기. 잎을 살피고 식물을 나눴다. 겨울을 지나 다시 자란 식물도 만났다. 식물에게 맞는 정원도 꾸몄다. 연잎의 비밀로 가방까지 만들었다! 작은 발견이 멋진 발명이 되었다. 나는 초록정원의 식물 연구원!'],
  expedition_hero_20261020:['리피의 탐험길','숲길을 따라 온실로 이어지는 초록정원'],
  expedition_hyacinth_tank_20261020:['수조 속 부레옥잠','수면 위 둥근 잎과 부푼 잎자루, 물속 뿌리'],
+ expedition_petiole_clear_20261023:['수조 속 잎자루 관찰 모형','투명한 배경의 잎 전체와 공기 공간이 드러난 잎자루 단면'],
  expedition_petiole_model_20261020:['입체 잎자루 관찰 모형','부푼 잎자루와 여러 공기 공간이 보이는 절단 모형'],
  expedition_restored_garden_20261020:['되살아난 초록정원','리피와 함께 다섯 연구 장소를 다시 연 초록정원'],
  expedition_tool_lens:['관찰 렌즈','손잡이가 달린 탐험용 돋보기'],

@@ -1,0 +1,559 @@
+{
+  "runtimeAssetsBeforeBytes": 168254365,
+  "assetsAfterBytes": 31548784,
+  "moved": 70,
+  "movedBytes": 208230627,
+  "byExtension": {
+    ".mp3": {
+      "files": 2,
+      "bytes": 4084362
+    },
+    ".md": {
+      "files": 2,
+      "bytes": 12688
+    },
+    ".woff2": {
+      "files": 8,
+      "bytes": 1151272
+    },
+    ".txt": {
+      "files": 3,
+      "bytes": 9974
+    },
+    ".webp": {
+      "files": 79,
+      "bytes": 13588764
+    },
+    ".png": {
+      "files": 2,
+      "bytes": 235323
+    },
+    ".glb": {
+      "files": 3,
+      "bytes": 2174596
+    },
+    ".mp4": {
+      "files": 2,
+      "bytes": 10291805
+    }
+  },
+  "inventory": [
+    {
+      "file": "assets/audio/ending-theme.mp3",
+      "bytes": 1573334,
+      "modified": 1792764696.0
+    },
+    {
+      "file": "assets/audio/main-theme.mp3",
+      "bytes": 2511028,
+      "modified": 1792764684.0
+    },
+    {
+      "file": "assets/CREDITS.md",
+      "bytes": 10745,
+      "modified": 1792765206.0
+    },
+    {
+      "file": "assets/fonts/gg-display-ko.woff2",
+      "bytes": 98340,
+      "modified": 1792407830.0
+    },
+    {
+      "file": "assets/fonts/gg-display-latin.woff2",
+      "bytes": 16488,
+      "modified": 1792407830.0
+    },
+    {
+      "file": "assets/fonts/gg-text-bold.woff2",
+      "bytes": 56996,
+      "modified": 1792407836.0
+    },
+    {
+      "file": "assets/fonts/gg-text-regular.woff2",
+      "bytes": 56776,
+      "modified": 1792407832.0
+    },
+    {
+      "file": "assets/fonts/Jua-OFL.txt",
+      "bytes": 4474,
+      "modified": 1792406190.0
+    },
+    {
+      "file": "assets/fonts/Pretendard-OFL.txt",
+      "bytes": 4419,
+      "modified": 1792406190.0
+    },
+    {
+      "file": "assets/fonts/source/jua-korean-400.woff2",
+      "bytes": 368172,
+      "modified": 1792406190.0
+    },
+    {
+      "file": "assets/fonts/source/jua-latin-400.woff2",
+      "bytes": 16620,
+      "modified": 1792406190.0
+    },
+    {
+      "file": "assets/fonts/source/Pretendard-Bold.subset.woff2",
+      "bytes": 270784,
+      "modified": 1792406190.0
+    },
+    {
+      "file": "assets/fonts/source/Pretendard-Regular.subset.woff2",
+      "bytes": 267096,
+      "modified": 1792406190.0
+    },
+    {
+      "file": "assets/generated/aloe_leaf_cutaway.webp",
+      "bytes": 129932,
+      "modified": 1791985550.0
+    },
+    {
+      "file": "assets/generated/aloe_plant.webp",
+      "bytes": 195838,
+      "modified": 1791985560.0
+    },
+    {
+      "file": "assets/generated/bag_lotus_closed.webp",
+      "bytes": 362180,
+      "modified": 1792068512.0
+    },
+    {
+      "file": "assets/generated/bag_lotus_open.webp",
+      "bytes": 311654,
+      "modified": 1792068528.0
+    },
+    {
+      "file": "assets/generated/bg_m1_1_scan.webp",
+      "bytes": 96092,
+      "modified": 1792406582.0
+    },
+    {
+      "file": "assets/generated/bg_m1_2_sort.webp",
+      "bytes": 105466,
+      "modified": 1792406584.0
+    },
+    {
+      "file": "assets/generated/bg_m2_1_seasons.webp",
+      "bytes": 218668,
+      "modified": 1792406584.0
+    },
+    {
+      "file": "assets/generated/bg_m2_2_evidence.webp",
+      "bytes": 115520,
+      "modified": 1792406584.0
+    },
+    {
+      "file": "assets/generated/bg_m3_1_chamber.webp",
+      "bytes": 184036,
+      "modified": 1792406586.0
+    },
+    {
+      "file": "assets/generated/bg_m3_2_habitat.webp",
+      "bytes": 153860,
+      "modified": 1792406586.0
+    },
+    {
+      "file": "assets/generated/bg_m4_1_terrain.webp",
+      "bytes": 122742,
+      "modified": 1792406586.0
+    },
+    {
+      "file": "assets/generated/bg_m4_2_garden.webp",
+      "bytes": 178938,
+      "modified": 1792406588.0
+    },
+    {
+      "file": "assets/generated/bg_m5_1_idea.webp",
+      "bytes": 174850,
+      "modified": 1792406588.0
+    },
+    {
+      "file": "assets/generated/bg_m5_2_test.webp",
+      "bytes": 140012,
+      "modified": 1792406588.0
+    },
+    {
+      "file": "assets/generated/cherry_leaf.webp",
+      "bytes": 172302,
+      "modified": 1791985566.0
+    },
+    {
+      "file": "assets/generated/cherry_seasons_v2.webp",
+      "bytes": 718726,
+      "modified": 1792329396.0
+    },
+    {
+      "file": "assets/generated/cherry_tree.webp",
+      "bytes": 438072,
+      "modified": 1791985584.0
+    },
+    {
+      "file": "assets/generated/ending_diary_20261023.webp",
+      "bytes": 369556,
+      "modified": 1792763320.0
+    },
+    {
+      "file": "assets/generated/expedition_hero_20261020.webp",
+      "bytes": 479768,
+      "modified": 1792505842.0
+    },
+    {
+      "file": "assets/generated/expedition_hyacinth_tank_20261020.webp",
+      "bytes": 218450,
+      "modified": 1792505880.0
+    },
+    {
+      "file": "assets/generated/expedition_petiole_clear_20261023.webp",
+      "bytes": 192636,
+      "modified": 1792762786.0
+    },
+    {
+      "file": "assets/generated/expedition_petiole_model_20261020.webp",
+      "bytes": 127452,
+      "modified": 1792505842.0
+    },
+    {
+      "file": "assets/generated/expedition_restored_garden_20261020.webp",
+      "bytes": 461946,
+      "modified": 1792505882.0
+    },
+    {
+      "file": "assets/generated/expedition_tool_bag.webp",
+      "bytes": 89090,
+      "modified": 1792505946.0
+    },
+    {
+      "file": "assets/generated/expedition_tool_camera.webp",
+      "bytes": 63492,
+      "modified": 1792505944.0
+    },
+    {
+      "file": "assets/generated/expedition_tool_fabric.webp",
+      "bytes": 90970,
+      "modified": 1792505944.0
+    },
+    {
+      "file": "assets/generated/expedition_tool_lens.webp",
+      "bytes": 65378,
+      "modified": 1792505944.0
+    },
+    {
+      "file": "assets/generated/expedition_tool_water.webp",
+      "bytes": 86560,
+      "modified": 1792505944.0
+    },
+    {
+      "file": "assets/generated/field_leaf_camellia.webp",
+      "bytes": 74296,
+      "modified": 1792506070.0
+    },
+    {
+      "file": "assets/generated/field_leaf_maple.webp",
+      "bytes": 101996,
+      "modified": 1792506070.0
+    },
+    {
+      "file": "assets/generated/field_leaf_pine.webp",
+      "bytes": 37962,
+      "modified": 1792506070.0
+    },
+    {
+      "file": "assets/generated/garden_hero.webp",
+      "bytes": 298168,
+      "modified": 1791985584.0
+    },
+    {
+      "file": "assets/generated/ginkgo_leaf.webp",
+      "bytes": 163890,
+      "modified": 1791985594.0
+    },
+    {
+      "file": "assets/generated/grass_leaf.webp",
+      "bytes": 54746,
+      "modified": 1791985596.0
+    },
+    {
+      "file": "assets/generated/greenhouse_studio_v1.webp",
+      "bytes": 259178,
+      "modified": 1792322342.0
+    },
+    {
+      "file": "assets/generated/hyacinth_petiole_cutaway.webp",
+      "bytes": 112136,
+      "modified": 1791985602.0
+    },
+    {
+      "file": "assets/generated/hyacinth_petiole_whole.webp",
+      "bytes": 100262,
+      "modified": 1791985610.0
+    },
+    {
+      "file": "assets/generated/lotus_leaf_whole.webp",
+      "bytes": 141798,
+      "modified": 1791985618.0
+    },
+    {
+      "file": "assets/generated/lotus_surface_diagram.webp",
+      "bytes": 157708,
+      "modified": 1791985624.0
+    },
+    {
+      "file": "assets/generated/map_trail_v2.webp",
+      "bytes": 780704,
+      "modified": 1792329398.0
+    },
+    {
+      "file": "assets/generated/mascot_flower.webp",
+      "bytes": 109374,
+      "modified": 1792068534.0
+    },
+    {
+      "file": "assets/generated/mascot_leaf.webp",
+      "bytes": 109810,
+      "modified": 1792068542.0
+    },
+    {
+      "file": "assets/generated/mascot_water.webp",
+      "bytes": 93770,
+      "modified": 1792068554.0
+    },
+    {
+      "file": "assets/generated/mood_flower_happy.webp",
+      "bytes": 18970,
+      "modified": 1792406626.0
+    },
+    {
+      "file": "assets/generated/mood_flower_idle.webp",
+      "bytes": 19726,
+      "modified": 1792406624.0
+    },
+    {
+      "file": "assets/generated/mood_flower_surprise.webp",
+      "bytes": 17788,
+      "modified": 1792406630.0
+    },
+    {
+      "file": "assets/generated/mood_flower_think.webp",
+      "bytes": 18308,
+      "modified": 1792406628.0
+    },
+    {
+      "file": "assets/generated/mood_leaf_happy.webp",
+      "bytes": 20576,
+      "modified": 1792406606.0
+    },
+    {
+      "file": "assets/generated/mood_leaf_idle.webp",
+      "bytes": 22226,
+      "modified": 1792406604.0
+    },
+    {
+      "file": "assets/generated/mood_leaf_surprise.webp",
+      "bytes": 19886,
+      "modified": 1792406610.0
+    },
+    {
+      "file": "assets/generated/mood_leaf_think.webp",
+      "bytes": 20796,
+      "modified": 1792406608.0
+    },
+    {
+      "file": "assets/generated/mood_water_happy.webp",
+      "bytes": 18668,
+      "modified": 1792406614.0
+    },
+    {
+      "file": "assets/generated/mood_water_idle.webp",
+      "bytes": 17668,
+      "modified": 1792406612.0
+    },
+    {
+      "file": "assets/generated/mood_water_surprise.webp",
+      "bytes": 23850,
+      "modified": 1792406620.0
+    },
+    {
+      "file": "assets/generated/mood_water_think.webp",
+      "bytes": 17906,
+      "modified": 1792406616.0
+    },
+    {
+      "file": "assets/generated/notebook_dry.webp",
+      "bytes": 200406,
+      "modified": 1792068570.0
+    },
+    {
+      "file": "assets/generated/notebook_wet.webp",
+      "bytes": 248834,
+      "modified": 1792068586.0
+    },
+    {
+      "file": "assets/generated/plant_lab_background.webp",
+      "bytes": 113304,
+      "modified": 1791985624.0
+    },
+    {
+      "file": "assets/generated/research_bag_body.webp",
+      "bytes": 159782,
+      "modified": 1791985634.0
+    },
+    {
+      "file": "assets/generated/research_bag_closed.webp",
+      "bytes": 319368,
+      "modified": 1791985646.0
+    },
+    {
+      "file": "assets/generated/reward_garden.webp",
+      "bytes": 460564,
+      "modified": 1792068608.0
+    },
+    {
+      "file": "assets/generated/reward_garden_thumb.webp",
+      "bytes": 17978,
+      "modified": 1792406092.0
+    },
+    {
+      "file": "assets/generated/reward_observatory.webp",
+      "bytes": 451754,
+      "modified": 1792068620.0
+    },
+    {
+      "file": "assets/generated/reward_observatory_thumb.webp",
+      "bytes": 16426,
+      "modified": 1792406092.0
+    },
+    {
+      "file": "assets/generated/reward_seasons.webp",
+      "bytes": 356730,
+      "modified": 1792068628.0
+    },
+    {
+      "file": "assets/generated/reward_seasons_thumb.webp",
+      "bytes": 12822,
+      "modified": 1792406092.0
+    },
+    {
+      "file": "assets/generated/reward_water.webp",
+      "bytes": 457328,
+      "modified": 1792068638.0
+    },
+    {
+      "file": "assets/generated/reward_water_thumb.webp",
+      "bytes": 18794,
+      "modified": 1792406092.0
+    },
+    {
+      "file": "assets/generated/reward_workshop.webp",
+      "bytes": 345250,
+      "modified": 1792068650.0
+    },
+    {
+      "file": "assets/generated/reward_workshop_thumb.webp",
+      "bytes": 13422,
+      "modified": 1792406092.0
+    },
+    {
+      "file": "assets/generated/sowthistle_seasons_v2.webp",
+      "bytes": 538918,
+      "modified": 1792329400.0
+    },
+    {
+      "file": "assets/generated/stamp_complete.webp",
+      "bytes": 86786,
+      "modified": 1792406800.0
+    },
+    {
+      "file": "assets/generated/stamp_direct.webp",
+      "bytes": 25834,
+      "modified": 1792406788.0
+    },
+    {
+      "file": "assets/generated/stamp_fixed.webp",
+      "bytes": 24564,
+      "modified": 1792406794.0
+    },
+    {
+      "file": "assets/generated/water_hyacinth_whole.webp",
+      "bytes": 261094,
+      "modified": 1791985668.0
+    },
+    {
+      "file": "assets/generated/workshop_studio_v2.webp",
+      "bytes": 323024,
+      "modified": 1792329400.0
+    },
+    {
+      "file": "assets/icons/icon-192.png",
+      "bytes": 34929,
+      "modified": 1792406092.0
+    },
+    {
+      "file": "assets/icons/icon-512.png",
+      "bytes": 200394,
+      "modified": 1792406092.0
+    },
+    {
+      "file": "assets/models/petiole_cut.glb",
+      "bytes": 959988,
+      "modified": 1792410342.0
+    },
+    {
+      "file": "assets/models/petiole_whole.glb",
+      "bytes": 598820,
+      "modified": 1792410280.0
+    },
+    {
+      "file": "assets/models/plant_aloe.glb",
+      "bytes": 615788,
+      "modified": 1792410438.0
+    },
+    {
+      "file": "assets/models/README.md",
+      "bytes": 1943,
+      "modified": 1792765370.0
+    },
+    {
+      "file": "assets/three-license.txt",
+      "bytes": 1081,
+      "modified": 1792245480.0
+    },
+    {
+      "file": "assets/title.webp",
+      "bytes": 188866,
+      "modified": 1791985676.0
+    },
+    {
+      "file": "assets/videos/intro-poster.webp",
+      "bytes": 30738,
+      "modified": 1792761796.0
+    },
+    {
+      "file": "assets/videos/intro.mp4",
+      "bytes": 3971151,
+      "modified": 1792761782.0
+    },
+    {
+      "file": "assets/videos/outro-poster.webp",
+      "bytes": 19826,
+      "modified": 1792761796.0
+    },
+    {
+      "file": "assets/videos/outro.mp4",
+      "bytes": 6320654,
+      "modified": 1792761796.0
+    }
+  ],
+  "validation": {
+    "syntaxFiles": 30,
+    "testsPassed": 76,
+    "buildFiles": 132,
+    "buildBytes": 32020958,
+    "brokenBuildReferences": 0,
+    "musicPlayerInstances": 1,
+    "mainSeconds": 104.36,
+    "endingSeconds": 68,
+    "introMusicPaused": true,
+    "outroMusicPaused": true
+  }
+}

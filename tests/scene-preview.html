@@ -1,0 +1,26 @@
+<!doctype html><html lang="ko"><meta charset="utf-8"><title>화면 검증 전용</title>
+<style>body{margin:0;background:#263e30;color:#fff;font:15px system-ui}header{display:flex;align-items:center;gap:8px;padding:10px;flex-wrap:wrap}button,select{font:inherit;padding:7px 12px}iframe{display:block;border:0;background:#fff;margin:0 auto}</style>
+<header><strong>독립 QA 화면 · 학생 기록용 아님</strong><select id="size"><option value="1280,720">1280 × 720</option><option value="1024,768">1024 × 768</option><option value="1280,800">1280 × 800</option></select><button data-scene="home">메인</button><button data-scene="lab">수조</button><button data-scene="garden">새 정원</button><button data-scene="design">새 가방 관찰</button><button data-scene="test">가방 비교</button><button data-scene="report">연구노트</button><button data-scene="ending">엔딩</button><button id="restore">검증 전 기록 복구</button><output id="status">검증할 화면을 골라 줘.</output><output id="measure" style="font:12px monospace"></output></header><iframe title="실제 앱 화면"></iframe>
+<script type="module">
+import {freshState,presetTerrain,recordFeature,PLANTS,STORAGE_KEY,testDesign} from '/src/model.js';
+const completeInvention=s=>{s.design={surface:'lotus',cover:'flap',linked:true,observed:true};s.tests=[{surface:'plain',cover:'open'},{surface:'lotus',cover:'open'},s.design].map(testDesign);s.inventionExplanations={surface:{before:'plain:open',key:'lotus:open',part:'surface'},cover:{before:'lotus:open',key:'lotus:flap',part:'cover'}};s.testExplanation={...s.inventionExplanations.cover};};
+const previous=localStorage.getItem(STORAGE_KEY),frame=document.querySelector('iframe');
+function resize(){const [w,h]=document.querySelector('select').value.split(',');frame.style.width=w+'px';frame.style.height=h+'px';}
+resize();document.querySelector('select').addEventListener('change',resize);
+frame.addEventListener('load',()=>{if(!frame.contentDocument?.querySelector('#app'))return;const measure=()=>{const d=frame.contentDocument,w=frame.contentWindow;document.querySelector('#measure').textContent=JSON.stringify({viewport:[w.innerWidth,w.innerHeight],document:[d.documentElement.scrollWidth,d.documentElement.scrollHeight],panels:[...d.querySelectorAll('main .learning-scene,main .learning-note')].map(e=>({height:e.clientHeight,scroll:e.scrollHeight})),images:[...d.images].filter(e=>e.getBoundingClientRect().width>0).every(e=>e.complete&&e.naturalWidth>0)});};measure();frame.contentDocument.fonts.ready.then(measure);new ResizeObserver(measure).observe(frame.contentDocument.querySelector('#app'));});
+function sample(kind){
+ const s=freshState();s.screen='activity';s.completed.fill(true);s.terrain=presetTerrain();s.garden={hyacinth:0,cherry:2,aloe:4};s.gardenReasons=['hyacinth','cherry','aloe'];s.gardenReviewed=true;
+ for(const p of PLANTS){recordFeature(s,p.id,'shape',p.id);recordFeature(s,p.id,'edge',p.edge?'yes':'no');}
+ s.experiment={step:4,compared:false,prediction:'bubbles'};s.experimentAnswer='air';s.seasonalRecords=['cherry:0','cherry:3','sowthistle:0','sowthistle:3'];for(const k of s.seasonalRecords)s.seasonPhotos[k]={underground:true};completeInvention(s);s.sharing.status='later';s.finalChecks.habitat=true;
+ if(kind==='home')s.screen='home';
+ if(kind==='lab')s.page=4;
+ if(kind==='garden'){s.page=6;s.garden={};s.gardenReasons=[];s.gardenReviewed=false;}
+ if(kind==='design'){s.page=8;s.design={surface:'plain',cover:'open',linked:false};s.tests=[];s.inventionExplanations={};s.testExplanation=null;s.testPrediction='';}
+ if(kind==='test')s.page=9;
+ if(kind==='report')s.screen='report';
+ if(kind==='ending'){s.screen='ending';s.finished=true;}
+ return s;
+}
+document.querySelectorAll('[data-scene]').forEach(b=>b.addEventListener('click',()=>{localStorage.setItem(STORAGE_KEY,JSON.stringify(sample(b.dataset.scene)));document.querySelector('output').textContent=b.textContent+' 검증용 기록';frame.src='/?preview='+b.dataset.scene;}));
+document.querySelector('#restore').addEventListener('click',()=>{if(previous===null)localStorage.removeItem(STORAGE_KEY);else localStorage.setItem(STORAGE_KEY,previous);frame.src='about:blank';document.querySelector('output').textContent='검증 전 기록으로 복구했어.';});
+</script></html>

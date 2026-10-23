@@ -1,0 +1,308 @@
+/* 2026-10-23: shared composition for the requested scenes, in the existing palette. */
+:root { --scene-copy: clamp(16px,1.35vw,20px); --scene-control: 48px; --scene-panel-gap: 12px; }
+
+/* The invitation sits on the path; the left column holds one clear action. */
+#app .home-scene::after { background: linear-gradient(90deg,#fffbedde 0%,#fffbedb8 28%,#fffbed38 53%,transparent 72%); }
+#app .home-copy { width: 48%; max-width: 700px; padding: max(86px,12vh) 0 0 4.5%; }
+#app .home-kicker { display: block; width: fit-content; padding: 6px 14px; margin-bottom: 12px; border-radius: 20px; background: #fffceeeb; font-size: clamp(15px,1.2vw,19px); font-weight: 700; color: #345d3c; }
+#app .home .hero-logo { width: 100%; max-width: 650px; margin: 0 0 16px; }
+#app .home-copy .home-story { font-size: clamp(21px,2vw,30px); line-height: 1.65; }
+#app .home-copy .home-story strong { font-size: 1.08em; }
+#app .home .home-actions { margin-top: 24px; gap: 14px; }
+#app .home .home-actions .jumbo { min-height: 72px; min-width: 270px; padding: 16px 28px; font-size: clamp(22px,2vw,29px); border: 2px solid #244c31; box-shadow: 0 6px 0 #183f2b,0 12px 24px #23472a33; }
+#app .home .home-actions > span { max-width: 22em; font-size: clamp(16px,1.3vw,20px); }
+#app .home-discoveries { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px; }
+#app .home-discoveries span { padding: 6px 14px; border: 1px solid #99ad70; border-radius: 20px; background: #f5f8dfdd; color: #385638; font-size: 16px; font-weight: 700; }
+#app .home .hero-friends { position: absolute; left: 39%; right: auto; bottom: 7%; width: clamp(300px,30vw,550px); height: clamp(330px,51vh,650px); transform: none; z-index: 3; }
+#app .home .hero-friends .mascot-wrap.large { width: 100%; max-width: none; height: 100%; }
+#app .home .hero-friends .mascot-image { width: 100%; height: 100%; object-fit: contain; }
+#app .home-invite { position: absolute; left: 48%; top: -28px; transform: translateX(-50%) rotate(-3deg); padding: 10px 18px; border: 2px solid #b5c792; border-radius: 20px 20px 20px 3px; color: #31563a; background: #fffdeb; box-shadow: 0 4px 0 #52744733; font: 20px/1.4 var(--font-display); white-space: nowrap; }
+#app .home-save-note { position: absolute; bottom: 16px; left: 4.5%; z-index: 3; font-size: 14px; color: #3f5d3b; background: #fffcedc9; border-radius: 14px; padding: 5px 12px; }
+
+/* Transparent specimens sit behind the front water, without a second tank photo. */
+#app .activity-4 .lab-scene { background: transparent; border: 0; border-radius: 0; box-shadow: none; overflow: hidden; }
+#app .activity-4 .lab-scene.spatial-flat { padding: 0 0 48px !important; }
+#app .activity-4 .lab-scene .specimen-focus { width: min(62%,640px); height: calc(100% - 58px); max-height: 420px; left: 43%; right: auto; top: 12px; transform: translateX(-50%); padding: 0 0 30px; background: transparent; border: 0; box-shadow: none; border-radius: 0; }
+#app .activity-4 .lab-scene .specimen-focus:hover { background: transparent; }
+#app .activity-4 .lab-scene .specimen-focus > img { object-fit: contain; width: 100%; height: 100%; filter: drop-shadow(0 5px 3px #244a3426); }
+#app .activity-4 .lab-scene.submerged .specimen-focus { top: 18px; height: calc(100% - 62px); }
+#app .activity-4 .lab-scene .specimen-focus > span { bottom: 0; width: fit-content; margin: auto; padding: 3px 12px; background: #f3f8dfdf; border-radius: 14px; font-size: 16px; z-index: 5; }
+#app .activity-4 .lab-scene .water-level { position: absolute; left: 14%; right: 29%; bottom: 48px; height: 52%; border: 0; border-top: 2px solid #d7ffffb0; background: linear-gradient(180deg,#65c7d51c,#5fbecb30); border-radius: 45% 45% 8% 8% / 5% 5% 8% 8%; pointer-events: none; }
+#app .activity-4 .lab-scene .water-level > span { display: none; }
+#app .activity-4 .lab-scene .spatial-controls { bottom: 0; }
+#app .activity-4 .lab-scene.spatial-flat::after { content: ''; position: absolute; left: 15%; right: 30%; bottom: 49px; height: 12%; border-radius: 50%; background: radial-gradient(ellipse,#dfffff40,transparent 68%); pointer-events: none; z-index: 4; }
+
+/* A large garden workbench: paint, then place, on the same persistent canvas. */
+#app :is(.activity-6,.activity-7) .learning-scene { padding: 0; overflow: hidden; display: block; }
+#app .garden-workbench { display: grid; height: 100%; min-height: 0; grid-template-rows: auto auto minmax(0,1fr) auto; gap: 8px; }
+#app .garden-workbench .learning-tabs { margin: 0; justify-content: center; gap: 8px; }
+#app .garden-modes .btn { padding: 6px 20px; font-size: 18px; }
+#app .garden-workbench .terrain-tools { min-height: 52px; }
+#app .garden-workbench .terrain-tools .btn { padding: 8px 18px; }
+#app .garden-workbench .garden-frame[data-spatial] { width: 100%; height: 100%; min-height: 0; max-height: none; margin: 0; padding: 0; background: transparent; border: 0; box-shadow: none; }
+#app .garden-workbench .garden-frame.spatial-flat { padding: 0 8px 54px !important; }
+#app .garden-workbench .garden-frame.spatial-flat .garden-grid { max-width: 820px; height: 100%; margin: auto; }
+#app .garden-workbench .garden-frame .spatial-controls { left: auto; right: 8px; top: 8px; bottom: auto; flex-direction: column; width: 66px; gap: 5px; }
+#app .garden-workbench .garden-frame .spatial-controls > span { display: none; }
+#app .garden-workbench .garden-frame .spatial-controls button { width: 64px; min-width: 48px; min-height: 48px; padding: 6px; white-space: normal; font-size: 14px; }
+#app .garden-workbench .garden-frame.spatial-flat .spatial-controls { top: auto; bottom: 0; }
+#app .garden-plant-tray { display: flex; align-items: stretch; justify-content: center; gap: 12px; min-height: 64px; }
+#app .garden-plant-pick { display: grid; grid-template-columns: 56px minmax(0,1fr); grid-template-rows: 1fr 1fr; align-items: center; min-width: 150px; padding: 5px 12px; border: 2px solid #bdc99e; border-radius: 16px; background: #fffcedf2; text-align: left; }
+#app .garden-plant-pick.selected { background: #e2edc2; border-color: #5c804e; box-shadow: 0 3px 0 #486b3c; }
+#app .garden-plant-pick img { grid-row: 1 / 3; width: 50px; height: 60px; object-fit: contain; }
+#app .garden-plant-pick span { font: 18px/1.3 var(--font-display); }
+#app .garden-plant-pick small { font-size: 14px; color: #53664a; }
+#app .garden-feedback { display: grid; gap: 6px; padding: 6px 10px; border-radius: 16px; background: #fffcedda; }
+#app .garden-feedback .direct-hint { margin: 0; text-align: center; font-size: 18px; padding: 0; }
+#app :is(.garden-placement-progress,.garden-terrain-status) { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; }
+#app .garden-placement-progress .record-row { margin: 0; padding: 0; font-size: 16px; }
+#app .garden-terrain-status > span { padding: 4px 10px; font-size: 16px; border-radius: 10px; background: #f0eedc; }
+#app .garden-terrain-status > span.done { color: #2d633d; background: #e4efcc; }
+#app .garden-feedback .reason-cards { display: flex; flex-wrap: wrap; gap: 6px; }
+#app .garden-feedback .reason-cards > p { display: none; }
+#app .garden-feedback .reason-cards .btn { flex: 1; font-size: 16px; padding: 6px 10px; }
+#app .activity-7 .garden-workbench { grid-template-rows: auto minmax(0,1fr) auto auto; }
+
+/* Invention: observation, one change, visible comparison, then a use in life. */
+#app :is(.activity-8,.activity-9) :is(.design-layout,.test-layout) { display: grid; grid-template-columns: minmax(0,1fr) clamp(280px,29vw,390px); gap: 14px; height: 100%; }
+#app :is(.activity-8,.activity-9) .learning-note { width: 100%; height: 100%; max-height: 100%; padding: 16px; border-radius: 20px; overflow: auto; }
+#app :is(.activity-8,.activity-9) .learning-note h2 { font: 23px/1.35 var(--font-display); margin: 0 0 12px; }
+#app :is(.activity-8,.activity-9) .learning-note :is(p,button) { font-size: 16px; line-height: 1.5; }
+#app :is(.activity-8,.activity-9) .learning-scene { display: flex; flex-direction: column; gap: 8px; overflow: hidden; padding: 0; }
+#app .activity-8 .compact-bag[data-spatial] { flex: 1; min-height: 0; height: auto; max-height: none; background: transparent; }
+#app :is(.activity-8,.activity-9) .compact-bag.spatial-flat { padding: 0 0 46px !important; }
+#app :is(.activity-8,.activity-9) .compact-bag > .bag-art { width: 100%; height: 100%; min-height: 0; }
+#app :is(.activity-8,.activity-9) .compact-bag .bag-product { width: 100%; height: 100%; object-fit: contain; }
+#app .invention-goal { align-self: center; padding: 6px 16px; border-radius: 14px; background: #fffcebdc; color: #345c3c; font: 17px/1.4 var(--font-display); }
+#app .picture-parts { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }
+#app .picture-parts fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+#app .picture-parts legend { font-size: 16px; font-weight: 700; padding: 3px 6px; background: #fffcecdf; border-radius: 8px; margin-bottom: 5px; }
+#app .picture-parts .part-pair { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+#app .picture-parts .part-card { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-height: 82px; padding: 5px 7px; border-radius: 14px; }
+#app .picture-parts .part-card img { height: 48px; width: 100%; object-fit: contain; }
+#app .picture-parts .part-card strong { font-size: 16px; line-height: 1.3; }
+#app .surface-comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+#app .surface-sample { position: relative; height: 136px; border: 1px solid #d6d9b6; border-radius: 14px; overflow: hidden; background: #f1f1dc; }
+#app .surface-sample > img { position: absolute; inset: 22px 2px 18px; width: calc(100% - 4px); height: calc(100% - 40px); object-fit: contain; }
+#app .surface-sample > span:first-child { position: absolute; top: 6px; left: 8px; font-weight: 700; z-index: 2; font-size: 15px; }
+#app .surface-sample.leaf-sample > span:nth-child(2) { position: absolute; top: 6px; left: 8px; font-size: 15px; font-weight: 700; }
+#app .cloth-sample { background: repeating-linear-gradient(90deg,#d9c7a3 0 2px,#e4d4b6 2px 5px); }
+#app .surface-outcome { position: absolute; left: 3px; right: 3px; bottom: 4px; padding: 3px; background: #fffceeeb; border-radius: 7px; text-align: center; font-size: 13px; }
+#app .sample-drop { position: absolute; left: 48%; top: 43%; width: 18px; height: 22px; border-radius: 60% 45% 55% 45%; background: radial-gradient(circle at 30% 25%,#fff 0 5%,#92e9f1 20%,#449eae 90%); box-shadow: 1px 3px 4px #244f5c55; opacity: 0; }
+#app .drop-tested .sample-drop { opacity: 1; }
+#app .drop-tested .cloth-sample .sample-drop { animation: cloth-soak 1.2s ease-out both; }
+#app .drop-tested .leaf-sample .sample-drop { animation: leaf-roll 1.8s ease-in-out both; }
+@keyframes cloth-soak { to { transform: scale(3.4,1.6); opacity: .4; border-radius: 50%; } }
+@keyframes leaf-roll { 0%,25% { transform: translate(0,-12px); } 100% { transform: translate(60px,32px) rotate(40deg); } }
+#app .discovery-actions { display: grid; gap: 6px; margin-bottom: 8px; }
+#app .discovery-actions .btn { width: 100%; min-height: 44px; padding: 6px; }
+#app .lotus-micro { display: grid; grid-template-columns: 94px minmax(0,1fr); gap: 8px; padding: 8px; margin-bottom: 8px; border-radius: 12px; background: #edf2d9; }
+#app .lotus-micro img { width: 94px; height: 94px; object-fit: contain; }
+#app .lotus-micro p { font-size: 15px !important; }
+#app .lotus-note:has(.lotus-micro) .surface-comparison { display: none; }
+#app .lotus-note .reason-cards { display: grid; gap: 6px; }
+#app .lotus-note .reason-cards > p { margin: 0; }
+#app .lotus-note .reason-cards .btn { min-height: 48px; padding: 6px 8px; }
+#app .invention-brief .prediction { display: grid; gap: 8px; margin: 16px 0; }
+#app .prediction-note { color: #596849; font-size: 15px !important; }
+#app .activity-9 .test-layout > .learning-scene { display: grid; grid-template-columns: minmax(0,1fr); grid-template-rows: minmax(130px,1fr) auto auto auto; align-content: stretch; gap: 8px; }
+#app .activity-9 .test-layout .learning-scene > * { grid-column: 1 / -1; grid-row: auto; }
+#app .activity-9 .water-demo { width: 100%; height: 100%; min-height: 0; margin: 0; background: transparent; }
+#app .activity-9 .water-demo .compact-bag { width: 100%; height: 100%; min-height: 0; }
+#app .activity-9 .notebook-result { right: 2%; bottom: 46px; width: 20%; max-width: 105px; }
+#app .activity-9 .notebook-result img { width: 100%; height: 78px; object-fit: contain; }
+#app .activity-9 .notebook-result span { font-size: 14px; }
+#app .test-control-row { display: flex; gap: 10px; align-items: center; justify-content: space-between; padding: 0 4px; }
+#app .test-control-row .test-conditions { font-size: 15px; background: #fffcebdc; border-radius: 12px; padding: 5px 10px; margin: 0; }
+#app .test-control-row .learning-tabs { margin: 0; gap: 6px; }
+#app .activity-9 .test-comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0; }
+#app .test-record { display: grid; grid-template-columns: 65px minmax(0,1fr); grid-template-rows: auto auto auto; gap: 3px 8px; padding: 8px; min-height: 0; border: 1px solid #d3d6b6; border-radius: 14px; background: #fffdefed; }
+#app .test-record > .bag-art { grid-column: 1; grid-row: 1 / 4; width: 65px; height: 82px; min-height: 0; }
+#app .test-record .bag-product { width: 100%; height: 100%; object-fit: contain; }
+#app .test-record > :is(strong,span,div:last-child) { grid-column: 2; }
+#app .test-record > strong { font-size: 16px; }
+#app .test-record > span { font-size: 14px; }
+#app .result-chip { display: block; font-size: 14px; line-height: 1.5; color: #7b583b; }
+#app .result-chip.good { color: #2f7144; }
+#app .comparison-question { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 0; }
+#app .comparison-question > p { grid-column: 1 / -1; font-size: 16px; margin: 0; }
+#app .comparison-question .btn { font-size: 16px !important; padding: 6px 8px !important; }
+#app .activity-9 .learning-note .picture-parts { grid-template-columns: 1fr; gap: 10px; }
+#app .invention-proof { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
+#app .invention-proof span { padding: 4px 8px; background: #ecebda; border-radius: 10px; font-size: 14px; }
+#app .invention-proof span.done { color: #2b633e; background: #e0edc4; }
+#app .invention-feedback { border-top: 1px dashed #c3c99f; padding-top: 10px; }
+#app .invention-feedback h3 { font-size: 18px; margin-bottom: 6px; }
+#app .test-history { margin-top: 10px; font-size: 15px; }
+#app .test-history .test-record { margin-top: 8px; }
+#app .idea-application { margin-top: 10px; padding: 10px; border-radius: 12px; background: #edf2d9; }
+#app .idea-application > span { display: block; font-size: 15px; margin-top: 6px; }
+
+/* The tools fit in a compact tray, with full-width actions instead of narrow text. */
+body dialog.tool-dialog { width: min(1160px,calc(100vw - 40px)); max-width: none; max-height: calc(100dvh - 40px); padding: 22px; overflow: hidden; }
+body .tool-dialog h2 { font-size: 28px; margin: 4px 0 10px; }
+body .tool-dialog .expedition-pack > p { font-size: 17px; line-height: 1.5; margin: 0 0 14px; }
+body .tool-dialog .expedition-tool-grid { grid-template-columns: repeat(5,minmax(0,1fr)); gap: 12px; margin: 0; max-height: calc(100dvh - 240px); overflow: auto; }
+body .tool-dialog .expedition-tool { display: flex; flex-direction: column; gap: 7px; padding: 14px 12px; border-radius: 17px; min-width: 0; }
+body .tool-dialog .expedition-tool > div { align-self: center; width: 64px; height: 68px; }
+body .tool-dialog .expedition-tool > div :is(img,svg) { width: 64px; height: 68px; object-fit: contain; }
+body .tool-dialog .expedition-tool h3 { font-size: 19px; line-height: 1.35; text-align: center; }
+body .tool-dialog .expedition-tool > span { font-size: 14px; text-align: center; margin: 0; }
+body .tool-dialog .expedition-tool > p { flex: 1; font-size: 16px; line-height: 1.55; margin: 2px 0 8px; }
+body .tool-dialog .expedition-tool .btn { width: 100%; padding: 8px; min-height: 48px; font-size: 16px; white-space: nowrap; }
+body .tool-dialog .dialog-actions { margin-top: 14px; padding-top: 10px; }
+
+/* Five pocket diaries, then one friendly two-page notebook popup. */
+#app .notebook-overview { display: grid; grid-template-rows: auto minmax(0,1fr) auto; gap: 16px; height: 100dvh; overflow: hidden; }
+#app :is(.notebook-overview,.ending-celebration,.activity-6,.activity-7).screen-enter { animation: none; transform: none; }
+#app .notebook-heading { display: block; text-align: center; width: fit-content; margin: 0 auto; padding: 10px 26px; border-radius: 20px; background: #fffceef2; }
+.notebook-kicker { display: block; font-size: 14px; color: #597142; font-weight: 700; letter-spacing: 1px; }
+#app .notebook-heading h1 { font: clamp(26px,2.8vw,38px)/1.4 var(--font-display); margin: 3px 0; }
+#app .notebook-heading p { font-size: 18px; }
+#app .notebook-shelf { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 16px; min-height: 0; align-items: stretch; padding: 6px 0; }
+.note-leaf { --note-accent: #729a4d; --note-tint: #edf2d3; }
+.note-flower { --note-accent: #ba7e7e; --note-tint: #f6e7d9; }
+.note-water { --note-accent: #5b9fa8; --note-tint: #dfeee8; }
+.note-garden { --note-accent: #9c9950; --note-tint: #f1edcd; }
+.note-invention { --note-accent: #ad8756; --note-tint: #f4e6cd; }
+#app .notebook-cover { position: relative; display: flex; flex-direction: column; align-items: center; min-width: 0; min-height: 0; padding: 18px 12px 12px 20px; border: 2px solid var(--note-accent); border-left-width: 10px; border-radius: 7px 18px 18px 7px; background: linear-gradient(90deg,#fff9e9,var(--note-tint)); box-shadow: 0 6px 0 #4d593b3b,0 12px 20px #34412a1c; text-align: center; transform: rotate(-1deg); }
+#app .notebook-cover:nth-child(even) { transform: rotate(1deg); }
+#app .notebook-cover:hover { transform: translateY(-5px); }
+.note-number { font-size: 14px; letter-spacing: 1px; color: var(--note-accent,#58754a); font-weight: 700; }
+#app .note-cover-art { flex: 1; min-height: 60px; max-height: 210px; width: 100%; margin: 10px 0; display: grid; place-items: center; }
+#app .note-cover-art img { width: 100%; height: 100%; min-height: 0; max-height: 200px; object-fit: contain; }
+#app .notebook-cover > strong { font: clamp(18px,1.55vw,24px)/1.45 var(--font-display); }
+#app .note-subtitle { font-size: 15px; color: #5c6c4e; margin-top: 6px; }
+#app .note-excerpt { font: 17px/1.55 var(--font-display); margin: 12px 0 6px; color: #41563a; }
+#app .note-record { font-size: 14px; padding: 8px 0; color: #54684a; margin-top: auto; }
+#app .note-open-label { width: 100%; border-top: 1px dashed var(--note-accent); padding-top: 10px; font-size: 16px; font-weight: 700; color: #365b3b; }
+#app .notebook-next { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 10px 16px; border-radius: 16px; background: #fffceee8; }
+#app .notebook-next > span { font-size: 18px; }
+body dialog.notebook-dialog { width: min(1080px,calc(100vw - 40px)); max-width: none; max-height: calc(100dvh - 36px); padding: 20px 24px; overflow: auto; background: #fffced; border: 3px solid #c6c99c; }
+body .notebook-dialog h2 { font: 28px/1.35 var(--font-display); margin: 2px 0 10px; }
+body .notebook-spread { display: grid; grid-template-columns: minmax(220px,37%) minmax(0,1fr); gap: 24px; background: repeating-linear-gradient(0deg,transparent 0 31px,#afbc9630 31px 32px); padding: 12px; border-radius: 14px; }
+body .note-memory { position: relative; display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 16px; border-radius: 16px; background: var(--note-tint); }
+body .note-memory-art { width: 100%; height: clamp(130px,24vh,230px); object-fit: contain; }
+body .note-tape { font-size: 16px; color: #3e5d3c; padding: 6px 10px; background: #fff9e7ba; border-radius: 8px; text-align: center; }
+body .note-memory .btn { width: 100%; font-size: 16px; padding: 8px; }
+body .note-read-sticker { position: absolute; top: 15%; right: 4%; display: grid; place-items: center; width: 76px; height: 76px; border: 3px dashed #6b9647; border-radius: 50%; background: #e0edb3; color: #3d673c; font: 21px var(--font-display); transform: rotate(14deg) scale(0); transition: transform .2s; }
+body .note-read-sticker.stuck { transform: rotate(14deg) scale(1); }
+body .note-diary { display: flex; flex-direction: column; gap: 12px; }
+body .note-diary h3 { font: 20px/1.5 var(--font-display); color: #426541; margin: 0 0 3px; }
+body .note-diary section p,body .note-next-idea p { font: 19px/1.7 var(--font-display); color: #3e4d38; }
+body .note-next-idea summary { font-size: 16px; color: #5a7247; min-height: 40px; cursor: pointer; }
+body .note-quiz { padding: 10px 12px; border-radius: 14px; background: #f3edd5; margin-top: auto; }
+body .note-quiz > p { font-size: 17px; line-height: 1.45; margin: 0 0 8px; }
+body .note-quiz > div { display: flex; flex-wrap: wrap; gap: 6px; }
+body .note-quiz .btn { flex: 1; font-size: 16px; padding: 7px 9px; }
+body .note-quiz .note-quiz-feedback { margin: 8px 0 0; font-size: 15px; color: #746345; }
+body .note-quiz-feedback.correct { color: #2f7046; }
+body .notebook-dialog .dialog-actions { display: flex; gap: 10px; margin-top: 14px; }
+
+/* One celebration scene, with a child's handwritten diary instead of a long list. */
+#app .ending.ending-celebration { display: block; position: relative; width: 100%; height: 100dvh; min-height: 0; max-width: none; padding: 0; overflow: hidden; isolation: isolate; }
+#app .ending-background { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; object-position: 35% 60%; }
+#app .ending-celebration::after { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(90deg,transparent 25%,#23462a16 65%,#23462a38); }
+#app .ending-celebration-title { position: absolute; left: 4%; top: max(84px,10vh); max-width: 47%; padding: 12px 22px; border-radius: 22px; background: #fffceee8; box-shadow: 0 5px 0 #3250392b; text-align: center; }
+#app .ending-celebration-title > span { font-size: clamp(14px,1.3vw,20px); color: #5b7543; }
+#app .ending-celebration-title h1 { font: clamp(27px,3vw,44px)/1.4 var(--font-display); color: #2c5437; }
+#app .ending-note { position: absolute; right: 2%; top: max(76px,9vh); bottom: 94px; width: 47%; filter: drop-shadow(0 12px 14px #142e2444); }
+#app .ending-diary-image { display: block; width: 100%; height: 100%; object-fit: contain; }
+#app .ending-celebration .certificate.sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: 0; border: 0; outline: 0; overflow: hidden; clip: rect(0,0,0,0); clip-path: inset(50%); }
+#app .ending-celebration .ending-actions { position: absolute; left: 3%; right: 3%; bottom: 18px; display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 10px; margin: 0; }
+#app .ending-celebration .ending-actions .btn { padding: 10px 18px; min-height: 48px; background: #fffceef2; border: 2px solid #c6cf9d; box-shadow: 0 4px 0 #365c3b; font-size: 17px; }
+#app .ending-celebration .ending-actions .btn:first-child { background: #315e3d; color: #fffced; border-color: #315e3d; }
+#app .ending-sparkles { position: absolute; inset: 0; pointer-events: none; }
+#app .ending-sparkles i { position: absolute; left: calc(5% + var(--i)*8%); top: calc(25% + mod(var(--i),3)*18%); color: #fff1a7; font-size: 26px; font-style: normal; animation: discovery-glow 2.8s ease-in-out infinite; animation-delay: calc(var(--i)*-.3s); text-shadow: 0 0 10px #f5e199; }
+@keyframes discovery-glow { 50% { opacity: .35; transform: scale(.65) rotate(15deg); } }
+
+@media(min-width:761px) and (max-height:820px) {
+  #app .home-copy { padding-top: 84px; }
+  #app .home .hero-logo { margin-bottom: 8px; }
+  #app .home .home-actions { margin-top: 16px; }
+  #app .home-discoveries { margin-top: 14px; }
+  #app .garden-workbench { gap: 5px; }
+  #app .garden-plant-pick { min-height: 56px; }
+  #app .garden-plant-pick img { height: 50px; }
+  #app .activity-9 .learning-note .part-card { min-height: 64px; }
+  #app .activity-9 .learning-note .part-card img { height: 36px; }
+  #app .activity-9 .learning-note { padding: 12px; }
+  #app .activity-9 .learning-note h2 { font-size: 20px; margin-bottom: 8px; }
+  #app .activity-9 .test-layout > .learning-note .picture-parts .part-card { min-height: 58px; padding: 4px; }
+  #app .activity-9 .test-layout > .learning-note .picture-parts .part-card img { height: 30px; }
+  #app .activity-9 .test-layout > .learning-note .picture-parts .part-card strong { font-size: 14px; }
+  #app .activity-9 .test-layout > .learning-note .picture-parts { gap: 6px; }
+  #app .activity-9 .test-layout > .learning-note .picture-parts legend { font-size: 14px; margin-bottom: 3px; }
+  #app .activity-9 .test-layout > .learning-note .invention-feedback p { font-size: 15px; }
+  #app .activity-9 .test-layout > .learning-note .invention-feedback h3 { font-size: 17px; }
+  #app .activity-9 .invention-proof { margin-block: 8px; }
+  #app .notebook-heading { padding: 6px 20px; }
+  #app .notebook-overview { gap: 10px; }
+  #app .note-cover-art { max-height: 140px; }
+  #app .notebook-overview .note-cover-art { max-height: 120px; margin-block: 6px; }
+  #app .notebook-overview .note-cover-art img { max-height: 120px; }
+  body .notebook-dialog { padding: 14px 20px; }
+  body .notebook-spread { gap: 16px; padding: 6px; }
+  body .note-diary { gap: 8px; }
+  body .note-diary section p { font-size: 18px; line-height: 1.55; }
+  body .note-quiz { padding: 8px; }
+}
+/* Keep result questions readable over the glass and plants. */
+#app .comparison-question > p { width: fit-content; max-width: 100%; padding: 4px 10px; border-radius: 10px; background: #fffcebdc; }
+@media(max-width:1000px) {
+  #app .home-copy { width: 52%; }
+  #app .home .hero-friends { left: 43%; width: 36vw; height: 48vh; min-width: 250px; min-height: 300px; }
+  #app .home .home-actions .jumbo { min-width: 230px; min-height: 60px; font-size: 22px; }
+  #app .home-discoveries { gap: 6px; }
+  #app .home-discoveries span { font-size: 14px; padding: 4px 9px; }
+  #app :is(.activity-8,.activity-9) :is(.design-layout,.test-layout) { grid-template-columns: minmax(0,1fr) 280px; gap: 10px; }
+  body .tool-dialog .expedition-tool-grid { grid-template-columns: repeat(3,minmax(0,1fr)); }
+  body .tool-dialog .expedition-tool { display: grid; grid-template-columns: 50px 1fr; grid-template-rows: auto auto auto auto; gap: 3px 7px; padding: 10px; }
+  body .tool-dialog .expedition-tool > div { grid-column: 1; grid-row: 1 / 4; width: 50px; height: 64px; }
+  body .tool-dialog .expedition-tool > div :is(img,svg) { width: 50px; height: 64px; }
+  body .tool-dialog .expedition-tool > :is(h3,span,p) { grid-column: 2; text-align: left; }
+  body .tool-dialog .expedition-tool > p { font-size: 15px; line-height: 1.45; }
+  body .tool-dialog .expedition-tool > .btn { grid-column: 1 / -1; }
+}
+@media(max-width:760px) {
+  #app .home-copy { width: 85%; padding: 88px 5% 0; }
+  #app .home .hero-logo { max-width: 520px; }
+  #app .home .hero-friends { left: 50%; bottom: 6%; width: 45vw; height: 38vh; min-width: 200px; min-height: 200px; }
+  #app .home-invite { top: -18px; font-size: 16px; padding: 7px 11px; }
+  #app .home .home-actions > span { max-width: 16em; }
+  #app .home-discoveries { display: none; }
+  #app .home-save-note { font-size: 12px; bottom: 10px; }
+  #app .garden-plant-tray { gap: 6px; }
+  #app .garden-plant-pick { min-width: 0; flex: 1; grid-template-columns: 38px 1fr; padding: 5px; }
+  #app .garden-plant-pick img { width: 35px; }
+  #app .garden-plant-pick span { font-size: 16px; }
+  #app .garden-plant-pick small { font-size: 12px; }
+  #app :is(.activity-8,.activity-9) :is(.design-layout,.test-layout) { grid-template-columns: 1fr; height: auto; }
+  #app :is(.activity-8,.activity-9) .learning-note { overflow: visible; }
+  #app .activity-8 .compact-bag[data-spatial] { height: 300px; min-height: 300px; }
+  #app .activity-9 .test-layout > .learning-scene { height: auto; min-height: 500px; }
+  #app .notebook-overview { height: auto; min-height: 100dvh; overflow: visible; padding: 82px 16px 20px; }
+  #app .notebook-shelf { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }
+  #app .notebook-cover { min-height: 270px; }
+  #app .note-cover-art { height: 105px; max-height: 105px; }
+  #app .note-cover-art img { max-height: 105px; }
+  #app .notebook-next { flex-direction: column; }
+  body dialog.notebook-dialog { padding: 14px; width: calc(100vw - 20px); }
+  body .notebook-spread { grid-template-columns: 1fr; gap: 12px; }
+  body .note-memory-art { height: 130px; }
+  body .notebook-dialog .dialog-actions { flex-wrap: wrap; }
+  body .notebook-dialog .dialog-actions .btn { flex: 1; font-size: 16px; padding: 8px; }
+  body dialog.tool-dialog { padding: 14px; width: calc(100vw - 20px); }
+  body .tool-dialog .expedition-tool-grid { grid-template-columns: 1fr 1fr; }
+  #app .ending-celebration-title { left: 5%; top: 80px; max-width: 90%; padding: 8px 16px; }
+  #app .ending-note { top: 180px; bottom: 130px; width: 65%; right: 1%; }
+  #app .ending-celebration .ending-actions { justify-content: center; gap: 6px; bottom: 12px; }
+  #app .ending-celebration .ending-actions .btn { font-size: 15px; padding: 8px 10px; }
+}
+@media(prefers-reduced-motion:reduce) { #app .ending-sparkles i { animation: none; } #app .sample-drop { animation-duration: .01ms !important; } }
+@media print {
+  #app .ending.ending-celebration { height: auto; min-height: 0; overflow: visible; }
+  #app .ending-celebration :is(.ending-background,.ending-celebration-title,.ending-actions,.ending-sparkles,.certificate) { display: none !important; }
+  #app .ending-note { position: static; width: 85%; height: auto; margin: 0 auto; filter: none; }
+  #app .ending-diary-image { height: auto; }
+}

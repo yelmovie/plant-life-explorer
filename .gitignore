@@ -35,3 +35,6 @@ _unused/duplicates-*/
 # Local verification captures and downloaded curriculum originals
 docs/reviews/**/*.png
 docs/sources/*.hwp
+
+# Archived unused runtime assets and duplicate delivery leftovers
+_unused/

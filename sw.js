@@ -13,6 +13,8 @@ const remember=(request,response)=>{if(response.ok&&response.type==='basic'){con
 self.addEventListener('fetch',event=>{
   const request=event.request;
   if(request.method!=='GET'||new URL(request.url).origin!==self.location.origin)return;
+  // Let the browser stream/seek films. Partial 206 responses cannot use cache.put.
+  if(request.headers.has('range')||request.destination==='video'||request.destination==='audio')return;
   // HTML: network first so a new deploy shows up, cache when offline.
   if(request.mode==='navigate'||request.destination==='document'){
     event.respondWith(fetch(request).then(response=>remember(request,response)).catch(()=>caches.match(request).then(hit=>hit||caches.match('/index.html'))));

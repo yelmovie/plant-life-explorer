@@ -1,3 +1,4 @@
+import {completeInvention} from './invention-fixture.mjs';
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {PLANTS,recordFeature,comparisonPair,freshState,restoreState,pageReady,evidenceCount,openMission,testDesign,testValid,gardenValid,canFinish,PAGE_ROUTES,previousRoute} from '../src/model.js';
@@ -27,12 +28,12 @@ test('계절 관찰과 증거 연결은 실제 기록을 요구한다',()=>{
 });
 test('정원은 확인, 환경, 서로 다른 위치, 근거를 모두 검사한다',()=>{
  const s=freshState();s.terrain=['water','water','water','grass','grass','grass','dry','dry','dry',...Array(15).fill('empty')];
- s.gardenReviewed=true;assert.equal(pageReady(s,6),true);s.garden={hyacinth:0,cherry:3,aloe:6};assert.equal(gardenValid(s),false);
+ s.gardenReviewed=true;assert.equal(pageReady(s,6),false);s.garden={hyacinth:0,cherry:3,aloe:6};assert.equal(pageReady(s,6),true);assert.equal(gardenValid(s),false);
  s.gardenReasons=['hyacinth','cherry','aloe'];assert.equal(gardenValid(s),true);s.terrain[0]='dry';assert.equal(gardenValid(s),false);
 });
 test('같은 제품 반복 시험은 개선으로 세지 않으며 최신 설계가 시험과 일치해야 한다',()=>{
  const s=freshState();s.design={surface:'lotus',cover:'flap',linked:true};s.tests=[testDesign(s.design),testDesign(s.design)];assert.equal(testValid(s),false);
- s.tests.unshift(testDesign({surface:'plain',cover:'open'}));assert.equal(testValid(s),false);s.tests.unshift(testDesign({surface:'plain',cover:'flap'}));s.testExplanation={key:'lotus:flap',before:'plain:flap',part:'surface'};assert.equal(testValid(s),true);
+ s.tests.unshift(testDesign({surface:'plain',cover:'open'}));assert.equal(testValid(s),false);s.tests.unshift(testDesign({surface:'plain',cover:'flap'}));s.testExplanation={key:'lotus:flap',before:'plain:flap',part:'surface'};assert.equal(testValid(s),false);completeInvention(s);assert.equal(testValid(s),true);
  s.design.cover='open';assert.equal(testValid(s),false);
 });
 test('손상된 저장과 외부 문자열은 안전하게 복원한다',()=>{
@@ -48,7 +49,7 @@ test('증거는 미션 두 장을 마쳐야 획득하며 엔딩은 현재 산출
  const s=freshState();s.completed[0]=true;assert.equal(evidenceCount(s),0);s.completed[1]=true;assert.equal(evidenceCount(s),1);
  s.completed.fill(true);Object.keys(s.finalChecks).forEach(k=>s.finalChecks[k]=true);assert.equal(canFinish(s),false);
  s.terrain=['water','grass','dry','water','grass','dry','water','grass','dry',...Array(15).fill('empty')];s.garden={hyacinth:0,cherry:1,aloe:2};s.gardenReasons=['hyacinth','cherry','aloe'];
- s.design={surface:'lotus',cover:'flap',linked:true};s.tests=[testDesign({surface:'plain',cover:'flap'}),testDesign(s.design)];s.testExplanation={key:'lotus:flap',before:'plain:flap',part:'surface'};s.gardenReviewed=true;s.sharing.status='later';assert.equal(canFinish(s),true);s.terrain[0]='empty';assert.equal(canFinish(s),false);
+ s.design={surface:'lotus',cover:'flap',linked:true};s.tests=[testDesign({surface:'plain',cover:'flap'}),testDesign(s.design)];s.testExplanation={key:'lotus:flap',before:'plain:flap',part:'surface'};s.gardenReviewed=true;s.sharing.status='later';completeInvention(s);assert.equal(canFinish(s),true);s.terrain[0]='empty';assert.equal(canFinish(s),false);
 });
 test('보고서 연결은 새로고침해도 보존하고 완료한 미션만 복원한다',()=>{
  const s=freshState();s.completed[0]=true;s.completed[1]=true;s.completed[4]=true;s.completed[5]=true;
@@ -59,7 +60,7 @@ test('보고서 연결은 새로고침해도 보존하고 완료한 미션만 �
 test('복원된 최종 확인은 현재 정원과 발명 시험이 유효할 때만 유지한다',()=>{
  const s=freshState();s.completed.fill(true);s.finalChecks={classification:true,habitat:true,garden:true,invention:true};s.finished=true;s.screen='ending';
  s.terrain=['water','grass','dry','water','grass','dry','water','grass','dry',...Array(15).fill('empty')];s.garden={hyacinth:0,cherry:1,aloe:2};s.gardenReasons=['hyacinth','cherry','aloe'];
- s.design={surface:'lotus',cover:'flap',linked:true};s.tests=[testDesign({surface:'plain',cover:'flap'}),testDesign(s.design)];s.testExplanation={key:'lotus:flap',before:'plain:flap',part:'surface'};s.gardenReviewed=true;s.sharing.status='later';
+ s.design={surface:'lotus',cover:'flap',linked:true};s.tests=[testDesign({surface:'plain',cover:'flap'}),testDesign(s.design)];s.testExplanation={key:'lotus:flap',before:'plain:flap',part:'surface'};s.gardenReviewed=true;s.sharing.status='later';completeInvention(s);
  assert.equal(restoreState(JSON.stringify(s)).finished,true);
  s.terrain[0]='empty';s.design.cover='open';const restored=restoreState(JSON.stringify(s));
  assert.equal(restored.finalChecks.garden,false);assert.equal(restored.finalChecks.invention,false);assert.equal(restored.finalChecks.classification,true);
@@ -105,7 +106,7 @@ test('예전 저장(새 필드 없음)은 기본값으로, 새 기록은 왕복 
 });
 test('정원 지형은 세 환경이 각각 3칸 이상이어야 한다',()=>{
  const s=freshState();s.gardenReviewed=true;s.terrain=['water','grass','dry','water','grass','dry',...Array(18).fill('empty')];assert.equal(terrainReady(s),false);assert.equal(pageReady(s,6),false);
- s.terrain[6]='water';s.terrain[7]='grass';s.terrain[8]='dry';assert.equal(pageReady(s,6),true);
+ s.terrain[6]='water';s.terrain[7]='grass';s.terrain[8]='dry';assert.equal(pageReady(s,6),false);s.garden={hyacinth:0,cherry:1,aloe:2};assert.equal(pageReady(s,6),true);
 });
 test('예전 저장의 완료 기록은 새 규칙(정원 3칸·가방 예상) 때문에 미완료로 돌아가지 않는다',()=>{
  const old=freshState();for(const k of ['misses','stamps','testPrediction','seasonPrediction','undergroundSeen'])delete old[k];

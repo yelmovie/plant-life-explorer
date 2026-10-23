@@ -63,7 +63,7 @@ export const PAGES = [
 ];
 export const SEASONS=['봄','여름','가을','겨울'];
 export function freshState() {
-  return {version:2,fieldEvidence:normalizeFieldEvidence(null),journeyRequired:Array(5).fill(false),legacyCompleted:[],legacyFinished:false,leafEvidence:{},groupsByRule:{edge:{},narrow:{}},classificationEvidence:{},seasonPhotos:{},seasonExplanation:'',seasonExplained:[],habitatFeatures:{},experimentAnswer:'',gardenReviewed:false,testExplanation:null,testPrediction:'',seasonPrediction:{},undergroundSeen:[],misses:Array(5).fill(0),stamps:{direct:[],fixed:[]},sharing:{status:'pending',question:'',response:''},highlight:0,screen:'home',page:0,completed:Array(10).fill(false),observation:{cherry:[],ginkgo:[],grass:[]},rule:'edge',groups:{},seasonPlant:'cherry',season:1,underground:false,seasonalRecords:[],linkedEvidence:[],experiment:{step:0,compared:false,prediction:''},habitats:{},reasons:{},terrain:Array(24).fill('empty'),garden:{},gardenReasons:[],design:{surface:'plain',cover:'open',linked:false},tests:[],reportSubmitted:[],finalChecks:{classification:false,habitat:false,garden:false,invention:false},finished:false,gardenTheme:'pink',largeText:false,soundEnabled:true,adminUnlocked:false};
+  return {version:2,fieldEvidence:normalizeFieldEvidence(null),journeyRequired:Array(5).fill(false),legacyCompleted:[],legacyFinished:false,leafEvidence:{},groupsByRule:{edge:{},narrow:{}},classificationEvidence:{},seasonPhotos:{},seasonExplanation:'',seasonExplained:[],habitatFeatures:{},experimentAnswer:'',gardenReviewed:false,testExplanation:null,inventionRevision:2,inventionExplanations:{},testPrediction:'',seasonPrediction:{},undergroundSeen:[],misses:Array(5).fill(0),stamps:{direct:[],fixed:[]},sharing:{status:'pending',question:'',response:''},highlight:0,screen:'home',page:0,completed:Array(10).fill(false),observation:{cherry:[],ginkgo:[],grass:[]},rule:'edge',groups:{},seasonPlant:'cherry',season:1,underground:false,seasonalRecords:[],linkedEvidence:[],experiment:{step:0,compared:false,prediction:''},habitats:{},reasons:{},terrain:Array(24).fill('empty'),garden:{},gardenReasons:[],design:{surface:'plain',cover:'open',linked:false},tests:[],reportSubmitted:[],finalChecks:{classification:false,habitat:false,garden:false,invention:false},finished:false,gardenTheme:'pink',largeText:false,soundEnabled:true,adminUnlocked:false};
 }
 export function presetTerrain(){return Array.from({length:24},(_,i)=>['water','grass','dry'][Math.floor((i%6)/2)]);}
 export function evidenceCount(s){return MISSIONS.filter((_,i)=>s.completed[i*2]&&s.completed[i*2+1]).length;}
@@ -92,13 +92,23 @@ export function awardStamp(s,i){
   if(missionDone(s,i)||missionStamps(s,i).length)return null;
   const kind=s.misses[i]?'fixed':'direct';s.stamps[kind].push(i);return kind;
 }
-export function gardenValid(s){return HABITAT_PLANTS.every(p=>Number.isInteger(s.garden[p.id])&&s.terrain[s.garden[p.id]]===p.habitat&&s.gardenReasons.includes(p.id)) && new Set(Object.values(s.garden)).size===3;}
+export function gardenPlaced(s){return HABITAT_PLANTS.every(p=>Number.isInteger(s.garden[p.id])&&s.terrain[s.garden[p.id]]===p.habitat)&&new Set(Object.values(s.garden)).size===3;}
+export function gardenValid(s){return gardenPlaced(s)&&HABITAT_PLANTS.every(p=>s.gardenReasons.includes(p.id));}
 export function comparisonPair(s){
   const last=s.tests.at(-1);if(!last||last.key!==designKey(s.design))return null;
   const before=s.tests.slice(0,-1).reverse().find(t=>Number(t.surface!==last.surface)+Number(t.cover!==last.cover)===1);
   return before?{before,last,part:before.surface!==last.surface?'surface':'cover'}:null;
 }
-export function testValid(s){const pair=comparisonPair(s);return !!pair&&s.design.linked&&s.design.surface==='lotus'&&s.testExplanation?.key===pair.last.key&&s.testExplanation?.before===pair.before.key&&s.testExplanation?.part===pair.part;}
+export function inventionEvidence(s){
+ const valid=part=>{const e=s.inventionExplanations?.[part];if(!e||e.part!==part)return false;const before=s.tests.find(t=>t.key===e.before),last=s.tests.find(t=>t.key===e.key);return !!before&&!!last&&before[part]!==last[part]&&before[part==='surface'?'cover':'surface']===last[part==='surface'?'cover':'surface'];};
+ return {surface:valid('surface'),cover:valid('cover')};
+}
+export function testValid(s){
+ const pair=comparisonPair(s),current=!!pair&&s.design.linked&&s.design.surface==='lotus'&&s.testExplanation?.key===pair.last.key&&s.testExplanation?.before===pair.before.key&&s.testExplanation?.part===pair.part;
+ if(!current)return false;
+ if(s.inventionRevision===1)return true;
+ const evidence=inventionEvidence(s);return s.design.cover==='flap'&&evidence.surface&&evidence.cover;
+}
 export function recordFeature(s,plant,region,answer){
   const p=PLANTS.find(x=>x.id===plant);if(!p||!['shape','edge'].includes(region))return false;
   if(answer!==(region==='shape'?p.id:p.edge?'yes':'no'))return false;
@@ -116,7 +126,7 @@ export function pageReady(s,p){
     case 4:return s.experiment.step>=4&&s.experimentAnswer==='air';
     case 5:return pageReady(s,4)&&HABITAT_PLANTS.every(p=>s.habitats[p.id]===p.habitat&&s.habitatFeatures[p.id]===p.id&&s.reasons[p.id]===p.id);
     // New rules (3-cell area, prediction) apply only to pages not yet completed; saved completions keep the old rule.
-    case 6:return s.gardenReviewed&&(s.completed[6]?['water','grass','dry'].every(t=>s.terrain.includes(t)):terrainReady(s));
+    case 6:return s.gardenReviewed&&(s.completed[6]?['water','grass','dry'].every(t=>s.terrain.includes(t)):terrainReady(s)&&gardenPlaced(s));
     case 7:return pageReady(s,6)&&gardenValid(s);
     case 8:return s.design.linked&&(s.completed[8]||!!s.testPrediction);
     case 9:return s.design.linked&&testValid(s);
@@ -129,6 +139,7 @@ export function restoreState(raw){
   try {
     const v=JSON.parse(raw); if(!v||![1,2].includes(v.version))return s;
     const member=(x,a)=>a.includes(x);
+    s.inventionRevision=v.inventionRevision===1?1:v.inventionRevision===2?2:v.completed?.[9]?1:2;
     s.fieldEvidence=normalizeFieldEvidence(v.fieldEvidence);
     s.journeyRequired=s.journeyRequired.map((_,i)=>v.journeyRequired?.[i]===true);
     if(member(v.screen,['home','map','activity','report','final','ending']))s.screen=v.screen;
@@ -156,6 +167,7 @@ export function restoreState(raw){
     if(member(v.design?.surface,['plain','lotus']))s.design.surface=v.design.surface;
     if(member(v.design?.cover,['open','flap']))s.design.cover=v.design.cover;
     s.design.linked=v.design?.linked===true;
+    if(v.design?.observed===true||s.design.linked)s.design.observed=true;
     if(Array.isArray(v.tests))s.tests=v.tests.filter(t=>t&&member(t.surface,['plain','lotus'])&&member(t.cover,['open','flap'])).slice(-30).map(testDesign);
     if(Array.isArray(v.reportSubmitted))s.reportSubmitted=[...new Set(v.reportSubmitted.filter(i=>Number.isInteger(i)&&i>=0&&i<MISSIONS.length&&missionDone(s,i)))];
     if(member(v.testPrediction,['surface','cover']))s.testPrediction=v.testPrediction;
@@ -185,6 +197,7 @@ export function restoreState(raw){
       s.gardenReviewed=v.gardenReviewed===true;
       const pair=comparisonPair(s),e=v.testExplanation;
       if(pair&&e?.key===pair.last.key&&e?.before===pair.before.key&&e?.part===pair.part)s.testExplanation={key:e.key,before:e.before,part:e.part};
+      for(const part of ['surface','cover']){const proof=v.inventionExplanations?.[part];if(proof&&typeof proof.key==='string'&&typeof proof.before==='string')s.inventionExplanations[part]={key:proof.key,before:proof.before,part};if(!inventionEvidence(s)[part])delete s.inventionExplanations[part];}
       if(member(v.sharing?.status,['pending','later','shared']))s.sharing.status=v.sharing.status;
       if(member(v.sharing?.question,['surface','cover']))s.sharing.question=v.sharing.question;
       if(member(v.sharing?.response,['keep','revise']))s.sharing.response=v.sharing.response;

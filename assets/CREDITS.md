@@ -75,3 +75,8 @@
 - `expedition_tool_{lens,camera,water,fabric,bag}.webp`: 도구 아틀라스에서 추출한 투명 그림 5종. 실제 내용은 돋보기·관찰수첩·물병·모종삽과 씨앗주머니·가방이다. `camera`·`fabric`은 런타임용 별칭으로, 해당 물건의 사진기·천 그림을 의미하지 않는다.
 - `expedition_field_leaf_atlas_20261020` 및 분리본 `field_leaf_{maple,pine,camellia}.webp`: 단풍나무·소나무·동백나무 잎을 Higgsfield GPT Image 2.5 high/2k로 새로 생성. 세 표본을 실제로 분리해 관찰 활동에 사용한다.
 - 과학 그림은 관찰을 돕는 교육용 모형이며 실제 식물 사진·현미경 사진 또는 독립적인 실험 증거가 아니다. 잎자루 단면의 공기 공간은 이해를 돕기 위해 확대·단순화한 표현이다.
+
+## 2026-10-23 배경 음악
+- 기획자 제공: `Main_Botanical Adventure.mp3` → `audio/main-theme.mp3`, `Ending_Earned Discovery.mp3` → `audio/ending-theme.mp3`. 제공된 MP3를 재인코딩하지 않고 사용한다. 프롬프트 기록: `docs/SUNO-PROMPTS-20261023.md`.
+
+정리 이후 편집용 PNG는 `_source/generated-images/`, 제목·캐릭터 PNG는 `_source/branding/`에 보관한다. 현재 사용하지 않는 합본 그림은 `_unused/assets/generated/`로 분리했다.

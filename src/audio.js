@@ -1,4 +1,4 @@
-// Only short interface feedback is used here; this activity has no music track.
+// One music player owns both themes. Story films and hidden tabs suspend it.
 // Sound preferences are separate from research records and survive a record reset.
 export const SOUND_KEY='green-garden-sound';
 const MUSIC_KEY='green-garden-music',VOLUME_KEY='green-garden-music-volume';
@@ -6,15 +6,46 @@ const saved=key=>{try{return localStorage.getItem(key);}catch{return null;}};
 const save=(key,value)=>{try{localStorage.setItem(key,value);}catch{/* keep in memory only */}};
 const volumeValue=value=>Number.isFinite(Number(value))?Math.round(Math.min(100,Math.max(0,Number(value)))/5)*5:30;
 let context,currentClick,effectsEnabled=saved(SOUND_KEY)!=='off';
-let musicEnabled=saved(MUSIC_KEY)==='on',musicVolume=volumeValue(saved(VOLUME_KEY)??30);
-export const hasMusic=()=>false;
+let musicEnabled=saved(MUSIC_KEY)!=='off',musicVolume=volumeValue(saved(VOLUME_KEY)??30);
+export const MUSIC_TRACKS={main:'/assets/audio/main-theme.mp3',ending:'/assets/audio/ending-theme.mp3'};
+export const hasMusic=()=>true;
 export const soundStored=()=>saved(SOUND_KEY)!==null;
 export const isEffectsOn=()=>effectsEnabled;
 export const isMusicOn=()=>hasMusic()&&musicEnabled;
 export const isSoundOn=()=>isEffectsOn()||isMusicOn();
 export const getMusicVolume=()=>musicVolume;
-export function setMusic(on){musicEnabled=hasMusic()&&Boolean(on);save(MUSIC_KEY,musicEnabled?'on':'off');}
-export function setMusicVolume(value){musicVolume=volumeValue(value);save(VOLUME_KEY,String(musicVolume));}
+export function setMusic(on){musicEnabled=Boolean(on);save(MUSIC_KEY,musicEnabled?'on':'off');syncMusic();}
+export function setMusicVolume(value){musicVolume=volumeValue(value);save(VOLUME_KEY,String(musicVolume));if(musicPlayer)musicPlayer.volume=musicVolume/100;}
+let musicPlayer,selectedTheme='main',loadedTheme=null,endedTheme=null,unlocked=false;
+const musicHolds=new Set();
+export function playMusic(theme='main'){
+  if(!Object.hasOwn(MUSIC_TRACKS,theme))return;
+  if(selectedTheme!==theme){selectedTheme=theme;endedTheme=null;}
+  syncMusic();
+}
+// Called from a user click, never from the initial render's autoplay attempt.
+export function unlockMusic(){unlocked=true;syncMusic();}
+export function suspendMusic(){
+  const token=Symbol('story');musicHolds.add(token);syncMusic();
+  return ()=>{musicHolds.delete(token);syncMusic();};
+}
+function syncMusic(){
+  if(!unlocked||!musicEnabled||musicHolds.size||globalThis.document?.hidden){musicPlayer?.pause();return;}
+  if(endedTheme===selectedTheme)return;
+  try{
+    if(!musicPlayer){
+      const Audio=globalThis.Audio||globalThis.window?.Audio;if(!Audio)return;
+      musicPlayer=new Audio();musicPlayer.id='background-music';musicPlayer.hidden=true;musicPlayer.preload='none';
+      musicPlayer.addEventListener('ended',()=>{endedTheme=loadedTheme;});
+      globalThis.document?.body?.append(musicPlayer);
+    }
+    if(loadedTheme!==selectedTheme){
+      musicPlayer.pause();musicPlayer.src=MUSIC_TRACKS[selectedTheme];musicPlayer.currentTime=0;loadedTheme=selectedTheme;
+    }
+    musicPlayer.loop=selectedTheme==='main';musicPlayer.volume=musicVolume/100;
+    if(musicPlayer.paused)void musicPlayer.play()?.catch(()=>{/* A blocked or unavailable track never blocks learning. */});
+  }catch{musicPlayer?.pause();}
+}
 function stopClick(){
   if(!currentClick)return;
   const {tone,volume}=currentClick;currentClick=null;
@@ -22,6 +53,7 @@ function stopClick(){
   try{tone.stop();}catch{/* It may already have finished. */}
   tone.disconnect();volume.disconnect();
 }
+export function stopFeedback(){stopClick();}
 export function setEffects(on){
   effectsEnabled=Boolean(on);save(SOUND_KEY,effectsEnabled?'on':'off');
   if(!effectsEnabled){stopClick();if(context?.state==='running')void context.suspend().catch(()=>{});}
@@ -56,6 +88,6 @@ export function playReward(){
 }
 
 globalThis.document?.addEventListener('visibilitychange',()=>{
-  if(!document.hidden)return;
-  stopClick();if(context?.state==='running')void context.suspend().catch(()=>{});
+  syncMusic();
+  if(document.hidden){stopClick();if(context?.state==='running')void context.suspend().catch(()=>{});}
 });

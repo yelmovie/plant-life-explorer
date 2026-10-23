@@ -1,0 +1,35 @@
+import {assetImage} from './asset-catalog.js';
+import {missionDone,terrainCount} from './model.js';
+
+const ENTRIES = [
+ {title:'잎 모양 탐정',subtitle:'작은 잎에서 찾은 다른 점',asset:'cherry_leaf',color:'leaf',saw:'벚나무·은행나무·강아지풀의 잎을 자세히 살펴봤다.',found:'잎은 모양과 가장자리가 서로 달랐다. 같은 기준으로 모으면 식물을 나눌 수 있었다.',try:'새로 만난 잎도 모양과 가장자리로 나눠 보고 싶다.'},
+ {title:'겨울을 건너 봄으로',subtitle:'안 보여도 살아 있는 부분',asset:'cherry_seasons_v2',color:'flower',saw:'겨울 사진과 다음 봄 사진을 나란히 놓아 보았다.',found:'겨울에 잎이 없어도 살아 있는 줄기나 뿌리가 남았다. 봄이 되자 그곳에서 다시 자랐다.',try:'우리 학교 화단도 겨울과 봄에 같은 자리에서 찍어 보고 싶다.'},
+ {title:'물속에서 뽀글뽀글',subtitle:'공기 방울이 알려 준 비밀',asset:'expedition_petiole_clear_20261023',color:'water',saw:'물속에 넣은 부레옥잠 잎자루를 눌러 보았다.',found:'공기 방울이 나왔다! 잎자루 속 공기는 부레옥잠이 물에 뜨는 데 도움을 준다.',try:'식물마다 몸속에 무엇을 저장하는지 더 찾아보고 싶다.'},
+ {title:'내 손으로 만든 정원',subtitle:'식물마다 어울리는 자리',asset:'reward_garden',color:'garden',saw:'물가·풀밭·건조 구역을 만들고 식물을 놓아 보았다.',found:'부레옥잠은 물가에, 벚나무는 풀밭에, 알로에는 건조 구역에 어울렸다. 식물의 특징을 생각해서 자리를 골랐다.',try:'집이나 학교에서 식물을 기를 때 물과 땅의 조건을 먼저 살펴보겠다.'},
+ {title:'자연에서 빌린 가방 아이디어',subtitle:'관찰이 생활 속 발명이 되었어',asset:'bag_lotus_closed',color:'invention',saw:'연잎 위 물방울을 보고 가방 겉면과 입구를 바꾸어 시험했다.',found:'연잎을 본뜬 겉면은 물방울을 굴려 보냈고, 덮개는 입구로 들어오는 비를 막았다. 두 부품이 하는 일이 달랐다.',try:'우산이나 신발에도 식물의 특징을 써 볼 수 있을까?'},
+];
+
+export const NOTE_QUIZZES = [
+ {question:'잎을 나눌 때 필요한 것은?',choices:['같은 기준','내가 좋아하는 색만'],answer:0,feedback:'맞아! 같은 기준으로 나누면 서로 비교하기 쉬워.',hint:'모양이나 가장자리처럼 모두에게 똑같이 적용할 기준을 떠올려 봐.'},
+ {question:'겨울에 잎이 없으면 식물은 모두 죽은 걸까?',choices:['그렇다','줄기나 뿌리가 살아 있을 수 있다'],answer:1,feedback:'맞아! 살아 남은 부분에서 봄에 다시 자라기도 해.',hint:'겨울과 다음 봄 사진에서 같은 줄기와 땅속 뿌리를 찾아봐.'},
+ {question:'누른 잎자루에서 나온 공기 방울은?',choices:['잎자루 속 공기의 단서','잎자루 속 흙의 단서'],answer:0,feedback:'맞아! 직접 본 현상이 공기 공간을 설명하는 증거가 돼.',hint:'물속에서 공기가 빠져나오면 무엇이 보일까?'},
+ {question:'알로에가 건조 구역에서 도움이 되는 특징은?',choices:['잎에 물을 저장한다','잎자루 속 공기로 물에 뜬다'],answer:0,feedback:'맞아! 물이 적은 곳에서는 저장한 물이 도움이 돼.',hint:'알로에의 두꺼운 잎 속에는 무엇이 있었지?'},
+ {question:'연잎 겉면만 바꾸면 열린 입구도 막아 줄까?',choices:['입구도 저절로 막힌다','입구를 막는 덮개는 따로 필요하다'],answer:1,feedback:'맞아! 자연의 아이디어와 필요한 부품을 함께 써서 생활 문제를 해결했어.',hint:'겉면을 굴러가는 물과 입구로 떨어지는 비는 길이 달라.'},
+];
+
+const entryRecord=(s,i)=>[
+ Object.values(s.leafEvidence).some(e=>e.shape||e.edge)?`${Object.values(s.leafEvidence).reduce((n,e)=>n+Number(!!e.shape)+Number(!!e.edge),0)}개의 잎 특징`:'이전에 마친 관찰 기록',
+ `${s.seasonalRecords.length}장의 계절 기록`,
+ s.experimentAnswer==='air'?'공기 방울의 까닭을 찾았어':'식물과 환경을 이어 봤어',
+ `물가 ${terrainCount(s,'water')}칸 · 풀밭 ${terrainCount(s,'grass')}칸 · 건조 ${terrainCount(s,'dry')}칸`,
+ `${s.tests.length}번의 가방 시험`,
+][i];
+
+export function renderResearchNotebook(s){
+ return `<main class="report-page tablet-report notebook-overview"><div class="notebook-heading"><span class="notebook-kicker">리피와 함께 쓴 다섯 장의 기록</span><h1>나의 초록정원 연구노트</h1><p>표지를 눌러 그날의 발견을 다시 펼쳐 봐.</p></div><div class="notebook-shelf">${ENTRIES.map((e,i)=>`<button class="notebook-cover note-${e.color}" data-action="note-open" data-id="${i}" aria-label="${i+1}번째 연구노트 · ${e.title}"><span class="note-number">탐험 기록 ${String(i+1).padStart(2,'0')}</span><span class="note-cover-art">${assetImage(e.asset)}</span><strong>${e.title}</strong><span class="note-subtitle">${e.subtitle}</span><p class="note-excerpt">${missionDone(s,i)?e.found:'발견을 찾아 탐험하는 중이야.'}</p><span class="note-record">${missionDone(s,i)?entryRecord(s,i):'아직 탐구 중이야'}</span><span class="note-open-label">노트 펼치기 ↗</span></button>`).join('')}</div><div class="notebook-next"><span>작은 발견 다섯 개가 하나의 정원을 만들었어.</span><button class="btn primary" data-action="report-tab" data-id="share">내 가방 이야기 나누기 →</button></div></main>`;
+}
+
+export function notebookEntry(s,i){
+ const e=ENTRIES[i],q=NOTE_QUIZZES[i],done=missionDone(s,i);
+ return {title:e.title,body:`<article class="notebook-spread note-${e.color}"><div class="note-memory"><span class="note-number">탐험 기록 ${String(i+1).padStart(2,'0')}</span>${assetImage(e.asset,'note-memory-art',true)}<span class="note-tape">${done?entryRecord(s,i):'이 장소의 탐구를 마치면 내 기록이 완성돼.'}</span><span class="note-read-sticker" aria-hidden="true">읽었어!</span><button class="btn soft" data-action="note-sticker" aria-pressed="false">읽었어 스티커 붙이기</button></div><div class="note-diary"><section><h3>오늘 나는 🔍</h3><p>${done?e.saw:'이곳에서 무엇을 관찰하고 발견할지 궁금하다.'}</p></section><section><h3>알게 된 비밀 🌱</h3>${done?`<p>${e.found}</p>`:'<p>내 탐구를 마치고 발견을 적어 보자.</p>'}</section><details class="note-next-idea"><summary>생활 속에서는 어디에 쓸까?</summary><p>${e.try}</p></details><div class="note-quiz"><p>${q.question}</p><div>${q.choices.map((c,n)=>`<button class="btn soft" data-action="note-check" data-id="${i}:${n}">${c}</button>`).join('')}</div><p class="note-quiz-feedback" role="status">기억을 떠올리며 골라 봐.</p></div></div></article>`};
+}

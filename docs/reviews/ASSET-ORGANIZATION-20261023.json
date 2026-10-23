@@ -1,0 +1,422 @@
+[
+  {
+    "From": "Main_Botanical Adventure.mp3",
+    "SHA256": "12746421FDBDAAFAF95B065A3DE1EBB81CE11DC7D3A8FC04A8222C3C357733F6",
+    "Bytes": 2511028,
+    "To": "assets\\audio\\main-theme.mp3"
+  },
+  {
+    "From": "Ending_Earned Discovery.mp3",
+    "SHA256": "A38BB185F9C4F370770761C1D84DC2591727D59E8DC00D5C39E2A6F17D3BD4DE",
+    "Bytes": 1573334,
+    "To": "assets\\audio\\ending-theme.mp3"
+  },
+  {
+    "From": "intro.mp4",
+    "SHA256": "4BB5C9C300640D59BF54868A6CC8AC56626D8BC20DB17D25AB8FA0D4EF312267",
+    "Bytes": 29821257,
+    "To": "_source\\videos\\intro.mp4"
+  },
+  {
+    "From": "outro.mp4",
+    "SHA256": "77FA38E53A58139F9B04AD6A4B8C265EFDF15E26865F6C46BC9257B942AB31BF",
+    "Bytes": 31674748,
+    "To": "_source\\videos\\outro.mp4"
+  },
+  {
+    "From": "assets\\title.png",
+    "SHA256": "0D8615AC55F8AC27A21A0362D6E7BD4CAE21C5F0ADDFD987F1C1B3AA34D5D53A",
+    "Bytes": 950779,
+    "To": "_source\\branding\\title.png"
+  },
+  {
+    "From": "assets\\characters.png",
+    "SHA256": "C39B17689020A9B9588D1292C6C2547FF0D1CCED58190E2854CECE37139F95B2",
+    "Bytes": 1718700,
+    "To": "_source\\branding\\characters.png"
+  },
+  {
+    "From": "assets\\generated\\aloe_leaf_cutaway.png",
+    "SHA256": "D19B925D8B1580090352C3B1CC71669A9A862A39B8705B75ACC46DC5809EB32A",
+    "Bytes": 1694261,
+    "To": "_source\\generated-images\\aloe_leaf_cutaway.png"
+  },
+  {
+    "From": "assets\\generated\\aloe_plant.png",
+    "SHA256": "2D34E8053FE1946F819643F9D488A453939F85DB93C0E128A4D86D1B747B2517",
+    "Bytes": 1092630,
+    "To": "_source\\generated-images\\aloe_plant.png"
+  },
+  {
+    "From": "assets\\generated\\bag_lotus_closed.png",
+    "SHA256": "9B255C7363844965FE939375ADF0B702ABCEF1BF50E6B1283977120E4A0D20D4",
+    "Bytes": 2778379,
+    "To": "_source\\generated-images\\bag_lotus_closed.png"
+  },
+  {
+    "From": "assets\\generated\\bag_lotus_open.png",
+    "SHA256": "89D2F158F1D2B9D2518F8A6940DBD0FEFA9D092FFCE88E68E077216A336E8544",
+    "Bytes": 2579989,
+    "To": "_source\\generated-images\\bag_lotus_open.png"
+  },
+  {
+    "From": "assets\\generated\\bg_m1_1_scan.png",
+    "SHA256": "68A8F885F907FDEEF8918016D1019AD86E343789D070EEF4EC5FCBFFB52CC105",
+    "Bytes": 1833926,
+    "To": "_source\\generated-images\\bg_m1_1_scan.png"
+  },
+  {
+    "From": "assets\\generated\\bg_m1_2_sort.png",
+    "SHA256": "C3B2393E5A870E56152C8367BEA702DE755D46063CAAE21D2D39AF215C270D59",
+    "Bytes": 2070783,
+    "To": "_source\\generated-images\\bg_m1_2_sort.png"
+  },
+  {
+    "From": "assets\\generated\\bg_m2_1_seasons.png",
+    "SHA256": "C742F04EE46C40CE9691D3D39E8ED89A80158CBC933B85327DA016E9776F83A9",
+    "Bytes": 2576470,
+    "To": "_source\\generated-images\\bg_m2_1_seasons.png"
+  },
+  {
+    "From": "assets\\generated\\bg_m2_2_evidence.png",
+    "SHA256": "E50E4171BFD53AD272D810F6336CB8B931E1F25ED4BC8F426223D8619B2A1D9C",
+    "Bytes": 2006897,
+    "To": "_source\\generated-images\\bg_m2_2_evidence.png"
+  },
+  {
+    "From": "assets\\generated\\bg_m3_1_chamber.png",
+    "SHA256": "E9AF73124A92C2A2116AB1B70599CD719730E3C0F945296CC454B1A5B37DC5F1",
+    "Bytes": 2351086,
+    "To": "_source\\generated-images\\bg_m3_1_chamber.png"
+  },
+  {
+    "From": "assets\\generated\\bg_m3_2_habitat.png",
+    "SHA256": "FC4A2AB8954EEC724C19519B6EC37F85B183727513E10098154E9389CA75530C",
+    "Bytes": 2136928,
+    "To": "_source\\generated-images\\bg_m3_2_habitat.png"
+  },
+  {
+    "From": "assets\\generated\\bg_m4_1_terrain.png",
+    "SHA256": "DB573B759C5F8A29BEB1EEBBFAF7874E7CDAD7945EDC3D4CE7C32941ECD56710",
+    "Bytes": 2160822,
+    "To": "_source\\generated-images\\bg_m4_1_terrain.png"
+  },
+  {
+    "From": "assets\\generated\\bg_m4_2_garden.png",
+    "SHA256": "DEBC054E41644BB47D6195313A715B22AD3C244BA23521AEFCC102EEC2465DD7",
+    "Bytes": 2318847,
+    "To": "_source\\generated-images\\bg_m4_2_garden.png"
+  },
+  {
+    "From": "assets\\generated\\bg_m5_1_idea.png",
+    "SHA256": "7DA44F7D6CB466ED78900DE16F20E607B9BCFAD370D7029D8474348A41F34EF5",
+    "Bytes": 2407341,
+    "To": "_source\\generated-images\\bg_m5_1_idea.png"
+  },
+  {
+    "From": "assets\\generated\\bg_m5_2_test.png",
+    "SHA256": "3174F75FCA3B53987DC273F5E3412F38F68E38B450382ADF583DD39C5671A85D",
+    "Bytes": 2161536,
+    "To": "_source\\generated-images\\bg_m5_2_test.png"
+  },
+  {
+    "From": "assets\\generated\\cherry_leaf.png",
+    "SHA256": "298AA5AC47ADE9E9B73129BA9B9F27D1E2BEDD9387BD704225F2500FAE0A0F7D",
+    "Bytes": 1143827,
+    "To": "_source\\generated-images\\cherry_leaf.png"
+  },
+  {
+    "From": "assets\\generated\\cherry_seasons_v2.png",
+    "SHA256": "8A28D1ED785875845274742BBDE3558AD49E5A46A790AB748C4D3CD96CA8DCAC",
+    "Bytes": 3941447,
+    "To": "_source\\generated-images\\cherry_seasons_v2.png"
+  },
+  {
+    "From": "assets\\generated\\cherry_tree.png",
+    "SHA256": "31A396DADCEB7E85278A35D0C0F2C1AC932EB7D7B5F0461A78FAAE1E0D6AC6EB",
+    "Bytes": 1585097,
+    "To": "_source\\generated-images\\cherry_tree.png"
+  },
+  {
+    "From": "assets\\generated\\ending_diary_20261023.png",
+    "SHA256": "9F9A16CC9926C247791908DAD5634C3F4A1184696D43000ADE082A270DD3D0A1",
+    "Bytes": 2356718,
+    "To": "_source\\generated-images\\ending_diary_20261023.png"
+  },
+  {
+    "From": "assets\\generated\\expedition_field_leaf_atlas_20261020.png",
+    "SHA256": "E25453EFAB526603D46E97518D7130FBDC0C4DBF29B605A048B95FC5322FA749",
+    "Bytes": 3603790,
+    "To": "_source\\generated-images\\expedition_field_leaf_atlas_20261020.png"
+  },
+  {
+    "From": "assets\\generated\\expedition_hero_20261020.png",
+    "SHA256": "3242B40A327743F1F05C64DA1C7A71A06413793D4C8B2F1328BBE109A0117589",
+    "Bytes": 7939964,
+    "To": "_source\\generated-images\\expedition_hero_20261020.png"
+  },
+  {
+    "From": "assets\\generated\\expedition_hyacinth_tank_20261020.png",
+    "SHA256": "F02B0C8B13160A8DB1C534D02DED140CFFDDCD85AE9B68FE143FDA34AC477EAE",
+    "Bytes": 5507193,
+    "To": "_source\\generated-images\\expedition_hyacinth_tank_20261020.png"
+  },
+  {
+    "From": "assets\\generated\\expedition_leafy_sheet_20261020.png",
+    "SHA256": "CC280601775ABE71509AD910EE1C89366D1C572B5209F461862DF2465F3CEA39",
+    "Bytes": 3813689,
+    "To": "_source\\generated-images\\expedition_leafy_sheet_20261020.png"
+  },
+  {
+    "From": "assets\\generated\\expedition_petiole_clear_20261023.png",
+    "SHA256": "8322FB92D938EFA0E0586F65EBA29ECF622DA6BEFB5BF31B22DD3F68FE5B0274",
+    "Bytes": 1152754,
+    "To": "_source\\generated-images\\expedition_petiole_clear_20261023.png"
+  },
+  {
+    "From": "assets\\generated\\expedition_petiole_model_20261020.png",
+    "SHA256": "8B8BD5DCB2E7FB27A4A877A648E9D6D2AD374242A1EF35F951882BD86264B7A6",
+    "Bytes": 4013842,
+    "To": "_source\\generated-images\\expedition_petiole_model_20261020.png"
+  },
+  {
+    "From": "assets\\generated\\expedition_restored_garden_20261020.png",
+    "SHA256": "62644B1BEA634068AFF4C3C2DE32497F86F03C83611F932E9552A854D34057E2",
+    "Bytes": 7258362,
+    "To": "_source\\generated-images\\expedition_restored_garden_20261020.png"
+  },
+  {
+    "From": "assets\\generated\\expedition_tools_atlas_20261020.png",
+    "SHA256": "8924BFE9F796FCC35BE790F031B418AE37E3F9CDBCF413AA0F2666AFF7CBFADF",
+    "Bytes": 5413722,
+    "To": "_source\\generated-images\\expedition_tools_atlas_20261020.png"
+  },
+  {
+    "From": "assets\\generated\\expedition_trail_20261020.png",
+    "SHA256": "BAE337715083201C2F5A64510F75E610BA5F6BAFA79F4FF33DC140EB9D99DE7B",
+    "Bytes": 6982104,
+    "To": "_source\\generated-images\\expedition_trail_20261020.png"
+  },
+  {
+    "From": "assets\\generated\\garden_hero.png",
+    "SHA256": "D4F67DCEF2BD2BFCB3619C7BB513284DAA5A5233058019A8E37F33D67FD6D80C",
+    "Bytes": 2382779,
+    "To": "_source\\generated-images\\garden_hero.png"
+  },
+  {
+    "From": "assets\\generated\\ginkgo_leaf.png",
+    "SHA256": "798D1D998D419BC03A0908EDD16C7AE4FC605F2EFB5C3FECC9101A2C8ED3861D",
+    "Bytes": 1132064,
+    "To": "_source\\generated-images\\ginkgo_leaf.png"
+  },
+  {
+    "From": "assets\\generated\\grass_leaf.png",
+    "SHA256": "A7AA84859EC17BE7A1906A861AC3A84D88A7142B0507E67ACEF933B5559D78FB",
+    "Bytes": 271745,
+    "To": "_source\\generated-images\\grass_leaf.png"
+  },
+  {
+    "From": "assets\\generated\\greenhouse_studio_v1.png",
+    "SHA256": "4188F25528729192156DE782CA241AD71957EB6DDB830A70A3180C228500118B",
+    "Bytes": 2288920,
+    "To": "_source\\generated-images\\greenhouse_studio_v1.png"
+  },
+  {
+    "From": "assets\\generated\\hyacinth_petiole_cutaway.png",
+    "SHA256": "C18C47D644B97F132695D51773BC49E811FB193D7DC7B044E30886E715BCDE8C",
+    "Bytes": 814720,
+    "To": "_source\\generated-images\\hyacinth_petiole_cutaway.png"
+  },
+  {
+    "From": "assets\\generated\\hyacinth_petiole_whole.png",
+    "SHA256": "179803F4DCED6D573F911EFB58B30C17DA47BB75AF1249245B288D750F98A6E5",
+    "Bytes": 687634,
+    "To": "_source\\generated-images\\hyacinth_petiole_whole.png"
+  },
+  {
+    "From": "assets\\generated\\lotus_leaf_whole.png",
+    "SHA256": "2D29A371C8639945BA6A0827C2C0E8A91958DE1052F27CC2A6C21E2202EDCE67",
+    "Bytes": 1234637,
+    "To": "_source\\generated-images\\lotus_leaf_whole.png"
+  },
+  {
+    "From": "assets\\generated\\lotus_surface_diagram.png",
+    "SHA256": "364D9988916B71DEB47713D4E34AC5A442F85AECC40791913AFA78CC54805451",
+    "Bytes": 1399650,
+    "To": "_source\\generated-images\\lotus_surface_diagram.png"
+  },
+  {
+    "From": "assets\\generated\\map_trail_v2.png",
+    "SHA256": "E8DBDED48C03CAED78A313C0217A809D88DEC96207166C248B8F209A7F567484",
+    "Bytes": 4093700,
+    "To": "_source\\generated-images\\map_trail_v2.png"
+  },
+  {
+    "From": "assets\\generated\\mascot_flower.png",
+    "SHA256": "7C510A047E5AE269999FC0A2351C80FB8863756E36A7A5EB9EE266268385592A",
+    "Bytes": 953198,
+    "To": "_source\\generated-images\\mascot_flower.png"
+  },
+  {
+    "From": "assets\\generated\\mascot_leaf.png",
+    "SHA256": "CFCE179D439FECC68178D48FABBA95DB8B70172CFC86B0A7EC991E096A0576D1",
+    "Bytes": 820150,
+    "To": "_source\\generated-images\\mascot_leaf.png"
+  },
+  {
+    "From": "assets\\generated\\mascot_water.png",
+    "SHA256": "26DF8157977A2A28C6D384295931444F948C844A0261CF41BF5F2EB5A7D619EB",
+    "Bytes": 714475,
+    "To": "_source\\generated-images\\mascot_water.png"
+  },
+  {
+    "From": "assets\\generated\\mood_sheet.png",
+    "SHA256": "BD1F02A542E83962F93F18D646E5EFF55F277D06AEA5F6DF8E35A4E591854A7C",
+    "Bytes": 1820098,
+    "To": "_source\\generated-images\\mood_sheet.png"
+  },
+  {
+    "From": "assets\\generated\\notebook_dry.png",
+    "SHA256": "0D756836F261A85F7D38A3032E634EED670D9B58F15C61F8E26C1C606324E0A2",
+    "Bytes": 1453852,
+    "To": "_source\\generated-images\\notebook_dry.png"
+  },
+  {
+    "From": "assets\\generated\\notebook_wet.png",
+    "SHA256": "3BEDC43CD904FFC81CBD95F262D7A49783FFBEA92A7A57461BEBD6C558C2E7FD",
+    "Bytes": 1609358,
+    "To": "_source\\generated-images\\notebook_wet.png"
+  },
+  {
+    "From": "assets\\generated\\plant_lab_background.png",
+    "SHA256": "C7242952885EA6F2F03DA84E098823F138AB1294B352E1A94AE9105325CDCEC8",
+    "Bytes": 1565595,
+    "To": "_source\\generated-images\\plant_lab_background.png"
+  },
+  {
+    "From": "assets\\generated\\research_bag_body.png",
+    "SHA256": "131ED46EBF27795E1DF53A3F912C1FE0C6C96AEC6623FC5D44107282D571C8F5",
+    "Bytes": 1817473,
+    "To": "_source\\generated-images\\research_bag_body.png"
+  },
+  {
+    "From": "assets\\generated\\research_bag_closed.png",
+    "SHA256": "3FBF93C4455F6EC6CFF0DBE4476AAAA9C285FE4E00D700591EA10068C9423FB5",
+    "Bytes": 2534179,
+    "To": "_source\\generated-images\\research_bag_closed.png"
+  },
+  {
+    "From": "assets\\generated\\reward_garden.png",
+    "SHA256": "FB52EA94D7076EF89E3B0A99448E415E1B040EDB3687699F453088913F089895",
+    "Bytes": 2207302,
+    "To": "_source\\generated-images\\reward_garden.png"
+  },
+  {
+    "From": "assets\\generated\\reward_observatory.png",
+    "SHA256": "0DCC8AC416ECA0344D35593515E2B4CB56335F81015F134D356D1F3EDA07EF2B",
+    "Bytes": 2475781,
+    "To": "_source\\generated-images\\reward_observatory.png"
+  },
+  {
+    "From": "assets\\generated\\reward_seasons.png",
+    "SHA256": "15527033F755A6648AC48CA0C7F9D417E79747CA6928D1300DCB24E1DE556EF9",
+    "Bytes": 1961868,
+    "To": "_source\\generated-images\\reward_seasons.png"
+  },
+  {
+    "From": "assets\\generated\\reward_water.png",
+    "SHA256": "0E6D292171EB3C131F3387276680DC342E7C27AB52F9596CAA51A927E1B03F09",
+    "Bytes": 2360252,
+    "To": "_source\\generated-images\\reward_water.png"
+  },
+  {
+    "From": "assets\\generated\\reward_workshop.png",
+    "SHA256": "1C27BBADBF120FB7D9BE39836BC2BAE35813527652A15EE328F97A38C954AE7E",
+    "Bytes": 2180022,
+    "To": "_source\\generated-images\\reward_workshop.png"
+  },
+  {
+    "From": "assets\\generated\\sowthistle_seasons_v2.png",
+    "SHA256": "B31C7550CD4BCEE40C7983AD576B7015843B88EF3D7540F067FA71A18A47B8F6",
+    "Bytes": 3383557,
+    "To": "_source\\generated-images\\sowthistle_seasons_v2.png"
+  },
+  {
+    "From": "assets\\generated\\stamp_complete.png",
+    "SHA256": "80C422D3EBCF2AA62DF42ADB0459605D52D747407C95359FB9F89CE1DDB05718",
+    "Bytes": 2095535,
+    "To": "_source\\generated-images\\stamp_complete.png"
+  },
+  {
+    "From": "assets\\generated\\stamp_direct.png",
+    "SHA256": "410FB4BBAB2488BAE7ABDF7CAB8B14792C4D07C3CAF5CCBFFDA611C9D0138B67",
+    "Bytes": 1648980,
+    "To": "_source\\generated-images\\stamp_direct.png"
+  },
+  {
+    "From": "assets\\generated\\stamp_fixed.png",
+    "SHA256": "43BFF0AE2E6A5BDB632304B91F0D2D7003CCC176183C78EDC67FB7FD9B36731F",
+    "Bytes": 1637522,
+    "To": "_source\\generated-images\\stamp_fixed.png"
+  },
+  {
+    "From": "assets\\generated\\water_hyacinth_whole.png",
+    "SHA256": "1EFE54EB00E25A2525F407A2F668824EACA3D724627286E04F3BFACA25B8665E",
+    "Bytes": 1257260,
+    "To": "_source\\generated-images\\water_hyacinth_whole.png"
+  },
+  {
+    "From": "assets\\generated\\workshop_studio_v2.png",
+    "SHA256": "539EFE6E4CF17798CD41EDC5F41F0F10B9E29BA300CE25D3D2343CC3D7B42337",
+    "Bytes": 2577047,
+    "To": "_source\\generated-images\\workshop_studio_v2.png"
+  },
+  {
+    "From": "assets\\generated\\expedition_leafy_sheet_20261020.webp",
+    "SHA256": "2137E470F5394E6B4788CD2485E2129ED4A4298C5ABE05AC41112931B9833553",
+    "Bytes": 124190,
+    "To": "_unused\\assets\\generated\\expedition_leafy_sheet_20261020.webp"
+  },
+  {
+    "From": "dist\\assets\\generated\\expedition_leafy_sheet_20261020.webp",
+    "SHA256": "2137E470F5394E6B4788CD2485E2129ED4A4298C5ABE05AC41112931B9833553",
+    "Bytes": 124190,
+    "To": "_unused\\dist-leftovers\\20261023\\assets\\generated\\expedition_leafy_sheet_20261020.webp"
+  },
+  {
+    "From": "assets\\generated\\expedition_trail_20261020.webp",
+    "SHA256": "51EE2FBE7CFAC2B29286293FD9DDA29569631CC82E2E988DDE17B6013F57CCE1",
+    "Bytes": 755994,
+    "To": "_unused\\assets\\generated\\expedition_trail_20261020.webp"
+  },
+  {
+    "From": "dist\\assets\\generated\\expedition_trail_20261020.webp",
+    "SHA256": "51EE2FBE7CFAC2B29286293FD9DDA29569631CC82E2E988DDE17B6013F57CCE1",
+    "Bytes": 755994,
+    "To": "_unused\\dist-leftovers\\20261023\\assets\\generated\\expedition_trail_20261020.webp"
+  },
+  {
+    "From": "assets\\generated\\expedition_tools_atlas_20261020.webp",
+    "SHA256": "2A6C96D9BD5715DDBACC074320488EC6D9803E6103C92D6FC5DC87273890EAEF",
+    "Bytes": 562270,
+    "To": "_unused\\assets\\generated\\expedition_tools_atlas_20261020.webp"
+  },
+  {
+    "From": "dist\\assets\\generated\\expedition_tools_atlas_20261020.webp",
+    "SHA256": "2A6C96D9BD5715DDBACC074320488EC6D9803E6103C92D6FC5DC87273890EAEF",
+    "Bytes": 562270,
+    "To": "_unused\\dist-leftovers\\20261023\\assets\\generated\\expedition_tools_atlas_20261020.webp"
+  },
+  {
+    "From": "assets\\generated\\expedition_field_leaf_atlas_20261020.webp",
+    "SHA256": "E54FB9FFB7D2F449A6C60EE392D24228A20CE9E2BF8763CE4A11C91073888768",
+    "Bytes": 417058,
+    "To": "_unused\\assets\\generated\\expedition_field_leaf_atlas_20261020.webp"
+  },
+  {
+    "From": "dist\\assets\\generated\\expedition_field_leaf_atlas_20261020.webp",
+    "SHA256": "E54FB9FFB7D2F449A6C60EE392D24228A20CE9E2BF8763CE4A11C91073888768",
+    "Bytes": 417058,
+    "To": "_unused\\dist-leftovers\\20261023\\assets\\generated\\expedition_field_leaf_atlas_20261020.webp"
+  }
+]
