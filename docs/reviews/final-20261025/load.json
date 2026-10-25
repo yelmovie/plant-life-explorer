@@ -1,0 +1,32 @@
+[
+ {
+  "load": 202,
+  "fcp": 328,
+  "domContentLoaded": 167.2999999988824,
+  "loadEvent": 190.69999999925494,
+  "requests": 11,
+  "bytes": 1590681,
+  "external": 0,
+  "css": 1
+ },
+ {
+  "load": 209,
+  "fcp": 324,
+  "domContentLoaded": 168.69999999925494,
+  "loadEvent": 199.59999999962747,
+  "requests": 11,
+  "bytes": 1590681,
+  "external": 0,
+  "css": 1
+ },
+ {
+  "load": 173,
+  "fcp": 276,
+  "domContentLoaded": 133.7999999988824,
+  "loadEvent": 160.90000000037253,
+  "requests": 11,
+  "bytes": 1590681,
+  "external": 0,
+  "css": 1
+ }
+]

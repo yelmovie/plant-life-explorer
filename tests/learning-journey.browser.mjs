@@ -15,7 +15,7 @@ page.on('pageerror',e=>report.errors.push(e.message));
 const selector=(name,id)=>`[data-action="${name}"]${id!==undefined?`[data-id="${id}"]`:''}`;
 const a=async(name,id,scope='')=>{await page.locator(scope+selector(name,id)).first().tap();};
 const close=()=>a('close',undefined,'#dialog .dialog-top ');
-const stage=n=>a('field-stage',String(n),'.field-mission .mission-journey ');
+const stage=n=>a('field-stage',String(n),'.today-panel .mission-journey ');
 const place=async(item,target,keyboard=false)=>{
  const source=page.locator(`[data-field-item="${item}"]`),destination=page.locator(`[data-field-drop="${target}"]`);
  if(keyboard){await source.focus();await page.keyboard.press('Enter');await destination.focus();await page.keyboard.press('Enter');}
@@ -31,7 +31,7 @@ async function enter(m){
  await a('enter-mission',undefined,'#dialog ');await page.locator('.field-mission').waitFor();
 }
 async function explore(){await a('journey-mode','explore','.learning-footer ');await page.locator('.field-mission').waitFor({state:'detached'});}
-async function completePage(){const button=page.locator('.learning-footer [data-action="complete"]');assert.notEqual(await button.getAttribute('aria-disabled'),'true',await page.locator('.next-condition').innerText());await button.tap();}
+async function completePage(){const button=page.locator('.learning-footer [data-action="complete"]');assert.notEqual(await button.getAttribute('aria-disabled'),'true',await page.locator('.guide-bubble').innerText());await button.tap();}
 async function missionDone(m){
  const state=await saved();assert.equal(state.completed[m*2],true);assert.equal(state.completed[m*2+1],true);
  assert.ok(state.stamps.helped.includes(m),'wrong → requested hint → correction must receive helped stamp');

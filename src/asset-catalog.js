@@ -71,6 +71,15 @@ export const ASSETS = Object.freeze({
   bg_m4_2_garden: ['완성된 연구정원', '연못과 선인장이 어우러진 정원'],
   bg_m5_1_idea: ['아이디어 공방', '식물 그림이 걸린 발명 작업대'],
   bg_m5_2_test: ['시험 센터', '비가 내리는 유리 시험 챔버'],
+  cactus_plant: ['선인장', '물을 저장하는 두꺼운 줄기를 가진 선인장'],
+  float_model_air: ['공기 공간 모형', '안쪽에 큰 공기 칸이 여러 개 있는 원통 모형'],
+  float_model_solid: ['속을 채운 비교 모형', '같은 크기에 안쪽을 흙으로 가득 채운 원통 모형'],
+  habitat_water: ['물가', '물이 고인 연못가 땅'],
+  habitat_grass: ['풀밭', '흙이 촉촉한 풀밭 땅'],
+  habitat_dry: ['건조 구역', '물이 적고 메마른 모래땅'],
+  cloth_swatch: ['보통 천', '물이 스며들 수 있는 평범한 면 천 조각'],
+  cherry_bud_spring: ['초봄의 벚나무', '겨울을 지난 가지에 새눈이 부풀어 오른 벚나무와 땅속 뿌리'],
+  sowthistle_bud_spring: ['초봄의 씀바귀', '살아 있던 뿌리에서 새싹이 돋는 씀바귀'],
 });
 
 // 240px thumbnails (`*_thumb.webp`) for small slots such as the home .mission-mini cards.
@@ -83,3 +92,16 @@ export function assetImage(key, className = '', eager = false, thumb = false) {
   const small = thumb && THUMBS.includes(key);
   return `<img class="asset-image ${className}" src="/assets/generated/${key}${small ? '_thumb' : ''}.webp" alt="${asset[1]}" data-asset="${key}" width="${small ? 240 : 1024}" height="${small ? 240 : 1024}" decoding="async" ${eager ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"'} draggable="false">`;
 }
+
+// Scene paintings per page (index = state.page), mirrored by --bg-activity-N in polish.css.
+export const STAGE_BACKGROUNDS = Object.freeze(['bg_m1_1_scan','bg_m1_2_sort','bg_m2_1_seasons','bg_m2_2_evidence','bg_m3_1_chamber','bg_m3_2_habitat','bg_m4_1_terrain','bg_m4_2_garden','bg_m5_1_idea','bg_m5_2_test']);
+const warmed = new Set();
+// Fetch ahead into the HTTP cache so the next screen never opens on a blank tint. Failures are ignored.
+export function warmImage(src) {
+  if (warmed.has(src)) return;
+  warmed.add(src);
+  // Idle time only, so warming never competes with the screen the student is looking at.
+  const start = () => { const image = new Image(); image.decoding = 'async'; image.src = src; };
+  if (typeof requestIdleCallback === 'function') requestIdleCallback(start, {timeout: 3000}); else setTimeout(start, 600);
+}
+export const warmMission = i => STAGE_BACKGROUNDS.slice(i * 2, i * 2 + 2).forEach(key => warmImage(`/assets/generated/${key}.webp`));

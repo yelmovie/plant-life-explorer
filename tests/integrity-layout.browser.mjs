@@ -18,7 +18,7 @@ for(const [width,height] of sizes){
   await page.addInitScript(s=>localStorage.setItem('green-garden-mvp-v2',JSON.stringify(s)),state);
   try{
    await page.goto(process.env.JOURNEY_URL||'http://127.0.0.1:4328');await page.locator('main').waitFor();await page.evaluate(()=>document.fonts.ready);
-   if(name==='field-bag'){await page.locator('[data-action="journey-mode"][data-id="field"]').first().tap();await page.locator('.field-mission .mission-journey [data-action="field-stage"][data-id="1"]').tap();}
+   if(name==='field-bag'){await page.locator('[data-action="journey-mode"][data-id="field"]').first().tap();await page.locator('.today-panel .mission-journey [data-action="field-stage"][data-id="1"]').tap();}
    if(name==='tests')await page.locator('.result-parts summary').tap();
    if(name==='notebook')await page.locator('[data-action="note-open"][data-id="4"]').tap();
    await page.waitForTimeout(200);

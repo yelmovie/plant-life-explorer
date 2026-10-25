@@ -108,3 +108,24 @@
 | `generated/ending_diary_20261023.webp` | 369,556 B | 1254×1254 | `c79197d12a3c25fa5ef61706703a35fc08900a877cd11b275790e48b5afbdd28` |
 
 2026-10-24 직접 확인: 두 PNG·WebP 모두 알파 채널이 있다. 잎자루의 완전 투명/부분 투명 픽셀은 각각 1,068,469/503,577개, 일기는 241,438/1,330,050개로 각 원본과 WebP가 일치한다. 해상도도 유지했다. 알파 존재 검증은 과학적 정확성이나 시각 품질 검증을 대신하지 않는다.
+
+## 2026-10-25 CSS·SVG 대체 그림 9장
+
+납품 전 디자인 고도화에서 CSS·SVG로 그렸던 부분을 같은 화풍의 생성 그림으로 교체했다. 모두 Higgsfield GPT Image 2.5(high, 2k)로 생성했고 글자를 넣지 않았다. 2k 원본 PNG는 `_source/generated-images/originals-20261025/`, 여백을 자르고 줄인 편집용 PNG는 `_source/generated-images/`에 보관하고 `npm run assets:optimize`로 WebP를 만들었다.
+
+- 선인장(마지막 적용 문제의 SVG 대체), 공기 공간 모형·속을 채운 비교 모형(현장 3 SVG 대체, 비교 모형은 공기 모형 결과를 참조해 같은 크기·각도로 생성), 물가·풀밭·건조 구역 지형 3종(서식지 연결판·정원 붓·현장 환경 카드), 보통 천 조각(연잎 비교의 CSS 줄무늬 대체).
+- 초봄의 벚나무·씀바귀(현장 2 순서 맞추기의 SVG 새싹 대체): 기존 `cherry_seasons_v2`·`sowthistle_seasons_v2`를 참조 이미지로 올려 같은 구도·화풍의 한 장면으로 생성했다. 학습 정확성 기준: 벚나무는 꽃이 피기 전 부푼 겨울눈과 막 나온 잎끝, 씀바귀는 살아 있던 뿌리에서 돋는 새 잎(꽃줄기 없음).
+- 학습 판단에 쓰이는 단서가 그림에 미리 드러나지 않도록 지형 그림에는 해당 식물(부레옥잠·벚나무·선인장)을 넣지 않았다.
+- 사용 크레딧: 9장 × 2.75 = 24.75 (힉스필드 커넥터 크레딧). 계정의 회사 배포 조건은 위 "배포 전 문서 확인 목록"의 Higgsfield 항목과 같이 제공자 확인 대상이다.
+
+| 파일 | job 앞 8자 | 화면용 크기 | 알파 | WebP SHA-256 앞 16자 |
+|---|---|---|---|---|
+| `generated/cactus_plant.webp` | 45519eda | 414×700 | 있음 | `44c1dce92bf3da25` |
+| `generated/float_model_air.webp` | 8adecd7a | 392×640 | 있음 | `60fac01b4d18d971` |
+| `generated/float_model_solid.webp` | 24a39b0f | 392×640 | 있음 | `2e506bb33f588f7a` |
+| `generated/habitat_water.webp` | dfa6dd22 | 360×318 | 있음 | `8009adf37fae159c` |
+| `generated/habitat_grass.webp` | d90a0472 | 360×318 | 있음 | `55a30cad66c5f2a3` |
+| `generated/habitat_dry.webp` | fcf9f932 | 360×318 | 있음 | `89e17781437cc927` |
+| `generated/cloth_swatch.webp` | 8f743d4d | 400×359 | 있음 | `a303560d708f6837` |
+| `generated/cherry_bud_spring.webp` | fe12ed8c | 768×510 | 없음(장면) | `f800dc94f7726ba4` |
+| `generated/sowthistle_bud_spring.webp` | 4a6e74a3 | 768×510 | 없음(장면) | `0b48260f9bdd2f42` |

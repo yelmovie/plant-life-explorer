@@ -25,7 +25,7 @@ async function dragPlace(item,id){
 }
 async function stage(n){await page.locator(`.field-mission .mission-step[data-id="${n}"]`).tap();report.inputs.taps++;}
 async function action(name){await page.locator(`.field-mission [data-action="${name}"]`).tap();report.inputs.taps++;}
-async function wrongFeedback(){const text=await page.locator('.field-mission .mission-feedback').innerText();assert.ok(text.trim().length>16);assert.equal(await page.locator('.field-mission .mission-feedback.success').count(),0);return text.trim();}
+async function wrongFeedback(){const text=await page.locator('.mission-feedback').innerText();assert.ok(text.trim().length>16);assert.equal(await page.locator('.mission-feedback.success').count(),0);return text.trim();}
 async function initialise(mission){
  const context=await browser.newContext({viewport:report.viewport,hasTouch:true});page=await context.newPage();page.setDefaultTimeout(12000);
  page.on('pageerror',error=>report.pageErrors.push({mission,message:error.message}));

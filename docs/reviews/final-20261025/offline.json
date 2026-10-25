@@ -1,0 +1,94 @@
+{
+ "status": "오프라인 준비 완료 · 94개 파일",
+ "seconds": 1.949,
+ "results": [
+  {
+   "view": "page-5",
+   "main": true,
+   "images": 8,
+   "broken": [],
+   "fallbacks": 0,
+   "offlineBadge": true,
+   "brokenFetch": [],
+   "brokenDetail": []
+  },
+  {
+   "view": "page-8",
+   "main": true,
+   "images": 8,
+   "broken": [
+    "/assets/generated/cloth_swatch.webp",
+    "/assets/generated/lotus_leaf_whole.webp"
+   ],
+   "fallbacks": 0,
+   "offlineBadge": true,
+   "brokenFetch": [
+    "/assets/generated/cloth_swatch.webp:200",
+    "/assets/generated/lotus_leaf_whole.webp:200"
+   ],
+   "brokenDetail": [
+    {
+     "loading": "lazy",
+     "inClosedDetails": true,
+     "w": 175.875
+    },
+    {
+     "loading": "lazy",
+     "inClosedDetails": true,
+     "w": 175.890625
+    }
+   ]
+  },
+  {
+   "view": "page-6",
+   "main": true,
+   "images": 7,
+   "broken": [],
+   "fallbacks": 0,
+   "offlineBadge": true,
+   "brokenFetch": [],
+   "brokenDetail": []
+  },
+  {
+   "view": "field-2",
+   "main": true,
+   "images": 3,
+   "broken": [],
+   "fallbacks": 0,
+   "offlineBadge": true,
+   "brokenFetch": [],
+   "brokenDetail": []
+  },
+  {
+   "view": "field-1",
+   "main": true,
+   "images": 1,
+   "broken": [],
+   "fallbacks": 0,
+   "offlineBadge": true,
+   "brokenFetch": [],
+   "brokenDetail": []
+  },
+  {
+   "view": "final",
+   "main": true,
+   "images": 4,
+   "broken": [],
+   "fallbacks": 0,
+   "offlineBadge": true,
+   "brokenFetch": [],
+   "brokenDetail": []
+  },
+  {
+   "view": "ending",
+   "main": true,
+   "images": 4,
+   "broken": [],
+   "fallbacks": 0,
+   "offlineBadge": true,
+   "brokenFetch": [],
+   "brokenDetail": []
+  }
+ ],
+ "errors": []
+}

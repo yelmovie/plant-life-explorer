@@ -1,0 +1,37 @@
+{
+ "out": [
+  {
+   "page": 0,
+   "ready": 1,
+   "flat": 0,
+   "canvas": 1
+  },
+  {
+   "page": 4,
+   "ready": 1,
+   "flat": 0,
+   "canvas": 1
+  },
+  {
+   "page": 6,
+   "ready": 1,
+   "flat": 0,
+   "canvas": 1
+  },
+  {
+   "page": 8,
+   "ready": 1,
+   "flat": 1,
+   "canvas": 1
+  }
+ ],
+ "requests": [
+  "/src/spatial.js",
+  "/src/vendor/three/three.module.min.js",
+  "/src/vendor/three/addons/loaders/GLTFLoader.js",
+  "/src/vendor/three/addons/utils/BufferGeometryUtils.js",
+  "/src/vendor/three/three.core.min.js",
+  "/assets/models/plant_aloe.glb"
+ ],
+ "errors": []
+}

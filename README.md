@@ -36,7 +36,7 @@ npm run preview
 - `src/inquiry.js`: 장소별 의뢰와 환경·특징·생활 연결 자료, 분류 확인.
 - `src/learning.js`: 관찰 증거·계절 사진·환경 연결·보고·새 상황 적용 화면.
 - `src/spatial.js`, `src/fieldwork.css`: 입체 관찰·정원·가방과 그림 대안. Three.js r181의 MIT 라이선스는 `assets/three-license.txt`.
-- `src/style.css`, `src/visuals.css`, `src/adventure.css`: 기본 디자인. `src/layout.css`는 전체 화면 틀과 태블릿별 최종 배치 규칙이다. 자세한 값은 `docs/DESIGN-SYSTEM.md`.
+- `src/style.css`, `src/visuals.css`, `src/adventure.css`: 기본 디자인. `src/layout.css`는 전체 화면 틀과 태블릿별 최종 배치 규칙이다. `src/frame.css`(마지막에 읽음)는 활동 화면의 오늘의 연구·활동 무대·하단 동작 배치를 맡는다. 자세한 값은 `docs/DESIGN-SYSTEM.md`.
 - `assets/generated/`: 원본 PNG와 화면용 WebP. `assets/CREDITS.md`: 출처.
 - `docs/ASSET-PROMPTS-20261014.json`: 이미지 생성 프롬프트 기록.
 - `docs/reviews/FINAL-CHECK-20261020.md`: 23항목 점검·수정·남은 현장 검수.
@@ -125,3 +125,13 @@ Git에는 코드·테스트·문서·실행용 WebP를 보관한다. `dist/`는 
 - 3D 로딩 실패의 그림 대체·재시도는 `src/runtime-support.js`와 `src/app.js`에서 처리한다. 지연 응답은 현재 화면에만 적용한다.
 - 화면 크기 검증은 별도 포트의 `tests/final-review.html`에서 진행한다. 이 페이지는 검증용 기록을 준비하므로 학생이 사용하는 origin에서 열지 않는다. 준비 기록의 렌더 검증은 실제 학생 완주나 수업 효과 검증과 다르다.
 - 새 화면 문구를 바꾼 뒤에는 `python scripts/subset-fonts.py`로 글꼴을 갱신하고 `npm run check`, `npm test`, `npm run build`를 실행한다.
+
+
+## 납품 전 디자인·교실 준비 고도화 (2026-10-25)
+
+- 활동 화면을 샘플 화면 구성(위 여정 · 왼쪽 오늘의 연구와 리피 · 가운데 활동 무대 · 아래 할 일 하나)으로 통일했다. 리피의 반응과 다음 할 일은 말풍선 한 곳에 나온다. 배치 규칙은 `src/frame.css`, 설명은 `docs/DESIGN-SYSTEM.md`.
+- CSS·SVG로 그리던 선인장·부력 모형·초봄 새싹·천 조각과 서식지 버튼을 같은 화풍의 생성 그림 9장으로 바꿨다(`assets/CREDITS.md`).
+- 지도에서 다음 장소의 배경 그림을 한가할 때 미리 받아, 활동이 빈 화면으로 열리지 않는다.
+- `npm run build`가 CSS를 `src/bundle.css` 하나로 합치고, 설치된 esbuild가 있으면(`ESBUILD_MODULE_PATH`, 없으면 wrangler에 포함된 것) 앱 스크립트를 `src/app.bundle.js` 하나로 묶고 압축한다. 입체 모듈(`spatial.js`)은 따로 남아 필요할 때만 받는다. esbuild가 없으면 기존 모듈 그대로 배포한다. 첫 화면 요청 36→11개.
+- 설정 › 교사용 가이드 › 교사용 도구의 **수업 전 오프라인 준비**: 배포 주소에서 한 번 연 기기에서 그림·입체 모형·three.js를 하나씩 차례로 저장한다. 영상은 연결될 때만 재생되고 끊기면 건너뛸 수 있다. 서비스워커가 없는 localhost에서는 안내만 뜬다(`?sw`로 확인).
+- 점검: `docs/reviews/FINAL-CHECK-20261025.md`, 증거 `docs/reviews/final-20261025/`.

@@ -1,0 +1,213 @@
+/* Delivery frame, 2026-10-25. Loaded last: owns the activity screen's three zones that follow the
+   sample pages (_reference/samplepages) — top journey, left "오늘의 연구" panel with Leafy, centre
+   stage, one-row footer. Earlier sheets keep component looks; geometry for these zones lives here. */
+:root {
+  --today-w: clamp(184px, 19.5vw, 300px);
+  --today-paper: #fffcef;
+  --today-edge: #c8d5a6;
+  --today-head-top: #3d6c49;
+  --today-head-bottom: #2d5a3d;
+  --stage-panel: rgb(255 252 239 / .72);
+  --text-plate: rgb(255 252 239 / .94);
+  --bubble-text: var(--frame-text); /* clamp(20px, 1.45vw, 24px) from layout.css */
+}
+
+/* ── 1. Scene base: a greenhouse tint while the painting streams in (no blank cream flash). ── */
+#app .exploration-activity { background-color: #cddfc3; }
+
+/* ── 2. Left column: 오늘의 연구 + Leafy (landscape tablets and up; narrower screens stack, see §7) ── */
+@media (min-width: 901px) and (orientation: landscape) {
+  #app .exploration-activity {
+    grid-template-columns: var(--today-w) minmax(0, 1fr);
+    grid-template-rows: 56px minmax(0, 1fr) auto;
+    column-gap: 18px;
+  }
+  #app .exploration-activity .field-guide {
+    grid-column: 1; grid-row: 2; min-height: 0; padding: 0 0 2px;
+    display: flex; flex-direction: column; align-items: stretch; justify-content: space-between; gap: 10px;
+    overflow: hidden;
+  }
+}
+#app .today-panel {
+  display: flex; flex-direction: column; gap: 8px; min-height: 0; flex: 0 1 auto; overflow: auto;
+  padding: 0 12px 12px; background: var(--today-paper);
+  border: 2px solid var(--today-edge); border-radius: 20px;
+  box-shadow: 0 5px 0 #3c4f3530, 0 14px 26px #24392b24; scrollbar-width: thin;
+}
+#app .today-panel > h2 {
+  position: sticky; top: 0; z-index: 1; display: flex; align-items: center; gap: 8px;
+  margin: 0 -12px 2px; padding: 9px 14px; border-radius: 17px 17px 0 0;
+  background: linear-gradient(var(--today-head-top), var(--today-head-bottom)); color: #fffced;
+  font: 20px/1.3 var(--font-display); letter-spacing: -.3px;
+}
+#app .today-steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+#app .exploration-activity .today-steps .mission-step {
+  justify-content: flex-start; width: 100%; min-height: 50px; padding: 7px 10px; text-align: left;
+  border: 2px solid transparent; border-radius: 14px; background: #f1f4e2; color: #4c5c42;
+  font: 18px/1.3 var(--font-display); box-shadow: none;
+}
+#app .exploration-activity .today-steps .mission-step b { width: 28px; height: 28px; background: #fffcef; border: 2px solid #c8d5a6; }
+#app .exploration-activity .today-steps button.mission-step:hover { border-color: #9db37c; }
+#app .exploration-activity .today-steps .mission-step.active { background: var(--today-head-bottom); color: #fffced; box-shadow: 0 3px 0 #173824; }
+#app .exploration-activity .today-steps .mission-step.active b { background: #cbe6a4; border-color: #cbe6a4; color: #26462e; }
+#app .exploration-activity .today-steps .mission-step.done:not(.active) { background: #e2eec8; color: #2e5d3d; }
+#app .exploration-activity .today-steps .mission-step.done:not(.active) b { background: #5d8f4b; border-color: #5d8f4b; color: #fff; }
+#app .today-panel :is(details, .miss-note) { margin: 0; font-size: 16px; }
+#app .today-panel details > summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; color: #3f5d3b; font-family: var(--font-display); }
+#app .today-panel details > p { margin: 0; font-size: 16px; line-height: 1.5; color: #46553d; }
+#app .today-panel .btn { min-height: 48px; font-size: 17px; }
+
+#app .guide-talk { display: flex; flex-direction: column; align-items: stretch; justify-content: flex-end; gap: 4px; flex: 1 0 auto; min-height: 0; }
+#app .today-panel .field-access-help > summary { min-height: 44px; font: 16px/1.3 var(--font-body); color: #5b6a52; text-decoration: underline; text-underline-offset: 3px; }
+#app .exploration-activity .guide-talk .guide-bubble {
+  max-height: none; overflow: visible; padding: 11px 14px; font-size: var(--bubble-text); line-height: 1.45;
+  border-radius: 20px 20px 20px 6px; scrollbar-width: thin; transition: background .2s, border-color .2s;
+}
+#app .exploration-activity .guide-talk .guide-bubble.mission-feedback { border-left-width: 2px; border-color: #879f70; }
+#app .exploration-activity .guide-talk .guide-bubble.success { background: #eef7dc; border-color: #6d9a50; }
+#app .exploration-activity .guide-talk .guide-bubble.success::after { background: #eef7dc; border-color: #6d9a50; }
+#app .guide-avatar { display: flex; align-items: flex-end; gap: 4px; padding-left: 6px; min-height: 0; }
+#app .exploration-activity .guide-avatar .guide-mascot { order: 0; height: clamp(100px, 19vh, 176px); min-height: 0; width: auto; max-width: 130px; flex-shrink: 1; }
+#app .exploration-activity .guide-avatar .guide-partner {
+  order: 1; margin-bottom: 8px; padding: 3px 12px; font-size: 16px; line-height: 1.25;
+  white-space: normal; max-width: 7.5em; text-align: center;
+  color: #fffced; background: var(--today-head-bottom); border-radius: 999px; box-shadow: 0 2px 0 #173824;
+}
+
+/* ── 3. Footer: one row — tools, where-am-I chip, the single primary action. ── */
+#app .exploration-activity .learning-footer { padding: 8px 0 14px; }
+#app .exploration-activity .learning-footer > div { align-items: center; }
+/* Progress numbers stay off the painting (iscream screen frame); the left steps show progress. */
+#app .exploration-activity .learning-footer .activity-route { display: none; }
+#app .exploration-activity .learning-footer > div > .primary { margin-left: auto; }
+
+/* ── 4. Field missions: objective bar carries progress and "다음 도전"; workspace sits on a paper stage. ── */
+#app .field-mission { gap: 10px; }
+#app .field-mission .mission-objective { flex-wrap: wrap; row-gap: 6px; padding: 10px 14px; border: 2px solid #fffdf3; }
+#app .field-mission .mission-objective > span { flex: 1 1 18em; display: flex; align-items: flex-start; gap: 10px; font-size: clamp(20px, 1.6vw, 24px); }
+#app .objective-num {
+  display: grid; place-items: center; flex-shrink: 0; width: 32px; height: 32px; margin-top: 1px;
+  border-radius: 50%; background: var(--today-head-bottom); color: #fffced; font: 18px/1 var(--font-display);
+}
+#app .mission-objective.step-done { background: #eef7dc; border-color: #b9d39a; }
+#app .mission-objective.step-done .objective-num { background: #5d8f4b; }
+#app .mission-objective .objective-next { min-height: 48px; animation: frame-nudge 2.8s ease-in-out 1.2s infinite; }
+#app .field-mission .mission-workspace {
+  padding: 12px; border-radius: 22px; background: var(--stage-panel);
+  border: 2px solid rgb(255 255 255 / .75); box-shadow: 0 10px 26px #2b3d2a1f;
+}
+#app .field-mission .mission-workspace { flex: 0 1 auto; }
+/* First, unaided predictions: the subject picture sits beside the two choices. */
+#app .field-season-predictions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; padding: 0; background: none; }
+#app .field-season-predictions > .direct-hint { grid-column: 1 / -1; }
+#app .field-season-predictions section { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 12px; border-radius: 18px; background: #fffdf1; box-shadow: 0 4px 0 #42503520; }
+#app .field-season-predictions section .mission-tool { width: 100%; }
+#app .field-predict-picture { border-radius: 14px; overflow: hidden; }
+#app .field-season-predictions .field-predict-picture .season-atlas { height: 150px; min-height: 0; }
+#app .field-bag-predict { display: grid; grid-template-columns: minmax(180px, 34%) minmax(0, 1fr); align-items: center; gap: 18px; }
+#app .field-bag-predict .field-predict-picture { padding: 8px; background: #fffdf1; }
+#app .field-bag-predict .bag-art { max-height: 220px; }
+#app .field-predict-choices { display: grid; gap: 10px; margin-top: 10px; }
+#app .field-mission .mission-loot { justify-content: center; font: 19px/1.4 var(--font-display); animation: frame-pop .42s cubic-bezier(.2,1.4,.4,1) both; }
+@keyframes frame-nudge { 0%, 86%, 100% { transform: none; } 92% { transform: translateY(-3px); } }
+@keyframes frame-pop { from { transform: scale(.86); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* ── 5. Loose text on paintings gets a plate (4.5:1), never a blur. ── */
+#app .exploration-activity :is(.reason-cards > p, .rule-result, .prediction > p, .discovery-prompt, .prediction-note) {
+  width: fit-content; max-width: 100%; margin-inline: auto; padding: 6px 14px; border-radius: 12px;
+  background: var(--text-plate); color: var(--scene-ink);
+}
+dialog::backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgb(24 46 34 / .62); }
+#app .exploration-activity :is(.design-layout .learning-note, .test-layout .learning-note) {
+  -webkit-backdrop-filter: none; backdrop-filter: none; background: rgb(255 253 244 / .93);
+}
+
+#app .activity-5 .habitat-focus { width: fit-content; max-width: 100%; margin-inline: auto; padding: 6px 16px; border-radius: 18px; background: var(--text-plate); box-shadow: 0 4px 0 #42503520; }
+#app .activity-5 .habitat-focus > img { width: auto; max-height: 140px; }
+#app .activity-5 .habitat-focus p { background: none; }
+
+/* Bag workshop: picture cards lie flat (picture | label) so both part rows fit under the model. */
+@media (min-width: 761px) {
+  #app .activity-8 .compact-bag[data-spatial] { flex: 0 0 clamp(150px, 26vh, 230px); height: clamp(150px, 26vh, 230px); min-height: 0; }
+  #app .exploration-activity .design-layout .picture-parts .part-card { flex-direction: row; justify-content: flex-start; gap: 10px; min-height: 62px; padding: 5px 12px; text-align: left; }
+  #app .exploration-activity .design-layout .picture-parts .part-card img { width: 64px; height: 50px; flex-shrink: 0; }
+}
+
+/* ── 6. Painted replacements for former CSS/SVG drawings ── */
+#app .field-float-model { width: auto; height: 120px; object-fit: contain; filter: drop-shadow(0 7px 4px #244a3c2e); }
+#app .field-model-token .field-float-model { height: 92px; }
+#app .field-tank-model .field-float-model { height: 96px; }
+#app .field-bud-picture { display: block; width: 100%; height: 115px; object-fit: cover; border-radius: 12px; }
+#app .field-time-slot .field-bud-picture { height: 115px; }
+#app .field-env-token { flex-direction: column; gap: 2px; padding: 6px 16px 8px; }
+#app .field-habitat-picture, #app .habitat-picture { width: 84px; height: 74px; object-fit: contain; filter: drop-shadow(0 4px 3px #2f3b2a2e); }
+#app .link-board .habitat-picture { width: 64px; height: 56px; flex-shrink: 0; }
+#app .link-board .btn:has(.habitat-picture) { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto auto; column-gap: 8px; justify-items: start; text-align: left; padding: 6px 10px; }
+#app .link-board .btn:has(.habitat-picture) .habitat-picture { grid-row: 1 / 3; }
+#app .link-board .plant-thumb { width: 44px; height: 44px; object-fit: contain; flex-shrink: 0; }
+#app .terrain-tools .habitat-picture { width: 44px; height: 38px; }
+#app .final-habitat-choices .btn { flex-direction: column; gap: 2px; min-width: 120px; padding: 8px 16px 10px; }
+#app .final-habitat-choices .habitat-picture { width: 92px; height: 80px; }
+#app .tablet-final .cactus-picture { display: grid; place-items: center; }
+#app .tablet-final .cactus-picture > img { height: 100%; max-height: inherit; width: auto; object-fit: contain; filter: drop-shadow(0 10px 8px #2f3b2a33); }
+#app .cloth-sample { background: #f1f1dc; }
+#app .cloth-sample > span:nth-child(2) { position: absolute; top: 6px; left: 8px; z-index: 2; font-size: var(--font-size-xs); font-weight: 700; }
+
+/* Narrow landscape tablets: nameplate wraps instead of clipping; the test record panel yields width. */
+@media (max-width: 1100px) and (min-width: 901px) and (orientation: landscape) {
+  :root { --bubble-text: 18px; }
+  #app .exploration-activity .guide-avatar .guide-partner { display: none; }
+  #app .activity-9 .test-layout { grid-template-columns: minmax(0, 1fr) minmax(250px, 37%); }
+}
+/* Short labels never break into a column of single syllables. */
+@media (max-width: 1100px) {
+  #app .activity-2 .timeline > div { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #app .activity-2 .timeline .btn { white-space: nowrap; }
+  #app .link-board .habitat-picture { width: 40px; height: 36px; }
+  #app .link-board .btn:has(.habitat-picture) { column-gap: 6px; padding: 6px 8px; }
+}
+#app :is(.field-garden-zone strong, .field-garden-zone .field-zone-name, .field-hotspot, .mission-step span) { text-wrap: balance; }
+
+/* Electronic whiteboards (1920×1080 class): the frame grows with the screen instead of floating small. */
+@media (min-width: 1500px) and (min-height: 850px) {
+  :root { --today-w: 320px; --bubble-text: 24px; }
+  #app .today-panel > h2 { font-size: 25px; padding: 12px 16px; }
+  #app .exploration-activity .today-steps .mission-step { min-height: 62px; font-size: 21px; }
+  #app .exploration-activity .today-steps .mission-step b { width: 34px; height: 34px; }
+  #app .today-panel :is(details > summary, details > p, .miss-note) { font-size: 19px; }
+  #app .exploration-activity .guide-avatar .guide-mascot { height: clamp(150px, 21vh, 230px); max-width: 170px; }
+  #app .exploration-activity .guide-avatar .guide-partner { font-size: 19px; }
+  #app .field-mission .mission-objective > span { font-size: 27px; }
+  #app .objective-num { width: 40px; height: 40px; font-size: 22px; }
+  #app .field-mission .mission-workspace { flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; gap: 14px; }
+  #app .field-float-model { height: 160px; }
+  #app .field-model-token .field-float-model { height: 120px; }
+  #app .field-habitat-picture, #app .habitat-picture { width: 110px; height: 96px; }
+}
+
+/* ── 7. Stacked layouts (portrait, ≤900px): 오늘의 연구 + Leafy become one strip above a full-width stage. ── */
+@media (max-width: 900px), (orientation: portrait) {
+  html body.activity-open { overflow: auto; }
+  #app .exploration-activity { display: flex; flex-direction: column; gap: 10px; height: auto; min-height: 100dvh; overflow: visible; }
+  #app .exploration-activity .field-guide { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); align-items: end; gap: 10px; padding: 0; min-height: 0; overflow: visible; }
+  #app .exploration-activity > .learning-layout { height: auto; min-height: 0; }
+  #app .exploration-activity .learning-scene { height: auto; min-height: 0; overflow: visible; }
+  #app .today-steps { flex-direction: row; }
+  #app .exploration-activity .today-steps .mission-step { flex: 1 1 0; min-width: 0; flex-direction: column; justify-content: center; gap: 4px; text-align: center; font-size: 16px; padding: 6px 4px; }
+  #app .guide-talk { flex-direction: row-reverse; align-items: flex-end; gap: 6px; }
+  #app .exploration-activity .guide-talk .guide-bubble { flex: 1 1 auto; }
+  #app .exploration-activity .guide-talk .guide-bubble::after { display: none; }
+  #app .guide-avatar { flex-direction: column; align-items: center; gap: 2px; padding: 0; }
+  #app .exploration-activity .guide-avatar .guide-mascot { height: 92px; }
+  #app .exploration-activity .guide-avatar .guide-partner { display: none; }
+}
+@media (max-width: 760px) {
+  #app .exploration-activity .field-guide { grid-template-columns: 1fr; }
+  #app .field-guide h1 { order: -1; }
+  #app .exploration-activity .today-steps .mission-step { font-size: 16px; }
+}
+.large-text #app .exploration-activity .field-guide { overflow: visible; }
+@media (prefers-reduced-motion: reduce) {
+  #app .mission-objective .objective-next, #app .field-mission .mission-loot { animation: none; }
+}
+@media print { #app .today-panel, #app .guide-talk { display: none; } }
