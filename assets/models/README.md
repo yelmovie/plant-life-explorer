@@ -12,3 +12,19 @@ Meshy Image-to-3D 결과를 블렌더 5.2로 다듬은 파일이다. 원본은 `
 2026-10-23 정원은 알로에 GLB와 부레옥잠·벚나무의 투명 그림을 함께 쓴다. 가방은 투명 그림 네 종류를 기본으로 보여 주며 간단한 코드 입체 모형으로 전환할 수 있다. 실제 가방 GLB는 아직 없고, 입력 그림과 프롬프트는 `docs/MESHY-BAG-PROMPTS-20261023.md`에 정리했다. 새 GLB는 모양을 확인한 뒤 코드에 연결해야 하며, 파일명만 맞춘다고 자동 교체되지는 않는다.
 
 2026-10-23 재확인: `src/spatial.js`의 탐구3 분기는 두 petiole GLB를 불러오지 않고 LatheGeometry/ExtrudeGeometry로 설명 모형을 만든다. 단면 GLB의 깊이/높이는 원본·최적화본 모두 약 0.126으로, 최적화 이전부터 납작했다. 자르기 전 GLB는 같은 비율이 약 0.864다. 재생성용 이미지·Meshy 프롬프트·치수 근거는 `docs/meshy-petiole-20261023/README.md`를 참고한다.
+
+## 2026-10-25 2단계 계절 타임랩 GLB 4종
+
+사용자가 Meshy Image-to-3D(질감 포함)로 만든 원본을 `_source/original-glb/season-20261025/`에 두고, `scripts/blender-season-glb.py`로 다듬었다. 입력 그림은 `_source/meshy-input/m2-season-20261025/M1~M4`.
+
+| 파일 | 쓰는 곳 | 원본 | 삼각형 | 크기 |
+|---|---|---|---|---|
+| `season_cherry_bare.glb` | 2단계 벚나무 줄기·가지·뿌리(다섯 계절 공통) | `Meshy_AI_Bare_Cherry_Tree_with_1025133530_image-to-3d-texture.glb` | 1,390,394 → 40,000 (가지 22,584 + 줄기 17,416) | 71.6MB → 1.71MB |
+| `season_sowthistle_root.glb` | 2단계 씀바귀 곧은뿌리(땅속) | `Meshy_AI_Korean_Sowthistle_Roo_1025133541_image-to-3d-texture.glb` | 882,104 → 14,000 | 56.0MB → 0.95MB |
+| `season_sowthistle_rosette.glb` | 2단계 씀바귀 뿌리잎(계절별 색·크기만 바꿈) | `Meshy_AI_Korean_Sowthistle_Lea_1025133606_image-to-3d-texture.glb` | 900,306 → 11,999 | 51.3MB → 0.72MB |
+| `season_sowthistle_flowers.glb` | 2단계 씀바귀 꽃줄기(여름·가을만 보임) | `Meshy_AI_Korean_Sowthistle_Flo_1025133551_image-to-3d-texture.glb` | 678,218 → 12,000 | 43.7MB → 0.76MB |
+
+- 찢어짐 방지: 가져올 때 겹친 꼭짓점을 합치고(UV 이음새만, 1e-6 거리) Decimate는 한 번만 했다. 열린 모서리 수는 전후 0→0(뿌리잎만 0→1, 화면에서 보이지 않음). 정면·옆·위 렌더를 원본과 나란히 비교했다(`D:/iscreammedia_sc34/_scratch/leave-20261025/glb-renders/`).
+- 기준: glTF +Y 위, y=0이 땅 높이, 원점은 줄기·뿌리 축. 벚나무는 전체 높이 2.0(땅 위 약 80%), 씀바귀 뿌리 1.0·뿌리잎 폭 1.0·꽃줄기 1.5. 질감 1024 JPEG, 금속·거칠기 질감 제거(거칠기 0.85).
+- 벚나무 가지는 Meshy가 한 장의 평면처럼 납작하게 만들었다. 가지 갈림 위를 `crown`, 아래를 `trunk` 노드로 나눴고, 앱(`spatial.js`)이 `crown`을 60°·120° 돌린 복사본 2개를 더해 입체감을 준다(기하 공유, 추가 다운로드 없음).
+- 잎·단풍·겨울눈·벚꽃은 GLB에 넣지 않고 앱이 가지 끝에 그림 카드(InstancedMesh)로 붙인다. 같은 나무 한 그루로 다섯 계절을 보여 주기 위해서다.

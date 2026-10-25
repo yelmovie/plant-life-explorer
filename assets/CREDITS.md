@@ -21,7 +21,7 @@
 | OpenAI 생성 이미지 (`generated/`), 이를 가공한 설치 아이콘 (`icons/`) | 제작 기록이 있는 AI 생성물·가공본 | 화면 AI 고지 있음. 생성 당시 계정의 회사 이용 권한은 배포 전 문서 확인 대상 |
 | 기획자 제공 제목·캐릭터·활동 배경·표정 시트 | 기획자 제공 AI 제작 자료 | 제공 사실·제작 기록 보존. 원본 권리와 제공 범위는 제공자 확인 대상 |
 | Higgsfield 도장 3종·3D 생성 입력 그림 | Higgsfield GPT Image 2.5 제작 기록 | 제작 도구 기록 있음. 계정별 상업 이용 조건은 배포 전 문서 확인 대상 |
-| Meshy GLB 3종 (`models/`) | Meshy AI 생성·Blender 가공 기록 | 생성·입력·가공 기록 보존. 상업 이용 가능한 조건으로 제작했음을 2026-10-24 사용자 확인. 파일 존재와 현재 런타임 연결 여부는 `models/README.md`에서 구분 |
+| Meshy GLB 7종 (`models/`, 2026-10-25 계절 4종 추가) | Meshy AI 생성·Blender 가공 기록 | 생성·입력·가공 기록 보존. 상업 이용 가능한 조건으로 제작했음을 2026-10-24 사용자 확인(10-25 계절 4종도 같은 조건 제작 전제). 파일 존재와 현재 런타임 연결 여부는 `models/README.md`에서 구분 |
 | Suno 배경 음악 2곡 (`audio/`) | 기획자 자체 AI 생성 음원 | 상업 이용 가능한 조건으로 제작했음을 2026-10-24 사용자 확인. 요금제·계약 세부는 저장소에 없음 |
 | 효과음 | 앱 코드(Web Audio)로 직접 합성 | 외부 음원 없음 |
 | npm 의존성 | 없음 (`package.json`에 dependencies 없음) | 하위 작업 폴더까지 `package.json` 정적 탐색 시 본 앱 1개. 직접 동봉한 Three.js는 위에서 별도 검토 |
@@ -132,7 +132,7 @@
 
 ## 2026-10-25 계절 타임랩 3D 준비 그림 7장 (아직 앱에 연결 전)
 
-2단계 계절 타임랩 3D의 Meshy 입력 4장과 코드용 질감 3장을 Higgsfield GPT Image 2.5(2k, 투명 배경)로 생성했다. 사용 크레딧은 14(high 4장 × 2.75 + medium 3장 × 1)이다. 원본은 `_source/meshy-input/m2-season-20261025/M1~M4-*.png`와 `_source/generated-images/originals-20261025/season_*.png`에 있다. 프롬프트와 참고 그림은 `docs/meshy-season-20261025/image-prompts.txt`에 있다. 씀바귀 꽃줄기는 생성본 둘레의 흰 번짐을 투명도 정리로 지웠고, 정리 전 원본도 보관했다. GLB는 사용자가 Meshy에서 제작할 예정이며, 앱 연결·WebP 변환은 아직 하지 않았다.
+2단계 계절 타임랩 3D의 Meshy 입력 4장과 코드용 질감 3장을 Higgsfield GPT Image 2.5(2k, 투명 배경)로 생성했다. 사용 크레딧은 14(high 4장 × 2.75 + medium 3장 × 1)이다. 원본은 `_source/meshy-input/m2-season-20261025/M1~M4-*.png`와 `_source/generated-images/originals-20261025/season_*.png`에 있다. 프롬프트와 참고 그림은 `docs/meshy-season-20261025/image-prompts.txt`에 있다. 씀바귀 꽃줄기는 생성본 둘레의 흰 번짐을 투명도 정리로 지웠고, 정리 전 원본도 보관했다. GLB는 사용자가 Meshy에서 제작했고, 2026-10-25에 블렌더로 다듬어 `models/season_*.glb` 4종으로 앱에 연결했다(대조표는 `models/README.md`). 단풍잎·벚꽃 질감은 `generated/season_cherry_leaf_autumn.webp`·`season_cherry_blossom.webp`로 줄여 연결했다.
 
 | 원본 | job 앞 8자 | SHA-256 앞 16자 |
 |---|---|---|

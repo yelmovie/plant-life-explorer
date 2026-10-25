@@ -210,6 +210,15 @@ dialog::backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; backgro
 #app .learning-note .bud-record { margin-top: 10px; }
 #app .learning-note .bud-record small { font-size: 16px; font-weight: 400; color: #66704f; }
 
+/* Season 3D: the picture box hosts the canvas; badge and soil button stay above it, view buttons sit bottom-left. */
+#app .season-scene > #season-art { position: relative; height: 100%; min-height: 0; }
+#app .season-scene > #season-art.spatial-ready { background: linear-gradient(#d6ecf6, #eef4ea 62%, #f3efdc); border-radius: inherit; }
+#app .season-scene > :is(.btn, .scene-badge) { z-index: 6; }
+#app #season-art .spatial-controls { left: 8px; right: auto; bottom: 8px; justify-content: flex-start; }
+/* With the 3D controls along the bottom, the soil button moves to the top-right corner (sky side). */
+#app .season-scene:has(> #season-art.spatial-ready) > .btn { top: 8px; bottom: auto; }
+#app #season-art .spatial-controls > span { display: none; }
+
 /* ── 7. Stacked layouts (portrait, ≤900px): 오늘의 연구 + Leafy become one strip above a full-width stage. ── */
 @media (max-width: 900px), (orientation: portrait) {
   html body.activity-open { overflow: auto; }

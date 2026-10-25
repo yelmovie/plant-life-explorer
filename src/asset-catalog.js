@@ -81,6 +81,8 @@ export const ASSETS = Object.freeze({
   cherry_bud_spring: ['초봄의 벚나무', '겨울을 지난 가지에 새눈이 부풀어 오른 벚나무와 땅속 뿌리'],
   sowthistle_bud_spring: ['초봄의 씀바귀', '살아 있던 뿌리에서 새싹이 돋는 씀바귀'],
   season_cherry_winter_bud: ['벚나무 겨울눈', '가지 끝에 껍질로 싸인 겨울눈 세 개, 맨 위 눈이 막 열리기 시작함'],
+  season_cherry_leaf_autumn: ['벚나무 단풍잎', '붉고 노랗게 물든 벚나무 잎'],
+  season_cherry_blossom: ['벚꽃 송이', '분홍 벚꽃 다섯 송이와 꽃봉오리'],
   season_sowthistle_crown_bud: ['씀바귀 뿌리 머리 새눈', '겨울을 난 곧은뿌리 머리에서 돋는 작은 초록 새눈'],
 });
 
@@ -104,6 +106,13 @@ export function warmImage(src) {
   warmed.add(src);
   // Idle time only, so warming never competes with the screen the student is looking at.
   const start = () => { const image = new Image(); image.decoding = 'async'; image.src = src; };
+  if (typeof requestIdleCallback === 'function') requestIdleCallback(start, {timeout: 3000}); else setTimeout(start, 600);
+}
+// Same idle-time warming for non-image files (the season GLBs) so stage 2 opens without waiting.
+export function warmFile(src) {
+  if (warmed.has(src)) return;
+  warmed.add(src);
+  const start = () => { fetch(src).catch(() => {}); };
   if (typeof requestIdleCallback === 'function') requestIdleCallback(start, {timeout: 3000}); else setTimeout(start, 600);
 }
 export const warmMission = i => STAGE_BACKGROUNDS.slice(i * 2, i * 2 + 2).forEach(key => warmImage(`/assets/generated/${key}.webp`));
