@@ -8,10 +8,10 @@
 
 | 생성할 GLB | 사용할 초기 이미지 |
 |---|---|
-| `bag_plain_open.glb` | [보통 천·열린 입구](../_source/meshy-input/meshy_m5_bag_plain_open.png) |
-| `bag_plain_closed.glb` | [보통 천·덮개](../_source/meshy-input/meshy_m5_bag_plain_closed.png) |
-| `bag_lotus_open.glb` | [연잎 겉면·열린 입구](../_source/meshy-input/meshy_m5_bag_lotus_open.png) |
-| `bag_lotus_closed.glb` | [연잎 겉면·덮개](../_source/meshy-input/meshy_m5_bag_lotus_closed.png) |
+| `bag_plain_open.glb` | [보통 천·열린 입구](../_source/meshy-input/m5-bag/meshy_m5_bag_plain_open.png) |
+| `bag_plain_closed.glb` | [보통 천·덮개](../_source/meshy-input/m5-bag/meshy_m5_bag_plain_closed.png) |
+| `bag_lotus_open.glb` | [연잎 겉면·열린 입구](../_source/meshy-input/m5-bag/meshy_m5_bag_lotus_open.png) |
+| `bag_lotus_closed.glb` | [연잎 겉면·덮개](../_source/meshy-input/m5-bag/meshy_m5_bag_lotus_closed.png) |
 
 ## 공통 프롬프트
 

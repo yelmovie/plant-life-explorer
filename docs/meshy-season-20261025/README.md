@@ -2,13 +2,14 @@
 
 최종점검(`../reviews/FINAL-CHECK-20261025.md`)에서 2단계 '계절과 생활'이 가장 약한 스테이지였다. 완주한 뒤에 같은 사진을 다시 이을 이유가 없다는 점이 약점이다. 2D 계절 그림을 입체 타임랩으로 바꾸고, 겨울에도 살아 있는 부분을 학생이 직접 찾게 하는 설계다. 이 문서는 설계와 GLB 제작 자료까지만 담는다. GLB는 사용자가 Meshy에서 만들고, 연결 구현은 GLB를 받은 뒤에 한다.
 
-- 복붙용 Meshy 프롬프트: [meshy-prompts.txt](meshy-prompts.txt)
+- **복붙용 3D 작업지(파일 위치·설정·프롬프트)**: [3D작업지.md](3D작업지.md) — 같은 파일이 그림 폴더 `_source/meshy-input/m2-season-20261025/00-3D작업지-복붙용.md`에도 있다
+- 만든 GLB 넣는 곳: `_source/original-glb/season-20261025/`
 - 기본 이미지 생성 프롬프트(재생성용): [image-prompts.txt](image-prompts.txt)
 - 입력 그림 미리보기: [inputs-preview.jpg](inputs-preview.jpg)
 
 ## 1. 왜 이렇게 나누었나
 
-기존 벚나무 그림(`cherry_tree`, `meshy_m4_cherry`)은 잎이 가지를 덮고 있다. 이 그림을 Meshy에 넣으면 잎 덩어리 하나가 만들어지고, 계절마다 같은 나무를 보여 줄 수 없다. 계절마다 모델을 따로 만들면 줄기 모양이 달라진다. 그러면 "같은 나무가 겨울을 지나 다시 자란다"는 2단계의 핵심이 흐려진다.
+기존 벚나무 그림(`cherry_tree`, `m4-garden/meshy_m4_cherry`)은 잎이 가지를 덮고 있다. 이 그림을 Meshy에 넣으면 잎 덩어리 하나가 만들어지고, 계절마다 같은 나무를 보여 줄 수 없다. 계절마다 모델을 따로 만들면 줄기 모양이 달라진다. 그러면 "같은 나무가 겨울을 지나 다시 자란다"는 2단계의 핵심이 흐려진다.
 
 그래서 **계절이 바뀌어도 그대로인 부분(줄기·가지·뿌리)만 Meshy로 만들고, 바뀌는 부분(잎·단풍·꽃·겨울눈)은 코드로 얹는다.** 같은 몸통이 한 번도 바뀌지 않으므로 학생은 같은 식물을 따라가게 된다.
 
@@ -27,10 +28,10 @@
 
 | 번호 | 만들 GLB | Meshy에 올릴 이미지 | 기존 그림과의 관계 |
 |---|---|---|---|
-| M1 | `season_cherry_bare.glb` | `_source/meshy-input/meshy_m2_cherry_bare_roots.png` | 새로 생성. 기존 `cherry_seasons_v2`의 겨울 나무를 참고했다. 가지 끝 겨울눈이 혹으로 보이게 했다 |
-| M2 | `season_sowthistle_root.glb` | `_source/meshy-input/meshy_m2_sowthistle_root.png` | 새로 생성. 기존 `sowthistle_seasons_v2`의 곧은뿌리를 참고했다. 뿌리 머리에 작은 새눈이 있다 |
-| M3 | `season_sowthistle_rosette.glb` | `_source/meshy-input/meshy_m2_sowthistle_rosette.png` | 새로 생성. 같은 그림을 참고한 톱니잎 방석 |
-| M4 | `season_sowthistle_flowers.glb` | `_source/meshy-input/meshy_m2_sowthistle_flowers.png` | 새로 생성. 흰 번짐을 투명도 정리로 지웠다(원본은 `originals-20261025/`) |
+| M1 | `season_cherry_bare.glb` | `_source/meshy-input/m2-season-20261025/M1-cherry-bare-roots.png` | 새로 생성. 기존 `cherry_seasons_v2`의 겨울 나무를 참고했다. 가지 끝 겨울눈이 혹으로 보이게 했다 |
+| M2 | `season_sowthistle_root.glb` | `_source/meshy-input/m2-season-20261025/M2-sowthistle-root.png` | 새로 생성. 기존 `sowthistle_seasons_v2`의 곧은뿌리를 참고했다. 뿌리 머리에 작은 새눈이 있다 |
+| M3 | `season_sowthistle_rosette.glb` | `_source/meshy-input/m2-season-20261025/M3-sowthistle-rosette.png` | 새로 생성. 같은 그림을 참고한 톱니잎 방석 |
+| M4 | `season_sowthistle_flowers.glb` | `_source/meshy-input/m2-season-20261025/M4-sowthistle-flowers.png` | 새로 생성. 흰 번짐을 투명도 정리로 지웠다(원본은 `m2-season-20261025/originals/`) |
 
 기존 그림 중 그대로 Meshy에 쓸 수 있는 것은 없었다. 잎이 덮인 나무와 흙 배경이 있는 계절 그림은 입력에 맞지 않는다.
 
@@ -98,7 +99,7 @@ GLB가 없어도 되는 부분은 먼저 구현했다. 3D가 안 되는 기기�
 
 ## 7. GLB를 받은 뒤 할 일
 
-1. 블렌더로 원점·크기·방향을 맞춘다(기준은 `meshy-prompts.txt` 끝). 30,000 삼각형 이하로 줄이고 질감을 1024로 맞춘다. 원본은 `_source/original-glb/`에 보관한다.
+1. 블렌더로 원점·크기·방향을 맞춘다(기준은 `3D작업지.md` 4절). 30,000 삼각형 이하로 줄이고 질감을 1024로 맞춘다. 원본은 `_source/original-glb/`에 보관한다.
 2. 측면 두께를 확인한다. 90도 돌려도 가지·뿌리가 납작하지 않아야 한다. 잎자루 단면처럼 납작하면 재생성한다.
 3. `spatial.js`에 `season` 장면을 추가한다. 2D의 `budsFound`·초봄 상태를 그대로 쓰고, 겨울눈 찾기는 렌즈 탭 대신 3D 광선 판정으로 바꾼다. 기존 2D와 같은 기록이 남는지 `tests/winter-buds.test.mjs`를 넓혀 확인한다.
 4. 1280×800·906×755·1920×1080·873×580 화면과 그림 모드에서 새 기록 완주 시나리오를 다시 돌린다.

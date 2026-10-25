@@ -24,7 +24,7 @@
 - 업로드 이미지: [petiole-cut-reference.png](petiole-cut-reference.png)
 - Meshy용 설명: [meshy-prompt.txt](meshy-prompt.txt)
 - 이미지 생성에 사용한 최종 프롬프트: [image-prompt.txt](image-prompt.txt)
-- 생성 도구: OpenAI 내장 image_gen, transparent_background=true. 기존 `_source/meshy-input/meshy_m3_petiole_whole.png`와 `meshy_m3_petiole_cut.png`를 각각 외형·조직 색감 참고로 사용했다.
+- 생성 도구: OpenAI 내장 image_gen, transparent_background=true. 기존 `_source/meshy-input/m3-petiole/meshy_m3_petiole_whole.png`와 `meshy_m3_petiole_cut.png`를 각각 외형·조직 색감 참고로 사용했다.
 - 새 이미지 SHA-256: `EFC6AF6BEFF5A3966BC6C35C48BAB54FA38F679D06C7D17505B8E56BA3842E77`.
 
 새 이미지는 전체 모형 한 개만 표시하고, 둥근 오른쪽 옆면과 오목한 절개 내부가 보이는 사선 구도를 사용한다. 식물 조직을 설명하기 위한 확대·단순화 모형이다. 새 Meshy 작업이나 GLB 교체는 수행하지 않았다.
