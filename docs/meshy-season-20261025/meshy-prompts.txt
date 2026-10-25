@@ -1,0 +1,35 @@
+초록정원 2단계 계절 타임랩 — Meshy Image to 3D 입력 (2026-10-25)
+입력 그림 폴더: _source/meshy-input/
+공통 설정: Image to 3D · Meshy-6(또는 최신) · Texture 켬(2K) · Topology Triangle · De-light(조명 제거) 켬 · 결과 GLB
+비용(API 가격표 기준): 질감 포함 모델당 30크레딧, 4개 120크레딧. 웹 화면에 다른 값이 보이면 그 값이 우선.
+
+========================================================================
+M1  season_cherry_bare.glb   ← meshy_m2_cherry_bare_roots.png
+설정: Target polycount 40,000 · Symmetry Off
+------------------------------------------------------------------------
+One isolated, fully volumetric 3D model of a bare cherry tree in winter together with its complete root system, for a web-based elementary science time-lapse. Follow the reference image: a short sturdy trunk splitting into four main limbs that spread into a rounded crown, fewer and thicker branches than in nature, and small swollen buds at the twig tips. Below the trunk, a strong root flare divides into six to eight thick lateral roots with finer rootlets, about as wide as the crown. Every branch and root must be a real round cylinder with depth that reads correctly from all sides; the crown and the root spread must extend front-to-back as well as left-to-right. Never a flat cut-out, relief, billboard or single plane. Keep the bud tips as small separate bumps. Warm brown bark, lighter tan roots, matte natural materials. Exactly one object: no leaves, no flowers, no soil, no grass, no snow, no pedestal, no ground plane, no text. Upright, trunk vertical, the point where trunk meets roots centered.
+
+========================================================================
+M2  season_sowthistle_root.glb   ← meshy_m2_sowthistle_root.png
+설정: Target polycount 15,000 · Symmetry Off
+------------------------------------------------------------------------
+One isolated, fully volumetric 3D model of the underground part of a Korean sowthistle (Ixeris dentata) that survives the winter, for a web-based elementary science time-lapse. Follow the reference image: a short compact root crown on top with a few cut dry leaf bases and two or three tiny pale-green bud points, one thick pale tan taproot tapering downward, and several thinner side roots with fine rootlets. Round, thick geometry that keeps its depth when rotated 90 degrees; no flat relief. Matte natural root materials. Exactly one object: no leaves, no flowers, no soil clumps, no pedestal, no text. Upright, crown at the top and centered.
+
+========================================================================
+M3  season_sowthistle_rosette.glb   ← meshy_m2_sowthistle_rosette.png
+설정: Target polycount 15,000 · Symmetry Off(또는 Auto)
+------------------------------------------------------------------------
+One isolated 3D model of a single basal leaf rosette of Korean sowthistle (Ixeris dentata), for a web-based elementary science time-lapse. Follow the reference image: twelve to fourteen lance-shaped green leaves with irregular shallow teeth and a pale midrib, radiating from one small central crown, lying low and gently arching up at the tips like a flat star. Leaves have slight real thickness (not paper-thin, not a single flat plane) and separate clean silhouettes. Smooth matte leaf material in one even fresh green so the color can be tinted per season. Exactly one object: no roots, no stems, no flowers, no soil, no pedestal, no text. The rosette lies flat on the ground plane, crown at the center.
+
+========================================================================
+M4  season_sowthistle_flowers.glb   ← meshy_m2_sowthistle_flowers.png
+설정: Target polycount 20,000 · Symmetry Off
+------------------------------------------------------------------------
+One isolated 3D model of the flowering stems of Korean sowthistle (Ixeris dentata), for a web-based elementary science time-lapse. Follow the reference image: three slender green stems rising from one shared base point, branching near the top into short flower stalks, each with a small bright yellow flower head of five to seven strap-shaped petals with tiny toothed tips, plus two closed buds and a few small narrow clasping leaves. Stems are round and slightly thicker than nature so they stay solid in 3D; petals have slight thickness. Exactly one object: no basal leaves, no roots, no soil, no pedestal, no text. Upright, the shared base point at the bottom center.
+
+========================================================================
+받은 뒤 (블렌더 정리 기준 — 받으면 내가 해도 됨)
+- 단위·방향: Y-up GLB. 땅 높이 = y 0.
+- M1: 줄기와 뿌리가 만나는 지점을 원점(0,0,0). 땅 위 높이 2.0, 뿌리는 y<0. 30,000 삼각형 이하, 질감 1024.
+- M2: 뿌리 머리 윗면 = y 0, 뿌리 길이 1.0. M3: 잎 방석 중심 = 원점, 지름 1.0, 바닥에 붙게. M4: 꽃줄기 밑점 = 원점, 높이 1.0.
+- 모델마다 GLB 1MB 안팎. 파일 이름은 위 이름 그대로 assets/models/에.

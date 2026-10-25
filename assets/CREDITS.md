@@ -129,3 +129,17 @@
 | `generated/cloth_swatch.webp` | 8f743d4d | 400×359 | 있음 | `a303560d708f6837` |
 | `generated/cherry_bud_spring.webp` | fe12ed8c | 768×510 | 없음(장면) | `f800dc94f7726ba4` |
 | `generated/sowthistle_bud_spring.webp` | 4a6e74a3 | 768×510 | 없음(장면) | `0b48260f9bdd2f42` |
+
+## 2026-10-25 계절 타임랩 3D 준비 그림 7장 (아직 앱에 연결 전)
+
+2단계 계절 타임랩 3D의 Meshy 입력 4장과 코드용 질감 3장을 Higgsfield GPT Image 2.5(2k, 투명 배경)로 생성했다. 사용 크레딧은 14(high 4장 × 2.75 + medium 3장 × 1)이다. 원본은 `_source/meshy-input/meshy_m2_*.png`와 `_source/generated-images/season_*.png`에 있다. 프롬프트와 참고 그림은 `docs/meshy-season-20261025/image-prompts.txt`에 있다. 씀바귀 꽃줄기는 생성본 둘레의 흰 번짐을 투명도 정리로 지웠고, 정리 전 원본도 보관했다. GLB는 사용자가 Meshy에서 제작할 예정이며, 앱 연결·WebP 변환은 아직 하지 않았다.
+
+| 원본 | job 앞 8자 | SHA-256 앞 16자 |
+|---|---|---|
+| `meshy-input/meshy_m2_cherry_bare_roots.png` | a3dc83e7 | `0619d2756a4176a5` |
+| `meshy-input/meshy_m2_sowthistle_root.png` | c0ed764b | `33b07d6bea6e131f` |
+| `meshy-input/meshy_m2_sowthistle_rosette.png` | b199ef5b | `602e4067040fe565` |
+| `meshy-input/meshy_m2_sowthistle_flowers.png`(번짐 정리) | 5843cdde | `212103f4bca40de8` |
+| `generated-images/season_cherry_leaf_autumn.png` | f60f99ad | `c0559a48dcc845cd` |
+| `generated-images/season_cherry_blossom.png` | 9c31d1bf | `6a344c25e1cd4ae1` |
+| `generated-images/season_cherry_winter_bud.png` | 58ccad1a | `646879bf602107a1` |

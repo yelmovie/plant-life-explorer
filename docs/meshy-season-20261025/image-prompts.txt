@@ -1,0 +1,40 @@
+초록정원 2단계 계절 타임랩 — 기본 이미지 생성 프롬프트 (2026-10-25)
+도구: Higgsfield · GPT Image 2.5 · 2k · 투명 배경
+참고 그림: 벚나무·씀바귀는 기존 assets/generated/cherry_seasons_v2·sowthistle_seasons_v2(같은 나무·풀로 맞추기),
+           단풍잎은 기존 cherry_leaf(같은 잎 모양으로 맞추기). 결과 원본: _source/meshy-input/, _source/generated-images/
+
+========================================================================
+M1 meshy_m2_cherry_bare_roots.png   (high · 2:3 · 참고: cherry_seasons_v2)
+------------------------------------------------------------------------
+Reference image = style and tree identity only (use the bottom-left winter panel's tree). Create ONE isolated object for image-to-3D modeling: the same cherry tree in winter, completely bare, shown together with its whole root system, as if the tree were lifted out of the ground and the soil washed away. Above: a short sturdy trunk splitting into 4 main limbs that spread into a rounded crown; branches are fewer and noticeably thicker than in nature (stylized for clean 3D geometry, no hair-thin twigs), twig tips end in small swollen buds. Below the trunk: a strong root flare dividing into 6-8 thick lateral roots spreading sideways and slightly down, with a few finer rootlets; root spread about as wide as the crown. Warm brown bark with subtle texture, roots a lighter tan-brown. Semi-realistic stylized 3D render like a polished mobile game asset, soft even studio lighting, no harsh shadows, three-quarter front view from slightly above, entire tree and roots fully in frame with margin, centered. Fully transparent background, no ground line, no soil, no snow, no grass, no cast shadow, no text, no inset circle, no frame.
+
+========================================================================
+M2 meshy_m2_sowthistle_root.png   (high · 2:3 · 참고: sowthistle_seasons_v2)
+------------------------------------------------------------------------
+Reference image = style and plant identity only. Create ONE isolated object for image-to-3D modeling: the underground part of the same sowthistle (Korean Ixeris dentata) plant that survives the winter. At the top, a short compact root crown with a few cut-off dry leaf bases and two or three tiny pale-green bud points; below it, one thick pale tan taproot tapering downward, with several thinner side roots and fine rootlets branching off. Roots slightly thicker than nature for clean 3D geometry. No leaves, no flowers, no soil clumps. Semi-realistic stylized 3D render like a polished mobile game asset, soft even studio lighting, three-quarter front view, whole root fully in frame with margin, centered. Fully transparent background, no ground, no cast shadow, no text, no frame.
+
+========================================================================
+M3 meshy_m2_sowthistle_rosette.png   (high · 1:1 · 참고: sowthistle_seasons_v2)
+------------------------------------------------------------------------
+Reference image = style and plant identity only. Create ONE isolated object for image-to-3D modeling: a single basal leaf rosette of sowthistle (Korean Ixeris dentata) without roots or flowers. 12 to 14 lance-shaped fresh green leaves with irregular shallow teeth along the edges and a pale midrib, radiating from one small central crown, lying low and gently arching upward at the tips like a flat star. Leaves slightly thickened (not paper-thin) for clean 3D geometry, smooth matte surfaces. Semi-realistic stylized 3D render like a polished mobile game asset, soft even studio lighting, three-quarter view from above at about 45 degrees, whole rosette in frame with margin, centered. Fully transparent background, no soil, no stems, no flowers, no cast shadow, no text, no frame.
+
+========================================================================
+M4 meshy_m2_sowthistle_flowers.png   (high · 2:3 · 참고: sowthistle_seasons_v2)
+※ 생성본 둘레의 흰 번짐은 투명도 정리로 지웠다. 정리 전 원본: _source/meshy-input/originals-20261025/
+------------------------------------------------------------------------
+Reference image = style and plant identity only (top-left summer panel flowers). Create ONE isolated object for image-to-3D modeling: the flowering stems of sowthistle (Korean Ixeris dentata). Three slender green stems rising from a single shared base point, each branching near the top into 2-3 short flower stalks, each carrying one small bright yellow flower head with 5 to 7 strap-shaped petals with tiny toothed tips, plus two closed buds. Stems slightly thicker than nature for clean 3D geometry, a couple of small narrow leaves clasping the stems. No basal leaves, no roots. Semi-realistic stylized 3D render like a polished mobile game asset, soft even studio lighting, three-quarter front view, whole object in frame with margin, centered. Fully transparent background, no ground, no cast shadow, no text, no frame.
+
+========================================================================
+T2 season_cherry_leaf_autumn.png   (medium · 1:1 · 참고: cherry_leaf)
+------------------------------------------------------------------------
+The exact same cherry leaf as the reference image (same shape, serrated edge, vein pattern, stalk, orientation and size), but in autumn colors: mostly warm orange-red blending to golden yellow near the midrib, a few small brownish spots, slightly dry. Same semi-realistic style, flat front view, centered with margin. Fully transparent background, no text, no frame.
+
+========================================================================
+T3 season_cherry_blossom.png   (medium · 1:1)
+------------------------------------------------------------------------
+A small cluster of five Korean cherry blossom (Prunus serrulata) flowers for a game texture sprite: pale pink five-petal flowers, each petal rounded with a tiny notch at the tip, deeper pink centers with fine stamens, on short thin stalks joined at one point, two unopened pink buds. Front view, flat even lighting, semi-realistic illustration style of a polished mobile game asset, centered with margin. Fully transparent background, no leaves, no branch, no text, no frame.
+
+========================================================================
+T4 season_cherry_winter_bud.png   (medium · 1:1)
+------------------------------------------------------------------------
+Close-up of the tip of a single bare cherry (Prunus serrulata) twig in late winter for a game texture sprite: a short brown twig with three plump reddish-brown winter buds covered in overlapping glossy bud scales, the top bud just starting to open and showing a pale green tip. Side view, flat even lighting, semi-realistic illustration style of a polished mobile game asset, centered with margin. Fully transparent background, no leaves, no flowers, no text, no frame.
