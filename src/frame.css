@@ -161,7 +161,6 @@ dialog::backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; backgro
 }
 /* Short labels never break into a column of single syllables. */
 @media (max-width: 1100px) {
-  #app .activity-2 .timeline > div { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   #app .activity-2 .timeline .btn { white-space: nowrap; }
   #app .link-board .habitat-picture { width: 40px; height: 36px; }
   #app .link-board .btn:has(.habitat-picture) { column-gap: 6px; padding: 6px 8px; }
@@ -184,6 +183,32 @@ dialog::backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; backgro
   #app .field-model-token .field-float-model { height: 120px; }
   #app .field-habitat-picture, #app .habitat-picture { width: 110px; height: 96px; }
 }
+
+/* ── 8. Season inquiry: 초봄 as a fifth stop, 겨울눈 찾기 lens on the winter picture ── */
+#app .season-atlas .soil-cover { height: var(--soil, 35%); }
+#app .exploration-activity .timeline > .season-stops { display: flex; flex-wrap: wrap; gap: 6px; }
+#app .exploration-activity .timeline > .season-stops .btn { flex: 1 1 auto; min-width: 0; padding-inline: 8px; white-space: nowrap; }
+@media (min-width: 761px) { #app .activity-2 .learning-scene > .bud-tools { grid-column: 2; } }
+#app .bud-tools { display: grid; gap: 8px; padding: 10px 12px; border-radius: 14px; background: var(--text-plate); border: 2px dashed #b7c99a; }
+#app .bud-tools > div { display: flex; flex-wrap: wrap; gap: 8px; }
+#app .exploration-activity .bud-tools .direct-hint { margin: 0; padding: 0; background: none; }
+#app .season-atlas.bud-search { cursor: zoom-in; box-shadow: inset 0 0 0 4px #f0c75a; }
+#app .bud-lens {
+  position: absolute; left: calc(var(--x) * 100%); top: calc(var(--y) * 100%); z-index: 4;
+  width: var(--d); height: var(--d); translate: -50% -50%; overflow: hidden; pointer-events: none;
+  border-radius: 50%; border: 5px solid #fffcef; background-color: #fffcef; background-repeat: no-repeat;
+  box-shadow: 0 0 0 3px #2d5a3d, 0 12px 24px #0006; animation: frame-pop .28s ease-out both;
+}
+#app .bud-lens.hit { border-color: #f7d36b; box-shadow: 0 0 0 3px #b0802a, 0 0 22px #f7d36baa, 0 12px 24px #0006; }
+#app .bud-lens > img { width: 100%; height: 100%; object-fit: contain; padding: 8%; }
+#app .bud-mark {
+  position: absolute; left: clamp(18px, calc(var(--x) * 100%), calc(100% - 18px)); top: clamp(18px, calc(var(--y) * 100%), calc(100% - 18px)); z-index: 3; pointer-events: none;
+  width: 36px; height: 36px; translate: -50% -50%; border-radius: 50%;
+  background: #fffcefe8; border: 2px solid #5d8f4b; box-shadow: 0 2px 6px #0004;
+}
+#app .bud-mark > img { width: 100%; height: 100%; object-fit: contain; padding: 3px; }
+#app .learning-note .bud-record { margin-top: 10px; }
+#app .learning-note .bud-record small { font-size: 16px; font-weight: 400; color: #66704f; }
 
 /* ── 7. Stacked layouts (portrait, ≤900px): 오늘의 연구 + Leafy become one strip above a full-width stage. ── */
 @media (max-width: 900px), (orientation: portrait) {

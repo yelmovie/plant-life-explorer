@@ -6,9 +6,13 @@ export const icon=(name,size=22)=>{
 const svg=(body,view='0 0 300 260',cls='')=>`<svg class="${cls}" viewBox="${view}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${body}</svg>`;
 export function leafArt(id){return assetImage(({cherry:'cherry_leaf',ginkgo:'ginkgo_leaf',grass:'grass_leaf'})[id]||'grass_leaf','leaf-illustration');}
 export function plantArt(id){return assetImage(({cherry:'cherry_tree',aloe:'aloe_plant',hyacinth:'water_hyacinth_whole'})[id]||'grass_leaf','plant-illustration');}
-export function seasonArt(plant,season,underground){
- const position={1:'0% 0%',2:'100% 0%',3:'0% 100%',0:'100% 100%'}[season];
- return `<div class="season-atlas ${underground?'underground-open':''}" role="img" aria-label="${plant==='cherry'?'벚나무':'씀바귀'}의 ${season===0?'다음 봄':season===3?'겨울':season===2?'가을':'여름'} ${underground?'땅속 포함':''} 관찰 그림" style="background-image:url('/assets/generated/${plant}_seasons_v2.webp');background-position:${position}">${underground?'':'<span class="soil-cover">땅속에는 무엇이 있을까?</span>'}</div>`;
+// Seasons 1-3 and 0 are quadrants of *_seasons_v2; 4 (초봄) is its own picture with a higher ground line.
+const EARLY_SPRING_SOIL={cherry:'34%',sowthistle:'51%'};
+export function seasonArt(plant,season,underground,overlay='',cls=''){
+ const early=season===4,position={1:'0% 0%',2:'100% 0%',3:'0% 100%',0:'100% 100%'}[season];
+ const label=['다음 봄','여름','가을','겨울','초봄'][season]||'여름';
+ const picture=early?`background-image:url('/assets/generated/${plant}_bud_spring.webp');background-size:100% 100%;--soil:${EARLY_SPRING_SOIL[plant]}`:`background-image:url('/assets/generated/${plant}_seasons_v2.webp');background-position:${position}`;
+ return `<div class="season-atlas ${underground?'underground-open':''} ${cls}" role="img" aria-label="${plant==='cherry'?'벚나무':'씀바귀'}의 ${label} ${underground?'땅속 포함':''} 관찰 그림" style="${picture}">${underground?'':'<span class="soil-cover">땅속에는 무엇이 있을까?</span>'}${overlay}</div>`;
 }
 export function bagArt(design,testing=false,result=null){
  const pocket=['open','flap'].includes(design.pocket),closed=design.pocket==='flap';

@@ -1,5 +1,6 @@
 import {emptyLearningRecords,normalizeLearningRecords,learningStamp,normalizeNotebook} from './learning-records.js';
 import {normalizeFieldEvidence,fieldMissionReady} from './field-missions-state.js';
+import {normalizeBuds} from './winter-buds.js';
 export const STORAGE_KEY = 'green-garden-mvp-v2';
 export const LEGACY_STORAGE_KEY = 'green-garden-mvp-v1';
 export const PLANTS = [
@@ -62,9 +63,10 @@ export const PAGES = [
     "부품 하나만 바꾸어 시험하고, 달라진 까닭을 골라 줘."
   ]
 ];
-export const SEASONS=['봄','여름','가을','겨울'];
+// Index 4 (초봄) is a view-only stop between winter and the next spring; records keep keys 0-3.
+export const SEASONS=['봄','여름','가을','겨울','초봄'];
 export function freshState() {
-  return {version:2,learningRecords:emptyLearningRecords(),fieldBridges:Array(5).fill(false),notebook:normalizeNotebook(),fieldEvidence:normalizeFieldEvidence(null),journeyRequired:Array(5).fill(false),legacyCompleted:[],legacyFinished:false,leafEvidence:{},groupsByRule:{edge:{},narrow:{}},classificationEvidence:{},seasonPhotos:{},seasonExplanation:'',seasonExplained:[],habitatFeatures:{},experimentAnswer:'',gardenReviewed:false,testExplanation:null,inventionRevision:2,inventionExplanations:{},testPrediction:'',activeTestKey:'',seasonPrediction:{},undergroundSeen:[],misses:Array(5).fill(0),stamps:{direct:[],fixed:[],helped:[],unknown:[]},sharing:{status:'pending',question:'',response:''},highlight:0,screen:'home',page:0,completed:Array(10).fill(false),observation:{cherry:[],ginkgo:[],grass:[]},rule:'edge',groups:{},seasonPlant:'cherry',season:1,underground:false,seasonalRecords:[],linkedEvidence:[],experiment:{step:0,compared:false,prediction:''},habitats:{},reasons:{},terrain:Array(24).fill('empty'),garden:{},gardenReasons:[],design:{surface:'plain',cover:'open',linked:false},tests:[],reportSubmitted:[],finalChecks:{classification:false,habitat:false,garden:false,invention:false},finished:false,gardenTheme:'pink',largeText:false,soundEnabled:true,adminUnlocked:false};
+  return {version:2,learningRecords:emptyLearningRecords(),fieldBridges:Array(5).fill(false),notebook:normalizeNotebook(),fieldEvidence:normalizeFieldEvidence(null),journeyRequired:Array(5).fill(false),legacyCompleted:[],legacyFinished:false,leafEvidence:{},groupsByRule:{edge:{},narrow:{}},classificationEvidence:{},seasonPhotos:{},seasonExplanation:'',seasonExplained:[],habitatFeatures:{},experimentAnswer:'',gardenReviewed:false,testExplanation:null,inventionRevision:2,inventionExplanations:{},testPrediction:'',activeTestKey:'',seasonPrediction:{},undergroundSeen:[],budsFound:normalizeBuds(),misses:Array(5).fill(0),stamps:{direct:[],fixed:[],helped:[],unknown:[]},sharing:{status:'pending',question:'',response:''},highlight:0,screen:'home',page:0,completed:Array(10).fill(false),observation:{cherry:[],ginkgo:[],grass:[]},rule:'edge',groups:{},seasonPlant:'cherry',season:1,underground:false,seasonalRecords:[],linkedEvidence:[],experiment:{step:0,compared:false,prediction:''},habitats:{},reasons:{},terrain:Array(24).fill('empty'),garden:{},gardenReasons:[],design:{surface:'plain',cover:'open',linked:false},tests:[],reportSubmitted:[],finalChecks:{classification:false,habitat:false,garden:false,invention:false},finished:false,gardenTheme:'pink',largeText:false,soundEnabled:true,adminUnlocked:false};
 }
 export function presetTerrain(){return Array.from({length:24},(_,i)=>['water','grass','dry'][Math.floor((i%6)/2)]);}
 export function evidenceCount(s){return MISSIONS.filter((_,i)=>s.completed[i*2]&&s.completed[i*2+1]).length;}
@@ -153,7 +155,8 @@ export function restoreState(raw){
     if(member(v.rule,['edge','narrow']))s.rule=v.rule;
     for(const p of PLANTS)if(member(v.groups?.[p.id],['yes','no']))s.groups[p.id]=v.groups[p.id];
     if(member(v.seasonPlant,['cherry','sowthistle']))s.seasonPlant=v.seasonPlant;
-    if(Number.isInteger(v.season)&&v.season>=0&&v.season<4)s.season=v.season;
+    if(Number.isInteger(v.season)&&v.season>=0&&v.season<5)s.season=v.season;
+    s.budsFound=normalizeBuds(v.budsFound);
     s.underground=v.underground===true;
     const recordKeys=['cherry','sowthistle'].flatMap(p=>[0,1,2,3].map(n=>`${p}:${n}`));
     for(const key of ['seasonalRecords','linkedEvidence'])if(Array.isArray(v[key]))s[key]=[...new Set(v[key].filter(x=>recordKeys.includes(x)))];

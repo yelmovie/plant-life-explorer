@@ -135,3 +135,4 @@ Git에는 코드·테스트·문서·실행용 WebP를 보관한다. `dist/`는 
 - `npm run build`가 CSS를 `src/bundle.css` 하나로 합치고, 설치된 esbuild가 있으면(`ESBUILD_MODULE_PATH`, 없으면 wrangler에 포함된 것) 앱 스크립트를 `src/app.bundle.js` 하나로 묶고 압축한다. 입체 모듈(`spatial.js`)은 따로 남아 필요할 때만 받는다. esbuild가 없으면 기존 모듈 그대로 배포한다. 첫 화면 요청 36→11개.
 - 설정 › 교사용 가이드 › 교사용 도구의 **수업 전 오프라인 준비**: 배포 주소에서 한 번 연 기기에서 그림·입체 모형·three.js를 하나씩 차례로 저장한다. 영상은 연결될 때만 재생되고 끊기면 건너뛸 수 있다. 서비스워커가 없는 localhost에서는 안내만 뜬다(`?sw`로 확인).
 - 점검: `docs/reviews/FINAL-CHECK-20261025.md`, 증거 `docs/reviews/final-20261025/`.
+- 2단계 계절 탐구: 시간 손잡이에 **초봄**(보기 전용)을 넣었다. 겨울 땅속 확인 뒤 **관찰 렌즈로 겨울눈 찾기**(벚나무 가지 끝 3·씀바귀 뿌리 머리 1, 완주 조건 아님)를 추가했다. 계절 3D 설계와 Meshy 입력은 `docs/meshy-season-20261025/`.
