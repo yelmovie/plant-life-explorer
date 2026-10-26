@@ -15,7 +15,18 @@ wrangler pages deploy dist --project-name leafy-garden --branch main
 
 `dist/`는 빌드 산출물이며 Git에 포함하지 않는다. 실행용 이미지·모형·글꼴만 배포하고 참고 자료·교육과정 원본·검증 화면은 배포에서 제외한다. 원본과 캡처는 로컬 프로젝트에 보존한다.
 
-## 최근 배포 — 2026-10-24
+## 최근 배포 — 2026-10-27
+
+- 기능 커밋: `a58605da41b4c537f1d08e84954c4661aed9ddfe` (`main`, GitHub push 완료)
+- 배포 주소: https://d248ad3b.leafy-garden.pages.dev
+- 운영 주소: https://leafy-garden.pages.dev
+- 바뀐 것: 다섯 현장 임무를 스테이지마다 다른 손 조작으로 바꿈(1 돋보기 끌기·카드 튕기기, 2 흙 문지르기·실 잇기·시간 다이얼, 3 꾹 누르고 버티기·잎자루 긋기, 4 물길 그리기·물뿌리개 기울이기·원 그려 구름 모으기, 5 톡톡 고르기·꿰매기·구름 연타·흔들기·동그라미). 리피 편지형 미션 안내(개구체 손글씨), 시작 화면·지도·설정 문구 정리.
+- 빌드: 169파일·115에셋·38,386,242바이트, `dirty=true`(추적하지 않는 `output/` 폴더 때문, 배포물과 무관).
+- 배포 전 JavaScript **41개 문법 검사**, **97/97 테스트**, 브라우저 테스트 **6종 통과**(expedition-core·expedition·integrity-layout 99화면·integrity-runtime·learning-journey·stage-map).
+- 운영 주소의 `build-info.json` 커밋이 배포 빌드와 같고, `app.bundle.js`에 새 조작 코드가 들어 있음을 확인했다. 헤드리스 Chrome으로 운영 주소에서 시작 → 인트로 → 지도 → 1스테이지 현장 임무까지 들어가 돋보기 표시와 글꼴(GG Display·GG Hand) 로딩, 페이지 오류 0건을 확인했다.
+- 실물 태블릿 손가락 조작은 미검증이다(마우스·스크립트 포인터로만 확인).
+
+## 이전 배포 — 2026-10-24 (2)
 
 - 기능 커밋: `49683310189e91a9944c2fe2612789cd57cfb4aa` (`main`, GitHub push 완료)
 - 배포 ID: `a6a01f92-7c09-4f64-bb27-c30dd23b17f4`
