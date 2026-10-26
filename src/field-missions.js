@@ -1,6 +1,7 @@
 import {assetImage} from './asset-catalog.js';
 import {icon,plantArt,seasonArt,bagArt} from './art.js';
-import {FIELD_LEAVES,FIELD_ORDER,FIELD_ZONES,FIELD_ENV,FIELD_PLANTS,normalizeFieldEvidence,fieldSteps,fieldMissionReady,fieldBagPair,FIELD_BAG_ROLES,applyFieldAction} from './field-missions-state.js';
+import {FIELD_LEAVES,FIELD_ORDER,FIELD_ZONES,FIELD_ENV,FIELD_PLANTS,normalizeFieldEvidence,fieldSteps,fieldMissionReady,fieldBagPair,fieldBagKey,FIELD_BAG_ROLES,applyFieldAction} from './field-missions-state.js';
+import {mountBagHands} from './field-hands-bag.js';
 export {normalizeFieldEvidence,fieldMissionReady};
 const esc=v=>String(v??'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
 const btn=(label,action,id='',cls='')=>`<button type="button" class="btn mission-tool ${cls}" data-action="${action}" data-id="${esc(id)}">${label}</button>`;
@@ -52,15 +53,33 @@ function garden(e,u,stage){
 }
 const partName={surface:'겉면',cover:'입구 덮개',pocket:'바깥 주머니 덮개'};
 const partLabel=(part,value)=>part==='surface'?(value==='lotus'?'연잎을 본뜬 겉면':'기본 천 겉면'):(value==='flap'?'닫힌 덮개':'열린 입구');
-function bagTools(u){return `<div class="field-bag-parts">${Object.keys(partName).map(part=>`<div><strong>${partName[part]}</strong>${(part==='surface'?['plain','lotus']:['open','flap']).map(value=>source(partLabel(part,value),`part:${part}:${value}`,u)).join('')}</div>`).join('')}</div>`;}
-function trialCard(t,label){return `<article class="field-trial-card"><h4>${label} · 같은 비 10방울</h4>${bagArt(t,false,t)}<p>겉면: ${t.rolls?'물방울 잘 굴러감':'물방울 남음'}</p><p>공책: ${t.notebookDry?'마름':'젖음'} · 바깥 주머니: ${t.pocketDry?'마름':'젖음'}</p><small>${partLabel('surface',t.surface)} / 입구 ${t.cover==='flap'?'닫힘':'열림'} / 주머니 ${t.pocket==='flap'?'닫힘':'열림'}</small></article>`;}
+// Where each part sits on the bag picture, as fractions of the 3:2 bag image.
+const BAG_SPOT={surface:[.2,.6],cover:[.5,.22],pocket:[.56,.68]},partNum={surface:'①',cover:'②',pocket:'③'};
+const partValues=part=>part==='surface'?['plain','lotus']:['open','flap'];
+const partPic=(part,value)=>part==='cover'?assetImage(value==='flap'?'research_bag_closed':'research_bag_body','bag-part-thumb').replace(/alt="[^"]*"/,'alt=""'):`<span class="bag-part-pic pic-${part}-${value}" aria-hidden="true"></span>`;
+function bagTools(u){return `<div class="bag-parts-tray">${Object.keys(partName).map(part=>`<div class="bag-part-group"><strong>${partNum[part]} ${partName[part]}</strong><div>${partValues(part).map(value=>source(`${partPic(part,value)}<span>${partLabel(part,value)}</span>`,`part:${part}:${value}`,u,'bag-part-card')).join('')}</div></div>`).join('')}</div>`;}
+// The bag picture with numbered places: drop slots while building, sticker spots while explaining.
+function bagStage(b,{slots=false,snap='',stuck='',rain=''}={}){
+ const spot=part=>{const [x,y]=BAG_SPOT[part],pos=`left:${x*100}%;top:${y*100}%`,done=b.assembled.includes(part);
+  return slots?`<button type="button" class="bag-slot ${done?'filled':''} ${snap===part?'snap':''}" data-action="field-drop" data-id="part:${part}" data-field-drop="part:${part}" style="${pos}"><b>${partNum[part]}</b><span>${done?partLabel(part,b.design[part]):partName[part]+' 자리'}</span></button>`
+   :`<span class="bag-hot ${stuck===part?'stuck':''}" data-bag-hot="${part}" style="${pos}"><b>${partNum[part]}</b><span>${stuck===part?'✓ ':''}${partName[part]}</span></span>`;};
+ return `<div class="bag-stage ${rain?'with-sky':''}" data-bag-stage ${rain?`data-rain="${rain}"`:''}>${rain?'<span class="bag-cloud" data-bag-cloud aria-hidden="true"><b>끌어서 가방 위로</b></span><span class="rain-count" data-rain-count aria-hidden="true"></span>':''}<div class="bag-canvas" data-bag-canvas>${bagArt(b.design)}${Object.keys(partName).map(spot).join('')}</div></div>`;
+}
+function trialCard(t,label,changed='',attrs=''){
+ const rows=[['surface',`① ${t.surface==='lotus'?'연잎 겉면':'보통 천'}`,t.rolls?'물방울 굴러감':'물방울 남음',t.rolls],['cover',`② 입구 ${t.cover==='flap'?'닫힘':'열림'}`,t.notebookDry?'공책 마름':'공책 젖음',t.notebookDry],['pocket',`③ 주머니 ${t.pocket==='flap'?'닫힘':'열림'}`,t.pocketDry?'주머니 마름':'주머니 젖음',t.pocketDry]];
+ return `<article class="field-trial-card" ${attrs}><h4>${label}</h4><p class="trial-rain" aria-label="같은 비 10방울">${'<i></i>'.repeat(10)}<span aria-hidden="true">같은 비 10방울</span></p><ul class="trial-body">${rows.map(([p,a,r,ok])=>`<li class="${changed===p?'changed':''} ${ok?'dry':'wet'}"><span>${a}</span><b>${r}</b></li>`).join('')}</ul></article>`;
+}
 function invention(e,u,stage){
- const b=e.bag,pair=fieldBagPair(b);
- const assembly=`${bagTools(u)}<div class="field-bag-assembly">${bagArt(b.design)}<div>${Object.keys(partName).map(part=>target(`<strong>${partName[part]}</strong><span>${b.assembled.includes(part)?partLabel(part,b.design[part]):'이 부품을 옮겨 조립해 줘'}</span>`,`part:${part}`,'field-part-slot')).join('')}</div></div>`;
+ const b=e.bag,pair=fieldBagPair(b),seen=u.bagSeen,last=b.tests.at(-1)?.key||'';
+ // Render-time diff: the part that just changed clicks into place, the newest rain result pops in.
+ const snap=seen?Object.keys(partName).find(p=>b.assembled.includes(p)&&(seen.design[p]!==b.design[p]||!seen.assembled.includes(p)))||'':'',fresh=!!seen&&!!last&&seen.last!==last;
+ u.bagSeen={design:{...b.design},assembled:[...b.assembled],last};
  if(stage===0&&!b.prediction)return `<div class="field-bag-predict"><div class="field-predict-picture">${bagArt({surface:'plain',cover:'open'})}</div><div><p class="field-request">도움 없는 첫 예상 · 비가 와도 공책을 지키려면?</p><div class="field-predict-choices">${btn('연잎 겉면만 바꾸면 돼','field-bag-predict','surface')}${btn('입구로 오는 비도 막아야 해','field-bag-predict','cover')}</div></div></div>`;
- if(stage===0)return `<p class="field-request">리피의 의뢰: 바깥의 물방울은 잘 굴러가게, 안쪽 공책과 바깥 주머니는 젖지 않게!</p>${assembly}`;
- if(stage===1)return `${assembly}${btn(icon('drop')+' 같은 비 10방울로 시험','field-bag-test','','primary')}<div class="field-trials">${b.tests.slice(-2).map((t,i)=>trialCard(t,`시험 ${b.tests.length- Math.min(b.tests.length,2)+i+1}`)).join('')||'<p>첫 가방을 시험해 줘. 그다음 부품 하나만 바꿔 다시 시험해.</p>'}</div><p class="microcopy">겉면·입구·주머니 중 하나만 바꾸고 나머지 두 부품과 비의 양은 같게 해. 이번에는 한 부품의 역할을 비교하면 돼.</p>`;
- return `${pair?`<div class="field-trials">${trialCard(pair.before,'바꾸기 전')}${trialCard(pair.after,'바꾼 뒤')}</div><div class="field-tools">${source('겉면을 바꿨어','compare:surface',u)}${source('입구 덮개를 바꿨어','compare:cover',u)}${source('주머니 덮개를 바꿨어','compare:pocket',u)}${target('두 시험에서 바뀐 부품을 여기 연결해 줘','compare','field-comparison-slot')}</div>`:'<p>먼저 부품 하나만 다른 두 시험을 만들어 줘.</p>'}${btn('의뢰 조건 확인하고 가방 완성','field-bag-deliver','','primary')}<div class="field-repair-actions">${btn('조립으로 돌아가기','field-stage','0')}${btn('비교 시험하기','field-stage','1')}</div><p class="microcopy">${pair&&b.compared.part===pair.part?`이 비교로 확인한 역할: ${FIELD_BAG_ROLES[pair.part]}`:'바뀐 부품 하나의 결과만 설명해 줘.'}</p>`;
+ if(stage===0)return `<p class="field-request">리피의 의뢰: 바깥의 물방울은 잘 굴러가게, 안쪽 공책과 바깥 주머니는 젖지 않게!</p><div class="bag-bench"><p class="lens-hint bag-hint"><span>부품 카드를 끌어 가방의 <b>같은 번호 자리</b>에 딸깍 끼워 봐.</span></p>${bagStage(b,{slots:true,snap})}${bagTools(u)}</div>`;
+ if(stage===1){const shown=b.tests.slice(-2),diff=shown.length===2?Object.keys(partName).filter(k=>shown[0][k]!==shown[1][k]).length:0,ready=b.assembled.length===3&&last!==fieldBagKey(b.design);
+  return `<div class="bag-bench rain-bench"><p class="lens-hint bag-hint"><span>구름을 끌어 가방 위에 대면 <b>같은 비 10방울</b>이 내려. 그다음 부품 <b>하나만</b> 바꿔 다시 비를 내려 봐.</span></p>${bagStage(b,{slots:true,snap,rain:ready?'go':'skip'})}${bagTools(u)}<div class="bag-results"><div class="field-trials">${shown.map((t,i)=>trialCard(t,`시험 ${b.tests.length-shown.length+i+1}`,'',i===shown.length-1&&fresh?'data-fresh':'')).join('')||'<p class="trial-empty">첫 가방에 비를 내려 줘. 그다음 부품 하나만 바꿔 다시 시험해.</p>'}</div>${diff>1?'<p class="trial-warn">두 부품 이상 달라서 무엇 때문인지 알 수 없어. 하나만 바꿔 봐.</p>':''}</div><div class="lens-fallback">${btn(icon('drop')+' 같은 비 10방울로 시험','field-bag-test','','primary')}</div></div>`;}
+ const ok=!!pair&&b.compared.part===pair.part&&b.compared.before===pair.before.key&&b.compared.after===pair.after.key;
+ return `${pair?`<div class="bag-bench explain-bench"><p class="lens-hint bag-hint"><span><b>바꾼 뒤</b> 결과 카드를 끌어서, 두 시험에서 <b>바뀐 부품</b> 자리에 붙여 봐.</span></p>${bagStage(b,{stuck:ok?pair.part:''})}<div class="field-trials">${trialCard(pair.before,'바꾸기 전',ok?pair.part:'')}${trialCard(pair.after,'바꾼 뒤 · 끌어서 붙여 봐',ok?pair.part:'','data-bag-result')}</div><div class="lens-fallback">${source('겉면을 바꿨어','compare:surface',u)}${source('입구 덮개를 바꿨어','compare:cover',u)}${source('주머니 덮개를 바꿨어','compare:pocket',u)}${target('두 시험에서 바뀐 부품을 여기 연결해 줘','compare','field-comparison-slot')}</div></div>`:'<p>먼저 부품 하나만 다른 두 시험을 만들어 줘.</p>'}<div class="bag-finish">${btn('의뢰 조건 확인하고 가방 완성','field-bag-deliver','','primary')}${btn('조립으로 돌아가기','field-stage','0')}${btn('비교 시험하기','field-stage','1')}</div><p class="microcopy">${ok?`이 비교로 확인한 역할: ${FIELD_BAG_ROLES[pair.part]}`:'바뀐 부품 하나의 결과만 설명해 줘.'}</p>`;
 }
 const DEFAULT_FEEDBACK='도구나 표본을 끌어 옮겨 봐. 하나를 누르고 놓을 자리를 눌러도 똑같이 할 수 있어.';
 const stageOf=u=>Number.isInteger(u?.stage)&&u.stage>=0&&u.stage<3?u.stage:0;
@@ -122,8 +141,9 @@ export function mountFieldInteractions(root,state,ui,onAction){
  const click=event=>{if(blockedClick){event.preventDefault();event.stopImmediatePropagation();blockedClick=false;}};
  const cancel=()=>clear();const key=event=>{if(event.key==='Escape'){clear();onAction('field-cancel','');}};
  const bench=root.querySelector('[data-lens-bench]'),lensCleanup=bench?mountLens(bench,ui,onAction):null,seasonCleanup=mountSeasonHands(root,ui,onAction);
+ const bagCleanup=mountBagHands(root,ui,onAction);
  root.addEventListener('pointerdown',down);root.addEventListener('pointermove',move,{passive:false});root.addEventListener('pointerup',up);root.addEventListener('pointercancel',cancel);root.addEventListener('click',click,true);root.addEventListener('keydown',key);
- return ()=>{lensCleanup?.();seasonCleanup();clear();clearTimeout(blockTimer);root.removeEventListener('pointerdown',down);root.removeEventListener('pointermove',move);root.removeEventListener('pointerup',up);root.removeEventListener('pointercancel',cancel);root.removeEventListener('click',click,true);root.removeEventListener('keydown',key);};
+ return ()=>{bagCleanup();lensCleanup?.();seasonCleanup();clear();clearTimeout(blockTimer);root.removeEventListener('pointerdown',down);root.removeEventListener('pointermove',move);root.removeEventListener('pointerup',up);root.removeEventListener('pointercancel',cancel);root.removeEventListener('click',click,true);root.removeEventListener('keydown',key);};
 }
 
 // object-fit:contain leaves blank margins; clue spots are measured on the painted image only.
