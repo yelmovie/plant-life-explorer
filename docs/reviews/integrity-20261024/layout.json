@@ -1,5 +1,5 @@
 {
-  "started": "2026-10-26T15:17:43.122Z",
+  "started": "2026-10-26T15:24:57.042Z",
   "fixture": "Actual fresh UI completion replayed in separate browser profiles; no real user data",
   "layouts": [
     {
@@ -978,7 +978,7 @@
           "width": 320,
           "height": 213.328125,
           "x": 49,
-          "y": 605.78125
+          "y": 690.78125
         }
       ],
       "cards": [],
@@ -1669,5 +1669,5 @@
   ],
   "errors": [],
   "failures": [],
-  "finished": "2026-10-26T15:20:19.990Z"
+  "finished": "2026-10-26T15:27:00.171Z"
 }

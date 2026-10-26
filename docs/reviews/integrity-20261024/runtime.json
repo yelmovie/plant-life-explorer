@@ -1,5 +1,5 @@
 {
-  "started": "2026-10-23T17:20:56.251Z",
+  "started": "2026-10-26T15:27:01.346Z",
   "storage": [
     {
       "case": "{broken",
@@ -40,10 +40,10 @@
       "supported": true,
       "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
       "canvas": {
-        "x": 185.59375,
-        "y": 226,
-        "width": 966.40625,
-        "height": 243
+        "x": 276.09375,
+        "y": 222,
+        "width": 875.90625,
+        "height": 382
       },
       "rotateAndZoom": true,
       "pictureToggle": true
@@ -53,10 +53,10 @@
       "supported": true,
       "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
       "canvas": {
-        "x": 185.59375,
-        "y": 156,
-        "width": 966.40625,
-        "height": 281
+        "x": 276.09375,
+        "y": 152,
+        "width": 875.90625,
+        "height": 350
       },
       "rotateAndZoom": true,
       "pictureToggle": true
@@ -66,10 +66,10 @@
       "supported": true,
       "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
       "canvas": {
-        "x": 173.59375,
-        "y": 262,
-        "width": 990.40625,
-        "height": 294
+        "x": 264.09375,
+        "y": 264,
+        "width": 899.90625,
+        "height": 361
       },
       "rotateAndZoom": true,
       "pictureToggle": true
@@ -79,15 +79,15 @@
       "supported": true,
       "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
       "canvas": {
-        "x": 173.59375,
-        "y": 191.796875,
-        "width": 560.4375,
-        "height": 230
+        "x": 264.09375,
+        "y": 243.703125,
+        "width": 507.953125,
+        "height": 213.1875
       },
       "rotateAndZoom": true,
       "pictureToggle": true
     }
   ],
   "errors": [],
-  "finished": "2026-10-23T17:23:19.532Z"
+  "finished": "2026-10-26T15:27:31.179Z"
 }

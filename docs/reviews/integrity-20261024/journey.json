@@ -1,5 +1,5 @@
 {
-  "started": "2026-10-26T15:17:32.055Z",
+  "started": "2026-10-26T15:27:32.568Z",
   "url": "http://127.0.0.1:4318",
   "mode": "WebGL disabled; isolated fresh browser; touch emulation and keyboard",
   "missions": [
@@ -1312,5 +1312,5 @@
     "soundEnabled": true,
     "adminUnlocked": false
   },
-  "finished": "2026-10-26T15:18:46.413Z"
+  "finished": "2026-10-26T15:28:31.764Z"
 }
