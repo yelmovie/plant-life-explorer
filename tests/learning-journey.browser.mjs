@@ -13,14 +13,32 @@ const page=await context.newPage();page.setDefaultTimeout(30000);
 const report={started:new Date().toISOString(),url,mode:'WebGL disabled; isolated fresh browser; touch emulation and keyboard',missions:[],checks:[],errors:[],snapshots:[],layout:[]};
 page.on('pageerror',e=>report.errors.push(e.message));
 const selector=(name,id)=>`[data-action="${name}"]${id!==undefined?`[data-id="${id}"]`:''}`;
-const a=async(name,id,scope='')=>{await page.locator(scope+selector(name,id)).first().tap();};
+// Old card/slot buttons now sit in a visually hidden .lens-fallback (keyboard path); press those with focus+Enter.
+const press=async loc=>{if(await loc.evaluate(el=>!!el.closest('.lens-fallback'))){await loc.focus();await page.keyboard.press('Enter');}else await loc.tap();};
+const a=async(name,id,scope='')=>{await press(page.locator(scope+selector(name,id)).first());};
 const close=()=>a('close',undefined,'#dialog .dialog-top ');
 const stage=n=>a('field-stage',String(n),'.today-panel .mission-journey ');
-const place=async(item,target,keyboard=false)=>{
- const source=page.locator(`[data-field-item="${item}"]`),destination=page.locator(`[data-field-drop="${target}"]`);
- if(keyboard){await source.focus();await page.keyboard.press('Enter');await destination.focus();await page.keyboard.press('Enter');}
- else{await source.tap();await destination.tap();}
+// Keyboard select-then-place. Some steps have no source card (magnifier, season string): the slot alone acts.
+const place=async(item,target)=>{
+ const source=page.locator(`[data-field-item="${item}"]`);
+ if(await source.count()){await source.first().focus();await page.keyboard.press('Enter');}
+ await page.locator(`[data-field-drop="${target}"]`).first().focus();await page.keyboard.press('Enter');
 };
+// Real pointer gestures (mouse pointer events drive the same handlers as a finger).
+const center=async loc=>{await loc.evaluate(el=>el.scrollIntoView({block:"nearest"}));const b=await loc.boundingBox();return [b.x+b.width/2,b.y+b.height/2];};
+async function stroke(points,beforeUp){await page.mouse.move(...points[0]);await page.mouse.down();for(const [x,y] of points.slice(1))await page.mouse.move(x,y,{steps:3});if(beforeUp)await beforeUp();await page.mouse.up();}
+const line=([x0,y0],[x1,y1],n=12)=>Array.from({length:n+1},(_,i)=>[x0+(x1-x0)*i/n,y0+(y1-y0)*i/n]);
+const ring=([cx,cy],r,turns=1,n=24)=>Array.from({length:n*turns+1},(_,i)=>[cx+r*Math.cos(i/n*2*Math.PI),cy+r*Math.sin(i/n*2*Math.PI)]);
+const evidence=fn=>page.waitForFunction(fn);
+// Drag the magnifier so its glass rests on a clue spot until the clue lights up.
+async function lens(id,kind,[fx,fy]){
+ const [from,to]=await page.evaluate(([id,fx,fy])=>{
+  const img=document.querySelector(`[data-lens-leaf="${id}"] img`),r=img.getBoundingClientRect(),nw=img.naturalWidth,nh=img.naturalHeight,k=Math.min(r.width/nw,r.height/nh),w=nw*k,h=nh*k;
+  const g=document.querySelector('[data-lens] .field-lens-glass').getBoundingClientRect();
+  return [[g.left+g.width/2,g.top+g.height/2],[r.left+(r.width-w)/2+fx*w,r.top+(r.height-h)/2+fy*h]];},[id,fx,fy]);
+ await stroke(line(from,to,20),()=>page.locator(`[data-clue="${id}:${kind}"].found`).waitFor());
+ await evidence(`JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.leaves.scans.${id}.includes('${kind}')`);
+}
 const saved=()=>page.evaluate(()=>navigator.locks.request('green-garden-mvp-v2',()=>JSON.parse(localStorage.getItem('green-garden-mvp-v2'))));
 async function snap(name){await page.screenshot({path:fileURLToPath(new URL(name+'.png',output)),fullPage:true});report.snapshots.push(name);}
 async function hint(){await a('journey-help');await close();}
@@ -49,8 +67,14 @@ try{
  await page.goto(url);assert.equal((await saved()).completed.some(Boolean),false);
  await a('sound');await a('begin');await page.locator('[data-story-action="exit"]').tap();
  await enter(0);
- for(const p of ['maple','pine','camellia'])for(const region of ['shape','edge'])await place('lens',`scan:${p}:${region}`,p==='pine');
- await stage(1);await place('leaf:maple','sort:edge:no');await hint();
+ // Hand: the magnifier rests on the maple's centre and edge; the rest use the keyboard slots.
+ await page.waitForFunction(()=>[...document.querySelectorAll('[data-lens-leaf] img')].every(i=>i.complete&&i.naturalWidth));
+ await lens('maple','shape',[.5,.6]);await lens('maple','edge',[.33,.33]);
+ for(const p of ['pine','camellia'])for(const region of ['shape','edge'])await place('lens',`scan:${p}:${region}`);
+ // Hand: throw the top card (maple) into the wrong basket first.
+ await stage(1);assert.equal(await page.locator('[data-swipe-top]').getAttribute('data-swipe-card'),'maple');
+ await stroke(line(await center(page.locator('[data-swipe-top]')),await center(page.locator('[data-swipe-bin="no"]')),8));
+ await evidence(`JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.leaves.edge.maple==='no'`);await hint();
  for(const p of ['maple','pine','camellia'])await place('leaf:'+p,'sort:edge:'+(p==='pine'?'no':'yes'));
  await stage(2);for(const p of ['maple','pine','camellia'])await place('leaf:'+p,'sort:narrow:'+(p==='pine'?'yes':'no'));
  await explore();
@@ -67,9 +91,16 @@ try{
  await completePage();await missionDone(0);
 
  await enter(1);await a('field-season-predict','tree:none');await a('field-season-predict','herb:none');
- await place('season:tree','link:tree:leaf');await hint();await place('season:tree','link:tree:trunk');await place('season:herb','link:herb:root');
+ await place('season:tree','link:tree:leaf');await hint();await place('season:tree','link:tree:trunk');
+ // Hand: rub the winter soil off the herb, then pull its glowing point to the root half of next spring.
+ const cover=await page.locator('[data-dig="herb"] .dig-cover').boundingBox(),rub=[];
+ for(let row=0;row<4;row++)for(const x of row%2?[.95,.05]:[.05,.95])rub.push([cover.x+x*cover.width,cover.y+(row+.5)/4*cover.height]);
+ await stroke(rub.flatMap((p,i)=>i?line(rub[i-1],p,10).slice(1):[p]));
+ await page.locator('[data-link-handle="herb"]').waitFor();
+ await stroke(line(await center(page.locator('[data-link-handle="herb"]')),await center(page.locator('[data-link-target="herb"] .link-zone.lower')),10));
+ await evidence(`JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.seasons.links.herb==='root'`);
  for(const [n,kind] of [[1,'tree'],[2,'herb']]){
-  await stage(n);assert.doesNotMatch(await page.locator('.field-frame-tray').innerText(),/겨울 ·|초봄 ·|다음 봄 ·/);
+  await stage(n);assert.doesNotMatch(await page.locator(`[data-time-dial="${kind}"]`).innerText(),/겨울|초봄|다음 봄/);
   for(const [i,phase] of ['winter','bud','spring'].entries())await place(`frame:${kind}:${phase}`,`order:${kind}:${i}`);
   await a('field-season-clue',kind+':'+(kind==='tree'?'branches':'rootbud'));
  }
@@ -79,7 +110,15 @@ try{
  for(const plant of ['cherry','sowthistle']){await a('season-plant',plant);await a('season-evidence','3');await a('season-evidence','0');await a('season-explain','growth');}
  await completePage();await missionDone(1);
 
- await enter(2);await place('model:air','predict:sink');await place('model:solid','predict:float');await stage(1);
+ await enter(2);
+ // Hand: hold the palm until the air model is lifted, then push its switch down (sink).
+ const palm=page.locator('[data-heft="air"] [data-heft-lift]');
+ // A re-render can swap the card under a held finger; lift again until it reports lifted.
+ for(let i=0;i<3&&!await page.locator('[data-heft="air"].lifted').count();i++)
+  await stroke([await center(palm)],()=>page.waitForFunction(()=>Number(document.querySelector('[data-heft="air"]')?.style.getPropertyValue('--lift'))>=.9,null,{timeout:5000}).catch(()=>{}));
+ await page.locator('[data-heft="air"].lifted').waitFor();
+ const knob=await center(page.locator('[data-heft="air"] .sw-knob'));await stroke(line(knob,[knob[0],knob[1]+80],8));
+ await evidence(`JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.float.predictions.air==='sink'`);await place('model:solid','predict:float');await stage(1);
  for(const model of ['air','solid'])await place('model:'+model,'tank');await stage(2);
  await place('model:air','observe:sink');await hint();await place('model:air','observe:float');await place('model:solid','observe:sink');await place('reason:air-space','reason:air');
  await explore();await a('experiment-predict','none');await a('lab-next','cut');await a('lab-next','water');await a('press-petiole',undefined,'.center ');await a('experiment-answer','air');
@@ -88,7 +127,9 @@ try{
  await completePage();await missionDone(2);
 
  await enter(3);await place('environment:dry','environment:pond');await hint();
- for(const [env,zone] of [['water','pond'],['grass','meadow'],['dry','ridge']])await place('environment:'+env,'environment:'+zone);
+ // Hand: one stream from the meadow that pools in the pond leaves the ridge dry.
+ await stroke(line(await center(page.locator('.zone-meadow')),await center(page.locator('.zone-pond')),16));
+ await evidence(`(g=>g.pond==='water'&&g.meadow==='grass'&&g.ridge==='dry')(JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.garden.environments)`);
  await stage(1);await place('plant:hyacinth','plant:ridge');
  for(const [plant,zone] of [['hyacinth','pond'],['cherry','meadow'],['aloe','ridge']])await place('plant:'+plant,'plant:'+zone);
  await stage(2);await a('field-garden-rain');await explore();
@@ -99,13 +140,20 @@ try{
  await completePage();await missionDone(3);
 
  await enter(4);await a('field-bag-predict','surface');
- for(const [part,value] of [['surface','lotus'],['cover','flap'],['pocket','open']])await place(`part:${part}:${value}`,'part:'+part);
+ // Hand: tap dials (plain→lotus, open→flap, open), then trace the dotted seam all the way round.
+ for(const [part,taps] of [['surface',2],['cover',2],['pocket',1]])for(let i=0;i<taps;i++)await page.locator(`[data-bag-dial="${part}"]`).tap();
+ const seam=await page.locator('[data-bag-stitch]').boundingBox(),m=13,corners=[[m,m],[seam.width-m,m],[seam.width-m,seam.height-m],[m,seam.height-m],[m,m]].map(([x,y])=>[seam.x+x,seam.y+y]);
+ await stroke(corners.flatMap((p,i)=>i?line(corners[i-1],p,24).slice(1):[p]));
+ await evidence(`(b=>b.assembled.length===3&&b.design.surface==='lotus'&&b.design.cover==='flap'&&b.design.pocket==='open')(JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.bag)`);
  await stage(1);await a('field-bag-test');await snap('pocket-open-test');
- const openArt=await page.locator('.field-bag-assembly .bag-art').getAttribute('aria-label');
+ const openArt=await page.locator('[data-bag-stage] .bag-art').getAttribute('aria-label');
  await place('part:pocket:flap','part:pocket');await a('field-bag-test');await snap('pocket-closed-test');
- const closedArt=await page.locator('.field-bag-assembly .bag-art').getAttribute('aria-label');assert.notEqual(openArt,closedArt);
+ const closedArt=await page.locator('[data-bag-stage] .bag-art').getAttribute('aria-label');assert.notEqual(openArt,closedArt);
  const trials=(await saved()).fieldEvidence.bag.tests;assert.equal(trials[0].pocketDry,false);assert.equal(trials[1].pocketDry,true);assert.equal(trials[0].notebookDry,trials[1].notebookDry);
- await stage(2);await place('compare:surface','compare');await hint();await place('compare:pocket','compare');await a('field-bag-deliver');
+ await stage(2);await place('compare:surface','compare');await hint();
+ // Hand: circle the pocket on the after picture.
+ const diff=await page.locator('[data-diff="after"]').boundingBox();await stroke(ring([diff.x+.56*diff.width,diff.y+.68*diff.height],Math.min(diff.width,diff.height)*.14));
+ await evidence(`JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.bag.compared.part==='pocket'`);await a('field-bag-deliver');
  assert.match(await page.locator('.mission-feedback').innerText(),/주머니/);
  report.checks.push('Pocket-only comparison changes picture, accessible description and wet result; notebook result stays fixed');
  await explore();assert.equal((await saved()).testPrediction,'surface');

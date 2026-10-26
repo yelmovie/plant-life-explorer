@@ -1079,6 +1079,10 @@
     "cherry",
     "sowthistle"
   ],
+  "budsFound": {
+    "cherry": [],
+    "sowthistle": []
+  },
   "misses": [
     1,
     0,

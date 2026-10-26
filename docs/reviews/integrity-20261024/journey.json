@@ -1,6 +1,6 @@
 {
-  "started": "2026-10-23T17:26:22.462Z",
-  "url": "http://127.0.0.1:4328",
+  "started": "2026-10-26T15:17:32.055Z",
+  "url": "http://127.0.0.1:4318",
   "mode": "WebGL disabled; isolated fresh browser; touch emulation and keyboard",
   "missions": [
     {
@@ -1141,6 +1141,10 @@
       "cherry",
       "sowthistle"
     ],
+    "budsFound": {
+      "cherry": [],
+      "sowthistle": []
+    },
     "misses": [
       1,
       0,
@@ -1308,5 +1312,5 @@
     "soundEnabled": true,
     "adminUnlocked": false
   },
-  "finished": "2026-10-23T17:27:06.799Z"
+  "finished": "2026-10-26T15:18:46.413Z"
 }
