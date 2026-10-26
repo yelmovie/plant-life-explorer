@@ -43,21 +43,27 @@ try{
  await page.locator('.reward-building').evaluate(img=>img.decode());
  await screenshot('reward');assert.deepEqual((await saved()).completed,[true,true,false,false,false,false,false,false,false,false]);
  await page.locator('[data-action="reward-map"]').click();assert.equal(await page.locator('.world-node.restored').count(),1);
+ // The tool pack lives on the mission screen (the map keeps only navigation).
+ await page.locator('.map-next-card [data-action="map-select"]').click();await page.locator('#dialog [data-action="enter-mission"]').click();
  await page.locator('[data-action="tool-pack"]').click();assert.equal(await page.locator('.expedition-tool.earned').count(),1);
  await page.locator('[data-action="expedition-use"][data-id="0"]').click();assert.match(await page.locator('#dialog').innerText(),/땅속/);await close();
+ await page.locator('[data-action="map"]').first().click();
  await page.reload();assert.equal(await page.locator('.world-node.restored').count(),1);report.checks.push('Two core completion buttons award exactly one seed/tool; restored place, next unlock, usable tool clue and reload persist');
  const student=await saved();
  await page.getByRole('button',{name:'설정',exact:true}).click();await page.locator('details[data-key="teacher"]>summary').click();await page.locator('details[data-key="tools"]>summary').click();await page.locator('[data-action="admin-unlock"]').click();await close();
  await page.locator('[data-action="map-overview"]').click();await page.waitForTimeout(500);
  await page.locator('.world-node[data-id="4"] .world-label').click();await page.locator('#dialog [data-action="enter-mission"]').click();
- await page.locator('[data-action="journey-mode"][data-id="explore"]').first().click();await page.locator('[data-action="cover"][data-id="flap"]').click();
+ await page.locator('[data-action="field-bag-predict"]').first().click();
  assert.deepEqual(await saved(),student);await page.reload();assert.deepEqual(await saved(),student);assert.equal(await page.locator('.map-preview-note').count(),0);
  report.checks.push('Teacher preview manipulation and reload do not alter the saved student record');
- await page.evaluate(async()=>{const{freshState}=await import('/src/model.js');const s=freshState();s.version=1;s.completed=[true,true,true,true,false,false,false,false,false,false];s.screen='activity';s.page=4;localStorage.setItem('green-garden-mvp-v2',JSON.stringify(s));});
+ await page.evaluate(async()=>{const{freshState}=await import('/src/model.js');const{fieldMissionAction}=await import('/src/field-missions.js');const s=freshState(),u={};s.version=1;s.completed=[true,true,true,true,false,false,false,false,false,false];s.screen='activity';s.page=4;
+  // Finish the float field mission through its own actions so the record stage opens.
+  for(const step of ['model:air|predict:float','model:solid|predict:sink','model:air|tank','model:solid|tank','model:air|observe:float','model:solid|observe:sink','reason:air-space|reason:air'])fieldMissionAction(s,u,'field-place',step);
+  localStorage.setItem('green-garden-mvp-v2',JSON.stringify(s));});
  await page.reload();await page.locator('[data-action="journey-mode"][data-id="explore"]').first().click();await page.locator('[data-spatial="lab"] canvas').waitFor();await screenshot('lab-whole');
  await page.locator('[data-action="experiment-predict"][data-id="none"]').click();await page.locator('[data-action="lab-next"][data-id="cut"]').click();await page.locator('[data-spatial="lab"] canvas').waitFor();await screenshot('lab-cut');
  await page.locator('[data-action="lab-next"][data-id="water"]').click();await page.locator('.center [data-action="press-petiole"]').click();assert.equal((await saved()).experiment.step,4);
- await page.locator('[data-action="experiment-answer"][data-id="air"]').click();assert.equal((await saved()).experimentAnswer,'air');report.checks.push('Volumetric petiole: incorrect prediction is accepted; cut, submerge, press and interpret air bubbles');
+ await page.locator('[data-action="experiment-answer"][data-id="air"]').click();await page.waitForFunction(()=>JSON.parse(localStorage.getItem('green-garden-mvp-v2')).experimentAnswer==='air',null,{timeout:4000}).catch(()=>{});assert.equal((await saved()).experimentAnswer,'air');report.checks.push('Volumetric petiole: incorrect prediction is accepted; cut, submerge, press and interpret air bubbles');
  assert.deepEqual(report.errors,[]);
 }catch(error){report.failure=error.stack;process.exitCode=1;}
 finally{await writeFile(new URL('core-browser.json',output),JSON.stringify(report,null,2));await browser.close();}

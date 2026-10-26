@@ -5,8 +5,8 @@ import {createRequire} from 'node:module';
 import {fileURLToPath} from 'node:url';
 import {mkdir,writeFile} from 'node:fs/promises';
 const require=createRequire(import.meta.url);
-const {chromium}=require(process.env.PLAYWRIGHT_MODULE_PATH||'playwright');
-const browser=await chromium.launch({headless:true,...(process.env.BROWSER_EXECUTABLE?{executablePath:process.env.BROWSER_EXECUTABLE}:{})});
+const {chromium}=require(process.env.PLAYWRIGHT_MODULE_PATH||'C:/Users/bongb/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const browser=await chromium.launch({headless:true,executablePath:process.env.BROWSER_EXECUTABLE||'C:/Program Files/Google/Chrome/Application/chrome.exe'});
 const context=await browser.newContext({viewport:{width:1280,height:800},hasTouch:true});
 const page=await context.newPage(),errors=[],checks=[],layouts=[];
 page.on('pageerror',e=>errors.push(e.message));
@@ -16,10 +16,12 @@ const saved=()=>page.evaluate(()=>JSON.parse(localStorage.getItem('green-garden-
 const close=()=>page.locator('#dialog [data-action="close"]').first().click();
 const waitFrames=()=>page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
 const enter=async i=>{await page.locator(`.world-node[data-id="${i}"]`).click();await page.locator('#dialog [data-action="enter-mission"]').waitFor();await page.locator('#dialog [data-action="enter-mission"]').click();};
+// The map is reached from Settings on every screen (home has no direct map button any more).
+const openMap=async()=>{await page.getByRole('button',{name:'설정',exact:true}).click();await page.locator('[data-action="settings-map"]').evaluate(b=>b.click());await page.locator('.stage-map').waitFor();};
 const enablePreview=async()=>{await page.getByRole('button',{name:'설정',exact:true}).click();await page.locator('details[data-key="teacher"]>summary').click();await page.locator('details[data-key="tools"]>summary').click();await page.locator('[data-action="admin-unlock"]').click();await close();};
 try{
   await page.goto(process.env.STAGE_MAP_URL||'http://127.0.0.1:4318');
-  await page.getByRole('button',{name:'탐험 지도',exact:true}).click();
+  await openMap();
   await page.evaluate(()=>Promise.all([...document.images].map(i=>i.decode().catch(()=>{}))));
   await page.locator('.world-node[data-id="4"]').tap({force:true});
   assert.match(await page.locator('#dialog').innerText(),/먼저 표본 온실/);
@@ -53,7 +55,7 @@ try{
   assert.equal(await page.locator('.world-node[data-id="1"]').getAttribute('aria-disabled'),null);
   await enter(1);
   assert.equal(await page.locator('main h1').innerText(),'계절을 바꿔 봐요');
-  await page.getByRole('button',{name:'탐험 지도',exact:true}).click();
+  await openMap();
   const student=await saved();
   checks.push('두 활동 완료 버튼 → 빛씨앗 1개 → 다음 단계 해금 → 새로고침 보존 → 다음 미션 입장');
 
@@ -67,7 +69,7 @@ try{
   await page.getByRole('button',{name:'설정',exact:true}).click();
   await page.locator('[data-action="view-ending"]').click();
   assert.equal(await page.locator('body').getAttribute('data-screen'),'ending');
-  await page.getByRole('button',{name:'탐험 지도',exact:true}).click();
+  await openMap();
   await page.getByRole('button',{name:'미리보기 종료',exact:true}).click();
   assert.deepEqual(await saved(),student);
   assert.equal(await page.locator('.world-node[aria-disabled="true"]').count(),3);
@@ -96,7 +98,7 @@ try{
   // A fresh profile avoids previous camera position or progress affecting layout checks.
   await context.clearCookies();
   await page.evaluate(()=>localStorage.removeItem('green-garden-mvp-v2'));await page.reload();
-  await page.getByRole('button',{name:'탐험 지도',exact:true}).click();
+  await openMap();
   await page.evaluate(async()=>{await document.fonts.ready;await Promise.all([...document.images].map(i=>i.decode().catch(()=>{})));await Promise.all(document.querySelector('main').getAnimations().map(a=>a.finished.catch(()=>{})));});
   for(const [width,height] of [[1024,768],[1180,820],[1280,800],[768,1024],[820,1180]]){
     await page.setViewportSize({width,height});await waitFrames();
