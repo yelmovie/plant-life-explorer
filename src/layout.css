@@ -791,3 +791,7 @@ body.large-text #app .exploration-activity .learning-scene { overflow: visible; 
 #app .regrow-mark.ok { background: radial-gradient(circle at 50% 50%, #fff 0 18%, #6fa05a 20%); box-shadow: 0 3px 0 #3e6a33; }
 @media (max-width: 1100px) { #app .regrow-find { margin-top: 8px; padding: 6px 10px; } #app .regrow-pic .field-bud-picture { max-height: 120px; } #app .regrow-copy p { font-size: 17px; } }
 @media (prefers-reduced-motion: reduce) { #app .link-handle, #app .regrow-pin { animation: none; } }
+
+/* The preview note sits over the map; let taps reach the places under it, keep its own button clickable. */
+#app .map-preview-note { pointer-events: none; }
+#app .map-preview-note .btn { pointer-events: auto; }
