@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {APP_VERSION,CREDIT_LINE,TEXT,STANDARDS,STANDARDS_DISCLAIMER,standardsSection,appInfoSection,studentSection,teacherSection,noticeSection} from '../src/settings-content.js';
+import {APP_VERSION,CREDIT_LINE,TEXT,STANDARDS,standardsSection,appInfoSection,studentSection,teacherSection,noticeSection} from '../src/settings-content.js';
 import {ASSETS,THUMBS,assetImage} from '../src/asset-catalog.js';
 const read=file=>readFileSync(new URL(`../${file}`,import.meta.url),'utf8');
 
@@ -18,7 +18,7 @@ test('성취기준은 원문 그대로이고 비어 있으면 접힘 자체가 �
  ]);
  assert.equal(standardsSection([]),'');
  const html=standardsSection();
- assert.ok(html.includes(STANDARDS_DISCLAIMER));
+ assert.ok(!html.includes('이 게임만으로'));
  for(const [code,text] of STANDARDS)assert.ok(html.includes(`[${code}]</strong> ${text}`));
  assert.ok(teacherSection('').includes('data-key="standards"'));
 });

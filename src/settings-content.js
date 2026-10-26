@@ -12,7 +12,6 @@ export const STANDARDS=[
  ['4과03-02','다양한 환경에 서식하는 식물을 조사하여 식물의 생김새와 생활 방식이 환경과 관련되어 있음을 설명할 수 있다.'],
  ['4과03-03','식물의 특징을 이용하여 일상생활에서 활용할 수 있는 생활용품을 설계하여 협력적으로 소통할 수 있다.'],
 ];
-export const STANDARDS_DISCLAIMER='이 게임만으로 성취기준 전체를 달성했다고 판단하지 않으며, 수업·토론·후속 평가와 함께 활용해 주세요.';
 
 export const TEXT={
  title:'설정',
@@ -75,7 +74,7 @@ const lines=list=>list.map(t=>`<p>${t}</p>`).join('');
 // Hidden entirely while the list is empty.
 export function standardsSection(list=STANDARDS){
  if(!list.length)return '';
- return fold('standards','성취기준',`<p>${CURRICULUM}과 연계한 탐구 보조 활동이에요. ${STANDARDS_DISCLAIMER}</p><ul class="standards-list">${list.map(([code,text])=>`<li><strong>[${code}]</strong> ${text}</li>`).join('')}</ul>`);
+ return fold('standards','성취기준',`<p>${CURRICULUM}과 연계한 탐구 보조 활동이에요.</p><ul class="standards-list">${list.map(([code,text])=>`<li><strong>[${code}]</strong> ${text}</li>`).join('')}</ul>`);
 }
 export const appInfoSection=(tools='')=>fold('info','앱 정보 · 배움과 보상',`<dl class="settings-info">${APP_INFO.map(([k,v])=>`<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl><p class="settings-credit">${CREDIT_LINE}</p>${tools}`);
 export const studentSection=()=>fold('student','학생용 가이드',lines(STUDENT_GUIDE));
