@@ -1,0 +1,57 @@
+/* Field mission 4 by hand: pour the ground, plant it, rain on it. */
+#app .garden-tool { cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; }
+#app .garden-tool.lifted { opacity: .45; transform: translateY(3px); box-shadow: 0 1px 0 #657452; }
+#app .garden-field { position: relative; }
+#app .field-garden-zone { position: relative; overflow: hidden; isolation: isolate; }
+#app .field-garden-zone > :not(.zone-ground,.zone-water) { position: relative; z-index: 1; }
+#app .zone-ground { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+#app .zone-ground img { width: 100%; height: 100%; object-fit: cover; opacity: .5; }
+#app .zone-water { position: absolute; left: 0; right: 0; bottom: 0; height: 0; z-index: 0; pointer-events: none; background: linear-gradient(#8fd0e8cc, #4f9fc4cc); border-radius: 50% 50% 0 0 / 18px 18px 0 0; transition: height 1.4s ease-out; }
+
+/* Pouring: the plot fills with the tool's colour while the tool hovers. */
+#app .field-garden-zone::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 0; z-index: 0; pointer-events: none; background: var(--pour, #8cbf5a); opacity: .45; }
+#app .field-garden-zone.pour-target::after { animation: garden-pour .85s linear forwards; }
+#app .field-garden-zone.poured::after { height: 100%; animation: none; opacity: .55; }
+@keyframes garden-pour { to { height: 100%; } }
+#app .field-garden-zone.just-env .zone-ground { animation: garden-ground-in .8s ease-out; }
+@keyframes garden-ground-in { from { clip-path: circle(0 at 50% 85%); } to { clip-path: circle(150% at 50% 85%); } }
+
+/* Planting: the plant drops into the soil with a puff; a poor fit wobbles. */
+#app .field-garden-zone.just-planted > img { animation: garden-plant-in .6s cubic-bezier(.2,1.4,.4,1) both; transform-origin: 50% 100%; }
+#app .field-garden-zone.just-planted.misfit > img { animation: garden-plant-in .6s cubic-bezier(.2,1.4,.4,1) both, garden-wobble .45s ease-in-out .6s 3; }
+#app .field-garden-zone.just-planted::before { content: ''; position: absolute; left: 50%; bottom: 22%; width: 120px; height: 34px; margin-left: -60px; z-index: 2; border-radius: 50%; background: radial-gradient(#7a5a3acc, #7a5a3a00 70%); pointer-events: none; animation: garden-puff .7s ease-out .25s both; }
+@keyframes garden-plant-in { from { transform: translateY(-46px) scale(.7); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes garden-wobble { 0%,100% { transform: rotate(0); } 30% { transform: rotate(-7deg); } 70% { transform: rotate(6deg); } }
+@keyframes garden-puff { from { transform: scale(.3); opacity: 1; } to { transform: scale(1.4); opacity: 0; } }
+
+/* Rain cloud and what each plot does with the same rain. */
+#app .garden-field.has-cloud { padding-top: 72px; }
+#app .garden-cloud { position: absolute; left: 8px; top: 0; z-index: 5; width: 128px; height: 62px; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; border-radius: 40px; background: radial-gradient(circle at 30% 60%, #fff 0 22px, transparent 23px), radial-gradient(circle at 55% 40%, #fff 0 28px, transparent 29px), radial-gradient(circle at 78% 62%, #fff 0 20px, transparent 21px), linear-gradient(transparent 55%, #fff 55% 88%, transparent 88%); filter: drop-shadow(0 4px 0 #b9c7cf) drop-shadow(0 8px 10px #2b3b4433); animation: garden-cloud-bob 1.6s ease-in-out infinite alternate; }
+#app .garden-cloud.dragging { cursor: grabbing; animation: none; }
+#app .cloud-rain { position: absolute; left: 16px; right: 16px; top: 52px; height: 150px; opacity: 0; pointer-events: none; background: repeating-linear-gradient(100deg, transparent 0 9px, #5fa8d0aa 9px 11px, transparent 11px 22px); -webkit-mask: linear-gradient(#000, transparent); mask: linear-gradient(#000, transparent); }
+#app .garden-cloud.raining .cloud-rain { opacity: 1; animation: garden-rain .35s linear infinite; }
+@keyframes garden-rain { from { background-position: 0 0; } to { background-position: -6px 30px; } }
+@keyframes garden-cloud-bob { to { transform: translateY(-5px); } }
+#app .zone-pond.wet .zone-water, #app .zone-pond.rained .zone-water { height: 34%; }
+#app .zone-meadow.wet .zone-water { animation: garden-soak 1.6s ease-in-out infinite; }
+#app .zone-ridge.wet .zone-water { animation: garden-drain .9s ease-in infinite; }
+@keyframes garden-soak { 0% { height: 0; opacity: .9; } 45% { height: 12%; opacity: .7; } 100% { height: 4%; opacity: 0; filter: saturate(.3); } }
+@keyframes garden-drain { 0% { height: 8%; opacity: .8; transform: none; } 100% { height: 2%; opacity: 0; transform: translateX(40%); } }
+#app .zone-meadow.wet .zone-ground img, #app .zone-meadow.rained .zone-ground img { filter: brightness(.85) saturate(1.2); }
+
+@media (max-width: 1100px) { #app .garden-field.has-cloud { padding-top: 60px; } #app .garden-cloud { width: 108px; height: 52px; } }
+@media (prefers-reduced-motion: reduce) { #app .garden-cloud, #app .field-garden-zone.just-planted > img, #app .field-garden-zone.just-planted::before, #app .field-garden-zone.just-env .zone-ground, #app .garden-cloud.raining .cloud-rain { animation: none; } }
+
+/* The drag ghost lives on <body>, outside #app. */
+.garden-ghost { position: fixed; z-index: 50; pointer-events: none; width: 84px; height: 74px; transform: translate(-50%,-60%) rotate(-12deg); transition: transform .2s; }
+.garden-ghost img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 6px 6px #2b1e0f55); }
+.garden-ghost.pouring { transform: translate(-50%,-60%) rotate(-38deg); }
+.garden-ghost::after { content: ''; position: absolute; left: 30%; top: 70%; width: 40%; height: 60px; opacity: 0; background: radial-gradient(circle, var(--grain) 0 3px, transparent 4px) 0 0 / 12px 14px; animation: garden-grain .4s linear infinite; -webkit-mask: linear-gradient(#000, transparent); mask: linear-gradient(#000, transparent); }
+.garden-ghost.pouring::after { opacity: 1; }
+.garden-ghost.tool-water { --grain: #4f9fc4; }
+.garden-ghost.tool-grass { --grain: #5e9a3a; }
+.garden-ghost.tool-dry { --grain: #c89a55; }
+@keyframes garden-grain { to { background-position: 0 14px; } }
+#app .field-garden-zone.has-env > strong { padding: 2px 10px; border-radius: 12px; background: #fffcefd9; }
+#app .field-garden-zone > img.plant-illustration { flex: none; height: 110px; }
+#app .field-garden-zone.has-env > :is(.field-plant-space, img + span) { padding: 2px 10px; border-radius: 12px; background: #fffcefd9; }
