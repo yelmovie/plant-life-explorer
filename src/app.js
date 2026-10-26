@@ -86,7 +86,7 @@ function render(){playMusic(state.screen==='ending'?'ending':'main');const previ
 function journal(){modal('나의 연구 노트',`${seedProgress(state)}${stampBoard(state)}<p>완료 수는 활동의 진행 기록이야. 이해한 내용은 처음 선택과 관찰 근거를 함께 보며 확인해.</p><div class="journal-list">${MISSIONS.map((m,i)=>`<section><h3>${m.evidence}</h3>${btn('선택·관찰 기록 펼치기','note-open','soft',`data-id="${i}"`)}</section>`).join('')}</div>`);}
 
 function teacherTools(){
- return `<p>${TEXT.teacherTools}</p>${btn(icon(state.adminUnlocked?'check':'lock')+(state.adminUnlocked?TEXT.unlockOn:TEXT.unlock),'admin-unlock',`soft wide ${state.adminUnlocked?'selected':''}`,`aria-pressed="${state.adminUnlocked}"`)}<p class="microcopy">${TEXT.teacherNote}</p>${btn(icon('download')+' '+(offlinePrep.done?TEXT.offlinePrepDone:TEXT.offlinePrep),'offline-prep',`soft wide ${offlinePrep.done?'selected':''}`,'id="offline-prep"')}<p class="microcopy" id="offline-prep-status" role="status">${offlinePrep.status||TEXT.offlinePrepNote}</p>`;
+ return `${btn(icon(state.adminUnlocked?'check':'lock')+(state.adminUnlocked?TEXT.unlockOn:TEXT.unlock),'admin-unlock',`soft wide ${state.adminUnlocked?'selected':''}`,`aria-pressed="${state.adminUnlocked}"`)}${btn(icon('download')+' '+(offlinePrep.done?TEXT.offlinePrepDone:TEXT.offlinePrep),'offline-prep',`soft wide ${offlinePrep.done?'selected':''}`,'id="offline-prep"')}<p class="microcopy" id="offline-prep-status" role="status">${offlinePrep.status}</p>`;
 }
 // Teacher-run, one file at a time so a class sharing Wi-Fi is not flooded. Videos stay network-only (range requests).
 const offlinePrep={running:false,done:false,status:''};
