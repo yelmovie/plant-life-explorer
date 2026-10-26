@@ -1,5 +1,6 @@
 import {assetImage} from './asset-catalog.js';
 import {icon,plantArt,seasonArt,bagArt} from './art.js';
+import {mountGardenHands} from './field-hands-garden.js';
 import {FIELD_LEAVES,FIELD_ORDER,FIELD_ZONES,FIELD_ENV,FIELD_PLANTS,normalizeFieldEvidence,fieldSteps,fieldMissionReady,fieldBagPair,FIELD_BAG_ROLES,applyFieldAction} from './field-missions-state.js';
 export {normalizeFieldEvidence,fieldMissionReady};
 const esc=v=>String(v??'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
@@ -45,10 +46,14 @@ function floatLab(e,u,stage){
  if(stage===1)return `${modelTools(u)}${target(tank,'tank','field-tank-drop')}<p class="microcopy">모형을 수조로 옮겨. 두 모형 모두 시험해야 공기 공간의 역할을 견줄 수 있어.</p>`;
  return `${tank}${modelTools(u)}<div class="field-sort-bins">${['float','sink'].map(r=>target(`<strong>관찰 기록 · ${r==='float'?'수면에 떠 있음':'바닥으로 내려감'}</strong>${['air','solid'].filter(m=>f.observed[m]===r).map(m=>`<span>${modelName(m)} ✓</span>`).join('')}`,`observe:${r}`,'field-sort-bin')).join('')}</div><div class="field-tools">${source('안에 공기가 차지하는 공간','reason:air-space',u)}${['air','solid'].map(m=>target(`${f.reason===m?'✓ ':''}${modelName(m)}`,`reason:${m}`)).join('')}</div>`;
 }
+const envVerb={water:'물 붓기 · 물가',grass:'풀씨 뿌리기 · 풀밭',dry:'모래 뿌리기 · 건조한 곳'};
+const gardenHint=['도구를 끌어 땅 위에서 <b>잠깐 멈추면</b> 부어져. 빗물 단서를 보고 골라 봐.','식물을 끌어 <b>특징이 도움이 되는 자리</b>에 쏙 심어 봐.','구름을 끌어 <b>세 자리 위를 모두</b> 지나가며 비를 뿌려 봐.'];
 function garden(e,u,stage){
- const g=e.garden,zoneClue={pond:'빗물이 낮은 자리에 오래 고여 있어',meadow:'빗물이 흙에 고르게 배어들어',ridge:'물이 빠르게 빠지고 땅이 말라 있어'};
- const tools=stage===0?Object.entries(envNames).map(([id,n])=>source(`${assetImage('habitat_'+id,'field-habitat-picture',true)}<span>${n}</span>`,'environment:'+id,u,'field-env-token')).join(''):Object.entries(plantNames).map(([id,n])=>source(`${plantArt(id)}<span>${n}</span>`,'plant:'+id,u,'field-plant-token')).join('');
- return `<div class="field-tools">${tools}</div><div class="field-restoration">${FIELD_ZONES.map(z=>{const p=Object.keys(FIELD_PLANTS).find(p=>g.plants[p]===z);return target(`<strong>${zoneClue[z]}</strong><span class="field-zone-name">${envNames[g.environments[z]]||'환경 카드를 놓아 줘'}</span>${p?plantArt(p)+`<span>${plantNames[p]}</span>`:'<span class="field-plant-space">심을 식물 자리</span>'}`,`${stage===0?'environment':'plant'}:${z}`,'field-garden-zone zone-'+z);}).join('')}</div>${stage===2?`${btn(icon('drop')+' 같은 비로 정원 시험','field-garden-rain','','primary')}<p class="microcopy">배치를 바꾸면 다시 시험해야 해. 비는 식물을 바로 자라거나 시들게 만드는 장치가 아니라 물이 머무르는 환경을 확인하는 모형이야.</p>`:''}`;
+ const g=e.garden,rained=fieldSteps(e,3)[2],zoneClue={pond:'빗물이 낮은 자리에 오래 고여 있어',meadow:'빗물이 흙에 고르게 배어들어',ridge:'물이 빠르게 빠지고 땅이 말라 있어'};
+ const envSources=Object.entries(envNames).map(([id,n])=>source(`${assetImage('habitat_'+id,'field-habitat-picture',true)}<span>${n}</span>`,'environment:'+id,u,'field-env-token')).join('');
+ const tools=stage===0?Object.keys(envNames).map(id=>`<div class="mission-tool field-token field-env-token garden-tool" data-garden-tool="${id}" aria-hidden="true">${assetImage('habitat_'+id,'field-habitat-picture',true)}<span>${envVerb[id]}</span></div>`).join('')+`<div class="lens-fallback">${envSources}</div>`:Object.entries(plantNames).map(([id,n])=>source(`${plantArt(id)}<span>${n}</span>`,'plant:'+id,u,'field-plant-token')).join('');
+ const zones=FIELD_ZONES.map(z=>{const env=g.environments[z],p=Object.keys(FIELD_PLANTS).find(p=>g.plants[p]===z);return target(`<i class="zone-state" data-zone="${z}" data-env="${env||''}" data-plant="${p||''}" data-fit="${p&&FIELD_ENV[z]===FIELD_PLANTS[p]?'1':''}" hidden></i><span class="zone-ground" aria-hidden="true">${env?assetImage('habitat_'+env,'zone-ground-picture',true):''}</span><span class="zone-water" aria-hidden="true"></span><strong>${zoneClue[z]}</strong><span class="field-zone-name">${envNames[env]||'도구로 땅을 만들어 줘'}</span>${p?plantArt(p)+`<span>${plantNames[p]}</span>`:'<span class="field-plant-space">심을 식물 자리</span>'}`,`${stage===0?'environment':'plant'}:${z}`,`field-garden-zone zone-${z} ${env?'has-env':''} ${rained?'rained':''}`);}).join('');
+ return `<p class="lens-hint season-hint" data-garden-tip><span>${gardenHint[stage]}</span></p><div class="field-tools">${tools}</div><div class="garden-field ${stage===2?'has-cloud':''}" data-garden-field>${stage===2?'<div class="garden-cloud" data-garden-cloud aria-hidden="true"><span class="cloud-rain"></span></div>':''}<div class="field-restoration">${zones}</div></div>${stage===2?`<div class="lens-fallback">${btn(icon('drop')+' 같은 비로 정원 시험','field-garden-rain','','primary')}</div><p class="microcopy">배치를 바꾸면 다시 시험해야 해. 비는 식물을 바로 자라거나 시들게 만드는 장치가 아니라 물이 머무르는 환경을 확인하는 모형이야.</p>`:''}`;
 }
 const partName={surface:'겉면',cover:'입구 덮개',pocket:'바깥 주머니 덮개'};
 const partLabel=(part,value)=>part==='surface'?(value==='lotus'?'연잎을 본뜬 겉면':'기본 천 겉면'):(value==='flap'?'닫힌 덮개':'열린 입구');
@@ -122,8 +127,9 @@ export function mountFieldInteractions(root,state,ui,onAction){
  const click=event=>{if(blockedClick){event.preventDefault();event.stopImmediatePropagation();blockedClick=false;}};
  const cancel=()=>clear();const key=event=>{if(event.key==='Escape'){clear();onAction('field-cancel','');}};
  const bench=root.querySelector('[data-lens-bench]'),lensCleanup=bench?mountLens(bench,ui,onAction):null,seasonCleanup=mountSeasonHands(root,ui,onAction);
+ const gardenCleanup=mountGardenHands(root,ui,onAction);
  root.addEventListener('pointerdown',down);root.addEventListener('pointermove',move,{passive:false});root.addEventListener('pointerup',up);root.addEventListener('pointercancel',cancel);root.addEventListener('click',click,true);root.addEventListener('keydown',key);
- return ()=>{lensCleanup?.();seasonCleanup();clear();clearTimeout(blockTimer);root.removeEventListener('pointerdown',down);root.removeEventListener('pointermove',move);root.removeEventListener('pointerup',up);root.removeEventListener('pointercancel',cancel);root.removeEventListener('click',click,true);root.removeEventListener('keydown',key);};
+ return ()=>{gardenCleanup();lensCleanup?.();seasonCleanup();clear();clearTimeout(blockTimer);root.removeEventListener('pointerdown',down);root.removeEventListener('pointermove',move);root.removeEventListener('pointerup',up);root.removeEventListener('pointercancel',cancel);root.removeEventListener('click',click,true);root.removeEventListener('keydown',key);};
 }
 
 // object-fit:contain leaves blank margins; clue spots are measured on the painted image only.
