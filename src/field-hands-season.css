@@ -1,0 +1,83 @@
+/* Field mission 2, steps 2-3: swap photo cards on a time dial, turn the hand to play a time-lapse. */
+#app .time-bench { --r: 118px; --turn: 0deg; --grow: 0; display: grid; grid-template-columns: 320px minmax(0,1fr); align-items: center; gap: 16px; padding: 8px 14px; border-radius: 18px; background: #fffdf3e6; }
+
+/* The dial: a progress ring, a face you turn, a hand, and three cards on the rim. */
+#app .time-dial { position: relative; width: 320px; height: 320px; user-select: none; -webkit-user-select: none; }
+#app .dial-sweep { position: absolute; inset: 28px; border-radius: 50%; background: conic-gradient(#8fc56a var(--turn), #e4ead0 0); -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 14px), #000 calc(100% - 13px)); mask: radial-gradient(farthest-side, #0000 calc(100% - 14px), #000 calc(100% - 13px)); }
+#app .dial-face { position: absolute; inset: 44px; border-radius: 50%; background: radial-gradient(circle at 45% 40%, #fffef6, #eaf0d6 70%); box-shadow: inset 0 0 0 6px #fff, 0 6px 0 #c0c9a3, 0 10px 18px #2b1e0f22; touch-action: none; cursor: grab; }
+#app .spinning .dial-face { cursor: grabbing; }
+#app .dial-tick { position: absolute; left: 50%; top: 50%; width: 6px; height: 16px; margin: -8px 0 0 -3px; border-radius: 3px; background: #a9b98a; transform: rotate(var(--a)) translateY(-104px); }
+#app .dial-hand { position: absolute; left: 50%; top: 50%; width: 10px; height: 88px; margin: -88px 0 0 -5px; border-radius: 5px; background: #4f6b3a; transform-origin: 50% 100%; transform: rotate(var(--turn)); pointer-events: none; }
+#app .dial-knob { position: absolute; left: 50%; top: 0; width: 52px; height: 52px; margin: -26px 0 0 -26px; border-radius: 50%; background: radial-gradient(circle, #fff7c2 30%, #f2c94c 64%); box-shadow: 0 0 0 4px #fffbe6, 0 4px 0 4px #c9a43a; animation: link-glow 1.4s ease-in-out infinite alternate; }
+#app .spinning .dial-knob, #app .pin-mode .dial-knob { animation: none; }
+#app .dial-hub { position: absolute; left: 50%; top: 50%; width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 50%; background: #4f6b3a; box-shadow: 0 0 0 5px #fffbe6; pointer-events: none; }
+#app .pin-mode .time-dial { opacity: .8; }
+#app .pin-mode .dial-face { cursor: default; }
+
+#app .dial-card { position: absolute; left: 50%; top: 50%; z-index: 2; width: 112px; height: 84px; margin: -42px 0 0 -56px; overflow: hidden; border: 4px solid #fffced; border-radius: 14px; background: #fffced; box-shadow: 0 5px 0 #c0c9a3, 0 8px 12px #2b1e0f26; transform: rotate(var(--a)) translateY(calc(-1 * var(--r))) rotate(calc(-1 * var(--a))); transition: transform .55s cubic-bezier(.3,1.3,.5,1), opacity .2s; touch-action: none; cursor: grab; }
+#app .dial-card :is(.season-atlas, img), .dial-ghost :is(.season-atlas, img) { display: block; width: 100%; height: 100%; min-height: 0; border-radius: 0; object-fit: cover; pointer-events: none; }
+#app .dial-card > span { position: absolute; left: 0; right: 0; bottom: 0; padding: 1px 4px; background: #fffcefe6; color: var(--scene-ink); font: 14px/1.3 var(--font-display); text-align: center; }
+#app .is-done .dial-card { cursor: default; border-color: #d9ecc6; }
+#app .dial-card.picked { box-shadow: 0 0 0 4px #f2c94c, 0 5px 0 4px #c9a43a; }
+#app .dial-card.swap-over { box-shadow: 0 0 0 5px #6fa05a, 0 8px 12px #2b1e0f26; }
+#app .dial-card.lifted { opacity: .35; }
+#app .dial-card.swapped { animation: dial-card-pop .45s ease-out; }
+#app .dial-card.jam { border-color: #f0b48a; box-shadow: 0 0 0 4px #d9824f, 0 5px 0 4px #9a4f2a; animation: dial-jolt .14s 4; }
+#app .dial-card.jam::after { content: '?'; position: absolute; right: 4px; top: 4px; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #d9824f; color: #fff; font: 18px/1 var(--font-display); }
+@keyframes dial-card-pop { 50% { scale: 1.12; } }
+@keyframes dial-jolt { 25% { translate: -5px 0; } 75% { translate: 5px 0; } }
+.dial-ghost { position: fixed; z-index: 50; width: 112px; height: 84px; overflow: hidden; border: 4px solid #fffced; border-radius: 14px; background: #fffced; box-shadow: 0 12px 20px #2b1e0f55; transform: translate(-50%,-50%) rotate(-6deg); pointer-events: none; }
+.dial-ghost > span { display: none; }
+
+/* The time-lapse viewer: three stacked photos crossfaded by the hand. */
+#app .time-view { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 0; }
+#app .time-viewer { position: relative; width: min(100%, 500px); aspect-ratio: 3 / 2; overflow: hidden; border: 5px solid #fffced; border-radius: 18px; background: #dfe8c8; box-shadow: 0 6px 0 #c0c9a3, 0 0 calc(var(--grow) * 36px) calc(var(--grow) * 10px) #f6e27a; }
+#app .viewer-film { position: absolute; inset: 0; }
+#app .viewer-layer { position: absolute; inset: 0; opacity: 0; }
+#app .viewer-layer :is(.season-atlas, .field-bud-picture) { width: 100%; height: 100%; min-height: 0; max-width: none; border-radius: 0; object-fit: cover; }
+#app .rewind .viewer-layer { transition: opacity .45s; }
+#app .rewind .dial-hand { transition: transform .45s ease-out; }
+#app .viewer-badge { position: absolute; left: 10px; top: 10px; padding: 3px 12px; border-radius: 999px; background: #243d31cc; color: #fffbe6; font: 16px/1.3 var(--font-display); pointer-events: none; }
+#app .viewer-jam { position: absolute; left: 50%; top: 45%; padding: 6px 20px; border: 4px solid #d9824f; border-radius: 14px; background: #fffaf0; color: #b5532a; font: 34px/1.1 var(--font-display); opacity: 0; transform: translate(-50%,-50%) rotate(-8deg) scale(.4); transition: opacity .15s, transform .25s cubic-bezier(.2,1.6,.4,1); pointer-events: none; }
+#app .jammed .viewer-jam { opacity: 1; transform: translate(-50%,-50%) rotate(-8deg) scale(1); }
+#app .jammed .viewer-film { filter: grayscale(.75) brightness(.9); }
+#app .jammed .time-viewer, #app .jammed .dial-hand { animation: dial-jolt .14s 3; }
+#app .viewer-bloom { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+#app .viewer-bloom > i { position: absolute; left: var(--x); bottom: -16px; width: 16px; height: 13px; border-radius: 70% 0 70% 0; background: #ffd3e6; box-shadow: inset -2px -2px 0 #f4a9c8; opacity: 0; }
+#app .kind-herb .viewer-bloom > i { background: #b9e08f; box-shadow: inset -2px -2px 0 #7fb35a; }
+#app .bloomed .viewer-bloom > i { animation: dial-petal 1.5s ease-out var(--d) forwards; }
+#app .bloomed .dial-sweep { filter: drop-shadow(0 0 8px #f6e27a); }
+#app .bloomed .dial-knob { background: radial-gradient(circle, #fff 30%, #8fc56a 64%); box-shadow: 0 0 0 4px #fffbe6, 0 4px 0 4px #4f7a4c; }
+@keyframes dial-petal { 0% { opacity: 0; transform: translateY(0) rotate(0) scale(var(--s)); } 20% { opacity: 1; } 100% { opacity: 0; transform: translate(24px,-280px) rotate(220deg) scale(var(--s)); } }
+#app .spinning .regrow-mark, #app .bloomed .regrow-mark { display: none; }
+
+/* Step 3 looks underground: the camera sinks below the soil line. */
+#app .underground-cam .viewer-film { transform-origin: 50% 100%; transform: scale(1.35); }
+#app .underground-cam.cam-descend .viewer-film { animation: dial-cam-down 1.6s ease-in-out .3s both; }
+#app .underground-cam .viewer-badge { background: #5e432acc; }
+#app .underground-cam .viewer-badge::before { content: ''; display: inline-block; width: 0; height: 0; margin-right: 6px; border: 7px solid transparent; border-top: 10px solid #fffbe6; border-bottom: 0; vertical-align: 1px; }
+@keyframes dial-cam-down { from { transform: scale(1.35) translateY(26%); } to { transform: scale(1.35); } }
+
+/* Under the viewer: the sprout pin once the time-lapse rests on early spring. */
+#app .time-side { display: flex; align-items: center; justify-content: center; gap: 12px; min-height: 48px; }
+#app .time-side p { margin: 0; font: 18px/1.35 var(--font-display); color: var(--scene-ink); text-wrap: balance; }
+#app .dial-status.ok { color: #3e6a33; }
+#app .pin-mode .time-viewer { cursor: crosshair; box-shadow: 0 6px 0 #c0c9a3, 0 0 0 4px #f2c94c; }
+
+@media (max-width: 1100px) {
+ #app .time-bench { --r: 98px; grid-template-columns: 268px minmax(0,1fr); gap: 10px; padding: 6px 8px; }
+ #app .time-dial { width: 268px; height: 268px; }
+ #app .dial-sweep { inset: 24px; }
+ #app .dial-face { inset: 38px; }
+ #app .dial-tick { transform: rotate(var(--a)) translateY(-84px); }
+ #app .dial-hand { height: 72px; margin-top: -72px; }
+ #app .dial-card { width: 96px; height: 72px; margin: -36px 0 0 -48px; }
+ #app .time-viewer { width: min(100%, 440px); }
+ #app .time-side p { font-size: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+ #app .dial-knob, #app .dial-card.swapped, #app .dial-card.jam, #app .jammed .time-viewer, #app .jammed .dial-hand, #app .bloomed .viewer-bloom > i, #app .underground-cam.cam-descend .viewer-film { animation: none; }
+ #app .dial-card { transition: none; }
+}
+#app .dial-start { position: absolute; left: 50%; top: 2px; z-index: 1; padding: 0 10px; border-radius: 999px; background: #4f6b3a; color: #fffbe6; font: 14px/1.5 var(--font-display); transform: translateX(-50%); pointer-events: none; }
+@media (max-width: 1100px) { #app .dial-start { top: 0; font-size: 13px; } }
