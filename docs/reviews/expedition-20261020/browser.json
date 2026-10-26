@@ -1,21 +1,37 @@
 {
-  "started": "2026-10-20T14:28:09.950Z",
-  "url": "http://127.0.0.1:4328",
+  "started": "2026-10-26T15:21:12.504Z",
+  "url": "http://127.0.0.1:4318",
   "viewport": {
     "width": 1280,
     "height": 800
   },
   "fixture": "Isolated version 1 profile; only previous missions completed; current and future false; field evidence empty",
   "inputs": {
-    "pointerDrags": 5,
-    "taps": 71,
-    "keyboardPlacements": 16
+    "handGestures": {
+      "lensDrag": 2,
+      "cardFlick": 4,
+      "soilRub": 2,
+      "threadPull": 2,
+      "dialSpin": 1,
+      "heftHold": 2,
+      "switchSlide": 1,
+      "pushUnder": 1,
+      "petioleSlice": 1,
+      "waterFlow": 2,
+      "canTilt": 1,
+      "cloudSwirl": 2,
+      "seamStitch": 1,
+      "bagShake": 1,
+      "diffCircle": 1
+    },
+    "taps": 52,
+    "keyboardPlacements": 22
   },
   "missions": [
     {
       "mission": 1,
       "stages": 3,
-      "wrongFeedback": "리피: 폭보다 길이가 훨씬 길어. 이 그림에는 큰 톱니가 없어. 지금 기준은 톱니가 있는지야.",
+      "wrongFeedback": "리피: 갈래 사이와 가장자리를 따라 작은 톱니를 봐. 지금 기준은 톱니가 있는지야.",
       "ready": true,
       "refreshPreserved": true,
       "coreCompletionUnchanged": true,
@@ -52,7 +68,7 @@
     {
       "mission": 5,
       "stages": 3,
-      "wrongFeedback": "덮개는 같아. 바뀐 겉면과 물방울 움직임을 봐.",
+      "wrongFeedback": "두 덮개는 같아. 바뀐 겉면과 물방울 움직임을 봐.",
       "ready": true,
       "refreshPreserved": true,
       "coreCompletionUnchanged": true,
@@ -61,6 +77,6 @@
   ],
   "pageErrors": [],
   "failures": [],
-  "finished": "2026-10-20T14:28:45.899Z",
+  "finished": "2026-10-26T15:22:10.023Z",
   "passed": true
 }
