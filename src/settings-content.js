@@ -48,12 +48,12 @@ const TEACHER_GUIDE=[
  '사이트 데이터를 지우면 기록도 사라져요.',
 ];
 const NOTICE=[
- '캐릭터·배경·장식은 프로젝트 자체 AI 생성 이미지예요.',
- '장면 그림은 실제 현장 사진이 아닌 학습용 재현 이미지예요. 단면과 확대 그림은 실제 크기·축척과 달라요.',
- '제목 로고와 캐릭터 원안도 기획자가 생성형 AI로 만든 이미지예요.',
- '메인·엔딩 배경 음악 2곡은 기획자가 Suno로 만든 프로젝트 자체 AI 생성 음원이에요. 효과음은 앱 코드에서 직접 만든 짧은 소리예요. 영상 재생 중에는 배경 음악이 멈춰요.',
- '일부 입체 식물은 Meshy AI로 생성한 뒤 가공한 모형이에요. 그림과 입체 모형은 원리를 이해하기 쉽게 단순화했어요.',
- '출처와 라이선스 상세 내용은 assets/CREDITS.md에서 확인할 수 있어요.',
+ '캐릭터·배경·장식은 프로젝트 자체 AI 생성 이미지입니다.',
+ '장면 그림은 실제 현장 사진이 아닌 학습용 재현 이미지입니다. 단면과 확대 그림은 실제 크기·축척과 다릅니다.',
+ '제목 로고와 캐릭터 원안도 기획자가 생성형 AI로 만든 이미지입니다.',
+ '메인·엔딩 배경 음악 2곡은 기획자가 Suno로 만든 프로젝트 자체 AI 생성 음원입니다. 효과음은 앱 코드에서 직접 만든 짧은 소리입니다. 영상 재생 중에는 배경 음악이 멈춥니다.',
+ '일부 입체 식물은 Meshy AI로 생성한 뒤 가공한 모형입니다. 그림과 입체 모형은 원리를 이해하기 쉽게 단순화했습니다.',
+ '출처와 라이선스 상세 내용은 assets/CREDITS.md에서 확인할 수 있습니다.',
 ];
 const SOURCES=[
  ['교육 내용 참고',['미국 플로리다대학교 IFAS · ask.ifas.ufl.edu','미국 국립독성프로그램 NTP · ntp.niehs.nih.gov','연잎 표면 연구 · Planta, 1997']],
@@ -61,8 +61,8 @@ const SOURCES=[
 ];
 const RIGHTS=[
  'ⓒ 2026 옐샘 & 아이스크림미디어. All rights reserved.',
- '앱 화면 캡처·자체 제작 일러스트·자체 제작 음원은 무단 복제·재배포·전용·상업적 이용을 금지해요.',
- 'Three.js(MIT)·글꼴(Jua, Pretendard — SIL OFL 1.1)과 참고 자료의 저작권은 각 원저작자와 소장 기관에 있으며, 각 자료의 이용 조건을 따라요.',
+ '앱 화면 캡처·자체 제작 일러스트·자체 제작 음원은 무단 복제·재배포·전용·상업적 이용을 금지합니다.',
+ 'Three.js(MIT)·글꼴(Jua, Pretendard — SIL OFL 1.1)과 참고 자료의 저작권은 각 원저작자와 소장 기관에 있으며, 각 자료의 이용 조건을 따릅니다.',
  '교육 내용 구성 참고: 미국 플로리다대학교 IFAS(ask.ifas.ufl.edu), 미국 국립독성프로그램 NTP(ntp.niehs.nih.gov), Planta(1997, 연잎 표면 연구).',
 ];
 
@@ -77,4 +77,4 @@ export const appInfoSection=(tools='')=>fold('info','앱 정보 · 배움과 보
 export const studentSection=()=>fold('student','학생용 가이드',lines(STUDENT_GUIDE));
 // teacherTools: the one-tap unlock-all demo tool, built by app.js.
 export const teacherSection=teacherTools=>fold('teacher','교사용 가이드',lines(TEACHER_GUIDE)+standardsSection()+fold('tools','교사용 도구',teacherTools));
-export const noticeSection=()=>fold('notice','이미지·소리·저작권 고지',lines(NOTICE)+fold('sources','자료 출처 모아 보기',`<p>미션 화면에는 출처를 표시하지 않고 이곳에 모아 두었어요.</p>${SOURCES.map(([group,items])=>`<h4>${group}</h4><ul>${items.map(i=>`<li>${i}</li>`).join('')}</ul>`).join('')}`)+`<div class="settings-rights">${lines(RIGHTS)}</div>`);
+export const noticeSection=()=>fold('notice','이미지·소리·저작권 고지',lines(NOTICE)+fold('sources','자료 출처 모아 보기',`<p>미션 화면에는 출처를 표시하지 않고 이곳에 모아 두었습니다.</p>${SOURCES.map(([group,items])=>`<h4>${group}</h4><ul>${items.map(i=>`<li>${i}</li>`).join('')}</ul>`).join('')}`)+`<div class="settings-rights">${lines(RIGHTS)}</div>`);
