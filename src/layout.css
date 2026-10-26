@@ -716,3 +716,6 @@ body.large-text #app .exploration-activity .learning-scene { overflow: visible; 
   #app .ending .certificate { overflow: visible; }
   #app .ending-top { max-width: 100%; }
 }
+
+/* Home: story lines in Jua. */
+#app .home-story, #app .home-story strong, #app .home-actions > span { font-family: var(--font-display); font-weight: 400; }
