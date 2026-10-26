@@ -27,11 +27,14 @@ function leaves(e,u,stage){
 function seedlingArt(herb){return assetImage(herb?'sowthistle_bud_spring':'cherry_bud_spring','field-bud-picture',true);}
 function frameArt(kind,phase){return phase==='bud'?seedlingArt(kind==='herb'):seasonArt(kind==='tree'?'cherry':'sowthistle',phase==='winter'?3:0,true).replace(/aria-label="[^"]*"/,`aria-label="${phase==='winter'?'잎이 없고 땅속 뿌리와 줄기가 남은 모습':'같은 식물에 잎과 꽃이 자란 모습'}"`);}
 const frameName={winter:'겨울 · 살아 있는 부분이 남아 있어',bud:'초봄 · 같은 부분에서 새눈·새싹이 나와',spring:'다음 봄 · 잎과 꽃이 자랐어'};
+// Stage-2 picture geometry, as fractions of one atlas cell.
+const LINK_HANDLE={tree:[.49,.7],herb:[.49,.68]},LINK_CUT={tree:.42,herb:.58},DIG_TOP=.6,DIG_CELLS=24;
+const regrowZone=(kind,x,y)=>kind==='tree'?(y<.6?'branches':'rootbud'):(x>.3&&x<.7&&y>.15&&y<.8?'rootbud':'color');
 function seasons(e,u,stage){
  if(stage===0&&!['tree','herb'].every(k=>e.seasons.predictions[k]))return `<div class="field-season-predictions"><p class="direct-hint">도움 없는 첫 예상 · 겨울에 잎이 보이지 않으면 땅속은 어떨까?</p>${['tree','herb'].map(k=>`<section><h3>${k==='tree'?'벚나무':'씀바귀'}</h3><div class="field-predict-picture">${seasonArt(k==='tree'?'cherry':'sowthistle',3,false)}</div>${e.seasons.predictions[k]?'<p>처음 예상을 보관했어.</p>':btn('뿌리가 남아 있을 것 같아','field-season-predict',k+':roots')+btn('아무것도 없을 것 같아','field-season-predict',k+':none')}</section>`).join('')}</div>`;
- if(stage===0)return `<div class="field-season-pairs">${['tree','herb'].map(kind=>`<article class="field-season-pair"><h3>${kind==='tree'?'벚나무':'씀바귀'}</h3><div class="field-season-images"><div>${seasonArt(kind==='tree'?'cherry':'sowthistle',3,true)}${source('겨울의 살아 있는 부분 →','season:'+kind,u)}</div><div>${seasonArt(kind==='tree'?'cherry':'sowthistle',0,true)}<div class="field-link-targets">${(kind==='tree'?['trunk','leaf']:['root','leaf']).map(part=>target(`${e.seasons.links[kind]===part?'✓ ':''}${part==='trunk'?'같은 줄기와 뿌리':part==='root'?'살아 있던 뿌리':'새로 나온 잎'}`,`link:${kind}:${part}`)).join('')}</div></div></div></article>`).join('')}</div>`;
+ if(stage===0)return `<p class="lens-hint season-hint"><span>겨울 그림의 <b>흙을 문질러</b> 걷어 내고, 빛나는 점을 <b>다음 봄의 같은 부분</b>까지 끌어 이어 봐.</span></p><div class="field-season-pairs">${['tree','herb'].map(kind=>{const plant=kind==='tree'?'cherry':'sowthistle',linked=e.seasons.links[kind],dug=linked||u.dug?.[kind],[hx,hy]=LINK_HANDLE[kind];return `<article class="field-season-pair" data-season-pair="${kind}"><h3>${kind==='tree'?'벚나무':'씀바귀'}</h3><div class="field-season-images"><div><div class="season-dig" data-dig="${kind}">${seasonArt(plant,3,true)}${dug?`<span class="link-handle ${linked?'linked':''}" data-link-handle="${kind}" style="left:${hx*100}%;top:${hy*100}%"></span>`:`<div class="dig-cover" style="top:${DIG_TOP*100}%">${'<i></i>'.repeat(DIG_CELLS)}</div>`}</div><p class="season-cap">겨울 · ${linked?'이었어':dug?'점을 끌어 이어 봐':'흙을 문질러 봐'}</p></div><div><div class="link-target" data-link-target="${kind}" style="--cut:${LINK_CUT[kind]*100}%">${seasonArt(plant,0,true)}<span class="link-zone upper ${linked==='leaf'?'picked':''}">새로 나온 잎</span><span class="link-zone lower ${linked&&linked!=='leaf'?'picked':''}">${kind==='tree'?'같은 줄기와 뿌리':'살아 있던 뿌리'}</span></div><p class="season-cap">다음 봄</p></div></div><svg class="link-line" aria-hidden="true"><line/></svg><div class="lens-fallback">${(kind==='tree'?['trunk','leaf']:['root','leaf']).map(part=>target(`${part==='trunk'?'같은 줄기와 뿌리':part==='root'?'살아 있던 뿌리':'새로 나온 잎'}에 잇기`,`link:${kind}:${part}`)).join('')}</div></article>`;}).join('')}</div>`;
  const kind=stage===1?'tree':'herb';
- return `<div class="field-frame-tray">${['spring','winter','bud'].map(phase=>source(`${frameArt(kind,phase)}<span>${e.seasons.clues[kind]===(kind==='tree'?'branches':'rootbud')?frameName[phase]:`관찰 사진 ${['spring','winter','bud'].indexOf(phase)+1}`}</span>`,`frame:${kind}:${phase}`,u,'field-frame')).join('')}</div><div class="field-timeline">${[0,1,2].map(i=>target(`<b>${i+1}</b>${e.seasons[kind][i]?`${frameArt(kind,e.seasons[kind][i])}<span>${e.seasons.clues[kind]===(kind==='tree'?'branches':'rootbud')?frameName[e.seasons[kind][i]]:'놓은 사진'}</span>`:'사진 놓는 자리'}`,`order:${kind}:${i}`,'field-time-slot')).join('')}</div><div class="reason-cards"><p>그림의 어떤 특징을 근거로 이어 놓았어?</p>${btn('같은 가지에서 새눈이 돋았어','field-season-clue',kind+':branches')}${btn('땅속 뿌리에서 새싹이 돋았어','field-season-clue',kind+':rootbud')}${btn('꽃 색깔만 같아','field-season-clue',kind+':color')}</div><p class="microcopy">달력 순서만 맞추는 게 아니야. 겨울에 남아 있던 부분에서 무엇이 다시 자랐는지 봐.</p>`;
+ return `<div class="field-frame-tray">${['spring','winter','bud'].map(phase=>source(`${frameArt(kind,phase)}<span>${e.seasons.clues[kind]===(kind==='tree'?'branches':'rootbud')?frameName[phase]:`관찰 사진 ${['spring','winter','bud'].indexOf(phase)+1}`}</span>`,`frame:${kind}:${phase}`,u,'field-frame')).join('')}</div><div class="field-timeline">${[0,1,2].map(i=>target(`<b>${i+1}</b>${e.seasons[kind][i]?`${frameArt(kind,e.seasons[kind][i])}<span>${e.seasons.clues[kind]===(kind==='tree'?'branches':'rootbud')?frameName[e.seasons[kind][i]]:'놓은 사진'}</span>`:'사진 놓는 자리'}`,`order:${kind}:${i}`,'field-time-slot')).join('')}</div><div class="regrow-find" data-regrow="${kind}"><div class="regrow-copy"><p>초봄 사진에서 <b>새로 돋은 곳</b>을 찾아 새싹 핀을 꽂아 봐.</p><span class="regrow-pin" data-regrow-pin aria-hidden="true"></span></div><div class="regrow-pic">${frameArt(kind,'bud')}${u.pin?.[kind]&&e.seasons.clues[kind]?`<span class="regrow-mark ${e.seasons.clues[kind]===(kind==='tree'?'branches':'rootbud')?'ok':''}" style="left:${u.pin[kind][0]*100}%;top:${u.pin[kind][1]*100}%"></span>`:''}</div><div class="lens-fallback">${btn('같은 가지에서 새눈이 돋았어','field-season-clue',kind+':branches')}${btn('땅속 뿌리에서 새싹이 돋았어','field-season-clue',kind+':rootbud')}${btn('꽃 색깔만 같아','field-season-clue',kind+':color')}</div></div>`;
 }
 function modelArt(id){return assetImage(id==='air'?'float_model_air':'float_model_solid','field-float-model',true);}
 function modelTools(u){return `<div class="field-tools">${['air','solid'].map(id=>source(`${modelArt(id)}<span>${modelName(id)}</span>`,'model:'+id,u,'field-model-token')).join('')}</div>`;}
@@ -96,10 +99,11 @@ function dropAction(item,targetId){
 }
 export function fieldMissionAction(state,ui,action,id=''){
  if(action==='field-cancel'){if(ui.fieldMission)ui.fieldMission.selected='';return '';}
+ if(action==='field-dig'){(ui.fieldMission??={}).dug={...ui.fieldMission.dug,[id]:true};return '';}
  if(action==='field-drop'||action==='field-place'){
   const [picked,targetId]=action==='field-place'?String(id).split('|'):[ui.fieldMission?.selected||'',id];
   // The magnifier is the only tool in the scan step, so tapping a scan spot uses it directly.
-  const item=picked||(String(targetId).startsWith('scan:')?'lens':'');
+  const t=String(targetId),item=picked||(t.startsWith('scan:')?'lens':t.startsWith('link:')?'season:'+t.split(':')[1]:'');
   const mapped=dropAction(item,targetId);if(mapped)return applyFieldAction(state,ui,...mapped);
   const u=ui.fieldMission??={};u.success=false;return u.feedback=item?'리피: 이 도구가 필요한 자리를 찾아 줘.':'먼저 옮길 도구나 표본을 하나 골라 줘.';
  }
@@ -117,13 +121,13 @@ export function mountFieldInteractions(root,state,ui,onAction){
  const up=event=>{if(!drag||event.pointerId!==drag.pointer)return;const item=drag.item,moved=drag.moved,target=document.elementFromPoint(event.clientX,event.clientY)?.closest('[data-field-drop]');clear();if(!moved)return;event.preventDefault();blockedClick=true;clearTimeout(blockTimer);blockTimer=setTimeout(()=>{blockedClick=false;},400);if(target&&root.contains(target))onAction('field-place',`${item}|${target.dataset.fieldDrop}`);};
  const click=event=>{if(blockedClick){event.preventDefault();event.stopImmediatePropagation();blockedClick=false;}};
  const cancel=()=>clear();const key=event=>{if(event.key==='Escape'){clear();onAction('field-cancel','');}};
- const bench=root.querySelector('[data-lens-bench]'),lensCleanup=bench?mountLens(bench,ui,onAction):null;
+ const bench=root.querySelector('[data-lens-bench]'),lensCleanup=bench?mountLens(bench,ui,onAction):null,seasonCleanup=mountSeasonHands(root,ui,onAction);
  root.addEventListener('pointerdown',down);root.addEventListener('pointermove',move,{passive:false});root.addEventListener('pointerup',up);root.addEventListener('pointercancel',cancel);root.addEventListener('click',click,true);root.addEventListener('keydown',key);
- return ()=>{lensCleanup?.();clear();clearTimeout(blockTimer);root.removeEventListener('pointerdown',down);root.removeEventListener('pointermove',move);root.removeEventListener('pointerup',up);root.removeEventListener('pointercancel',cancel);root.removeEventListener('click',click,true);root.removeEventListener('keydown',key);};
+ return ()=>{lensCleanup?.();seasonCleanup();clear();clearTimeout(blockTimer);root.removeEventListener('pointerdown',down);root.removeEventListener('pointermove',move);root.removeEventListener('pointerup',up);root.removeEventListener('pointercancel',cancel);root.removeEventListener('click',click,true);root.removeEventListener('keydown',key);};
 }
 
 // object-fit:contain leaves blank margins; clue spots are measured on the painted image only.
-function drawnRect(img){const r=img.getBoundingClientRect(),nw=img.naturalWidth||1,nh=img.naturalHeight||1,k=Math.min(r.width/nw,r.height/nh),w=nw*k,h=nh*k;return {left:r.left+(r.width-w)/2,top:r.top+(r.height-h)/2,width:w,height:h};}
+function drawnRect(img){const r=img.getBoundingClientRect(),nw=img.naturalWidth||1,nh=img.naturalHeight||1,k=(getComputedStyle(img).objectFit==='cover'?Math.max:Math.min)(r.width/nw,r.height/nh),w=nw*k,h=nh*k;return {left:r.left+(r.width-w)/2,top:r.top+(r.height-h)/2,width:w,height:h};}
 // Drag the magnifier; resting on a clue spot for a moment records that observation.
 function mountLens(bench,ui,onAction){
  const lens=bench.querySelector('[data-lens]'),glass=lens.querySelector('.field-lens-glass'),zoom=glass.querySelector('img'),u=ui.fieldMission??={},Z=2.6;
@@ -149,4 +153,40 @@ function mountLens(bench,ui,onAction){
  lens.addEventListener('pointerdown',down);lens.addEventListener('pointermove',move);lens.addEventListener('pointerup',up);lens.addEventListener('pointercancel',up);
  bench.querySelectorAll('[data-lens-leaf] img').forEach(img=>img.complete||img.addEventListener('load',look,{once:true}));addEventListener('resize',settle);settle();
  return ()=>{clearTimeout(timer);removeEventListener('resize',settle);};
+}
+
+// Stage 2 by hand: rub the soil away, pull a string to the same part next spring, pin where it regrew.
+function mountSeasonHands(root,ui,onAction){
+ const offs=[];const on=(el,type,fn,opt)=>{el.addEventListener(type,fn,opt);offs.push(()=>el.removeEventListener(type,fn,opt));};
+ const local=(el,e)=>{const r=el.getBoundingClientRect();return [(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height];};
+ root.querySelectorAll('.dig-cover').forEach(cover=>{
+  const kind=cover.closest('[data-dig]').dataset.dig,cells=[...cover.children];let rubbing=false,done=false;
+  const rub=e=>{if(!rubbing||done)return;const r=cover.getBoundingClientRect(),reach=Math.max(r.width/6,26);cells.forEach(c=>{const b=c.getBoundingClientRect();if(Math.hypot(b.left+b.width/2-e.clientX,b.top+b.height/2-e.clientY)<reach)c.classList.add('gone');});
+   if(cells.filter(c=>c.classList.contains('gone')).length>=cells.length*.6){done=true;cover.classList.add('cleared');setTimeout(()=>onAction('field-dig',kind),450);}};
+  on(cover,'pointerdown',e=>{e.preventDefault();e.stopPropagation();rubbing=true;cover.setPointerCapture?.(e.pointerId);rub(e);});
+  on(cover,'pointermove',e=>{e.preventDefault();rub(e);});on(cover,'pointerup',()=>{rubbing=false;});on(cover,'pointercancel',()=>{rubbing=false;});
+ });
+ root.querySelectorAll('[data-season-pair]').forEach(pair=>{
+  const kind=pair.dataset.seasonPair,handle=pair.querySelector('[data-link-handle]'),targetBox=pair.querySelector('[data-link-target]'),svg=pair.querySelector('.link-line'),line=svg?.querySelector('line');if(!handle||!line)return;
+  const cut=LINK_CUT[kind],partAt=y=>y>=cut?(kind==='tree'?'trunk':'root'):'leaf';
+  const draw=(x,y)=>{const p=pair.getBoundingClientRect(),h=handle.getBoundingClientRect();line.setAttribute('x1',h.left+h.width/2-p.left);line.setAttribute('y1',h.top+h.height/2-p.top);line.setAttribute('x2',x-p.left);line.setAttribute('y2',y-p.top);svg.classList.add('show');};
+  const zoneCenter=part=>{const z=targetBox.querySelector(part==='leaf'?'.upper':'.lower').getBoundingClientRect();return [z.left+z.width/2,z.top+z.height/2];};
+  const linked=targetBox.querySelector('.link-zone.picked');
+  const restore=()=>{if(!linked){svg.classList.remove('show');return;}const [x,y]=zoneCenter(linked.classList.contains('upper')?'leaf':'trunk');draw(x,y);svg.classList.add('fixed');};
+  requestAnimationFrame(restore);
+  let pulling=false;
+  on(handle,'pointerdown',e=>{e.preventDefault();e.stopPropagation();pulling=true;handle.setPointerCapture?.(e.pointerId);pair.classList.add('linking');svg.classList.remove('fixed');draw(e.clientX,e.clientY);});
+  on(handle,'pointermove',e=>{if(!pulling)return;e.preventDefault();draw(e.clientX,e.clientY);const t=targetBox.getBoundingClientRect(),inside=e.clientX>=t.left&&e.clientX<=t.right&&e.clientY>=t.top&&e.clientY<=t.bottom;targetBox.querySelectorAll('.link-zone').forEach(z=>z.classList.remove('hover'));if(inside)targetBox.querySelector(partAt((e.clientY-t.top)/t.height)==='leaf'?'.upper':'.lower').classList.add('hover');});
+  const end=e=>{if(!pulling)return;pulling=false;pair.classList.remove('linking');targetBox.querySelectorAll('.link-zone').forEach(z=>z.classList.remove('hover'));const t=targetBox.getBoundingClientRect();if(e.type==='pointerup'&&e.clientX>=t.left&&e.clientX<=t.right&&e.clientY>=t.top&&e.clientY<=t.bottom){const part=partAt((e.clientY-t.top)/t.height),[x,y]=zoneCenter(part);draw(x,y);onAction('field-season-link',`${kind}:${part}`);}else restore();};
+  on(handle,'pointerup',end);on(handle,'pointercancel',end);
+ });
+ root.querySelectorAll('[data-regrow]').forEach(box=>{
+  const kind=box.dataset.regrow,pin=box.querySelector('[data-regrow-pin]'),pic=box.querySelector('.regrow-pic'),img=pic.querySelector('img');let ghost=null;
+  const drop=e=>{const r=drawnRect(img),p=pic.getBoundingClientRect();if(e.clientX<p.left||e.clientX>p.right||e.clientY<p.top||e.clientY>p.bottom)return;const x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height,u=ui.fieldMission??={};u.pin={...u.pin,[kind]:local(pic,e)};onAction('field-season-clue',`${kind}:${regrowZone(kind,x,y)}`);};
+  on(pin,'pointerdown',e=>{e.preventDefault();e.stopPropagation();pin.setPointerCapture?.(e.pointerId);ghost=pin.cloneNode();ghost.classList.add('dragging');document.body.append(ghost);Object.assign(ghost.style,{position:'fixed',left:e.clientX+'px',top:e.clientY+'px'});});
+  on(pin,'pointermove',e=>{if(!ghost)return;e.preventDefault();ghost.style.left=e.clientX+'px';ghost.style.top=e.clientY+'px';});
+  const end=e=>{if(!ghost)return;ghost.remove();ghost=null;if(e.type==='pointerup')drop(e);};on(pin,'pointerup',end);on(pin,'pointercancel',end);
+  on(pic,'click',drop);
+ });
+ return ()=>offs.forEach(off=>off());
 }
