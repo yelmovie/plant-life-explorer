@@ -15,7 +15,8 @@
 #app .next-condition { flex:1 0 100%; margin:0 0 5px; font-size:16px; }
 #app .learning-footer > div { flex-wrap:wrap; }
 #app .learning-footer .btn { white-space:normal; }
-#app .field-token, #app .plant-card, #app .garden-cell { touch-action:pan-y pinch-zoom; }
+#app .garden-cell { touch-action:pan-y pinch-zoom; }
+#app .field-token, #app .plant-card { touch-action:none; }
 #app .field-token { cursor:grab; }
 #app .field-target, #app .mission-tool, #app .mission-step, #app .part-card,
 #app .learning-tabs .btn, #app .reason-cards .btn { min-height:48px; min-width:48px; }
@@ -74,3 +75,5 @@
 #app .activity-9 .water-demo { min-height:230px; }
 #app .timeline { padding:12px; background:#fffdf1; border-radius:14px; }
 #app .final-feedback { padding:12px 16px; margin:8px 0; background:#fffdf1; border-radius:12px; }
+/* The zoom/rotate panel drives the flat picture only; the 3D view has its own controls. */
+#app main:has(.spatial-ready:not(.spatial-flat)) .optional-tools { display: none; }

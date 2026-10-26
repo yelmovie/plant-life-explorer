@@ -166,6 +166,8 @@ body .toast { pointer-events: none; }
 #app .field-token { touch-action: none; user-select: none; -webkit-user-select: none; cursor: grab; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
 #app .field-token:active { cursor: grabbing; transform: translateY(3px); box-shadow: 0 1px 0 #657452; }
 #app .field-token.selected { outline: 3px solid #f0c75a; outline-offset: 2px; }
+#app .field-lens-token { flex-direction: column; min-width: 120px; padding: 8px 14px; gap: 2px; }
+#app .field-lens-picture { width: 84px; height: 84px; object-fit: contain; filter: drop-shadow(0 4px 3px #3a2d1a40); }
 #app .field-target { position: relative; min-height: 52px; min-width: 48px; border: 2px dashed #7d9460; padding: 12px 16px; border-radius: 18px; background: #fffcf0ed; color: var(--scene-ink); font: 18px/1.4 var(--font-body); transition: background .16s, transform .16s, border-color .16s; }
 #app .field-target:hover { background: #f2f7dc; }
 #app .field-target:focus-visible { outline: 3px solid #b88a27; outline-offset: 3px; }

@@ -16,7 +16,7 @@ function leafPicture(id){
  return assetImage('field_leaf_'+id,'field-leaf-picture leaf-'+id,true);
 }
 function leaves(e,u,stage){
- if(stage===0)return `<div class="field-tools">${source(icon('zoom',30)+' 돋보기','lens',u)}<p class="microcopy">끌어도 되고, 돋보기 → 관찰 자리 순서로 눌러도 돼.</p></div><div class="field-leaf-tray">${FIELD_LEAVES.map(p=>`<article class="field-specimen"><h3>${p.name}</h3>${leafPicture(p.id)}<div class="field-hotspots">${target(`${e.leaves.scans[p.id].includes('shape')?'✓ ':''}잎 전체`,'scan:'+p.id+':shape','field-hotspot')}${target(`${e.leaves.scans[p.id].includes('edge')?'✓ ':''}가장자리 확대`,'scan:'+p.id+':edge','field-hotspot')}</div><p>${e.leaves.scans[p.id].includes('shape')?p.shape:'잎 전체에서 모양을 찾아봐.'}</p>${e.leaves.scans[p.id].includes('edge')?`<div class="field-magnified">${leafPicture(p.id)}<strong>${p.edge?'작은 톱니가 이어져 있어':'큰 톱니가 보이지 않아'}</strong></div>`:''}</article>`).join('')}</div>`;
+ if(stage===0)return `<div class="field-tools">${source(assetImage('expedition_tool_lens','field-lens-picture',true)+'<span>돋보기</span>','lens',u,'field-lens-token')}<p class="microcopy">끌어도 되고, 돋보기 → 관찰 자리 순서로 눌러도 돼.</p></div><div class="field-leaf-tray">${FIELD_LEAVES.map(p=>`<article class="field-specimen"><h3>${p.name}</h3>${leafPicture(p.id)}<div class="field-hotspots">${target(`${e.leaves.scans[p.id].includes('shape')?'✓ ':''}잎 전체`,'scan:'+p.id+':shape','field-hotspot')}${target(`${e.leaves.scans[p.id].includes('edge')?'✓ ':''}가장자리 확대`,'scan:'+p.id+':edge','field-hotspot')}</div><p>${e.leaves.scans[p.id].includes('shape')?p.shape:'잎 전체에서 모양을 찾아봐.'}</p>${e.leaves.scans[p.id].includes('edge')?`<div class="field-magnified">${leafPicture(p.id)}<strong>${p.edge?'작은 톱니가 이어져 있어':'큰 톱니가 보이지 않아'}</strong></div>`:''}</article>`).join('')}</div>`;
  const rule=stage===1?'edge':'narrow';
  return `<div class="field-tools">${FIELD_LEAVES.map(p=>source(`${leafPicture(p.id)}<span>${p.name}</span>`,'leaf:'+p.id,u,'field-leaf-token')).join('')}</div><div class="field-sort-bins">${['yes','no'].map(answer=>target(`<strong>${rule==='edge'?(answer==='yes'?'톱니가 있어':'큰 톱니가 없어'):(answer==='yes'?'가늘고 길어':'가늘고 긴 모양은 아니야')}</strong><span class="field-bin-content">${FIELD_LEAVES.filter(p=>e.leaves[rule][p.id]===answer).map(p=>`<span>${leafPicture(p.id)}${p.name}</span>`).join('')||'여기로 표본을 옮겨 줘'}</span>`,`sort:${rule}:${answer}`,'field-sort-bin')).join('')}</div><p class="microcopy">관찰 그림의 특징으로 나누는 활동이야. 식물 이름이 기준은 아니야.</p>`;
 }
@@ -93,7 +93,9 @@ function dropAction(item,targetId){
 export function fieldMissionAction(state,ui,action,id=''){
  if(action==='field-cancel'){if(ui.fieldMission)ui.fieldMission.selected='';return '';}
  if(action==='field-drop'||action==='field-place'){
-  const [item,targetId]=action==='field-place'?String(id).split('|'):[ui.fieldMission?.selected||'',id];
+  const [picked,targetId]=action==='field-place'?String(id).split('|'):[ui.fieldMission?.selected||'',id];
+  // The magnifier is the only tool in the scan step, so tapping a scan spot uses it directly.
+  const item=picked||(String(targetId).startsWith('scan:')?'lens':'');
   const mapped=dropAction(item,targetId);if(mapped)return applyFieldAction(state,ui,...mapped);
   const u=ui.fieldMission??={};u.success=false;return u.feedback=item?'리피: 이 도구가 필요한 자리를 찾아 줘.':'먼저 옮길 도구나 표본을 하나 골라 줘.';
  }
@@ -106,7 +108,7 @@ export function mountFieldInteractions(root,state,ui,onAction){
  if(!root)return ()=>{};
  let drag=null,ghost=null,blockedClick=false,blockTimer;
  const clear=()=>{ghost?.remove();ghost=null;root.querySelectorAll('.field-drag-over').forEach(el=>el.classList.remove('field-drag-over'));if(drag?.el?.hasPointerCapture?.(drag.pointer))drag.el.releasePointerCapture(drag.pointer);drag=null;};
- const down=event=>{if(event.pointerType==='touch')return;const el=event.target.closest('[data-field-item]');if(!el||!root.contains(el)||event.button>0)return;drag={el,item:el.dataset.fieldItem,x:event.clientX,y:event.clientY,pointer:event.pointerId,moved:false};el.setPointerCapture?.(event.pointerId);};
+ const down=event=>{const el=event.target.closest('[data-field-item]');if(!el||!root.contains(el)||event.button>0)return;drag={el,item:el.dataset.fieldItem,x:event.clientX,y:event.clientY,pointer:event.pointerId,moved:false};el.setPointerCapture?.(event.pointerId);};
  const move=event=>{if(!drag||event.pointerId!==drag.pointer)return;if(!drag.moved&&Math.hypot(event.clientX-drag.x,event.clientY-drag.y)<8)return;event.preventDefault();drag.moved=true;if(!ghost){ghost=drag.el.cloneNode(true);ghost.removeAttribute('id');ghost.setAttribute('aria-hidden','true');ghost.classList.add('field-drag-ghost');ghost.style.cssText='position:fixed;pointer-events:none;z-index:40;width:120px;max-height:140px;overflow:hidden;opacity:.9;transform:translate(-50%,-50%);';document.body.append(ghost);}ghost.style.left=event.clientX+'px';ghost.style.top=event.clientY+'px';const over=document.elementFromPoint(event.clientX,event.clientY)?.closest('[data-field-drop]');root.querySelectorAll('.field-drag-over').forEach(el=>el.classList.toggle('field-drag-over',el===over));if(over&&root.contains(over))over.classList.add('field-drag-over');};
  const up=event=>{if(!drag||event.pointerId!==drag.pointer)return;const item=drag.item,moved=drag.moved,target=document.elementFromPoint(event.clientX,event.clientY)?.closest('[data-field-drop]');clear();if(!moved)return;event.preventDefault();blockedClick=true;clearTimeout(blockTimer);blockTimer=setTimeout(()=>{blockedClick=false;},400);if(target&&root.contains(target))onAction('field-place',`${item}|${target.dataset.fieldDrop}`);};
  const click=event=>{if(blockedClick){event.preventDefault();event.stopImmediatePropagation();blockedClick=false;}};
