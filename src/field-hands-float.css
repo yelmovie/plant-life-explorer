@@ -1,0 +1,67 @@
+/* Field mission 3 by hand: predict bins, one water tank, push-and-release, record by carrying. */
+#app .float-lab { --mh: 120px; --surface: 30%; display: grid; grid-template-columns: minmax(290px,1fr) minmax(0,1.7fr); align-items: stretch; gap: 16px; margin: 4px 0 8px; }
+#app .float-lab.record { grid-template-columns: minmax(0,1.35fr) minmax(250px,1fr); }
+#app .float-lab .field-float-model { width: auto; height: var(--mh); object-fit: contain; filter: drop-shadow(0 7px 4px #244a3c33); pointer-events: none; }
+#app .float-hint > span { padding: 4px 16px; border-radius: 999px; background: #fffdf3e6; }
+#app .float-bench { display: flex; flex-wrap: nowrap; align-items: flex-end; justify-content: center; gap: 12px; padding: 12px 10px 16px; border-radius: 18px; background: linear-gradient(#fffdf399 0 74%, #c9a777 74% 84%, #a9845a 84%); }
+#app .float-standing, #app .float-model.on-bench { display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 0; padding: 6px 10px; border: 0; background: none; box-shadow: none; font: 17px/1.25 var(--font-display); color: var(--scene-ink); text-align: center; touch-action: none; user-select: none; -webkit-user-select: none; cursor: grab; }
+#app .float-bench > .float-standing, #app .float-bench > .on-bench { flex: 1 1 0; min-width: 0; max-width: 170px; }
+#app .float-standing > span, #app .float-model.on-bench > span { padding: 2px 10px; border-radius: 12px; background: #fffdf3e6; word-break: keep-all; text-wrap: balance; }
+#app .float-standing.selected > span { background: #e2edbd; box-shadow: 0 0 0 2px #3d663f; }
+#app .float-empty { margin: auto; color: #5a6b4c; font: 17px/1.35 var(--font-display); text-align: center; }
+#app .float-bins { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; }
+#app .float-bin { display: flex; flex-direction: column; gap: 8px; padding: 10px 12px; text-align: center; }
+#app .float-bin > strong { font-size: 20px; }
+/* A small water box inside each prediction bin: the placed model rests at the surface or the bottom. */
+#app .float-mini { position: relative; display: flex; justify-content: center; gap: 10px; height: 170px; border-radius: 12px; overflow: hidden; background: linear-gradient(#e9f7f5 0 38%, #8fd3dc 38% 82%, #6cb6c2); }
+#app .float-mini::before { content: ''; position: absolute; left: 0; right: 0; top: 38%; height: 3px; background: #f4fdff; }
+#app .float-mini.float { align-items: flex-start; padding-top: calc(170px * .38 - var(--mh) * .44); }
+#app .float-mini.sink { align-items: flex-end; padding-bottom: 6px; }
+#app .float-mini .field-float-model { height: calc(var(--mh) * .8); }
+#app .float-mini-model { position: relative; display: block; }
+#app .float-mini.float .float-mini-model.fresh { animation: float-mini-bob 1s cubic-bezier(.34,1.56,.5,1); }
+#app .float-mini.sink .float-mini-model.fresh { animation: float-mini-sink 1.4s ease-in-out; }
+@keyframes float-mini-bob { from { transform: translateY(-120px); } }
+@keyframes float-mini-sink { from { transform: translateY(-160px); } 30% { transform: translateY(-90px); } }
+/* The shared tank. Models sit under a translucent water layer so the wet part looks submerged. */
+#app .float-tank { position: relative; min-height: 300px; border: 3px solid #d5efe5; border-top: 12px solid #e6f8ef; border-radius: 22px 22px 32px 32px; background: linear-gradient(#d6eff2aa 0 var(--surface), #6ac6d4cc var(--surface) 80%, #4c9dacc7); box-shadow: inset 0 0 32px #ffffff80, 0 9px 0 #34686b35; transition: box-shadow .2s; }
+#app .float-tank::before { content: ''; position: absolute; left: 0; right: 0; top: var(--surface); height: 3px; background: #e2faff; z-index: 3; }
+#app .float-tank::after { content: ''; position: absolute; left: 0; right: 0; top: var(--surface); bottom: 0; border-radius: 0 0 28px 28px; background: #4fb0c242; pointer-events: none; z-index: 2; }
+#app .float-tank.drop-ready { box-shadow: inset 0 0 32px #ffffff80, 0 0 0 6px #f6e27aaa, 0 9px 0 #34686b35; }
+#app .float-model.in-tank { position: absolute; z-index: 1; left: calc(var(--x) * 100% - var(--mh) * .31); width: calc(var(--mh) * .62); display: flex; justify-content: center; touch-action: none; user-select: none; -webkit-user-select: none; cursor: grab; }
+#app .float-model.rest-air { top: calc(var(--surface) - var(--mh) * .6); }
+#app .float-model.rest-solid { top: calc(100% - var(--mh) - 10px); }
+#app .float-model.rest-air:not(.held):not(.settling) img { animation: float-model-bob 3s ease-in-out infinite; }
+#app .float-model.held { z-index: 5; cursor: grabbing; pointer-events: none; }
+#app .float-model.on-bench.held { position: relative; z-index: 30; }
+#app .float-model.settling { transition: transform .4s ease-out, left .4s ease-out; }
+#app .float-model.in-tank.settling.rest-air { transition: transform .95s cubic-bezier(.34,1.56,.5,1), left .95s cubic-bezier(.34,1.56,.5,1); }
+#app .float-model.in-tank.settling.rest-solid { transition: transform 1.8s cubic-bezier(.45,.05,.55,.95), left 1.8s cubic-bezier(.45,.05,.55,.95); }
+#app .float-model.in-tank.field-drag-over img { filter: drop-shadow(0 0 10px #f6e27a) drop-shadow(0 0 4px #f2c94c); }
+#app .float-tag { position: absolute; left: 50%; bottom: calc(100% + 2px); transform: translateX(-50%); padding: 2px 10px; border-radius: 999px; background: #f2f9dc; border: 2px solid #8fb36a; color: #2f4a26; font: 15px/1.3 var(--font-display); white-space: nowrap; }
+#app .float-ripple { position: absolute; top: var(--surface); z-index: 4; width: 130px; height: 26px; margin: -13px 0 0 -65px; border: 3px solid #ffffffd9; border-radius: 50%; pointer-events: none; animation: float-ripple .85s ease-out forwards; }
+@keyframes float-ripple { from { transform: scale(.2); opacity: 1; } to { transform: scale(1.5); opacity: 0; } }
+#app .float-say { position: absolute; right: 12px; top: 10px; z-index: 6; max-width: 60%; padding: 4px 12px; border-radius: 12px; background: #fffdf3f0; color: #2f4a26; font: 17px/1.35 var(--font-display); opacity: 0; pointer-events: none; }
+#app .float-say.show { animation: float-say 2.6s ease forwards; }
+@keyframes float-say { 0% { opacity: 0; transform: translateY(6px); } 10%, 80% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+#app .float-tank-label { position: absolute; left: 12px; bottom: 8px; z-index: 3; padding: 2px 10px; border-radius: 999px; background: #ffffffb3; color: #24505a; font: 15px/1.3 var(--font-display); pointer-events: none; }
+#app .float-notes { display: flex; flex-direction: column; gap: 12px; }
+#app .float-rec { display: flex; justify-content: center; gap: 8px; min-height: 80px; }
+#app .float-rec .field-float-model { height: 72px; }
+#app .float-rec .float-mini-model > b { position: absolute; right: -6px; top: -4px; color: #3e6a33; font: 20px/1 var(--font-display); }
+#app .float-rec .float-mini-model.fresh { animation: lens-clue-pop .5s cubic-bezier(.2,1.5,.4,1); }
+#app .float-reason-card { align-self: center; padding: 12px 18px; border-style: dashed; background: #fff7d6; box-shadow: 0 4px 0 #c9a54c; }
+@media (max-width: 1100px) {
+ #app .float-lab { --mh: 92px; gap: 10px; }
+ #app .float-tank { min-height: 230px; }
+ #app .float-mini { height: 130px; }
+ #app .float-mini.float { padding-top: calc(130px * .38 - var(--mh) * .44); }
+ #app .float-bin > strong { font-size: 18px; }
+ #app .float-rec { min-height: 60px; }
+ #app .float-rec .field-float-model { height: 56px; }
+ #app .float-lab.record { grid-template-columns: minmax(0,1.2fr) minmax(220px,1fr); }
+}
+@media (prefers-reduced-motion: reduce) {
+ #app .float-model img, #app .float-mini-model.fresh, #app .float-ripple { animation: none !important; }
+ #app .float-model.settling { transition-duration: .2s !important; }
+}
