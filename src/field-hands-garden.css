@@ -1,20 +1,62 @@
-/* Field mission 4 by hand: pour the ground, plant it, rain on it. */
-#app .garden-tool { cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; }
-#app .garden-tool.lifted { opacity: .45; transform: translateY(3px); box-shadow: 0 1px 0 #657452; }
-#app .garden-field { position: relative; }
+/* Field mission 4 by hand: draw the rain stream, sow and water, swirl up a rain cloud. */
+#app .garden-field { position: relative; touch-action: none; user-select: none; -webkit-user-select: none; }
+#app .garden-field.stage-0 { cursor: crosshair; }
 #app .field-garden-zone { position: relative; overflow: hidden; isolation: isolate; }
 #app .field-garden-zone > :not(.zone-ground,.zone-water) { position: relative; z-index: 1; }
 #app .zone-ground { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
 #app .zone-ground img { width: 100%; height: 100%; object-fit: cover; opacity: .5; }
 #app .zone-water { position: absolute; left: 0; right: 0; bottom: 0; height: 0; z-index: 0; pointer-events: none; background: linear-gradient(#8fd0e8cc, #4f9fc4cc); border-radius: 50% 50% 0 0 / 18px 18px 0 0; transition: height 1.4s ease-out; }
+#app .field-garden-zone.has-env > strong { padding: 2px 10px; border-radius: 12px; background: #fffcefd9; }
+#app .field-garden-zone > img.plant-illustration { flex: none; height: 110px; }
+#app .field-garden-zone.has-env > :is(.field-plant-space, img + span) { padding: 2px 10px; border-radius: 12px; background: #fffcefd9; }
 
-/* Pouring: the plot fills with the tool's colour while the tool hovers. */
-#app .field-garden-zone::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 0; z-index: 0; pointer-events: none; background: var(--pour, #8cbf5a); opacity: .45; }
-#app .field-garden-zone.pour-target::after { animation: garden-pour .85s linear forwards; }
-#app .field-garden-zone.poured::after { height: 100%; animation: none; opacity: .55; }
-@keyframes garden-pour { to { height: 100%; } }
+/* Step 1 legend: what a stream does to the ground it meets. */
+#app .garden-rule { display: flex; align-items: center; gap: 8px; min-height: 56px; padding: 4px 14px 4px 6px; border: 2px solid #c9c38f; border-radius: 16px; background: #fffcef; font: 18px/1.25 var(--font-body); }
+#app .garden-rule .field-habitat-picture { width: 52px; height: 44px; object-fit: cover; border-radius: 10px; }
+#app .garden-rule span { display: grid; }
+#app .garden-rule small { font-size: 15px; color: #5d6b4a; }
+
+/* The drawn stream: a pencil line while drawing, then water running along it. */
+#app .garden-flow { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 4; pointer-events: none; overflow: visible; }
+#app .garden-flow polyline { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+#app .garden-flow .flow-live { stroke: #3f7f9f; stroke-width: 6; opacity: .7; }
+#app .garden-flow .flow-fizzle { transition: opacity .5s; opacity: 0; }
+#app .garden-flow .flow-water { stroke: #5fb2d8; stroke-width: 12; opacity: .8; filter: drop-shadow(0 2px 0 #2f6f8f66); }
+#app .garden-flow .flow-water.flowing { stroke-dasharray: 1; stroke-dashoffset: 1; animation: garden-flow .9s ease-in forwards; }
+@keyframes garden-flow { to { stroke-dashoffset: 0; } }
+#app .field-garden-zone.flow-touched { outline: 4px dashed #3f7f9f; outline-offset: -6px; }
+#app .field-garden-zone.pooling .zone-water { height: 40%; }
+#app .field-garden-zone.pooling::before { content: ''; position: absolute; left: 50%; bottom: 14%; width: 140px; height: 40px; margin-left: -70px; z-index: 2; border: 3px solid #ffffffcc; border-radius: 50%; pointer-events: none; animation: garden-ripple 1s ease-out 2; }
+#app .field-garden-zone.damp .zone-water { animation: garden-soak 1.6s ease-in-out infinite; }
+#app .field-garden-zone.damp { filter: saturate(1.25) brightness(.95); }
+#app .field-garden-zone.dried { filter: sepia(.35) brightness(1.05); transition: filter .8s; }
+@keyframes garden-ripple { from { transform: scale(.3); opacity: 1; } to { transform: scale(1.3); opacity: 0; } }
 #app .field-garden-zone.just-env .zone-ground { animation: garden-ground-in .8s ease-out; }
 @keyframes garden-ground-in { from { clip-path: circle(0 at 50% 85%); } to { clip-path: circle(150% at 50% 85%); } }
+
+/* Step 2: seed cards, a sprout that grows while the can pours. */
+#app .garden-seed { cursor: pointer; touch-action: manipulation; }
+#app .garden-seed.selected { outline: 4px solid #e8a33a; outline-offset: 2px; transform: translateY(-4px) rotate(-2deg); }
+#app .field-garden-zone.sown { outline: 4px solid #e8a33a; outline-offset: -6px; }
+#app .garden-sprout { --grow: 0; position: absolute; z-index: 5; width: 14px; height: 10px; margin: -5px 0 0 -7px; border-radius: 50%; background: #7a5a3a; pointer-events: none; animation: garden-sow .35s cubic-bezier(.2,1.6,.4,1); }
+#app .garden-sprout::before { content: ''; position: absolute; left: 5px; bottom: 6px; width: 4px; height: 56px; border-radius: 2px; background: #4d8f35; transform-origin: 50% 100%; transform: scaleY(var(--grow)); }
+#app .garden-sprout::after { content: ''; position: absolute; left: -9px; bottom: calc(6px + 52px * var(--grow)); width: 32px; height: 16px; border-radius: 50% 50% 50% 50% / 100% 100% 0 0; background: radial-gradient(circle at 25% 100%, #6fb04a 0 9px, transparent 10px), radial-gradient(circle at 75% 100%, #6fb04a 0 9px, transparent 10px); transform: scale(calc(.2 + var(--grow) * .8)); transform-origin: 50% 100%; }
+#app .garden-sprout.grown { animation: garden-pop .45s cubic-bezier(.2,1.6,.4,1); }
+@keyframes garden-sow { from { transform: translateY(-30px); opacity: 0; } }
+@keyframes garden-pop { 50% { transform: scale(1.5); } }
+#app .garden-can { --tilt: 0deg; --fill: 0; position: absolute; z-index: 6; width: 112px; height: 84px; cursor: grab; touch-action: none; }
+#app .garden-can[hidden] { display: none; }
+#app .can-body { position: absolute; inset: 0; transform: rotate(var(--tilt)); transform-origin: 60% 60%; transition: transform .12s; }
+#app .garden-can svg { width: 100%; height: 100%; filter: drop-shadow(0 4px 3px #2b3b4440); }
+#app .garden-can.held { cursor: grabbing; }
+#app .garden-can:not(.held) .can-body { animation: garden-can-nudge 1.4s ease-in-out infinite; }
+@keyframes garden-can-nudge { 0%,70%,100% { transform: rotate(0); } 80% { transform: rotate(-12deg); } 90% { transform: rotate(-4deg); } }
+#app .can-water { position: absolute; left: -4px; top: 18px; width: 22px; height: 70px; transform: rotate(calc(var(--tilt) * -1)); transform-origin: 50% 0; opacity: 0; pointer-events: none; background: radial-gradient(circle, #5fa8d0 0 3px, transparent 4px) 0 0 / 11px 14px; animation: garden-grain .35s linear infinite; -webkit-mask: linear-gradient(#000, transparent); mask: linear-gradient(#000, transparent); }
+#app .garden-can.pouring .can-water { opacity: 1; }
+@keyframes garden-grain { to { background-position: 0 14px; } }
+#app .can-meter { position: absolute; left: 14px; right: 14px; bottom: -12px; height: 8px; border-radius: 4px; background: #ffffffcc; box-shadow: 0 0 0 2px #3f7f9f66; overflow: hidden; }
+#app .can-meter i { display: block; height: 100%; width: calc(var(--fill) * 100%); background: #4f9fc4; }
+#app .field-garden-zone.plant-misfit > img { filter: grayscale(.6) brightness(.95); rotate: 10deg; transform-origin: 50% 100%; }
 
 /* Planting: the plant drops into the soil with a puff; a poor fit wobbles. */
 #app .field-garden-zone.just-planted > img { animation: garden-plant-in .6s cubic-bezier(.2,1.4,.4,1) both; transform-origin: 50% 100%; }
@@ -24,34 +66,30 @@
 @keyframes garden-wobble { 0%,100% { transform: rotate(0); } 30% { transform: rotate(-7deg); } 70% { transform: rotate(6deg); } }
 @keyframes garden-puff { from { transform: scale(.3); opacity: 1; } to { transform: scale(1.4); opacity: 0; } }
 
-/* Rain cloud and what each plot does with the same rain. */
-#app .garden-field.has-cloud { padding-top: 72px; }
-#app .garden-cloud { position: absolute; left: 8px; top: 0; z-index: 5; width: 128px; height: 62px; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; border-radius: 40px; background: radial-gradient(circle at 30% 60%, #fff 0 22px, transparent 23px), radial-gradient(circle at 55% 40%, #fff 0 28px, transparent 29px), radial-gradient(circle at 78% 62%, #fff 0 20px, transparent 21px), linear-gradient(transparent 55%, #fff 55% 88%, transparent 88%); filter: drop-shadow(0 4px 0 #b9c7cf) drop-shadow(0 8px 10px #2b3b4433); animation: garden-cloud-bob 1.6s ease-in-out infinite alternate; }
-#app .garden-cloud.dragging { cursor: grabbing; animation: none; }
-#app .cloud-rain { position: absolute; left: 16px; right: 16px; top: 52px; height: 150px; opacity: 0; pointer-events: none; background: repeating-linear-gradient(100deg, transparent 0 9px, #5fa8d0aa 9px 11px, transparent 11px 22px); -webkit-mask: linear-gradient(#000, transparent); mask: linear-gradient(#000, transparent); }
-#app .garden-cloud.raining .cloud-rain { opacity: 1; animation: garden-rain .35s linear infinite; }
+/* Step 3: circles in the sky gather a cloud; when it is full the same rain falls everywhere. */
+#app .garden-sky { --gather: 0; position: relative; height: 96px; margin-bottom: 8px; border-radius: 20px; background: linear-gradient(#cfe6f2, #eef6ee); box-shadow: inset 0 0 0 2px #b9d3df; }
+#app .garden-cloud { position: absolute; left: 50%; top: 10px; width: 140px; height: 66px; margin-left: -70px; pointer-events: none; transform: scale(calc(.35 + var(--gather) * .65)); opacity: calc(.35 + var(--gather) * .65); transition: transform .15s, opacity .15s; border-radius: 40px; background: radial-gradient(circle at 30% 60%, #fff 0 22px, transparent 23px), radial-gradient(circle at 55% 40%, #fff 0 28px, transparent 29px), radial-gradient(circle at 78% 62%, #fff 0 20px, transparent 21px), linear-gradient(transparent 55%, #fff 55% 88%, transparent 88%); filter: drop-shadow(0 4px 0 #b9c7cf) drop-shadow(0 8px 10px #2b3b4433); }
+#app .garden-sky.raining .garden-cloud { filter: brightness(.82) drop-shadow(0 4px 0 #8fa3ad); }
+#app .cloud-rain { position: absolute; left: 16px; right: 16px; top: 54px; height: 40px; opacity: 0; background: repeating-linear-gradient(100deg, transparent 0 9px, #5fa8d0aa 9px 11px, transparent 11px 22px); -webkit-mask: linear-gradient(#000, transparent); mask: linear-gradient(#000, transparent); }
+#app .garden-sky.raining .cloud-rain { opacity: 1; animation: garden-rain .35s linear infinite; }
+#app .sky-meter { position: absolute; left: 16px; bottom: 12px; width: 120px; height: 10px; border-radius: 5px; background: #ffffffcc; box-shadow: 0 0 0 2px #3f7f9f55; overflow: hidden; }
+#app .sky-meter i { display: block; height: 100%; width: calc(var(--gather) * 100%); background: #4f9fc4; }
+#app [data-sky-count] { position: absolute; left: 16px; top: 12px; font: 20px/1.2 var(--font-display, var(--font-body)); color: #2f5f77; }
+#app .garden-flow .swirl-live { stroke: #ffffffee; stroke-width: 8; filter: drop-shadow(0 0 3px #3f7f9f); }
+#app .garden-field.storm .field-garden-zone::after { content: ''; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: repeating-linear-gradient(100deg, transparent 0 12px, #5fa8d088 12px 14px, transparent 14px 28px); animation: garden-rain .35s linear infinite; }
 @keyframes garden-rain { from { background-position: 0 0; } to { background-position: -6px 30px; } }
-@keyframes garden-cloud-bob { to { transform: translateY(-5px); } }
 #app .zone-pond.wet .zone-water, #app .zone-pond.rained .zone-water { height: 34%; }
 #app .zone-meadow.wet .zone-water { animation: garden-soak 1.6s ease-in-out infinite; }
 #app .zone-ridge.wet .zone-water { animation: garden-drain .9s ease-in infinite; }
 @keyframes garden-soak { 0% { height: 0; opacity: .9; } 45% { height: 12%; opacity: .7; } 100% { height: 4%; opacity: 0; filter: saturate(.3); } }
 @keyframes garden-drain { 0% { height: 8%; opacity: .8; transform: none; } 100% { height: 2%; opacity: 0; transform: translateX(40%); } }
 #app .zone-meadow.wet .zone-ground img, #app .zone-meadow.rained .zone-ground img { filter: brightness(.85) saturate(1.2); }
+#app .garden-field.rainbow::before { content: ''; position: absolute; left: 50%; top: -10px; z-index: 7; width: 420px; height: 210px; margin-left: -210px; border-radius: 210px 210px 0 0; pointer-events: none; background: radial-gradient(circle at 50% 100%, transparent 0 58%, #e8705a99 58% 63%, #f2c14e99 63% 68%, #7cc36b99 68% 73%, #5fa8d099 73% 78%, transparent 78%); animation: garden-rainbow 3.2s ease-out forwards; }
+@keyframes garden-rainbow { 0% { clip-path: inset(0 100% 0 0); opacity: 1; } 40% { clip-path: inset(0 0 0 0); opacity: 1; } 100% { clip-path: inset(0 0 0 0); opacity: 0; } }
 
-@media (max-width: 1100px) { #app .garden-field.has-cloud { padding-top: 60px; } #app .garden-cloud { width: 108px; height: 52px; } }
-@media (prefers-reduced-motion: reduce) { #app .garden-cloud, #app .field-garden-zone.just-planted > img, #app .field-garden-zone.just-planted::before, #app .field-garden-zone.just-env .zone-ground, #app .garden-cloud.raining .cloud-rain { animation: none; } }
-
-/* The drag ghost lives on <body>, outside #app. */
-.garden-ghost { position: fixed; z-index: 50; pointer-events: none; width: 84px; height: 74px; transform: translate(-50%,-60%) rotate(-12deg); transition: transform .2s; }
-.garden-ghost img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 6px 6px #2b1e0f55); }
-.garden-ghost.pouring { transform: translate(-50%,-60%) rotate(-38deg); }
-.garden-ghost::after { content: ''; position: absolute; left: 30%; top: 70%; width: 40%; height: 60px; opacity: 0; background: radial-gradient(circle, var(--grain) 0 3px, transparent 4px) 0 0 / 12px 14px; animation: garden-grain .4s linear infinite; -webkit-mask: linear-gradient(#000, transparent); mask: linear-gradient(#000, transparent); }
-.garden-ghost.pouring::after { opacity: 1; }
-.garden-ghost.tool-water { --grain: #4f9fc4; }
-.garden-ghost.tool-grass { --grain: #5e9a3a; }
-.garden-ghost.tool-dry { --grain: #c89a55; }
-@keyframes garden-grain { to { background-position: 0 14px; } }
-#app .field-garden-zone.has-env > strong { padding: 2px 10px; border-radius: 12px; background: #fffcefd9; }
-#app .field-garden-zone > img.plant-illustration { flex: none; height: 110px; }
-#app .field-garden-zone.has-env > :is(.field-plant-space, img + span) { padding: 2px 10px; border-radius: 12px; background: #fffcefd9; }
+@media (max-width: 1100px) { #app .garden-sky { height: 84px; } #app .garden-cloud { width: 120px; margin-left: -60px; } #app .garden-rule { font-size: 17px; } }
+@media (prefers-reduced-motion: reduce) {
+ #app .garden-field :is(.garden-sprout, .garden-sprout.grown, .can-body, .can-water, .cloud-rain), #app .field-garden-zone.just-planted > img, #app .field-garden-zone:is(.just-planted, .pooling)::before, #app .field-garden-zone.just-env .zone-ground, #app .garden-field.storm .field-garden-zone::after, #app .field-garden-zone .zone-water { animation: none !important; }
+ #app .garden-flow .flow-water.flowing { animation: none; stroke-dashoffset: 0; }
+ #app .garden-field.rainbow::before { display: none; }
+}
