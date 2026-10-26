@@ -17,6 +17,18 @@ wrangler pages deploy dist --project-name leafy-garden --branch main
 
 ## 최근 배포 — 2026-10-27
 
+- 기능 커밋: `55c5fa68557ac35f69ea75464e7bab66307073d6` (`main`, GitHub push 완료)
+- 배포 주소: https://40bc3574.leafy-garden.pages.dev
+- 운영 주소: https://leafy-garden.pages.dev
+- 선택한 1번 온실 탐험형 이미지를 `assets/og/green-garden-og-20261027.png`로 배포했다. 원본과 동일한 **1774×887, 2:1 PNG**다.
+- 정적 HTML에 OG 제목·설명·운영 URL·이미지 URL/크기/대체 설명과 Twitter 큰 이미지 카드를 설정했다. 공유용 PNG는 배포하되 게임의 오프라인 사전 캐시에서는 제외했다.
+- JavaScript **41개 문법 검사**, 빌드, OG 태그·PNG 크기·선택 원본 해시·배포 포함 여부 검사를 통과했다.
+- 빌드 시각: **2026-10-27 05:19:25 KST** (`2026-10-26T20:19:25.333Z`), `dirty=false`. 본문 170파일·116에셋과 생성 번들/메타데이터를 배포했다.
+- 운영 빌드 정보 일치 및 **5개 파일**(HTML, OG PNG, 서비스워커, JS/CSS 번들)의 SHA-256 일치를 확인했다. 크롤러 User-Agent로 받은 HTML에도 OG 태그가 있고 PNG는 HTTP 200·`image/png`로 응답했다.
+- 격리 Chrome에서 시작 화면 표시, OG 이미지 실제 디코딩(1774×887), 페이지 오류 0건을 확인했다. 개별 메신저의 공유 카드 캐시 갱신 여부는 확인하지 않았다.
+
+## 이전 배포 — 2026-10-27
+
 - 기능 커밋: `a58605da41b4c537f1d08e84954c4661aed9ddfe` (`main`, GitHub push 완료)
 - 배포 주소: https://d248ad3b.leafy-garden.pages.dev
 - 운영 주소: https://leafy-garden.pages.dev
