@@ -4,6 +4,7 @@ import {mountGardenHands} from './field-hands-garden.js';
 import {FIELD_LEAVES,FIELD_ORDER,FIELD_ZONES,FIELD_ENV,FIELD_PLANTS,normalizeFieldEvidence,fieldSteps,fieldMissionReady,fieldBagPair,fieldBagKey,FIELD_BAG_ROLES,applyFieldAction} from './field-missions-state.js';
 import {mountFloatHands} from './field-hands-float.js';
 import {mountBagHands} from './field-hands-bag.js';
+import {mountLens,mountLeafSwipe} from './field-hands-leaf.js';
 export {normalizeFieldEvidence,fieldMissionReady};
 const esc=v=>String(v??'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
 const btn=(label,action,id='',cls='')=>`<button type="button" class="btn mission-tool ${cls}" data-action="${action}" data-id="${esc(id)}">${label}</button>`;
@@ -13,19 +14,29 @@ const envNames={water:'물가',grass:'풀밭',dry:'건조한 곳'};
 const plantNames={hyacinth:'부레옥잠',cherry:'벚나무',aloe:'알로에'};
 const modelName=id=>id==='air'?'공기 공간 모형':'속을 채운 비교 모형';
 const stages=[['돋보기로 찾기','톱니로 나누기','새 기준으로 나누기'],['살아 있는 부분 잇기','나무 시간 잇기','풀 시간 잇기'],['결과 예상하기','같은 수조에서 시험','관찰 결과 연결하기'],['빗물 자리 찾기','식물 옮겨 심기','비로 복구 확인'],['의뢰 가방 조립','부품 하나만 비교','역할 설명하고 완성']];
-const objectives=[['돋보기를 끌어 세 잎의 가운데와 가장자리를 살펴봐.','새 표본 세 개를 톱니가 있는 잎과 없는 잎으로 옮겨 봐.','같은 잎을 이번에는 가늘고 긴 모양인지로 다시 나눠 봐.'],['겨울에 살아 있는 부분을 다음 봄의 같은 부분에 이어 줘.','같은 벚나무가 겨울을 지나 다시 자라는 순서로 놓아 줘.','땅속에 뿌리가 남는 씀바귀의 사진 순서를 완성해 줘.'],['두 모형을 물에 넣으면 어떻게 될지 예상 칸에 놓아 줘.','두 모형을 같은 수조에 하나씩 넣고 위치를 살펴봐.','본 결과를 기록하고 공기 공간이 있던 모형을 연결해 줘.'],['물·풀씨·모래 도구를 끌어 와서 비 온 뒤 모습에 맞는 땅을 만들어 줘.','각 식물을 특징이 도움이 되는 자리에 심어 줘.','비를 뿌려 정원 배치를 시험하고 필요하면 고쳐 봐.'],['물방울이 잘 굴러가고 공책과 바깥 주머니가 마를 가방을 조립해 줘.','같은 비로 시험하고 겉면·입구·주머니 중 하나만 바꿔 다시 시험해 줘.','바뀐 부품을 시험 결과에 연결하고 의뢰 조건을 완성해 줘.']];
+const objectives=[['돋보기를 끌어 세 잎의 가운데와 가장자리를 살펴봐.','표본 카드를 톱니가 있는 잎과 없는 잎 바구니로 휙 튕겨 봐.','같은 잎을 이번에는 가늘고 긴 모양인지로 다시 나눠 봐.'],['겨울에 살아 있는 부분을 다음 봄의 같은 부분에 이어 줘.','같은 벚나무가 겨울을 지나 다시 자라는 순서로 놓아 줘.','땅속에 뿌리가 남는 씀바귀의 사진 순서를 완성해 줘.'],['두 모형을 물에 넣으면 어떻게 될지 예상 칸에 놓아 줘.','두 모형을 같은 수조에 하나씩 넣고 위치를 살펴봐.','본 결과를 기록하고 공기 공간이 있던 모형을 연결해 줘.'],['물·풀씨·모래 도구를 끌어 와서 비 온 뒤 모습에 맞는 땅을 만들어 줘.','각 식물을 특징이 도움이 되는 자리에 심어 줘.','비를 뿌려 정원 배치를 시험하고 필요하면 고쳐 봐.'],['물방울이 잘 굴러가고 공책과 바깥 주머니가 마를 가방을 조립해 줘.','같은 비로 시험하고 겉면·입구·주머니 중 하나만 바꿔 다시 시험해 줘.','바뀐 부품을 시험 결과에 연결하고 의뢰 조건을 완성해 줘.']];
 
 function leafPicture(id){
  return assetImage('field_leaf_'+id,'field-leaf-picture leaf-'+id,true);
 }
-// Where each clue sits on the leaf picture, as fractions of the drawn image.
-const LENS_SPOTS={maple:{shape:[[.5,.6]],edge:[[.33,.33],[.68,.33],[.17,.55],[.83,.5],[.3,.69],[.7,.69]]},pine:{shape:[[.5,.45]],edge:[[.3,.25],[.7,.25],[.4,.65],[.58,.65]]},camellia:{shape:[[.5,.45]],edge:[[.14,.4],[.86,.42],[.2,.66],[.8,.64],[.32,.17],[.68,.17]]}};
 const edgeNote=p=>p.edge?'작은 톱니가 이어져 있어':'큰 톱니가 없어';
 function lensClue(p,kind,found,fresh){const text=kind==='shape'?`모양 · ${p.shape}`:`가장자리 · ${edgeNote(p)}`;return `<span class="lens-clue ${found?'found':''} ${fresh?'just-found':''}" data-clue="${p.id}:${kind}" data-text="✓ ${text}">${found?'✓ '+text:`? ${kind==='shape'?'잎 가운데를 살펴봐':'가장자리를 살펴봐'}`}</span>`;}
+const sortLabel=(rule,answer)=>rule==='edge'?(answer==='yes'?'톱니가 있어':'큰 톱니가 없어'):(answer==='yes'?'가늘고 길어':'가늘고 긴 모양은 아니야');
+const leafClue=(e,p,rule)=>e.leaves.scans[p.id].includes(rule==='edge'?'edge':'shape')?(rule==='edge'?edgeNote(p):p.shape):'돋보기로 아직 안 봤어';
+// The clue drawer fills one notch per clue and slides open on the last one.
+function clueDrawer(e,u){
+ const n=FIELD_LEAVES.reduce((sum,p)=>sum+e.leaves.scans[p.id].length,0),all=n===FIELD_LEAVES.length*2,opening=all&&!!u.lastFound&&!u.drawerOpened;if(all)u.drawerOpened=true;
+ return `<span class="clue-drawer ${all?'open':''} ${opening?'opening':''}" data-clue-gauge="${n}" role="status" aria-label="찾은 단서 ${n}/6"><span class="drawer-pop" aria-hidden="true">${FIELD_LEAVES.map(p=>leafPicture(p.id)).join('')}</span><span class="drawer-box" aria-hidden="true"><i></i></span><span class="drawer-meter" aria-hidden="true"><b>${all?'서랍이 열렸어!':`단서 ${n}/6`}</b><span class="clue-bar"><i style="width:${n/6*100}%"></i></span></span></span>`;
+}
 function leaves(e,u,stage){
- if(stage===0)return `<div class="lens-bench" data-lens-bench><p class="lens-hint"><span>돋보기를 끌어서 잎의 <b>가운데</b>와 <b>가장자리</b>에 대고 잠깐 멈춰 봐.</span></p><div class="field-leaf-tray">${FIELD_LEAVES.map(p=>{const s=e.leaves.scans[p.id];return `<article class="field-specimen"><h3>${p.name}</h3><div class="lens-leaf" data-lens-leaf="${p.id}">${leafPicture(p.id)}</div><div class="lens-clues">${['shape','edge'].map(k=>lensClue(p,k,s.includes(k),u.lastFound===p.id+':'+k)).join('')}</div><div class="lens-fallback">${target('잎 가운데 살펴보기','scan:'+p.id+':shape','field-hotspot')}${target('가장자리 살펴보기','scan:'+p.id+':edge','field-hotspot')}</div></article>`;}).join('')}</div><div class="field-lens" data-lens aria-hidden="true"><div class="field-lens-glass"><img alt=""></div><span class="field-lens-ring"></span></div></div>`;
- const rule=stage===1?'edge':'narrow';
- return `<div class="field-tools">${FIELD_LEAVES.map(p=>source(`${leafPicture(p.id)}<span>${p.name}</span><small class="leaf-token-clue">${e.leaves.scans[p.id].includes(rule==='edge'?'edge':'shape')?(rule==='edge'?edgeNote(p):p.shape):'돋보기로 아직 안 봤어'}</small>`,'leaf:'+p.id,u,'field-leaf-token')).join('')}</div><div class="field-sort-bins">${['yes','no'].map(answer=>target(`<strong>${rule==='edge'?(answer==='yes'?'톱니가 있어':'큰 톱니가 없어'):(answer==='yes'?'가늘고 길어':'가늘고 긴 모양은 아니야')}</strong><span class="field-bin-content">${FIELD_LEAVES.filter(p=>e.leaves[rule][p.id]===answer).map(p=>`<span>${leafPicture(p.id)}${p.name}</span>`).join('')||'여기로 표본을 옮겨 줘'}</span>`,`sort:${rule}:${answer}`,'field-sort-bin')).join('')}</div><p class="microcopy">관찰 그림의 특징으로 나누는 활동이야. 식물 이름이 기준은 아니야.</p>`;
+ if(stage===0){const all=FIELD_LEAVES.every(p=>e.leaves.scans[p.id].length===2);return `<div class="lens-bench" data-lens-bench><p class="lens-hint"><span>${all?'단서를 다 모았어! 서랍에서 나온 잎을 <b>나누러</b> 가 보자.':'돋보기를 끌어서 잎의 <b>가운데</b>와 <b>가장자리</b>에 대고 잠깐 멈춰 봐.'}</span>${clueDrawer(e,u)}</p><div class="field-leaf-tray">${FIELD_LEAVES.map(p=>{const s=e.leaves.scans[p.id];return `<article class="field-specimen"><h3>${p.name}</h3><div class="lens-leaf" data-lens-leaf="${p.id}">${leafPicture(p.id)}${s.map(k=>`<span class="leaf-spark ${u.lastFound===p.id+':'+k?'fresh':''}" data-spark="${p.id}:${k}" aria-hidden="true"></span>`).join('')}</div><div class="lens-clues">${['shape','edge'].map(k=>lensClue(p,k,s.includes(k),u.lastFound===p.id+':'+k)).join('')}</div><div class="lens-fallback">${target('잎 가운데 살펴보기','scan:'+p.id+':shape','field-hotspot')}${target('가장자리 살펴보기','scan:'+p.id+':edge','field-hotspot')}</div></article>`;}).join('')}</div><div class="field-lens" data-lens aria-hidden="true"><div class="field-lens-glass"><img alt=""></div><span class="field-lens-ring"></span></div></div>`;}
+ // Stage 2 throws left/right; stage 3 reshuffles the same leaves and throws up/down.
+ const rule=stage===1?'edge':'narrow',vertical=stage===2,thrown=u.leafThrown;u.leafThrown='';
+ const placed=p=>e.leaves[rule][p.id]===(p[rule]?'yes':'no'),deck=FIELD_LEAVES.filter(p=>!placed(p)),shuffle=vertical&&!u.leafShuffled&&deck.length===3;if(vertical)u.leafShuffled=true;
+ const card=(p,i)=>`<div class="swipe-card ${i===0&&thrown===p.id?'bounced':''}" ${i===0?'data-swipe-top':''} data-swipe-card="${p.id}" style="--i:${i}" aria-hidden="true">${leafPicture(p.id)}<strong>${p.name}</strong><small class="leaf-token-clue">${leafClue(e,p,rule)}</small>${vertical&&e.leaves.edge[p.id]?`<span class="swipe-before">아까는 · ${sortLabel('edge',e.leaves.edge[p.id])}</span>`:''}</div>`;
+ const bin=answer=>`<div class="swipe-bin bin-${answer}" data-swipe-bin="${answer}"><span class="swipe-arrow" aria-hidden="true"></span><strong>${sortLabel(rule,answer)}</strong><span class="swipe-bin-leaves">${FIELD_LEAVES.filter(p=>placed(p)&&e.leaves[rule][p.id]===answer).map(p=>`<span class="${thrown===p.id?'fresh':''}">${leafPicture(p.id)}${p.name}</span>`).join('')}</span></div>`;
+ const empty=vertical?`<div class="swipe-done"><strong>같은 잎도 기준이 바뀌면 다른 바구니로 가!</strong><ul>${FIELD_LEAVES.map(p=>`<li>${leafPicture(p.id)}<b>${p.name}</b><span>${e.leaves.edge[p.id]?sortLabel('edge',e.leaves.edge[p.id]):'-'}</span><span>${sortLabel('narrow',e.leaves.narrow[p.id])}</span></li>`).join('')}</ul></div>`:'<div class="swipe-done"><strong>세 표본을 모두 나눴어!</strong></div>';
+ return `<p class="lens-hint season-hint"><span>${vertical?'이번엔 바구니가 <b>위아래</b>에 있어. 카드를 위나 아래로 <b>휙</b> 튕겨 봐.':'가운데 카드를 손가락으로 <b>왼쪽이나 오른쪽</b>으로 <b>휙</b> 튕겨서 바구니에 넣어 봐.'}</span></p><div class="swipe-sort ${vertical?'axis-y':'axis-x'} ${shuffle?'shuffling':''}" data-swipe-sort="${rule}" data-axis="${vertical?'y':'x'}">${bin('yes')}<div class="swipe-deck">${deck.length?deck.slice(0,3).map(card).reverse().join('')+`<span class="swipe-count">남은 표본 <b>${deck.length}</b>장</span><span class="swipe-tip" aria-hidden="true">조금 더 빠르게 휙!</span>${shuffle?'<span class="swipe-shuffle" aria-hidden="true">기준이 바뀌었어 · 다시 섞는 중</span>':''}`:empty}</div>${bin('no')}</div><div class="lens-fallback">${FIELD_LEAVES.map(p=>source(`${p.name} · ${leafClue(e,p,rule)}`,'leaf:'+p.id,u,'field-leaf-token')).join('')}${['yes','no'].map(answer=>target(sortLabel(rule,answer),`sort:${rule}:${answer}`,'field-sort-bin')).join('')}</div>${deck.length?'<p class="microcopy">관찰 그림의 특징으로 나누는 활동이야. 식물 이름이 기준은 아니야.</p>':''}`;
 }
 function seedlingArt(herb){return assetImage(herb?'sowthistle_bud_spring':'cherry_bud_spring','field-bud-picture',true);}
 function frameArt(kind,phase){return phase==='bud'?seedlingArt(kind==='herb'):seasonArt(kind==='tree'?'cherry':'sowthistle',phase==='winter'?3:0,true).replace(/aria-label="[^"]*"/,`aria-label="${phase==='winter'?'잎이 없고 땅속 뿌리와 줄기가 남은 모습':'같은 식물에 잎과 꽃이 자란 모습'}"`);}
@@ -153,39 +164,13 @@ export function mountFieldInteractions(root,state,ui,onAction){
  const click=event=>{if(blockedClick){event.preventDefault();event.stopImmediatePropagation();blockedClick=false;}};
  const cancel=()=>clear();const key=event=>{if(event.key==='Escape'){clear();onAction('field-cancel','');}};
  const bench=root.querySelector('[data-lens-bench]'),lensCleanup=bench?mountLens(bench,ui,onAction):null,seasonCleanup=mountSeasonHands(root,ui,onAction),floatCleanup=mountFloatHands(root,ui,onAction),gardenCleanup=mountGardenHands(root,ui,onAction),bagCleanup=mountBagHands(root,ui,onAction);
+ const swipeCleanup=mountLeafSwipe(root,ui,onAction);
  root.addEventListener('pointerdown',down);root.addEventListener('pointermove',move,{passive:false});root.addEventListener('pointerup',up);root.addEventListener('pointercancel',cancel);root.addEventListener('click',click,true);root.addEventListener('keydown',key);
- return ()=>{lensCleanup?.();seasonCleanup();floatCleanup();gardenCleanup();bagCleanup();clear();clearTimeout(blockTimer);root.removeEventListener('pointerdown',down);root.removeEventListener('pointermove',move);root.removeEventListener('pointerup',up);root.removeEventListener('pointercancel',cancel);root.removeEventListener('click',click,true);root.removeEventListener('keydown',key);};
+ return ()=>{lensCleanup?.();swipeCleanup();seasonCleanup();floatCleanup();gardenCleanup();bagCleanup();clear();clearTimeout(blockTimer);root.removeEventListener('pointerdown',down);root.removeEventListener('pointermove',move);root.removeEventListener('pointerup',up);root.removeEventListener('pointercancel',cancel);root.removeEventListener('click',click,true);root.removeEventListener('keydown',key);};
 }
 
 // object-fit:contain leaves blank margins; clue spots are measured on the painted image only.
 function drawnRect(img){const r=img.getBoundingClientRect(),nw=img.naturalWidth||1,nh=img.naturalHeight||1,k=(getComputedStyle(img).objectFit==='cover'?Math.max:Math.min)(r.width/nw,r.height/nh),w=nw*k,h=nh*k;return {left:r.left+(r.width-w)/2,top:r.top+(r.height-h)/2,width:w,height:h};}
-// Drag the magnifier; resting on a clue spot for a moment records that observation.
-function mountLens(bench,ui,onAction){
- const lens=bench.querySelector('[data-lens]'),glass=lens.querySelector('.field-lens-glass'),zoom=glass.querySelector('img'),u=ui.fieldMission??={},Z=2.6;
- let drag=null,timer=0,spot='',queued=[];
- const record=key=>{u.lastFound=key;onAction('field-place','lens|scan:'+key);};
- const discover=key=>{lens.classList.remove('charging');const chip=bench.querySelector(`[data-clue="${key}"]`);if(!chip||chip.classList.contains('found'))return;chip.classList.add('found','just-found');chip.textContent=chip.dataset.text;lens.classList.add('found-flash');setTimeout(()=>lens.classList.remove('found-flash'),500);if(drag)queued.push(key);else record(key);};
- const look=()=>{const g=glass.getBoundingClientRect(),cx=g.left+g.width/2,cy=g.top+g.height/2;let hit='',over=false;
-  for(const box of bench.querySelectorAll('[data-lens-leaf]')){const img=box.querySelector('img'),r=drawnRect(img);if(cx<r.left-30||cx>r.left+r.width+30||cy<r.top-30||cy>r.top+r.height+30)continue;over=true;
-   if(zoom.dataset.src!==img.src){zoom.src=img.src;zoom.dataset.src=img.src;}
-   Object.assign(zoom.style,{width:r.width*Z+'px',height:r.height*Z+'px',left:g.width/2-(cx-r.left)*Z+'px',top:g.height/2-(cy-r.top)*Z+'px'});
-   const id=box.dataset.lensLeaf,x=(cx-r.left)/r.width,y=(cy-r.top)/r.height;
-   for(const kind of ['shape','edge'])if(LENS_SPOTS[id][kind].some(([a,b])=>Math.hypot((x-a)*r.width,(y-b)*r.height)<r.height*.11))hit=`${id}:${kind}`;
-   break;}
-  lens.classList.toggle('over',over);
-  if(hit===spot)return;spot=hit;clearTimeout(timer);lens.classList.remove('charging');
-  if(hit&&!bench.querySelector(`[data-clue="${hit}"]`)?.classList.contains('found')){void lens.offsetWidth;lens.classList.add('charging');timer=setTimeout(()=>discover(hit),650);}
- };
- const place=(x,y)=>{const b=bench.getBoundingClientRect();u.lens={x:Math.max(40,Math.min(b.width-40,x)),y:Math.max(40,Math.min(b.height-40,y))};lens.style.left=u.lens.x+'px';lens.style.top=u.lens.y+'px';look();};
- const down=e=>{if(e.button>0)return;e.preventDefault();e.stopPropagation();const b=bench.getBoundingClientRect();drag={id:e.pointerId,dx:e.clientX-b.left-u.lens.x,dy:e.clientY-b.top-u.lens.y};lens.setPointerCapture?.(e.pointerId);lens.classList.add('dragging');};
- const move=e=>{if(!drag||e.pointerId!==drag.id)return;e.preventDefault();const b=bench.getBoundingClientRect();place(e.clientX-b.left-drag.dx,e.clientY-b.top-drag.dy);};
- const up=e=>{if(!drag||e.pointerId!==drag.id)return;drag=null;lens.classList.remove('dragging');const keys=queued;queued=[];keys.forEach(record);};
- const settle=()=>place(u.lens?.x??150,u.lens?.y??58);
- lens.addEventListener('pointerdown',down);lens.addEventListener('pointermove',move);lens.addEventListener('pointerup',up);lens.addEventListener('pointercancel',up);
- bench.querySelectorAll('[data-lens-leaf] img').forEach(img=>img.complete||img.addEventListener('load',look,{once:true}));addEventListener('resize',settle);settle();
- return ()=>{clearTimeout(timer);removeEventListener('resize',settle);};
-}
-
 // Stage 2 by hand: rub the soil away, pull a string to the same part next spring, pin where it regrew.
 function mountSeasonHands(root,ui,onAction){
  const offs=[];const on=(el,type,fn,opt)=>{el.addEventListener(type,fn,opt);offs.push(()=>el.removeEventListener(type,fn,opt));};
