@@ -21,6 +21,7 @@ _reference/
 _source/
 assets/**/*.png
 !assets/icons/*.png
+!assets/og/*.png
 docs/implementation-backup-*/
 
 # Captured shared-chat payloads can contain unrelated context

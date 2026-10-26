@@ -27,7 +27,7 @@ async function walk(directory) {
 
 const source = (await walk('src')).filter(file => /\.(m?js|css)$/.test(file));
 const assets = (await walk('assets')).filter(file => /\.webp$/i.test(file) || /(?:credits|licenses?|provenance)[^/]*\.(?:md|json|txt|csv)$/i.test(path.basename(file))
-  || /^assets\/icons\/[^/]+\.png$/i.test(file) || /^assets\/models\/[^/]+\.glb$/i.test(file) || /^assets\/audio\/[^/]+\.mp3$/i.test(file) || /^assets\/videos\/[^/]+\.mp4$/i.test(file) || /^assets\/fonts\/[^/]+(?:\.woff2|-OFL\.txt)$/i.test(file));
+  || /^assets\/(?:icons|og)\/[^/]+\.png$/i.test(file) || /^assets\/models\/[^/]+\.glb$/i.test(file) || /^assets\/audio\/[^/]+\.mp3$/i.test(file) || /^assets\/videos\/[^/]+\.mp4$/i.test(file) || /^assets\/fonts\/[^/]+(?:\.woff2|-OFL\.txt)$/i.test(file));
 const pwa = ['sw.js', 'manifest.webmanifest'];
 const files = ['index.html', ...pwa, ...source, ...assets];
 const allowed = new Set([...files,'build-info.json','src/bundle.css','src/app.bundle.js']);
@@ -88,7 +88,7 @@ bytes += Buffer.byteLength(bundle) + Buffer.byteLength(bundledHtml) - Buffer.byt
 // Service worker: version + content hash so any redeploy replaces old caches; precache the app shell.
 const hash = createHash('sha1');
 for (const file of files) hash.update(file).update(await readFile(path.join(root, file)));
-const shell = ['/', '/src/bundle.css', ...(scriptBundle ? ['/'+scriptBundle] : []), ...files.filter(file => file !== 'sw.js' && !styles.includes(file) && !file.startsWith('src/vendor/') && !file.startsWith('assets/icons/') && !file.startsWith('assets/models/') && !/\.(mp4|mp3)$/.test(file) && !/\.(?:md|txt)$/i.test(file)
+const shell = ['/', '/src/bundle.css', ...(scriptBundle ? ['/'+scriptBundle] : []), ...files.filter(file => file !== 'sw.js' && !styles.includes(file) && !file.startsWith('src/vendor/') && !file.startsWith('assets/icons/') && !file.startsWith('assets/og/') && !file.startsWith('assets/models/') && !/\.(mp4|mp3)$/.test(file) && !/\.(?:md|txt)$/i.test(file)
   && (!file.startsWith('assets/generated/') || /\/(?:expedition_hero_20261020|mascot_[a-z]+|map_trail_v2|reward_[a-z]+_thumb)\.webp$/.test(file))).map(file => `/${file}`)];
 const swPath = path.join(output, 'sw.js');
 let sw = await readFile(swPath, 'utf8');
