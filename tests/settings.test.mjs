@@ -31,7 +31,7 @@ test('교사용 도구는 확인 코드 없이 버튼 하나로 전체를 한 �
 test('설정 문구: 저장 정책·저작권 단락이 있고 학년·링크·메일이 없다',()=>{
  const all=[appInfoSection(),studentSection(),teacherSection(''),noticeSection(),...Object.values(TEXT)].join('\n');
  assert.ok(all.includes('활동 기록은 서버로 보내지 않고 이 브라우저에만 저장돼요.'));
- for(const line of ['ⓒ 2026 옐샘 & 아이스크림미디어. All rights reserved.','앱 화면 캡처·자체 제작 일러스트·자체 제작 음원은 무단 복제·재배포·전용·상업적 이용을 금지합니다.','Three.js(MIT)·글꼴(Jua, Pretendard — SIL OFL 1.1)과 참고 자료의 저작권은 각 원저작자와 소장 기관에 있으며, 각 자료의 이용 조건을 따릅니다.','캐릭터·배경·장식은 프로젝트 자체 AI 생성 이미지입니다.'])assert.ok(all.includes(line),line);
+ for(const line of ['ⓒ 2026 옐샘 & 아이스크림미디어. All rights reserved.','앱 화면 캡처·자체 제작 일러스트·자체 제작 음원은 무단 복제·재배포·전용·상업적 이용을 금지합니다.','Three.js(MIT)·글꼴(Jua, Pretendard, Gaegu — SIL OFL 1.1)과 참고 자료의 저작권은 각 원저작자와 소장 기관에 있으며, 각 자료의 이용 조건을 따릅니다.','캐릭터·배경·장식은 프로젝트 자체 AI 생성 이미지입니다.'])assert.ok(all.includes(line),line);
  assert.doesNotMatch(all,/<a\s|https?:|mailto:|@[a-z0-9-]+\.[a-z]/i);
  assert.doesNotMatch(all+read('src/app.js'),/\d학년/);
  assert.doesNotMatch(all,/<details[^>]*\sopen/);

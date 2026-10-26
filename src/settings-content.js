@@ -57,12 +57,12 @@ const NOTICE=[
 ];
 const SOURCES=[
  ['교육 내용 참고',['미국 플로리다대학교 IFAS · ask.ifas.ufl.edu','미국 국립독성프로그램 NTP · ntp.niehs.nih.gov','연잎 표면 연구 · Planta, 1997']],
- ['프로그램과 글꼴',['Three.js r181 · MIT License','Jua · SIL Open Font License 1.1','Pretendard · SIL Open Font License 1.1']],
+ ['프로그램과 글꼴',['Three.js r181 · MIT License','Jua · SIL Open Font License 1.1','Pretendard · SIL Open Font License 1.1','Gaegu · SIL Open Font License 1.1']],
 ];
 const RIGHTS=[
  'ⓒ 2026 옐샘 & 아이스크림미디어. All rights reserved.',
  '앱 화면 캡처·자체 제작 일러스트·자체 제작 음원은 무단 복제·재배포·전용·상업적 이용을 금지합니다.',
- 'Three.js(MIT)·글꼴(Jua, Pretendard — SIL OFL 1.1)과 참고 자료의 저작권은 각 원저작자와 소장 기관에 있으며, 각 자료의 이용 조건을 따릅니다.',
+ 'Three.js(MIT)·글꼴(Jua, Pretendard, Gaegu — SIL OFL 1.1)과 참고 자료의 저작권은 각 원저작자와 소장 기관에 있으며, 각 자료의 이용 조건을 따릅니다.',
  '교육 내용 구성 참고: 미국 플로리다대학교 IFAS(ask.ifas.ufl.edu), 미국 국립독성프로그램 NTP(ntp.niehs.nih.gov), Planta(1997, 연잎 표면 연구).',
 ];
 

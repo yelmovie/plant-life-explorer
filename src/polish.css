@@ -7,6 +7,7 @@
 /* ── 1. Fonts: self-hosted, 0 external requests. Title·button·label = Jua, body = Pretendard ── */
 @font-face{font-family:'GG Display';font-style:normal;font-weight:400;font-display:swap;src:url('/assets/fonts/gg-display-ko.woff2') format('woff2');unicode-range:U+AC00-D7A3,U+1100-11FF,U+3130-318F,U+A960-A97F,U+D7B0-D7FF,U+3000-303F,U+FF00-FFEF}
 @font-face{font-family:'GG Display';font-style:normal;font-weight:400;font-display:swap;src:url('/assets/fonts/gg-display-latin.woff2') format('woff2');unicode-range:U+0000-00FF,U+2000-206F,U+2190-21FF}
+@font-face{font-family:'GG Hand';font-style:normal;font-weight:400;font-display:swap;src:url('/assets/fonts/gg-hand.woff2') format('woff2')}
 /* Official Pretendard KS X 1001 subset (2,350 syllables) — covers every Hangul syllable in src/*.js; rarer ones fall back per glyph. */
 @font-face{font-family:'GG Text';font-style:normal;font-weight:400;font-display:swap;src:url('/assets/fonts/gg-text-regular.woff2') format('woff2')}
 @font-face{font-family:'GG Text';font-style:normal;font-weight:700;font-display:swap;src:url('/assets/fonts/gg-text-bold.woff2') format('woff2')}
@@ -26,6 +27,7 @@
  /* semantic — from style.css :root + assets */
  --font-body:'GG Text','Malgun Gothic','Apple SD Gothic Neo',system-ui,sans-serif;
  --font-display:'GG Display',var(--font-body);
+ --font-hand:'GG Hand','GG Display',var(--font-body);
  --color-bg:var(--cream);--color-surface:var(--paper);--color-surface-glass:#fffef7e6;--color-panel:#fffdf4;--color-surface-soft:#f2f3e9;
  --color-primary:var(--forest);--color-primary-top:#356048;--color-primary-edge:#183827;--color-primary-soft:var(--lime);
  --color-secondary:var(--water);--color-accent:var(--gold);

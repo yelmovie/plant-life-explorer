@@ -33,6 +33,8 @@ def cut(src, dst, family, style, keep):
 missing = set()
 missing |= hangul & cut(SRC/'jua-korean-400.woff2', OUT/'gg-display-ko.woff2', 'GG Display', 'Regular', hangul | {c for c in chars if 0x3000 <= ord(c) <= 0x303F or 0xFF00 <= ord(c) <= 0xFFEF})
 cut(SRC/'jua-latin-400.woff2', OUT/'gg-display-latin.woff2', 'GG Display', 'Regular', {c for c in chars if ord(c) < 0x2200})
+# Gaegu (OFL, no Reserved Font Name) for Lipi's handwritten letters; Jua covers any glyph it lacks.
+cut(SRC/'gaegu-400.woff2', OUT/'gg-hand.woff2', 'GG Hand', 'Regular', hangul | {chr(c) for c in range(0x20, 0x7F)} | set('·…!?,.'))
 for w in ('Regular', 'Bold'):
     missing |= {c for c in cut(SRC/f'Pretendard-{w}.subset.woff2', OUT/f'gg-text-{w.lower()}.woff2', 'GG Text', w, chars) if c in hangul}
 for f in sorted(OUT.glob('gg-*.woff2')): print(f.name, f.stat().st_size)

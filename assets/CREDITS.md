@@ -15,6 +15,7 @@
 |---|---|---|
 | Three.js r181 (`src/vendor/three/`) | MIT | 사용 가능, 원문 `assets/three-license.txt` 동봉 |
 | Jua 글꼴 | SIL Open Font License 1.1 | 사용 가능, 원문 `assets/fonts/Jua-OFL.txt` 동봉 |
+| Gaegu 글꼴 (리피 편지 손글씨, `gg-hand.woff2` 서브셋) | SIL Open Font License 1.1, 예약 이름 없음 | 사용 가능, 원문 `assets/fonts/Gaegu-OFL.txt` 동봉, 원본 `assets/fonts/source/gaegu-400.woff2` |
 | Pretendard 글꼴 | SIL Open Font License 1.1 | 사용 가능, 원문 `assets/fonts/Pretendard-OFL.txt` 동봉 |
 | 화면 글꼴 `gg-display-*`(Jua 기반)·`gg-text-*`(Pretendard 기반) | SIL OFL 1.1 수정본 | 앱 글자만 남긴 서브셋. 두 글꼴 모두 예약 이름(RFN)이 있어 수정본 이름을 'GG Display'·'GG Text'로 바꿈. 원본 `assets/fonts/source/`, 다시 만들기 `python scripts/subset-fonts.py` |
 | GLTFLoader·BufferGeometryUtils (`src/vendor/three/addons/`) | MIT (Three.js r181) | 원문 `assets/three-license.txt` |
@@ -46,7 +47,7 @@
 
 ## 2026-10-19 설정·오프라인 정리
 
-- 글꼴: **Jua** (Google Fonts, SIL Open Font License 1.1), **Pretendard** (SIL Open Font License 1.1). 원문은 `assets/fonts/Jua-OFL.txt`, `assets/fonts/Pretendard-OFL.txt`.
+- 글꼴: **Jua** (Google Fonts, SIL Open Font License 1.1), **Pretendard**, **Gaegu** (SIL Open Font License 1.1). 원문은 `assets/fonts/Jua-OFL.txt`, `assets/fonts/Pretendard-OFL.txt`, `assets/fonts/Gaegu-OFL.txt`.
 - `icons/icon-192.png`, `icons/icon-512.png`: 설치형 앱(PWA) 아이콘. 생성 캐릭터 `mascot_leaf`를 축소해 바탕색 위에 배치했다.
 - `generated/reward_*_thumb.webp`: 보상 그림 5종을 폭 240px로 줄인 썸네일. 원본과 같은 그림이다.
 - 쓰지 않는 그림 `map_island`, `research_bag_flap`, `aloe_leaf_whole`은 저장소 `_unused/`로 옮겨 배포에서 뺐다.
