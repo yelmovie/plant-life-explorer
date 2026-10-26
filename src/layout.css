@@ -276,7 +276,11 @@ body .expedition-brief { display: grid; grid-template-columns: 140px minmax(0,1f
 body .brief-leafy { width: 140px; height: 200px; object-fit: contain; filter: drop-shadow(0 8px 5px #35523a25); }
 body .expedition-brief h3 { font-size: 26px; line-height: 1.35; }
 body .expedition-brief p, body .expedition-brief ol { font-size: 18px; line-height: 1.6; }
-body .expedition-brief ol { display: grid; gap: 8px; padding-left: 24px; }
+body .lipi-letter { position: relative; margin-bottom: 18px; padding: 22px 26px 18px; background: repeating-linear-gradient(#fffaf0 0 33px, #e9dfc4 33px 34px); border: 1px solid #e3d6b3; border-radius: 6px; box-shadow: 0 6px 14px #4a3b1a1f; transform: rotate(-.6deg); font: 21px/34px var(--font-display); color: #3e3524; }
+body .lipi-letter p { margin: 0; font: inherit; }
+body .lipi-letter .letter-tag { position: absolute; top: -14px; left: 18px; padding: 2px 12px; border-radius: 999px; background: #4f7a4c; color: #fffbea; font: 15px/1.6 var(--font-display); transform: rotate(-1.5deg); }
+body .lipi-letter .letter-to { color: #4f7a4c; }
+body .lipi-letter .letter-from { text-align: right; color: #4f7a4c; }
 body .expedition-tool-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; margin-top: 16px; }
 body .expedition-tool { padding: 18px; display: grid; grid-template-columns: 64px minmax(0,1fr); align-content: start; column-gap: 14px; border: 2px solid #d8dfc0; border-radius: 20px; background: #f2f3e6; }
 body .expedition-tool > div { display: grid; place-items: center; grid-column: 1; grid-row: 1 / 4; }

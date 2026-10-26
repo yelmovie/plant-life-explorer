@@ -24,7 +24,7 @@ test('도구와 배지는 실제 미션 완료에서만 계산하고 미리보�
   s.completed[0]=true;assert.equal(earnedTools(s).length,0);s.completed[1]=true;
   for(let n=0;n<3;n++)renderToolPack(s);
   assert.deepEqual(earnedTools(s).map(p=>p.tool),['관찰 렌즈']);assert.equal(rewardCount(s),1);
-  assert.ok(EXPEDITIONS.every(p=>p.goal&&p.steps.length===3&&p.use&&p.standard));
+  assert.ok(EXPEDITIONS.every(p=>p.goal&&p.letter&&p.use&&p.standard));
 });
 test('모든 활동에서 같은 리피와 현장 임무에서 보상까지의 연결이 보인다',()=>{
   const s=freshState(),ui={plant:'cherry',region:'shape',selected:'hyacinth',zoom:1,rotation:0,undo:[],activityMode:'explore'};
