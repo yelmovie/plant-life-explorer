@@ -74,7 +74,7 @@ function applyFieldActionCore(state,ui,action,id=''){
  }
  if(action==='field-sort'){
   const p=FIELD_LEAVES.find(p=>p.id===b);if(!p||!['edge','narrow'].includes(a)||!['yes','no'].includes(c))return '';
-  if(!e.leaves.scans[b].includes(a==='edge'?'edge':'shape'))return feedback(u,'리피: 먼저 돋보기를 잎에 가져가서 그 특징을 살펴봐.');
+  if(!e.leaves.scans[b].includes(a==='edge'?'edge':'shape'))return feedback(u,`리피: ${p.name}은 아직 돋보기로 살펴보지 않았어. 1번 '돋보기로 찾기'에서 먼저 살펴봐.`);
   e.leaves[a][b]=c;u.selected='';const ok=c===(p[a]?'yes':'no');return feedback(u,ok?`${p.name}을 같은 기준으로 놓았어.`:`리피: ${p.clue} 지금 기준은 ${a==='edge'?'톱니가 있는지':'가늘고 긴지'}야.`,ok);
  }
  if(action==='field-season-predict'){
