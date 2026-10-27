@@ -425,20 +425,9 @@ body .settings-tools { display: grid; grid-template-columns: repeat(2, minmax(0,
 body .settings-tools .btn { min-height: 52px; }
 html body[data-screen] .toast { top: calc(var(--hud-top) + 8px); max-width: min(72vw, 680px); font-size: var(--frame-text); }
 
-/* Grouping and season controls sit next to their visual evidence, keeping the
+/* Season controls sit next to their visual evidence, keeping the
    completed states within the same landscape frame as the first interaction. */
 @media (min-width: 761px) {
-  #app .activity-1 .learning-scene { display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: auto; align-content: safe center; padding-block: 6px; }
-  #app .activity-1 .learning-scene > .learning-tabs { grid-column: 1 / -1; }
-  #app .activity-1 .classify-leaves { grid-column: 1; grid-row: 2 / 4; min-height: 180px; max-height: 260px; gap: 10px; }
-  #app .activity-1 .classify-leaves .plant-card { padding: 6px; }
-  #app .activity-1 .classify-leaves img { min-height: 60px; max-height: 150px; }
-  #app .activity-1 .sort-bins { grid-column: 2; grid-row: 2; gap: 10px; }
-  #app .activity-1 .sort-bin { min-height: 130px; padding: 12px; }
-  #app .activity-1 .direct-hint { grid-column: 1; grid-row: 4; }
-  #app .activity-1 .learning-scene > .center { grid-column: 2; grid-row: 3 / 5; }
-  #app .activity-1 .learning-scene > :is(.reason-cards, .rule-result) { grid-column: 1 / -1; }
-  #app .activity-1 .reason-cards .btn { flex-basis: 22%; }
   #app .activity-2 .learning-scene { display: grid; grid-template-columns: minmax(0, 1fr) minmax(240px, 37%); grid-auto-rows: auto; align-content: stretch; }
   #app .activity-2 .learning-scene > .learning-tabs { grid-column: 1 / -1; }
   #app .activity-2 .season-scene { grid-column: 1; grid-row: 2 / 7; min-height: 210px; height: 100%; }
@@ -484,20 +473,6 @@ html body[data-screen] .toast { top: calc(var(--hud-top) + 8px); max-width: min(
   #app .exploration-activity .learning-scene .btn { padding: 8px 10px; }
   #app .exploration-activity :is(.design-layout, .test-layout) { grid-template-columns: minmax(0, 1fr) 240px; gap: 12px; }
   #app .exploration-activity :is(.design-layout, .test-layout) > .learning-note { padding: 12px; }
-  #app .activity-1 .learning-scene { display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: auto; align-content: safe center; padding-block: 6px; }
-  #app .activity-1 .learning-scene > .learning-tabs { grid-column: 1 / -1; }
-  #app .activity-1 .classify-leaves { grid-column: 1; grid-row: 2 / 4; min-height: 150px; max-height: 168px; gap: 6px; }
-  #app .activity-1 .classify-leaves .plant-card { padding: 4px; }
-  #app .activity-1 .classify-leaves img { min-height: 40px; max-height: 90px; }
-  #app .activity-1 .classify-leaves :is(strong, small) { font-size: 16px; }
-  #app .activity-1 .sort-bins { grid-column: 2; grid-row: 2; gap: 8px; }
-  #app .activity-1 .sort-bin { min-height: 105px; padding: 8px; font-size: 18px; }
-  #app .activity-1 .direct-hint { grid-column: 1; grid-row: 4; font-size: 16px; }
-  #app .activity-1 .learning-scene > .center { grid-column: 2; grid-row: 3 / 5; }
-  #app .activity-1 .learning-scene > :is(.reason-cards, .rule-result) { grid-column: 1 / -1; }
-  #app .activity-1 .reason-cards { gap: 6px; }
-  #app .activity-1 .reason-cards .btn { flex-basis: 24%; font-size: 16px; }
-  #app .activity-1 .learning-scene:has(.reason-cards) > .direct-hint { display: none; }
   #app .activity-2 .learning-scene { display: grid; grid-template-columns: minmax(0, 1fr) minmax(240px, 42%); grid-auto-rows: auto; align-content: stretch; }
   #app .activity-2 .learning-scene > .learning-tabs { grid-column: 1 / -1; }
   #app .activity-2 .season-scene { grid-column: 1; grid-row: 2 / 7; min-height: 170px; height: 100%; }

@@ -60,7 +60,11 @@ export function setEffects(on){
 }
 // The header speaker controls both channels; the settings switches control one.
 export function setSound(on){setMusic(on);setEffects(on);}
-export function playClick(){
+export function playClick(){chirp(620,440,.075,.035,'sine');}
+// Card handling: a rising lift, a soft wooden drop into a box, a falling slide back to the tray.
+const DRAG_SOUNDS={lift:[420,680,.09,.03,'sine'],drop:[560,240,.14,.05,'triangle'],back:[380,250,.11,.025,'sine']};
+export function playDragSound(kind){const s=DRAG_SOUNDS[kind];if(s)chirp(...s);}
+function chirp(from,to,length,gain,type){
   if(!effectsEnabled||globalThis.document?.hidden)return;
   const AudioContext=globalThis.window?.AudioContext||globalThis.window?.webkitAudioContext;
   if(!AudioContext)return;
@@ -69,9 +73,9 @@ export function playClick(){
     if(context.state==='suspended')void context.resume().catch(()=>{});
     const tone=context.createOscillator(),volume=context.createGain(),now=context.currentTime;
     currentClick={tone,volume};
-    tone.type='sine';tone.frequency.setValueAtTime(620,now);tone.frequency.exponentialRampToValueAtTime(440,now+.065);
-    volume.gain.setValueAtTime(0,now);volume.gain.linearRampToValueAtTime(.035,now+.006);volume.gain.exponentialRampToValueAtTime(.0001,now+.075);
-    tone.connect(volume);volume.connect(context.destination);tone.start(now);tone.stop(now+.08);
+    tone.type=type;tone.frequency.setValueAtTime(from,now);tone.frequency.exponentialRampToValueAtTime(to,now+length*.87);
+    volume.gain.setValueAtTime(0,now);volume.gain.linearRampToValueAtTime(gain,now+.006);volume.gain.exponentialRampToValueAtTime(.0001,now+length);
+    tone.connect(volume);volume.connect(context.destination);tone.start(now);tone.stop(now+length+.005);
     tone.onended=()=>{tone.disconnect();volume.disconnect();if(currentClick?.tone===tone)currentClick=null;};
   }catch{stopClick();/* Keep controls usable on browsers without audio support. */}
 }

@@ -15,6 +15,8 @@ function loadTexture(key){
  return textures.get(key);
 }
 const colors={water:0x79c8d4,grass:0x96b85d,dry:0xd9b67b,empty:0xbca78a};
+// Turntable on bg_m1_1_scan (1600x900, center/cover on .activity-0): top-face center and width in image pixels.
+const TURNTABLE={x:797,y:563,width:535},LEAF_SIZE=4.2,LEAF_TILT=.5;
 // Seeded random: leaves and petals land in the same places every time the season scene opens.
 const seeded=seed=>()=>{seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return ((t^t>>>14)>>>0)/4294967296;};
 // Twig tips = the outermost crown vertices, spread out by farthest-point sampling.
@@ -77,10 +79,15 @@ export function mountSpatial(host,s,u,send,paint){
  if(kind==='leaf'){
   const key={cherry:'cherry_leaf',ginkgo:'ginkgo_leaf',grass:'grass_leaf'}[u.plant]||'cherry_leaf';
   const texture=loadTexture(key);texture.ready.then(()=>draw()).catch(()=>{textures.delete(key);if(!disposed)showFallback();});
-  const geometry=new THREE.PlaneGeometry(3.9,3.9,28,28),p=geometry.attributes.position;
+  // The leaf rests on the scan table's turntable: petiole at the origin, blade leaning back, a soft shadow under it.
+  const geometry=new THREE.PlaneGeometry(LEAF_SIZE,LEAF_SIZE,28,28),p=geometry.attributes.position;
   for(let i=0;i<p.count;i++)p.setZ(i,Math.sin(p.getX(i)*1.5)*.1+Math.cos(p.getY(i))* .12);
-  geometry.computeVertexNormals();mesh(geometry,mat(0xffffff,{map:texture.texture,transparent:true,side:THREE.DoubleSide,alphaTest:.05}));
-  group.scale.setScalar(u.zoom||1);group.rotation.z=(u.rotation||0)*Math.PI/180;
+  geometry.computeVertexNormals();
+  const stand=new THREE.Group();stand.rotation.x=-LEAF_TILT;group.add(stand);
+  const blade=mesh(geometry,mat(0xffffff,{map:texture.texture,transparent:true,side:THREE.DoubleSide,alphaTest:.05}),0,LEAF_SIZE*.44,0,stand);blade.rotation.z=(u.rotation||0)*Math.PI/180;
+  const shade=document.createElement('canvas');shade.width=shade.height=64;const g=shade.getContext('2d'),fade=g.createRadialGradient(32,32,0,32,32,32);fade.addColorStop(0,'rgba(40,58,30,.38)');fade.addColorStop(1,'rgba(40,58,30,0)');g.fillStyle=fade;g.fillRect(0,0,64,64);
+  const shadow=mesh(new THREE.PlaneGeometry(1,1),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(shade),transparent:true,depthWrite:false}),.15,.01,-LEAF_SIZE*.2);shadow.rotation.x=-Math.PI/2;shadow.scale.set(LEAF_SIZE*.6,LEAF_SIZE*.55,1);extraMaterials.push(shadow.material.map);
+  group.scale.setScalar(u.zoom||1);cameraTarget.set(0,1.3,0);
  }else if(kind==='garden'){
   box(6.45,.35,4.45,0x8b7753,0,-.33);
   s.terrain.forEach((t,i)=>{const tile=box(.98,.18,.98,colors[t],i%6-2.5,-.07,Math.floor(i/6)-1.5);tile.userData.cell=i;tiles.push(tile);const ripples=[];for(let j=0;j<2;j++){const ripple=mesh(new THREE.TorusGeometry(.13+j*.09,.008,5,30),mat(0xc6f5ed),tile.position.x,.04,tile.position.z);ripple.rotation.x=-Math.PI/2;ripple.visible=t==='water';ripples.push(ripple);}waterRipples.push(ripples);});
@@ -201,7 +208,18 @@ export function mountSpatial(host,s,u,send,paint){
  const hit=e=>{const r=canvas.getBoundingClientRect();pointer.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);raycaster.setFromCamera(pointer,camera);return raycaster.intersectObjects(tiles,false)[0]?.object;};
  function setCamera(){const distance=(kind==='garden'?Math.max(7.6,6.5/camera.aspect):7.2)*fit/view.zoom;camera.position.set(Math.sin(view.yaw)*Math.cos(view.pitch)*distance,Math.sin(view.pitch)*distance+cameraTarget.y,Math.cos(view.yaw)*Math.cos(view.pitch)*distance);camera.lookAt(cameraTarget);}
  function draw(){if(disposed||!host.isConnected||flat)return;setCamera();renderer.render(scene,camera);}
- function resize(){if(disposed)return;const r=host.getBoundingClientRect();const w=Math.max(1,r.width),h=Math.max(1,r.height);renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.5));renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();draw();}
+ function resize(){if(disposed)return;const r=host.getBoundingClientRect();const w=Math.max(1,r.width),h=Math.max(1,r.height);renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.5));renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();if(kind==='leaf')placeOnTurntable(r,w,h);draw();}
+ // Shift the view so the world origin lands on the painted turntable, and size the leaf to the turntable.
+ function placeOnTurntable(r,w,h){
+  const bg=host.closest('.activity-0')?.getBoundingClientRect(),k=bg&&Math.max(bg.width/1600,bg.height/900);
+  const x=bg&&bg.left+(bg.width-1600*k)/2+TURNTABLE.x*k-r.left,y=bg&&bg.top+(bg.height-900*k)/2+TURNTABLE.y*k-r.top;
+  const on=!!bg&&x>=w*.15&&x<=w*.85&&y>=h*.45&&y<=h;host.classList.toggle('on-turntable',on);
+  if(!on){camera.clearViewOffset();fit=1;cameraTarget.set(0,1.3,0);return;}
+  const span=2*Math.tan(camera.fov*Math.PI/360)*7.2;
+  fit=Math.max(h*5.4/(span*TURNTABLE.width*k),LEAF_SIZE*.75*h/(span*(y-12)));cameraTarget.set(0,0,0);camera.setViewOffset(w,h,w/2-x,h/2-y,w,h);
+  // The flat picture stands on the same spot, about as tall as the 3D leaf.
+  host.style.setProperty('--turntable-x',`${x}px`);host.style.setProperty('--turntable-y',`${y}px`);host.style.setProperty('--turntable-leaf',`${Math.min(LEAF_SIZE*.8*h/(span*fit),(y-8)/.95)}px`);
+ }
  const observer=new ResizeObserver(resize);observer.observe(host);resize();
  controls.addEventListener('click',e=>{const b=e.target.closest('[data-view]'),v=b?.dataset.view;if(!v||unavailable)return;if(v==='flat'){flat=!flat;view.flat=flat;host.classList.toggle('spatial-flat',flat);b.textContent=flat?'입체로 보기':'그림으로 보기';}if(v==='rotate')view.yaw+=.4;if(v==='zoom')view.zoom=view.zoom>=1.6?1:view.zoom+.2;if(v==='reset')Object.assign(view,initial);views.set(kind,view);draw();},{signal});
  canvas.addEventListener('pointerdown',e=>{if(e.button!==0||drag)return;canvas.setPointerCapture(e.pointerId);drag={id:e.pointerId,x:e.clientX,y:e.clientY,lastX:e.clientX,lastY:e.clientY,cells:new Set()};if(kind==='garden'&&s.page===6&&u.gardenMode!=='plant'){const tile=hit(e);if(tile){drag.cells.add(tile.userData.cell);tile.material.color.setHex(colors[u.brush]);draw();}}},{signal});
@@ -220,5 +238,5 @@ export function mountSpatial(host,s,u,send,paint){
   const label=controls.querySelector('span');if(label)label.textContent=s.page===6&&u.gardenMode!=='plant'?'쓸어서 땅 만들기':'식물을 고르고 땅 누르기';
   resize();
  }};
- activeCleanup=()=>{if(activeGarden?.host===host)activeGarden=undefined;disposed=true;drag=null;abort.abort();cancelAnimationFrame(frame);observer.disconnect();scene.traverse(o=>{if(o.userData.shared)return;o.geometry?.dispose();if(o.material){for(const m of Array.isArray(o.material)?o.material:[o.material])m.dispose();}});extraMaterials.forEach(m=>m.dispose());layer.remove();controls.remove();host.classList.remove('spatial-ready','spatial-flat');};
+ activeCleanup=()=>{if(activeGarden?.host===host)activeGarden=undefined;disposed=true;drag=null;abort.abort();cancelAnimationFrame(frame);observer.disconnect();scene.traverse(o=>{if(o.userData.shared)return;o.geometry?.dispose();if(o.material){for(const m of Array.isArray(o.material)?o.material:[o.material])m.dispose();}});extraMaterials.forEach(m=>m.dispose());layer.remove();controls.remove();host.classList.remove('spatial-ready','spatial-flat','on-turntable');};
 }
