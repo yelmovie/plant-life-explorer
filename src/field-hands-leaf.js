@@ -10,13 +10,13 @@ function drawnRect(img){const r=img.getBoundingClientRect(),nw=img.naturalWidth|
 // Drag the magnifier; resting on a clue spot for a moment records that observation.
 export function mountLens(bench,ui,onAction){
  const lens=bench.querySelector('[data-lens]'),glass=lens.querySelector('.field-lens-glass'),zoom=glass.querySelector('img'),u=ui.fieldMission??={},Z=2.6;
- const gauge=bench.querySelector('[data-clue-gauge]'),total=Object.keys(LENS_SPOTS).length*2;
+ const gauge=bench.querySelector('[data-clue-gauge]'),total=2;
  let drag=null,timer=0,spot='',queued=[];
  const record=key=>{u.lastFound=key;onAction('field-place','lens|scan:'+key);};
  // Sparkles stay on the leaf where a clue was found.
  const sparks=()=>bench.querySelectorAll('[data-spark]').forEach(s=>{const [id,kind]=s.dataset.spark.split(':'),box=s.closest('[data-lens-leaf]'),img=box.querySelector('img');if(!img?.naturalWidth)return;const r=drawnRect(img),b=box.getBoundingClientRect(),[x,y]=LENS_SPOTS[id][kind][0];s.style.left=r.left-b.left+x*r.width+'px';s.style.top=r.top-b.top+y*r.height+'px';s.classList.add('placed');});
  const bump=()=>{if(!gauge)return;const n=Math.min(total,Number(gauge.dataset.clueGauge)+1);gauge.dataset.clueGauge=n;gauge.querySelector('b').textContent=`단서 ${n}/${total}`;gauge.querySelector('.clue-bar i').style.width=n/total*100+'%';gauge.classList.remove('tick');void gauge.offsetWidth;gauge.classList.add('tick');};
- const discover=key=>{lens.classList.remove('charging');const chip=bench.querySelector(`[data-clue="${key}"]`);if(!chip||chip.classList.contains('found'))return;chip.classList.add('found','just-found');chip.textContent=chip.dataset.text;bump();lens.classList.add('found-flash');setTimeout(()=>lens.classList.remove('found-flash'),500);if(drag)queued.push(key);else record(key);};
+ const discover=key=>{lens.classList.remove('charging');const chip=bench.querySelector(`[data-clue="${key}"]`);if(!chip||chip.classList.contains('found'))return;chip.classList.add('found','just-found');chip.textContent=chip.dataset.text;if(key.startsWith('maple:'))bump();lens.classList.add('found-flash');setTimeout(()=>lens.classList.remove('found-flash'),500);if(drag)queued.push(key);else record(key);};
  const look=()=>{const g=glass.getBoundingClientRect(),cx=g.left+g.width/2,cy=g.top+g.height/2;let hit='',over=false;
   for(const box of bench.querySelectorAll('[data-lens-leaf]')){const img=box.querySelector('img'),r=drawnRect(img);if(cx<r.left-30||cx>r.left+r.width+30||cy<r.top-30||cy>r.top+r.height+30)continue;over=true;
    if(zoom.dataset.src!==img.src){zoom.src=img.src;zoom.dataset.src=img.src;}

@@ -8,9 +8,18 @@
 #app .stage-map .island-ground{object-fit:contain;pointer-events:none}
 #app .stage-map .world-node{left:calc(var(--stage-x) - 10.5%);top:calc(var(--stage-y) - 18.72%);width:21%;height:24%;transform:none;opacity:1;min-height:48px;min-width:48px;z-index:auto}
 #app .stage-map .world-building{position:relative;z-index:2;width:100%;height:100%;object-fit:contain;transition:filter .2s,transform .2s}
-#app .stage-map .sleeping.available .world-building{filter:drop-shadow(0 8px 10px #e8ce7780)}
-#app .stage-map .locked .world-building{filter:grayscale(.6) saturate(.6) brightness(.9);opacity:.66}
-#app .stage-map .restored .world-building{filter:drop-shadow(0 5px 10px #e3f7a770)}
+/* Before/after must read at a glance: sleeping places are washed out and misty, restored ones wake in full colour. */
+#app .stage-map .sleeping .world-building{filter:grayscale(.9) saturate(.35) contrast(.82) brightness(1.04) blur(.5px);opacity:.7}
+#app .stage-map .sleeping.available .world-building{filter:grayscale(.7) saturate(.5) contrast(.88) brightness(1.02) drop-shadow(0 0 3px #fff3c4) drop-shadow(0 0 10px #e8c25ab0);opacity:.86}
+#app .stage-map .restored .world-building{filter:saturate(1.3) brightness(1.06) contrast(1.05) drop-shadow(0 0 6px #fff6c8) drop-shadow(0 6px 10px #59782f55);opacity:1}
+#app .stage-map .restored::before,#app .stage-map .restored::after{content:'';position:absolute;pointer-events:none;border-radius:50%}
+#app .stage-map .restored::before{z-index:1;inset:-4% -2% 6%;background:radial-gradient(closest-side,#fff7c2f0,#ffe58a99 45%,#ffe58a00);animation:restored-aura 3.2s ease-in-out infinite alternate}
+#app .stage-map .restored::after{z-index:1;left:10%;right:10%;bottom:4%;height:18%;background:radial-gradient(closest-side,#9fd46acc,#7fbf5a80 55%,#7fbf5a00)}
+@keyframes restored-aura{from{opacity:.75;transform:scale(.96)}to{opacity:1;transform:scale(1.04)}}
+#app .stage-map .just-restored .world-building{animation:restore-wake 1.8s ease-out}
+#app .stage-map .just-restored::before{animation:restore-burst 1.8s ease-out,restored-aura 3.2s 1.8s ease-in-out infinite alternate}
+@keyframes restore-wake{0%{filter:grayscale(1) saturate(.35) brightness(.95);opacity:.6;transform:scale(.94)}55%{filter:grayscale(0) saturate(1.6) brightness(1.3) drop-shadow(0 0 18px #fff1a0);opacity:1;transform:scale(1.06)}100%{filter:saturate(1.3) brightness(1.06) contrast(1.05) drop-shadow(0 0 6px #fff6c8) drop-shadow(0 6px 10px #59782f55);transform:scale(1)}}
+@keyframes restore-burst{0%{opacity:0;transform:scale(.3);box-shadow:0 0 0 0 #fff3b0}35%{opacity:1;transform:scale(1.25);box-shadow:0 0 0 calc(10px / var(--map-scale)) #fff3b0cc}100%{opacity:.75;transform:scale(.96);box-shadow:0 0 0 calc(40px / var(--map-scale)) #fff3b000}}
 #app .stage-map .world-label{z-index:6;bottom:calc(-22px / var(--map-scale));padding:calc(8px / var(--map-scale)) calc(14px / var(--map-scale));gap:calc(9px / var(--map-scale));font-size:calc(17px / var(--map-scale));line-height:1.15;border:calc(1px / var(--map-scale)) solid #e0d8b9;border-radius:calc(18px / var(--map-scale));box-shadow:0 calc(3px / var(--map-scale)) 0 #666d4230;background:#fffced;min-height:calc(56px / var(--map-scale));text-align:left;color:#2a5038}
 #app .stage-map .world-label b{width:calc(30px / var(--map-scale));height:calc(30px / var(--map-scale));min-width:0;font-size:calc(16px / var(--map-scale));background:#e9ecdd;color:#506542;flex-shrink:0}
 #app .stage-map .world-label b svg{width:calc(16px / var(--map-scale));height:calc(16px / var(--map-scale))}
@@ -18,12 +27,19 @@
 #app .stage-map .world-label small svg{width:calc(12px / var(--map-scale));height:calc(12px / var(--map-scale))}
 #app .stage-map .next-stop .world-label{background:#fff7cf;border-color:#b28c37;box-shadow:0 calc(3px / var(--map-scale)) 0 #b38b4560}
 #app .stage-map .next-stop .world-label b{color:white;background:#47754c}
+#app .stage-map .restored .world-label{background:#eef8df;border-color:#79a65c;box-shadow:0 calc(3px / var(--map-scale)) 0 #4f7a3f50}
 #app .stage-map .restored .world-label b{color:white;background:#47754c}
+#app .stage-map .restored .world-label small{color:#3b6d40}
 #app .stage-map .locked .world-label{background:#f1f0e7;color:#53604e;border-style:dashed}
 #app .stage-map .world-stamp{display:none}
 #app .stage-map .world-next{position:absolute;z-index:6;top:calc(-12px / var(--map-scale));padding:calc(5px / var(--map-scale)) calc(12px / var(--map-scale));border-radius:calc(12px / var(--map-scale));background:#335b3c;color:#fffdf0;font-family:var(--font-display);font-size:calc(14px / var(--map-scale));box-shadow:0 4px 12px #1d352330;white-space:nowrap}
-#app .stage-map .world-light{top:12%;right:8%;width:calc(24px / var(--map-scale));height:calc(24px / var(--map-scale));color:#fff0a1;filter:drop-shadow(0 0 8px #ffe276)}
-#app .stage-map .world-light svg{width:100%;height:100%}
+#app .stage-map .world-light{inset:6% 6% 34%;z-index:3;width:auto;height:auto;pointer-events:none;color:#fff0a1;filter:drop-shadow(0 0 8px #ffe276)}
+#app .stage-map .world-light svg{position:absolute;top:0;right:4%;width:calc(26px / var(--map-scale));height:calc(26px / var(--map-scale));animation:sparkle 2.2s ease-in-out infinite}
+#app .stage-map .world-light::before,#app .stage-map .world-light::after{content:'✦';position:absolute;font-size:calc(18px / var(--map-scale));line-height:1;animation:sparkle 2.6s .9s ease-in-out infinite}
+#app .stage-map .world-light::before{left:6%;top:30%}
+#app .stage-map .world-light::after{left:58%;top:4%;font-size:calc(13px / var(--map-scale));animation-delay:1.6s}
+@keyframes sparkle{0%,100%{opacity:.35;transform:scale(.7)}50%{opacity:1;transform:scale(1.15)}}
+@media(prefers-reduced-motion:reduce){#app .stage-map .restored::before,#app .stage-map .just-restored .world-building,#app .stage-map .world-light svg,#app .stage-map .world-light::before,#app .stage-map .world-light::after{animation:none}}
 #app .stage-map .world-core{display:none}
 #app .map-road{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
 #app .map-road polyline{fill:none;stroke:#fff4d2;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1 25;opacity:.65}
@@ -126,3 +142,15 @@ body .map-locked-message .mascot-wrap{width:90px;height:120px;flex-shrink:0}
  body .map-locked-message .mascot-wrap{width:64px;height:90px}
 }
 @media(prefers-reduced-motion:reduce){#app .map-walker.walking img{animation:none}}
+/* Flower path: a tinted band, a petal-dot line and flowers on both sides of the walkable trail. */
+#app .trail-blooms{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:visible}
+#app .trail-blooms polyline{fill:none;stroke-linecap:round;stroke-linejoin:round}
+#app .trail-blooms .bloom-band{stroke:var(--flower-color);stroke-width:36;opacity:.55;filter:blur(2px)}
+#app .trail-blooms .bloom-edge{stroke:#fffdf3;stroke-width:13;stroke-dasharray:0 26;opacity:.95}
+#app .trail-blooms .bloom-petals{stroke:var(--flower-color);stroke-width:8;stroke-dasharray:0 26}
+#app .trail-blooms .petal{fill:var(--flower-color);stroke:#fffdf3;stroke-width:2.5}
+#app .trail-blooms .heart{fill:#fff0a0;stroke:#c9932e;stroke-width:1.5}
+#app .trail-flower{filter:drop-shadow(0 2px 1.5px #26331f8c)}
+#app .trail-flower.fresh{transform-box:fill-box;transform-origin:center;animation:trail-bloom .7s cubic-bezier(.3,1.6,.5,1) both;animation-delay:calc(var(--i) * 70ms + 300ms)}
+@keyframes trail-bloom{from{transform:scale(0) rotate(-90deg);opacity:0}}
+@media(prefers-reduced-motion:reduce){#app .trail-flower.fresh{animation:none}}

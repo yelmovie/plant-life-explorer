@@ -146,3 +146,5 @@
 | `generated-images/originals-20261025/season_cherry_winter_bud.png` | 58ccad1a | `646879bf602107a1` |
 
 2026-10-25 추가: 겨울눈 찾기 렌즈에 `generated/season_cherry_winter_bud.webp`(위 겨울눈 원본을 512px로 줄임)와 `generated/season_sowthistle_crown_bud.webp`를 연결했다. 뒤의 것은 `M2-sowthistle-root.png`의 뿌리 머리 부분을 잘라 만들었다. 새로 생성하지 않았다. 편집용 PNG는 `_source/generated-images/`에 있다.
+
+2026-10-27: 사용자가 제공한 `Meshy_AI_cherry_tree_sapling_1019114653_image-to-3d-texture.glb`를 경량화해 `models/plant_cherry_full.glb`로 정원에 연결했다. 원본은 보존했다. 압축 해제에는 Three.js r181 배포본의 MeshoptDecoder(meshoptimizer, Copyright 2016–2024 Arseny Kapoulkine, MIT)를 사용한다. 원문 라이선스는 `meshopt-license.txt`, 출처와 파일 해시는 `docs/reviews/existing-models-20261027/asset-provenance.json`에 기록했다.

@@ -16,7 +16,7 @@ export const STANDARDS=[
 export const TEXT={
  title:'설정',
  music:'배경 음악',musicVolume:'배경 음악 크기',musicAbsent:'이 탐구에는 배경 음악이 없어요. 관찰에 집중하며 효과음만 들을 수 있어요.',
- map:'탐험 지도',journal:'연구 노트',activityNotes:'이번 활동의 기록',activityHelp:'이번 활동 도움말',
+ map:'탐험 지도',journal:'연구 노트',
  sfx:'효과음',on:'켜짐',off:'꺼짐',
  largeText:'전자칠판용 큰 글자',fullscreen:'전체화면 전환',
  intro:'이 탐험을 하는 이유 다시 보기',

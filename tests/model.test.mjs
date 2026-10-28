@@ -20,8 +20,11 @@ test('이전 페이지는 전체 화면 순서를 따르고 메인에서는 범�
 });
 test('관찰 데이터 없이 분류 정답만으로 통과하지 못한다',()=>{
  const s=freshState();s.groups={cherry:'yes',ginkgo:'no',grass:'no'};assert.equal(pageReady(s,1),false);
- for(const p of PLANTS){recordFeature(s,p.id,'shape',p.id);recordFeature(s,p.id,'edge',p.edge?'yes':'no');}s.classificationEvidence.edge='cherry';assert.equal(pageReady(s,1),false);s.groupsByRule.edge={...s.groups};
- s.rule='narrow';assert.equal(pageReady(s,1),false);s.groups={cherry:'no',ginkgo:'no',grass:'yes'};s.classificationEvidence.narrow='grass';assert.equal(pageReady(s,1),true);
+ for(const p of PLANTS){recordFeature(s,p.id,'shape',p.id);recordFeature(s,p.id,'edge',p.edge?'yes':'no');}assert.equal(pageReady(s,1),false,'근거 카드 없이는 통과하지 못한다');s.classificationEvidence.edge='cherry';
+ // The field mission already sorted by both rules; one rule with its proof is enough for the new leaves.
+ assert.equal(pageReady(s,1),true);
+ const t=freshState();for(const p of PLANTS){recordFeature(t,p.id,'shape',p.id);recordFeature(t,p.id,'edge',p.edge?'yes':'no');}
+ t.rule='narrow';t.groups={cherry:'no',ginkgo:'no',grass:'yes'};assert.equal(pageReady(t,1),false);t.classificationEvidence.narrow='grass';assert.equal(pageReady(t,1),true);
 });
 test('계절 관찰과 증거 연결은 실제 기록을 요구한다',()=>{
  const s=freshState();s.linkedEvidence=['cherry:0','cherry:3'];assert.equal(pageReady(s,3),false);

@@ -1,11 +1,11 @@
 // Field mission 3 by hand. Signature move: press and hold.
-// Step 1: press a palm to heft each model, then push a switch up/down to predict.
+// Step 1: push a switch up/down to predict.
 // Step 2: tap a model into the tank, press it under water and hold against the push back.
-// Step 3: record where each stopped, slice the petiole open, tap its air rooms, pick the matching model.
-const HEFT={air:.32,solid:.92},HOLD_MS=1300,SINK_MS=1800;
+// Step 3: slice the petiole open (its air rooms bubble by themselves), pick the matching model.
+const HOLD_MS=1300,SINK_MS=1800;
 // Cut axis of the petiole picture (bottom-left end to top-right end), in picture fractions.
-const AXIS=[[.21,.875],[.89,.125]],CUT_BINS=20,CUT_NEED=.7,ROOMS_NEED=3;
-const HINT={rooms:'공기 방을 <b>톡톡</b> 눌러 봐. 무엇이 나올까?',reason:'공기 방을 봤지? 같은 원리로 떠 있던 모형을 수조에서 <b>톡</b> 눌러 봐.'};
+const AXIS=[[.21,.875],[.89,.125]],CUT_BINS=20,CUT_NEED=.7;
+const HINT={reason:'공기 방을 봤지? 같은 원리로 떠 있던 모형을 수조에서 <b>톡</b> 눌러 봐.'};
 
 export function mountFloatHands(root,ui,onAction){
  const lab=root?.querySelector('.float-lab');if(!lab)return ()=>{};
@@ -28,20 +28,10 @@ export function mountFloatHands(root,ui,onAction){
   on(el,'pointerup',end);on(el,'pointercancel',end);offs.push(()=>cancelAnimationFrame(raf));
  };
 
- // Step 1: heft, then predict with a vertical switch.
- root.querySelectorAll('[data-heft]').forEach(card=>{
-  const id=card.dataset.heft,palm=card.querySelector('[data-heft-lift]'),fill=card.querySelector('.heft-meter i'),word=card.querySelector('.heft-word'),sw=card.querySelector('[data-heft-switch]'),knob=sw.querySelector('.sw-knob'),track=sw.querySelector('.sw-track');
-  const done=!!card.dataset.done;
-  press(palm,{
-   start:()=>card.classList.add('lifting'),
-   tick:p=>{fill.style.setProperty('--w',Math.max(p*HEFT[id],u.floatLifted?.[id]||done?HEFT[id]:0));card.style.setProperty('--lift',p);},
-   end:p=>{card.classList.remove('lifting');card.style.setProperty('--lift',0);
-    if(u.floatLifted?.[id]||done)return;
-    if(p<.6){fill.style.setProperty('--w',0);word.textContent='조금 더 오래 꾹 눌러 들어 봐';return;}
-    u.floatLifted={...u.floatLifted,[id]:true};fill.style.setProperty('--w',HEFT[id]);word.textContent=id==='air'?'생각보다 가뿐해!':'영차, 묵직해!';card.classList.add('lifted');sw.classList.remove('locked');}
-  });
-  if(done)return;
-  const choose=r=>{knob.style.transform='';if(sw.classList.contains('locked')){nudge(sw);word.textContent='먼저 손바닥을 꾹 눌러 들어 봐';return;}
+ // Step 1: predict with a vertical switch (slide the knob or tap a label).
+ root.querySelectorAll('[data-heft]:not([data-done])').forEach(card=>{
+  const id=card.dataset.heft,word=card.querySelector('.heft-word'),sw=card.querySelector('[data-heft-switch]'),knob=sw.querySelector('.sw-knob'),track=sw.querySelector('.sw-track');
+  const choose=r=>{knob.style.transform='';
    sw.classList.add('set-'+r);word.textContent='딸깍! 예상을 남겼어';later(()=>onAction('field-place',`model:${id}|predict:${r}`),320);};
   let d=null;
   on(knob,'pointerdown',e=>{if(e.button>0)return;e.preventDefault();e.stopPropagation();d={id:e.pointerId,y:e.clientY,dy:0,half:1};knob.setPointerCapture?.(e.pointerId);knob.classList.add('held');});
@@ -92,26 +82,19 @@ export function mountFloatHands(root,ui,onAction){
 
  if(!stage3)return cleanup;
 
- // Step 3a: tap a model in the tank, then the band (surface / bottom) where it stopped.
- let pick='';
+ // Step 3a: before the cut a tank model only nudges the petiole; after it, tapping one links it.
  const models=[...tank.querySelectorAll('[data-tank-model]')],pet=root.querySelector('[data-petiole]');
  models.forEach(m=>on(m,'click',()=>{
   const id=m.dataset.tankModel,phase=lab.dataset.phase;
-  if(phase==='record'){pick=id;models.forEach(x=>x.classList.toggle('picked',x===m));tank.classList.add('picking');speak('이 모형이 멈춘 곳 눈금을 눌러 줘.');}
-  else if(phase==='reason'){m.classList.add('picked');later(()=>onAction('field-place',`reason:air-space|reason:${id}`),450);}
+  if(phase==='reason'){m.classList.add('picked');later(()=>onAction('field-place',`reason:air-space|reason:${id}`),450);}
   else if(phase==='cut')nudge(pet);
- }));
- root.querySelectorAll('[data-float-band]').forEach(b=>on(b,'click',()=>{
-  if(lab.dataset.phase!=='record')return;
-  if(!pick){speak('먼저 기록할 모형을 톡 눌러 줘.');models.forEach(nudge);return;}
-  onAction('field-place',`model:${pick}|observe:${b.dataset.floatBand}`);
  }));
  if(!pet)return cleanup;
 
+ const bubble=r=>{for(let i=0;i<5;i++){const b=document.createElement('i');b.className='air-bubble';b.style.cssText=`left:${r.style.left};top:${r.style.top};--dx:${(Math.random()*40-20).toFixed(0)}px;--s:${(.6+Math.random()*.8).toFixed(2)};animation-delay:${i*90}ms`;pet.append(b);later(()=>b.remove(),1800);}r.classList.remove('popped');void r.offsetWidth;r.classList.add('popped');};
  // Step 3b: slice along the petiole; the skin opens once most of its length is traced.
  const count=root.querySelector('.petiole-count'),trail=pet.querySelector('.cut-trail polyline');
- if(lab.dataset.phase==='cut'&&pet.classList.contains('open'))hint(HINT.rooms);
- if(lab.dataset.phase==='cut'&&!pet.classList.contains('open')){
+ if(lab.dataset.phase==='cut'){
   let d=null;const seen=new Set(),[[ax,ay],[bx,by]]=AXIS,vx=bx-ax,vy=by-ay,len2=vx*vx+vy*vy;
   const norm=e=>{const r=pet.getBoundingClientRect();return [(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height];};
   on(pet,'pointerdown',e=>{if(e.button>0||pet.classList.contains('open'))return;e.preventDefault();d={id:e.pointerId,pts:[]};pet.setPointerCapture?.(e.pointerId);pet.classList.add('cutting');});
@@ -120,21 +103,16 @@ export function mountFloatHands(root,ui,onAction){
    if(dist<.13&&t>=0&&t<=1)seen.add(Math.floor(t*CUT_BINS));
    if(seen.size/CUT_BINS<CUT_NEED)return;
    d=null;u.floatCut=true;pet.classList.remove('cutting');pet.classList.add('open','just-open');trail.setAttribute('points','');
-   count.innerHTML='공기 방 톡톡 <b>0</b> / 3';hint(HINT.rooms);speak('짠! 잎자루 속에 빈 방이 가득해!');});
+   count.textContent='공기 방이 가득해! 톡 누르면 뽀글';speak('짠! 잎자루 속 빈 방에서 공기가 뽀글뽀글 나와!');
+   pet.querySelectorAll('[data-air-room]').forEach((r,i)=>later(()=>bubble(r),250+i*120));
+   later(()=>{lab.dataset.phase='reason';pet.dataset.petiole='reason';hint(HINT.reason);tank.classList.add('choose');},1400);});
   const up=e=>{if(!d||e.pointerId!==d.id)return;d=null;pet.classList.remove('cutting');trail.setAttribute('points','');if(seen.size)speak('잎자루를 따라 끝까지 쓱 그어 봐.');};
   on(pet,'pointerup',up);on(pet,'pointercancel',up);
  }
 
- // Step 3c: tap air rooms; each one lets out a stream of bubbles.
+ // Once open, any air room can still be tapped for another stream of bubbles.
  pet.querySelectorAll('[data-air-room]').forEach(r=>on(r,'pointerdown',e=>{
-  if(!pet.classList.contains('open')||lab.dataset.phase==='record')return;e.stopPropagation();
-  for(let i=0;i<5;i++){const b=document.createElement('i');b.className='air-bubble';b.style.cssText=`left:${r.style.left};top:${r.style.top};--dx:${(Math.random()*40-20).toFixed(0)}px;--s:${(.6+Math.random()*.8).toFixed(2)};animation-delay:${i*90}ms`;pet.append(b);later(()=>b.remove(),1800);}
-  r.classList.remove('popped');void r.offsetWidth;r.classList.add('popped');
-  const pops=u.floatPops=[...new Set([...(u.floatPops||[]),Number(r.dataset.airRoom)])];
-  speak('뽀글뽀글! 공기가 나와.');
-  if(lab.dataset.phase!=='cut')return;
-  count.innerHTML=`공기 방 톡톡 <b>${Math.min(ROOMS_NEED,pops.length)}</b> / 3`;
-  if(pops.length>=ROOMS_NEED)later(()=>{lab.dataset.phase='reason';hint(HINT.reason);tank.classList.add('choose');},700);
+  if(!pet.classList.contains('open'))return;e.stopPropagation();bubble(r);speak('뽀글뽀글! 공기가 나와.');
  }));
 
  return cleanup;

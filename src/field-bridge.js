@@ -1,10 +1,26 @@
-import {comparisonPair, designKey, testDesign} from './model.js';
+import {HABITAT_PLANTS, comparisonPair, designKey, testDesign} from './model.js';
+import {fieldMissionReady} from './field-missions-state.js';
 import {normalizeFieldEvidence} from './field-missions-state.js';
 // Carry only actual choices and tested comparisons. Never award a core completion.
 export function carryFieldEvidence(s, mission) {
   s.fieldBridges??=Array(5).fill(false);
   if(s.fieldBridges[mission])return;
   const e=normalizeFieldEvidence(s.fieldEvidence);
+  // Carry only observations and placements actually completed in the field.
+  if(fieldMissionReady(s,mission)&&mission===1){
+    for(const [field,plant] of [['tree','cherry'],['herb','sowthistle']]){
+      if(e.seasons.predictions[field]&&!s.seasonPrediction[plant])s.seasonPrediction[plant]=e.seasons.predictions[field];
+      if(!s.undergroundSeen.includes(plant))s.undergroundSeen.push(plant);
+      for(const n of [3,0]){const key=`${plant}:${n}`;if(!s.seasonalRecords.includes(key))s.seasonalRecords.push(key);s.seasonPhotos[key]??={underground:true};if(!s.linkedEvidence.includes(key))s.linkedEvidence.push(key);}
+    }
+  }
+  // The field cut already showed air bubbling out of the petiole, so the same lab page is not repeated.
+  if(fieldMissionReady(s,mission)&&mission===2&&e.float.reason==='air'){s.experiment.step=Math.max(4,s.experiment.step);s.experimentAnswer='air';}
+  if(fieldMissionReady(s,mission)&&mission===3&&!s.gardenReviewed&&!s.terrain.some(t=>t!=='empty')&&!Object.keys(s.garden).length){
+    s.terrain=['water','water','grass','grass','dry','dry','water','empty','grass','empty','dry','empty',...Array(12).fill('empty')];
+    s.garden={hyacinth:0,cherry:2,aloe:4};s.gardenReviewed=true;
+  }
+  if(fieldMissionReady(s,mission)&&mission===3)s.gardenReasons=[...new Set([...s.gardenReasons,...HABITAT_PLANTS.filter(p=>s.reasons[p.id]===p.id).map(p=>p.id)])];
   if(mission===1){
     for(const [field,core] of [['tree','cherry'],['herb','sowthistle']])
       if(e.seasons.predictions[field]&&!s.seasonPrediction[core])s.seasonPrediction[core]=e.seasons.predictions[field];
@@ -14,10 +30,10 @@ export function carryFieldEvidence(s, mission) {
     if(b.prediction&&!s.testPrediction)s.testPrediction=b.prediction;
     if(!s.tests.length && b.delivered){
       s.design={...s.design,surface:b.design.surface,cover:b.design.cover};
-      s.tests=b.tests.filter(t=>t.pocket===b.design.pocket).map(testDesign);
+      s.tests=b.tests.map(testDesign);
       for(const part of ['surface','cover']){
         const c=b.comparisons[part],before=b.tests.find(t=>t.key===c?.before),after=b.tests.find(t=>t.key===c?.after);
-        if(!before||!after||before.pocket!==b.design.pocket||after.pocket!==b.design.pocket||before[part]===after[part]||before[part==='surface'?'cover':'surface']!==after[part==='surface'?'cover':'surface'])continue;
+        if(!before||!after||before[part]===after[part]||before[part==='surface'?'cover':'surface']!==after[part==='surface'?'cover':'surface'])continue;
         s.inventionExplanations[part]={before:designKey(before),key:designKey(after),part};
         if(part==='surface')s.design.observed=s.design.linked=true;
       }
@@ -29,8 +45,8 @@ export function carryFieldEvidence(s, mission) {
 }
 export const BRIDGE_NOTES=[
   '새 표본 적용 · 현장에서 찾은 모양과 가장자리 기준을 벚나무·은행나무·강아지풀에 써 보자.',
-  '관찰 기록 남기기 · 현장의 첫 예상을 이어 쓰고, 시간 손잡이로 겨울과 다음 봄의 증거를 사진에 담자.',
-  '새 상황 실험 · 모형의 뜨고 가라앉음을 살펴봤어. 이번에는 실제 식물의 잎자루에서 공기의 증거를 찾아보자.',
-  '내 정원 설계 · 현장의 빗물 단서를 바탕으로 물가·풀밭·건조 구역의 크기와 모양을 직접 정하자.',
-  '현장 가방 이어 쓰기 · 바깥 주머니는 닫힌 상태로 두고, 본 탐구에서는 공책을 담는 겉면과 입구 두 부품에 집중해. 같은 조건의 시험과 비교 증거는 가져왔어.'
+  '현장에서 이은 겨울과 봄의 기록을 다시 보고, 두 식물의 변화를 설명해 보자.',
+  '현장에서 잎자루 속 공기 방을 확인했어. 이번에는 부레옥잠·알로에·벚나무의 특징과 사는 곳을 이어 보자.',
+  '현장에서 복구한 정원을 가져왔어. 자리를 살펴보고 까닭을 고르거나 땅 모양을 바꿔 보자.',
+  '현장 가방 이어 쓰기 · 현장에서 한 시험과 비교 증거를 가져왔어. 아직 확인하지 않은 부품 하나만 더 비교해 보자.'
 ];

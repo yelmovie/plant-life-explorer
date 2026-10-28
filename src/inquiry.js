@@ -18,5 +18,5 @@ export function checkClassification(s){
  const conflicts=PLANTS.filter(p=>s.groups[p.id]&&s.groups[p.id]!== (p[s.rule]?'yes':'no')).length;
  return {key:classificationKey(s),missing,conflicts,valid:!missing&&!conflicts};
 }
-export function seasonEvidenceReady(s){return [3,0].every(n=>{const key=`${s.seasonPlant}:${n}`;return s.seasonPhotos[key]&&s.seasonalRecords.includes(key)&&s.linkedEvidence.includes(key);});}
+export function seasonEvidenceReady(s){return [3,0].every(n=>{const key=`${s.seasonPlant}:${n}`;return s.seasonPhotos[key]&&s.seasonalRecords.includes(key);});}
 export function habitatChain(s,id){const p=HABITAT_PLANTS.find(p=>p.id===id);return !!p&&s.habitats[id]===p.habitat&&s.habitatFeatures?.[id]===id;}

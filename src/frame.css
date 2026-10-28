@@ -58,7 +58,6 @@
 #app .today-panel .btn { min-height: 48px; font-size: 17px; }
 
 #app .guide-talk { display: flex; flex-direction: column; align-items: stretch; justify-content: flex-end; gap: 4px; flex: 1 0 auto; min-height: 0; }
-#app .today-panel .field-access-help > summary { min-height: 44px; font: 16px/1.3 var(--font-body); color: #5b6a52; text-decoration: underline; text-underline-offset: 3px; }
 #app .exploration-activity .guide-talk .guide-bubble {
   max-height: none; overflow: visible; padding: 11px 14px; font-size: var(--bubble-text); line-height: 1.45;
   border-radius: 20px 20px 20px 6px; scrollbar-width: thin; transition: background .2s, border-color .2s;
@@ -103,7 +102,9 @@
 #app .field-season-predictions section { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 12px; border-radius: 18px; background: #fffdf1; box-shadow: 0 4px 0 #42503520; }
 #app .field-season-predictions section .mission-tool { width: 100%; }
 #app .field-predict-picture { border-radius: 14px; overflow: hidden; }
-#app .field-season-predictions .field-predict-picture .season-atlas { height: 150px; min-height: 0; }
+/* Each atlas quadrant is 3:2, so the box keeps that ratio instead of stretching to the card width. */
+#app .field-season-predictions .field-predict-picture { width: min(100%, calc(clamp(150px, 30vh, 240px) * 1.5)); margin-inline: auto; }
+#app .field-season-predictions .field-predict-picture .season-atlas { height: auto; min-height: 0; aspect-ratio: 3 / 2; }
 #app .field-bag-predict { display: grid; grid-template-columns: minmax(180px, 34%) minmax(0, 1fr); align-items: center; gap: 18px; }
 #app .field-bag-predict .field-predict-picture { padding: 8px; background: #fffdf1; }
 #app .field-bag-predict .bag-art { max-height: 220px; }
@@ -141,10 +142,6 @@ dialog::backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; backgro
 #app .field-time-slot .field-bud-picture { height: 115px; }
 #app .field-env-token { flex-direction: column; gap: 2px; padding: 6px 16px 8px; }
 #app .field-habitat-picture, #app .habitat-picture { width: 84px; height: 74px; object-fit: contain; filter: drop-shadow(0 4px 3px #2f3b2a2e); }
-#app .link-board .habitat-picture { width: 64px; height: 56px; flex-shrink: 0; }
-#app .link-board .btn:has(.habitat-picture) { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto auto; column-gap: 8px; justify-items: start; text-align: left; padding: 6px 10px; }
-#app .link-board .btn:has(.habitat-picture) .habitat-picture { grid-row: 1 / 3; }
-#app .link-board .plant-thumb { width: 44px; height: 44px; object-fit: contain; flex-shrink: 0; }
 #app .terrain-tools .habitat-picture { width: 44px; height: 38px; }
 #app .final-habitat-choices .btn { flex-direction: column; gap: 2px; min-width: 120px; padding: 8px 16px 10px; }
 #app .final-habitat-choices .habitat-picture { width: 92px; height: 80px; }
@@ -162,8 +159,6 @@ dialog::backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; backgro
 /* Short labels never break into a column of single syllables. */
 @media (max-width: 1100px) {
   #app .activity-2 .timeline .btn { white-space: nowrap; }
-  #app .link-board .habitat-picture { width: 40px; height: 36px; }
-  #app .link-board .btn:has(.habitat-picture) { column-gap: 6px; padding: 6px 8px; }
 }
 #app :is(.field-garden-zone strong, .field-garden-zone .field-zone-name, .field-hotspot, .mission-step span) { text-wrap: balance; }
 
@@ -219,6 +214,121 @@ dialog::backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; backgro
 #app .season-scene:has(> #season-art.spatial-ready) > .btn { top: 8px; bottom: auto; }
 #app #season-art .spatial-controls > span { display: none; }
 
+/* Petiole inquiry: reserve the scene height even when large text makes panels height:auto. */
+#app .activity-4 .lab-scene[data-spatial] {
+  background: linear-gradient(#deeff0ed, #edf2dfe8); border-radius: 22px;
+  border: 1px solid #f5faeb; box-shadow: 0 6px 20px #294c3520;
+}
+#app .activity-4 .lab-scene.spatial-flat { padding: 0 !important; }
+#app .activity-4 .lab-scene[data-spatial] .specimen-focus {
+  inset: 14px 14px 66px; width: auto; height: auto; max-height: none;
+  transform: none; padding: 0 0 34px;
+}
+#app .activity-4 .lab-scene .water-level { left: 8%; right: 8%; bottom: 64px; }
+#app .activity-4 .lab-scene.submerged.spatial-ready > .water-level { visibility: visible; z-index: 3; pointer-events: none; }
+#app .activity-4 .lab-scene .spatial-controls { bottom: 8px; }
+#app .activity-4 .lab-scene .spatial-controls > span { display: none; }
+#app .activity-4 .lab-scene.spatial-flat::after { display: none; }
+@media (min-width: 901px) and (orientation: landscape) {
+  body #app .exploration-activity.activity-4 .learning-scene {
+    display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(260px, 1fr);
+    grid-template-rows: minmax(0, 1fr); height: 100%; min-height: 0;
+    align-items: stretch; align-content: stretch; gap: 14px; overflow: hidden;
+  }
+  #app .activity-4 .experiment-stage[data-spatial] { height: 100%; min-height: 0; grid-column: 1; grid-row: 1; }
+  #app .activity-4 .lab-dock {
+    grid-column: 2; grid-row: 1; grid-template-columns: minmax(0, 1fr);
+    align-self: center; max-height: 100%; overflow-y: auto; padding: 14px;
+  }
+  #app .activity-4 .lab-dock :is(.prediction, .reason-cards) { grid-template-columns: minmax(0, 1fr); }
+  #app .activity-4 .lab-dock .center .btn { width: 100%; }
+  #app .activity-4 .lab-dock .rule-result { width: auto; padding: 0; background: none; }
+}
+@media (max-width: 900px), (orientation: portrait) {
+  #app .activity-4 .experiment-stage[data-spatial] {
+    flex: none; height: clamp(320px, 45dvh, 480px); min-height: 320px;
+  }
+}
+
+/* Garden: keep a large work surface, with materials and planting choices on the side. */
+#app .garden-workbench .garden-frame[data-spatial] {
+  border: 1px solid #f6fae8; border-radius: 22px;
+  background: linear-gradient(#d8edf1f2, #edf0d9f5); box-shadow: 0 6px 20px #294c3520;
+  overflow: hidden;
+}
+#app .garden-workbench .garden-frame .spatial-controls {
+  left: 10px; right: 10px; top: auto; bottom: 8px; width: auto;
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px;
+  padding: 8px; border-radius: 16px; background: #fffcedeb; pointer-events: auto;
+}
+#app .garden-workbench .garden-frame .spatial-controls button {
+  width: 100%; min-width: 0; height: auto; min-height: 48px;
+  font-size: 16px; white-space: normal; padding: 6px 8px;
+}
+#app .garden-frame .spatial-controls [data-view="orbit"] { grid-column: span 2; }
+#app .garden-frame .spatial-controls [data-view="orbit"][aria-pressed="true"] { background: #315d40; color: #fffcef; border-color: #315d40; }
+#app .garden-frame .garden-angle {
+  grid-column: span 2; display: flex; align-items: center; justify-content: center; gap: 6px;
+  color: #31543b; font: 16px/1.25 var(--font-display);
+}
+#app .garden-frame .garden-angle select {
+  min-width: 0; width: 60%; min-height: 48px; padding: 5px 8px;
+  color: inherit; font: inherit; background: #fffdf3; border: 1px solid #b9c7a2; border-radius: 10px;
+}
+#app .garden-workbench .garden-frame .spatial-controls > .garden-view-hint {
+  grid-column: 1 / -1; display: block; margin: 0; padding: 0; text-align: center;
+  background: none; font: 16px/1.3 var(--font-body); color: #415c3d;
+}
+#app .garden-workbench .garden-frame.spatial-flat .spatial-controls { display: flex; justify-content: center; }
+#app .garden-workbench .garden-frame.spatial-flat { padding: 0 8px var(--garden-controls-height, 80px) !important; }
+#app .garden-workbench .garden-frame.spatial-flat .spatial-controls :is(.garden-angle,.garden-view-hint) { display: none; }
+#app .garden-workbench .garden-frame.spatial-flat .spatial-controls [data-view="flat"] { width: auto; }
+@media (min-width: 1200px) and (orientation: landscape) {
+  #app .garden-workbench .garden-frame .spatial-controls { grid-template-columns: minmax(100px, 1fr) minmax(210px, 1.5fr) 48px 48px 48px minmax(104px, 1fr); }
+  #app .garden-frame .spatial-controls [data-view="orbit"], #app .garden-frame .garden-angle { grid-column: span 1; }
+  #app .garden-workbench .garden-frame .spatial-controls > .garden-view-hint { grid-column: 1 / -1; }
+}
+@media (min-width: 901px) and (orientation: landscape) {
+  body.large-text #app .exploration-activity:is(.activity-6,.activity-7) { height: 100dvh; min-height: 100dvh; grid-template-rows: 56px minmax(0,1fr) auto; overflow: hidden; }
+  body #app .exploration-activity:is(.activity-6,.activity-7) .field-guide { overflow-y: auto; }
+  body #app .exploration-activity:is(.activity-6,.activity-7) .learning-scene { height: 100%; min-height: 0; overflow: hidden; }
+  #app .garden-workbench {
+    display: grid; height: 100%; min-height: 0;
+    grid-template-columns: minmax(0, 1fr) clamp(220px, 21vw, 290px);
+    grid-template-rows: auto auto minmax(0, 1fr); gap: 12px;
+  }
+  #app .garden-workbench .garden-frame[data-spatial] { grid-column: 1; grid-row: 1 / -1; height: 100%; min-height: 0; }
+  #app .garden-workbench .garden-modes { grid-column: 2; grid-row: 1; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); align-items: stretch; }
+  #app .garden-workbench .garden-modes .btn { white-space: normal; min-width: 0; }
+  #app .garden-workbench :is(.terrain-tools,.garden-plant-tray) {
+    grid-column: 2; grid-row: 2; display: flex; flex-direction: column; align-items: stretch;
+    gap: 6px; min-height: 0; flex-wrap: nowrap;
+  }
+  #app .garden-workbench .garden-plant-pick { width: 100%; min-width: 0; min-height: 64px; }
+  #app .garden-workbench .terrain-tools .btn { justify-content: flex-start; min-height: 48px; }
+  #app .garden-workbench .terrain-tools { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); }
+  #app .garden-workbench .terrain-tools .btn { white-space: normal; min-width: 0; padding-inline: 8px; }
+  #app .garden-workbench .terrain-tools .btn:last-child { grid-column: 1 / -1; }
+  #app .garden-workbench .terrain-tools .habitat-picture { width: 42px; height: 36px; }
+  #app .garden-workbench .garden-feedback { grid-column: 2; grid-row: 3; align-self: start; min-height: 0; max-height: 100%; overflow-y: auto; padding: 10px; }
+  #app .garden-workbench .garden-feedback .reason-cards { flex-direction: column; align-items: stretch; }
+  #app .garden-workbench .garden-feedback .reason-cards .btn { flex: none; width: 100%; min-width: 0; white-space: normal; }
+  #app .garden-workbench .garden-feedback .direct-hint { text-align: left; }
+  #app .garden-feedback :is(.garden-placement-progress,.garden-terrain-status) { flex-direction: column; align-items: stretch; gap: 6px; }
+  #app .garden-feedback .garden-terrain-status { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); }
+  #app .garden-feedback .garden-terrain-status > :nth-child(n+3) { grid-column: 1 / -1; }
+  #app .garden-workbench .garden-terrain-status > .btn { white-space: normal; }
+  #app .activity-7 .garden-workbench { grid-template-rows: auto minmax(0, 1fr) auto; }
+  #app .activity-7 .garden-workbench .garden-plant-tray { grid-row: 1; }
+  #app .activity-7 .garden-workbench .garden-feedback { grid-row: 2; }
+  #app .activity-7 .garden-workbench > .btn { grid-column: 2; grid-row: 3; }
+}
+@media (max-width: 900px), (orientation: portrait) {
+  #app .garden-workbench { display: flex; flex-direction: column; height: auto; gap: 10px; }
+  #app .garden-workbench .garden-frame[data-spatial] { flex: none; height: clamp(420px, 52dvh, 640px); min-height: 420px; }
+  #app .garden-workbench :is(.garden-modes,.terrain-tools,.garden-plant-tray) { flex-wrap: wrap; }
+}
+
 /* ── 7. Stacked layouts (portrait, ≤900px): 오늘의 연구 + Leafy become one strip above a full-width stage. ── */
 @media (max-width: 900px), (orientation: portrait) {
   html body.activity-open { overflow: auto; }
@@ -245,3 +355,42 @@ dialog::backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; backgro
   #app .mission-objective .objective-next, #app .field-mission .mission-loot { animation: none; }
 }
 @media print { #app .today-panel, #app .guide-talk { display: none; } }
+/* Habitat card: one plant, one question at a time; answers stack into a three-step chain. */
+#app .habitat-quiz { display: flex; flex-direction: column; gap: 12px; }
+#app .habitat-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+#app .habitat-tab { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 56px; padding: 6px 10px; border: 2px solid #d8d2b8; border-radius: 16px; background: #fffdf3; color: var(--scene-ink); font: 18px/1.2 var(--font-display); }
+#app .habitat-tab .plant-thumb { width: 40px; height: 40px; object-fit: contain; }
+#app .habitat-tab.selected { border-color: #3d663f; background: #e6f0d3; box-shadow: 0 4px 0 #3d663f40; }
+#app .habitat-tab.done > svg { color: #3d8a3c; }
+#app .habitat-card { display: grid; grid-template-columns: minmax(130px, .6fr) minmax(0, 2fr); gap: 16px; align-items: start; align-content: start; padding: 14px; border-radius: 20px; background: #fffdf3e6; }
+#app .habitat-subject { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+#app .habitat-subject > :first-child { width: 100%; height: 170px; object-fit: contain; }
+#app .habitat-subject figcaption { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+#app .habitat-subject strong { font: 20px/1.2 var(--font-display); color: var(--scene-ink); }
+#app .habitat-subject small { color: #6b7262; font-size: 14px; }
+#app .habitat-chain { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin: 0 0 10px; padding: 0; }
+#app .habitat-chain li { display: flex; flex-direction: column; gap: 2px; padding: 6px 10px; border: 2px solid transparent; border-radius: 12px; background: #f1efe4; color: #7a8071; font-size: 14px; }
+#app .habitat-chain li > b { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: #d8d2b8; color: #fff; font-size: 13px; }
+#app .habitat-chain li strong { font: 15px/1.3 var(--font-display); color: inherit; word-break: keep-all; }
+#app .habitat-chain li.now { border-style: dashed; border-color: #c9a54c; background: #fff7d6; color: #6b5420; }
+#app .habitat-chain li.now > b { background: #c9a54c; }
+#app .habitat-chain li.done { background: #e3f0d3; color: #2f4a26; }
+#app .habitat-chain li.done > b { background: #3d8a3c; }
+#app .habitat-question { margin: 4px 0 10px; font: 22px/1.35 var(--font-display); color: var(--scene-ink); word-break: keep-all; }
+#app .habitat-question.done { display: flex; align-items: center; gap: 8px; color: #2f6b34; }
+#app .habitat-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+#app .habitat-option { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-height: 96px; padding: 10px; border: 2px solid #d8d2b8; border-radius: 16px; background: #fff; color: var(--scene-ink); font-size: 18px; text-align: center; word-break: keep-all; }
+#app .habitat-option .habitat-picture { width: 84px; height: 66px; object-fit: contain; }
+#app .habitat-option small { color: #6b7262; font-size: 14px; }
+#app .habitat-option.picked { border-color: #d08a3a; background: #fff3e0; }
+#app .habitat-options.text .habitat-option { min-height: 84px; }
+#app .habitat-next { margin-top: 4px; min-height: 56px; font-size: 18px; }
+#app .habitat-all { margin: 0; color: #2f6b34; font: 18px/1.4 var(--font-display); }
+@media (max-width: 900px) {
+  #app .habitat-card { grid-template-columns: 1fr; }
+  #app .habitat-subject { flex-direction: row; justify-content: center; }
+  #app .habitat-subject > :first-child { width: 72px; height: 72px; }
+  #app .habitat-question { font-size: 19px; }
+  #app .habitat-option { min-height: 80px; font-size: 16px; padding: 8px; }
+  #app .habitat-option .habitat-picture { width: 64px; height: 50px; }
+}

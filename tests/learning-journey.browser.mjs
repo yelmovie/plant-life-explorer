@@ -70,7 +70,6 @@ try{
  // Hand: the magnifier rests on the maple's centre and edge; the rest use the keyboard slots.
  await page.waitForFunction(()=>[...document.querySelectorAll('[data-lens-leaf] img')].every(i=>i.complete&&i.naturalWidth));
  await lens('maple','shape',[.5,.6]);await lens('maple','edge',[.33,.33]);
- for(const p of ['pine','camellia'])for(const region of ['shape','edge'])await place('lens',`scan:${p}:${region}`);
  // Hand: throw the top card (maple) into the wrong basket first.
  await stage(1);assert.equal(await page.locator('[data-swipe-top]').getAttribute('data-swipe-card'),'maple');
  await stroke(line(await center(page.locator('[data-swipe-top]')),await center(page.locator('[data-swipe-bin="no"]')),8));
@@ -83,10 +82,11 @@ try{
  await a('feature-answer','ginkgo');await a('feature-answer','no');await page.getByRole('button',{name:'강아지풀 관찰하기',exact:true}).tap();
  await a('feature-answer','grass');await a('feature-answer','no');
  await snap('leaves-recorded');await completePage();
- for(const rule of ['edge','narrow']){
+ // The field already sorted by both rules, so one rule with its proof finishes the new leaves.
+ for(const rule of ['edge']){
   await a('rule',rule);
   for(const p of ['cherry','ginkgo','grass']){await a('select-plant',p);await a('assign-group',(rule==='edge'?p==='cherry':p==='grass')?'yes':'no');}
-  await a('check-rule');await a('classification-proof',rule==='edge'?'cherry:edge':'grass:shape');
+  assert.equal(await page.locator('[data-action="check-rule"]').count(),0);await a('classification-proof',rule==='edge'?'cherry:edge':'grass:shape');
  }
  await completePage();await missionDone(0);
 
@@ -100,69 +100,61 @@ try{
  await stroke(line(await center(page.locator('[data-link-handle="herb"]')),await center(page.locator('[data-link-target="herb"] .link-zone.lower')),10));
  await evidence(`JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.seasons.links.herb==='root'`);
  for(const [n,kind] of [[1,'tree'],[2,'herb']]){
-  await stage(n);assert.doesNotMatch(await page.locator(`[data-time-dial="${kind}"]`).innerText(),/겨울|초봄|다음 봄/);
-  for(const [i,phase] of ['winter','bud','spring'].entries())await place(`frame:${kind}:${phase}`,`order:${kind}:${i}`);
+  await stage(n);
+  await a('field-season-turn',kind);
   await a('field-season-clue',kind+':'+(kind==='tree'?'branches':'rootbud'));
  }
  await explore();assert.equal((await saved()).seasonPrediction.cherry,'none');
- for(const plant of ['cherry','sowthistle']){await a('season-plant',plant);await a('season','3');if(await page.getByRole('button',{name:/땅속 닫기/}).count()===0)await a('underground');await a('record-season');await a('season','0');await a('record-season');}
- await completePage();
- for(const plant of ['cherry','sowthistle']){await a('season-plant',plant);await a('season-evidence','3');await a('season-evidence','0');await a('season-explain','growth');}
+ assert.equal((await saved()).page,3);assert.equal((await saved()).seasonalRecords.length,4);
+ for(const plant of ['cherry','sowthistle']){await a('season-plant',plant);await a('season-explain','growth');}
  await completePage();await missionDone(1);
 
  await enter(2);
- // Hand: hold the palm until the air model is lifted, then push its switch down (sink).
- const palm=page.locator('[data-heft="air"] [data-heft-lift]');
- // A re-render can swap the card under a held finger; lift again until it reports lifted.
- for(let i=0;i<3&&!await page.locator('[data-heft="air"].lifted').count();i++)
-  await stroke([await center(palm)],()=>page.waitForFunction(()=>Number(document.querySelector('[data-heft="air"]')?.style.getPropertyValue('--lift'))>=.9,null,{timeout:5000}).catch(()=>{}));
- await page.locator('[data-heft="air"].lifted').waitFor();
+ // Hand: push the air model's switch down (sink).
  const knob=await center(page.locator('[data-heft="air"] .sw-knob'));await stroke(line(knob,[knob[0],knob[1]+80],8));
  await evidence(`JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.float.predictions.air==='sink'`);await place('model:solid','predict:float');await stage(1);
  for(const model of ['air','solid'])await place('model:'+model,'tank');await stage(2);
- await place('model:air','observe:sink');await hint();await place('model:air','observe:float');await place('model:solid','observe:sink');await place('reason:air-space','reason:air');
- await explore();await a('experiment-predict','none');await a('lab-next','cut');await a('lab-next','water');await a('press-petiole',undefined,'.center ');await a('experiment-answer','air');
- await completePage();
- for(const [p,habitat] of [['hyacinth','water'],['aloe','dry'],['cherry','grass']]){await a('select-plant',p);await a('habitat',habitat);await a('habitat-feature',p);await a('habitat-answer',p);}
+ await hint();await place('reason:air-space','reason:air');
+ // The field cut already showed the petiole's air, so the repeated lab page is skipped.
+ await explore();assert.equal((await saved()).page,5);
+ for(const [p,habitat] of [['hyacinth','water'],['aloe','dry'],['cherry','grass']]){await a('habitat-plant',p);await a('habitat',habitat);await a('habitat-feature',p);await a('habitat-answer',p);}
  await completePage();await missionDone(2);
 
- await enter(3);await place('environment:dry','environment:pond');await hint();
- // Hand: one stream from the meadow that pools in the pond leaves the ridge dry.
- await stroke(line(await center(page.locator('.zone-meadow')),await center(page.locator('.zone-pond')),16));
+ // One cloud tap rains on the bare beds and makes their ground.
+ await enter(3);await a('field-garden-ground');
  await evidence(`(g=>g.pond==='water'&&g.meadow==='grass'&&g.ridge==='dry')(JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.garden.environments)`);
- await stage(1);await place('plant:hyacinth','plant:ridge');
+ // A wrong bed refuses the plant; Leafy's hint, then the right beds.
+ await stage(1);await place('plant:hyacinth','plant:ridge');assert.deepEqual((await saved()).fieldEvidence.garden.plants,{});await hint();
  for(const [plant,zone] of [['hyacinth','pond'],['cherry','meadow'],['aloe','ridge']])await place('plant:'+plant,'plant:'+zone);
  await stage(2);await a('field-garden-rain');await explore();
- for(const [brush,cells] of [['water',[0,1,6]],['grass',[2,3,8]],['dry',[4,5,10]]]){await a('brush',brush);for(const cell of cells)await a('garden-cell',String(cell));}
- await a('garden-ready');for(const [plant,cell] of [['hyacinth',0],['cherry',2],['aloe',4]]){await a('select-plant',plant);await a('garden-cell',String(cell));}
- await snap('garden-designed');await completePage();
- for(const plant of ['hyacinth','cherry','aloe']){await a('select-plant',plant);await a('garden-answer',plant);}
+ assert.equal((await saved()).page,7);assert.deepEqual((await saved()).garden,{hyacinth:0,cherry:2,aloe:4});
+ await snap('garden-designed');
+ // Reasons chosen for the same plants in mission 3 come along; nothing is asked twice.
+ assert.deepEqual([...(await saved()).gardenReasons].sort(),['aloe','cherry','hyacinth']);
  await completePage();await missionDone(3);
 
  await enter(4);await a('field-bag-predict','surface');
- // Hand: tap dials (plain→lotus, open→flap, open), then trace the dotted seam all the way round.
- for(const [part,taps] of [['surface',2],['cover',2],['pocket',1]])for(let i=0;i<taps;i++)await page.locator(`[data-bag-dial="${part}"]`).tap();
- const seam=await page.locator('[data-bag-stitch]').boundingBox(),m=13,corners=[[m,m],[seam.width-m,m],[seam.width-m,seam.height-m],[m,seam.height-m],[m,m]].map(([x,y])=>[seam.x+x,seam.y+y]);
- await stroke(corners.flatMap((p,i)=>i?line(corners[i-1],p,24).slice(1):[p]));
- await evidence(`(b=>b.assembled.length===3&&b.design.surface==='lotus'&&b.design.cover==='flap'&&b.design.pocket==='open')(JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.bag)`);
- await stage(1);await a('field-bag-test');await snap('pocket-open-test');
+ // Hand: tap dials (plain→lotus, open); choosing both assembles the bag.
+ for(const [part,taps] of [['surface',2],['cover',1]])for(let i=0;i<taps;i++)await page.locator(`[data-bag-dial="${part}"]`).tap();
+ await evidence(`(b=>b.assembled.length===2&&b.design.surface==='lotus'&&b.design.cover==='open')(JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.bag)`);
+ await stage(1);const [cx,cy]=await center(page.locator('[data-bag-cloud]'));await page.mouse.click(cx,cy);
+ await evidence(`JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.bag.tests.length===1`);await snap('cover-open-test');
  const openArt=await page.locator('[data-bag-stage] .bag-art').getAttribute('aria-label');
- await place('part:pocket:flap','part:pocket');await a('field-bag-test');await snap('pocket-closed-test');
+ await place('part:cover:flap','part:cover');await a('field-bag-test');await snap('cover-closed-test');
  const closedArt=await page.locator('[data-bag-stage] .bag-art').getAttribute('aria-label');assert.notEqual(openArt,closedArt);
- const trials=(await saved()).fieldEvidence.bag.tests;assert.equal(trials[0].pocketDry,false);assert.equal(trials[1].pocketDry,true);assert.equal(trials[0].notebookDry,trials[1].notebookDry);
+ const trials=(await saved()).fieldEvidence.bag.tests;assert.equal(trials[0].notebookDry,false);assert.equal(trials[1].notebookDry,true);assert.equal(trials[0].rolls,trials[1].rolls);
  await stage(2);await place('compare:surface','compare');await hint();
- // Hand: circle the pocket on the after picture.
- const diff=await page.locator('[data-diff="after"]').boundingBox();await stroke(ring([diff.x+.56*diff.width,diff.y+.68*diff.height],Math.min(diff.width,diff.height)*.14));
- await evidence(`JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.bag.compared.part==='pocket'`);await a('field-bag-deliver');
- assert.match(await page.locator('.mission-feedback').innerText(),/주머니/);
- report.checks.push('Pocket-only comparison changes picture, accessible description and wet result; notebook result stays fixed');
+ // Hand: circle the opening cover on the after picture.
+ const diff=await page.locator('[data-diff="after"]').boundingBox();await stroke(ring([diff.x+.5*diff.width,diff.y+.22*diff.height],Math.min(diff.width,diff.height)*.14));
+ await evidence(`JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.bag.compared.part==='cover'`);await a('field-bag-deliver');
+ assert.match(await page.locator('.mission-feedback').innerText(),/입구 덮개/);
+ report.checks.push('Cover-only comparison changes picture, accessible description and notebook result; surface result stays fixed');
  await explore();assert.equal((await saved()).testPrediction,'surface');
  await a('lotus-drop');await a('design-answer','roll');await completePage();
- // Reuse the inherited final design: just two new trials establish both roles.
- await a('cover','open');await a('run-test',undefined,'.test-control-row ');await page.waitForFunction(()=>!document.querySelector('.water-demo.moving'));await a('test-explain','cover');
+ // The field's cover comparison comes along, so only the surface needs one new trial.
  await a('surface','plain');await a('run-test',undefined,'.test-control-row ');await page.waitForFunction(()=>!document.querySelector('.water-demo.moving'));await a('test-explain','surface');
- await a('surface','lotus');await a('cover','flap');await a('use-tested-design');assert.equal((await saved()).tests.length,3);
- report.checks.push('Inherited bag trial plus two new single-part comparisons; final tested design reused without repeat rain');
+ await a('surface','lotus');await a('use-tested-design');assert.equal((await saved()).tests.length,3);
+ report.checks.push('Inherited cover comparison plus one new surface comparison; final tested design reused without repeat rain');
  await snap('invention-compared');await completePage();await missionDone(4);
  await a('report');await a('note-open','4');await a('note-sticker');await a('note-check','4:0');await a('note-check','4:1');await close();
  await a('note-open','4');assert.equal(await page.locator('[data-action="note-sticker"]').getAttribute('aria-pressed'),'true');assert.match(await page.locator('.note-quiz-feedback').innerText(),/맞아/);await snap('notebook-records');await close();
@@ -170,7 +162,7 @@ try{
  await a('report-tab','share');await a('share-later');await a('start-final');await a('final-habitat','water');await a('final-habitat','dry');await a('power-core');await page.locator('[data-story-action="exit"]').tap();
  assert.equal((await saved()).finished,true);await snap('ending');
  await a('home');await a('begin');await a('report');await a('note-open','4');assert.equal(await page.locator('.note-read-sticker.stuck').count(),1);await close();
- report.checks.push('Fresh completion: 5 field missions, 10 core activities, new plant application, ending and research notebook; home/re-entry retains notebook');
+ report.checks.push('Fresh completion: 5 field missions, carried observations, new plant application, ending and research notebook; home/re-entry retains notebook');
  report.finalState=await saved();
  await writeFile(new URL('completed-test-record.json',output),JSON.stringify(report.finalState,null,2));
  assert.deepEqual(report.errors,[]);

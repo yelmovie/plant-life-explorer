@@ -32,11 +32,6 @@
 #app .exploration-activity :is(.design-layout,.test-layout) { grid-template-columns:minmax(280px,1fr) minmax(300px,42%); }
 #app .exploration-activity :is(.design-layout,.test-layout) > .learning-note { background:#fffdf1; }
 .bag-art { position:relative; }
-.bag-pocket-detail { position:absolute; width:38%; height:56%; left:36%; top:37%; z-index:3; overflow:visible; }
-.bag-part-label { position:absolute; color:#253e30; background:#fffdf1; border:1px solid #789265; padding:3px 6px; border-radius:7px; font-size:14px; z-index:4; }
-.surface-label { left:13%; top:58%; }
-.cover-label { left:38%; top:18%; }
-.field-trial-card .bag-pocket-detail { width:38%; height:56%; }
 .field-trial-card .bag-art { min-height:150px; }
 .student-record { padding:12px; margin-bottom:12px; background:#fffdf4; border:1px solid #d4dfc9; border-radius:12px; }
 .student-record ul { padding-left:20px; margin:6px 0; }
@@ -77,3 +72,11 @@
 #app .final-feedback { padding:12px 16px; margin:8px 0; background:#fffdf1; border-radius:12px; }
 /* The zoom/rotate panel drives the flat picture only; the 3D view has its own controls. */
 #app main:has(.spatial-ready:not(.spatial-flat)) .optional-tools { display: none; }
+/* Leaf page progress: each specimen shows how many of its two features are recorded. */
+#app .exploration-activity .specimen-pick:has(.leaf-progress) { width:auto; min-width:clamp(130px, 14vw, 190px); }
+#app .specimen-pick .leaf-progress { margin-left:auto; display:inline-flex; align-items:center; gap:2px; padding:2px 7px; border-radius:999px; background:#fff6d8; border:1px solid #e3cf8f; color:#7a5a12; font-size:13px; font-weight:700; white-space:nowrap; }
+#app .specimen-pick .leaf-progress.done { background:#e3f0d4; border-color:#7aa063; color:#2f6236; }
+/* A locked click rewrites the bubble; flash it so the child sees the new hint. */
+#app .guide-bubble.nudge { animation:bubble-nudge .9s ease-out; }
+@keyframes bubble-nudge { 0%,35% { background:#fff1b8; border-color:#e0a930; } 100% {} }
+@media (prefers-reduced-motion: reduce) { #app .guide-bubble.nudge { animation:none; background:#fff1b8; border-color:#e0a930; } }

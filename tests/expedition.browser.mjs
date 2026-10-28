@@ -9,7 +9,7 @@ import {mkdir,writeFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 const require=createRequire(import.meta.url);
 const {chromium}=require(process.env.PLAYWRIGHT_MODULE_PATH||'C:/Users/bongb/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
-const output=new URL('../docs/reviews/expedition-20261020/',import.meta.url);
+const output=new URL(process.env.EXPEDITION_OUTPUT||'../docs/reviews/expedition-20261020/',import.meta.url);
 await mkdir(output,{recursive:true});
 // fileURLToPath decodes "%20": the project folder name contains a space.
 const shot=name=>fileURLToPath(new URL(name,output));
@@ -100,31 +100,14 @@ async function pressHold(selector,doneCheck,name){
  const [x,y]=mid(await box(selector));
  await stroke([[x,y]],{hold:()=>page.waitForFunction(doneCheck)});gesture(name);
 }
-async function drawFlow(fromZone,toZone){
- const a=mid(await box(`.field-garden-zone.zone-${fromZone}`)),b=mid(await box(`.field-garden-zone.zone-${toZone}`)),pts=[];
+async function cloudTap(){await tap('.garden-cloud-btn');gesture('cloudTap');}
+async function dragPlant(plant,zone){
+ const a=mid(await box(`[data-field-item="plant:${plant}"]`)),b=mid(await box(`.field-garden-zone.zone-${zone}`)),pts=[];
  for(let i=0;i<=12;i++)pts.push([a[0]+(b[0]-a[0])*i/12,a[1]+(b[1]-a[1])*i/12]);
- await stroke(pts,{steps:2});gesture('waterFlow');
+ await stroke(pts,{steps:2});gesture('plantDrag');
 }
-async function sowAndPour(plant,zone){
- await tap(`[data-garden-seed="${plant}"]`);await tapAt(...mid(await box(`.field-garden-zone.zone-${zone}`)));
- const [cx,cy]=mid(await box('[data-garden-can]:not([hidden])'));
- await stroke(ring(cx,cy,34,90,160,10),{hold:()=>page.waitForFunction(([p,z])=>document.querySelector('.garden-sprout.grown')||document.querySelector(`[data-zone="${z}"][data-plant="${p}"]`),[plant,zone])});gesture('canTilt');
-}
-async function swirlSky(){
- const s=await box('[data-garden-sky]'),[cx,cy]=mid(s),r=Math.min(s.width,s.height)*.32;
- await stroke(ring(cx,cy,r,0,900,15),{steps:2});gesture('cloudSwirl');
-}
-async function sewSeam(){
- const f=await box('[data-bag-stitch]'),m=13,[l,t,r,b]=[f.x+m,f.y+m,f.x+f.width-m,f.y+f.height-m],pts=[];
- const edge=(x0,y0,x1,y1)=>{const n=Math.ceil(Math.hypot(x1-x0,y1-y0)/14);for(let i=0;i<n;i++)pts.push([x0+(x1-x0)*i/n,y0+(y1-y0)*i/n]);};
- edge(l,t,r,t);edge(r,t,r,b);edge(r,b,l,b);edge(l,b,l,t);pts.push([l,t+14]);
- await stroke(pts,{steps:1});gesture('seamStitch');
-}
-async function rainAndShake(){
- const c=mid(await box('[data-bag-cloud]'));for(let i=0;i<10;i++)await tapAt(...c);
- await page.locator('[data-bag-stage].shake-ready').waitFor();
- const [x,y]=mid(await box('[data-bag-stage] [data-bag-canvas]')),pts=[[x,y]];for(let i=0;i<8;i++)pts.push([x+(i%2?-60:60),y]);
- await stroke(pts,{steps:4});gesture('bagShake');
+async function rain(){
+ await tapAt(...mid(await box('[data-bag-cloud]')));gesture('cloudTap');
 }
 async function circleSpot(side,part){
  const b=await box(`[data-diff="${side}"]`),spot={surface:[.2,.6],cover:[.5,.22],pocket:[.56,.68]}[part];
@@ -184,64 +167,54 @@ try{
     await rubSoil('herb');await pullThread('herb','upper');await until(e=>e.seasons.links.herb==='leaf','herb wrong link');
     result.wrongFeedback=await wrongFeedback('땅속에 살아 있던 뿌리');
     await keyboardPress('[data-field-drop="link:herb:root"]');await until(e=>e.seasons.links.herb==='root','herb link');
-    // 2: tap-swap rim cards into order, spin the hand a full lap, tap the sprout spot.
+    // 2: the rim already shows the seasons in order; spin the hand a full lap, tap the sprout spot.
     await stage(1);
-    await tap('[data-dial-card="spring"]');await tap('[data-dial-card="winter"]');
-    await tap('[data-dial-card="spring"]');await tap('[data-dial-card="bud"]');
     assert.equal(await page.locator('[data-time-dial]').evaluate(b=>[...b.querySelectorAll('[data-dial-card]')].sort((x,y)=>parseFloat(x.style.getPropertyValue('--a'))-parseFloat(y.style.getPropertyValue('--a'))).map(c=>c.dataset.dialCard).join(',')),'winter,bud,spring');
     await spinDial();await until(e=>e.seasons.tree.join()==='winter,bud,spring','tree order');
     await page.locator('.time-bench.pin-mode').waitFor();
     const bud=await box('[data-viewer] [data-layer="bud"] img');await tapAt(bud.x+bud.width/2,bud.y+bud.height*.3);
     await until(e=>e.seasons.clues.tree==='branches','tree regrow pin');
     // 3: the underground herb through the keyboard.
-    await stage(2);for(const [i,phase] of ['winter','bud','spring'].entries())await keyboardPlace(`frame:herb:${phase}`,`order:herb:${i}`);
+    await stage(2);await keyboardPress('.lens-fallback [data-action="field-season-turn"][data-id="herb"]');await until(e=>e.seasons.herb.join()==='winter,bud,spring','herb turned');
     await keyboardPress('.lens-fallback [data-action="field-season-clue"][data-id="herb:rootbud"]');
    }else if(mission===2){
-    // 1: press-hold to heft, then slide the switch down (air) or tap the label (solid).
-    await pressHold('[data-heft="air"] [data-heft-lift]',()=>parseFloat(document.querySelector('[data-heft="air"]').style.getPropertyValue('--lift'))>=.95,'heftHold');
+    // 1: slide the switch down (air) or tap the label (solid).
     const knob=mid(await box('[data-heft="air"] .sw-knob'));await stroke([knob,[knob[0],knob[1]+40],[knob[0],knob[1]+80]],{steps:4});gesture('switchSlide');
     assert.equal((await until(e=>e.float.predictions.air,'air prediction')).float.predictions.air,'sink');
-    await pressHold('[data-heft="solid"] [data-heft-lift]',()=>parseFloat(document.querySelector('[data-heft="solid"]').style.getPropertyValue('--lift'))>=.95,'heftHold');
     await tap('[data-heft="solid"] [data-heft-pick="float"]');await until(e=>e.float.predictions.solid==='float','solid prediction');
     // 2: keyboard drops the solid model; the air model is tapped in and pushed under by hand.
     await stage(1);await keyboardPlace('model:solid','tank');await until(e=>e.float.tested.includes('solid'),'solid tested');
     await tap('[data-float-item="air"]');await page.waitForFunction(()=>{const m=document.querySelector('[data-float-tank] .rest-air');return m&&!m.classList.contains('settling');});
     await pressHold('[data-float-tank] .rest-air',()=>document.querySelector('[data-press-gauge]')?.classList.contains('full'),'pushUnder');
     await until(e=>e.float.tested.includes('air'),'air tested');
-    // 3: record by tapping model then band (one wrong), slice the petiole, pop air rooms, link the floater.
-    await stage(2);await tap('[data-tank-model="solid"]');await tap('[data-float-band="float"]');result.wrongFeedback=await wrongFeedback('수면과 수조 바닥 중');
-    await tap('[data-tank-model="air"]');await tap('[data-float-band="float"]');await keyboardPlace('model:solid','observe:sink');
-    await until(e=>e.float.observed.air==='float'&&e.float.observed.solid==='sink','observations');
-    await page.locator('.float-lab[data-phase="cut"]').waitFor();
+    // 3: the tank already recorded where each stopped; slice the petiole, then link the floater (one wrong first).
+    assert.deepEqual((await evidence()).float.observed,{air:'float',solid:'sink'});
+    await stage(2);await page.locator('.float-lab[data-phase="cut"]').waitFor();
     const p=await box('[data-petiole]'),cut=[];for(let i=0;i<=24;i++){const t=i/24;cut.push([p.x+(.21+.68*t)*p.width,p.y+(.875-.75*t)*p.height]);}
     await stroke(cut,{steps:2});gesture('petioleSlice');await page.locator('[data-petiole].open').waitFor();
-    for(const i of [0,2,4])await tapAt(...mid(await box(`[data-air-room="${i}"]`)));
+    await page.locator('.float-lab[data-phase="reason"]').waitFor();await tap('[data-tank-model="solid"]');result.wrongFeedback=await wrongFeedback('겉 크기는 같아');
     await page.locator('.float-lab[data-phase="reason"]').waitFor();await tap('[data-tank-model="air"]');
     await until(e=>e.float.reason==='air','air-space reason');
    }else if(mission===3){
-    // 1: a stream from the ridge ending on the meadow makes the wrong ground; meadow to pond is right.
-    await drawFlow('ridge','meadow');result.wrongFeedback=await wrongFeedback('빗물 단서를 봐');
-    await drawFlow('meadow','pond');await until(e=>e.garden.environments.pond==='water'&&e.garden.environments.meadow==='grass'&&e.garden.environments.ridge==='dry','environments');
-    // 2: sow and tilt the can by hand once, keyboard for the other two.
-    await stage(1);await sowAndPour('hyacinth','pond');await until(e=>e.garden.plants.hyacinth==='pond','hyacinth planted');
+    // 1: one cloud tap rains on the bare beds and makes their ground.
+    await cloudTap();await until(e=>e.garden.environments.pond==='water'&&e.garden.environments.meadow==='grass'&&e.garden.environments.ridge==='dry','environments');
+    // 2: a drag onto the wrong bed is refused with a clue; drag the right one, keyboard for the other two.
+    await stage(1);await dragPlant('hyacinth','ridge');result.wrongFeedback=await wrongFeedback('물이 고인 곳을 찾아 봐');assert.deepEqual((await evidence()).garden.plants,{});
+    await dragPlant('hyacinth','pond');await until(e=>e.garden.plants.hyacinth==='pond','hyacinth planted');
     for(const [plant,z] of [['cherry','meadow'],['aloe','ridge']])await keyboardPlace('plant:'+plant,'plant:'+z);
-    // 3: swirl the sky into rain; an edit invalidates the test until it rains again.
-    await stage(2);assert.equal(await ready(3),false);await swirlSky();await until(e=>e.garden.testedKey,'first rain');assert.equal(await ready(3),true);
-    await keyboardPlace('plant:aloe','plant:meadow');await until(e=>e.garden.plants.aloe==='meadow','aloe moved');assert.equal(await ready(3),false);await keyboardPress('.lens-fallback [data-action="field-garden-rain"]');await wrongFeedback('아직 맞지 않는 자리가');
-    await keyboardPlace('plant:cherry','plant:meadow');await keyboardPlace('plant:aloe','plant:ridge');await until(e=>e.garden.plants.cherry==='meadow'&&e.garden.plants.aloe==='ridge','garden fixed');assert.equal(await ready(3),false);
-    await swirlSky();await until(e=>e.garden.testedKey,'rain after edit');result.retestAfterEdit=true;
+    // 3: one cloud tap rains on the planted garden.
+    await stage(2);assert.equal(await ready(3),false);await cloudTap();await until(e=>e.garden.testedKey,'garden rain');assert.equal(await ready(3),true);
    }else{
     await tap('[data-action="field-bag-predict"][data-id="surface"]');
-    // 1: tap-dial each place (plain, flap, flap), then trace the seam to sew it.
-    for(const [part,n] of [['surface',1],['cover',2],['pocket',2]])for(let i=0;i<n;i++)await tap(`[data-bag-dial="${part}"]`);
-    await page.locator('[data-bag-stitch][data-ready="true"]').waitFor();await sewSeam();
-    const sewn=await until(e=>e.bag.assembled.length===3,'bag assembled');assert.deepEqual(sewn.bag.design,{surface:'plain',cover:'flap',pocket:'flap'});
-    // 2: ten cloud taps and a shake; change one part by tap, re-test through the keyboard.
-    await stage(1);await rainAndShake();await until(e=>e.bag.tests.length===1,'first rain test');
+    // 1: tap-dial each place (plain, flap); the second choice assembles the bag.
+    for(const [part,n] of [['surface',1],['cover',2]])for(let i=0;i<n;i++)await tap(`[data-bag-dial="${part}"]`);
+    const sewn=await until(e=>e.bag.assembled.length===2,'bag assembled');assert.deepEqual(sewn.bag.design,{surface:'plain',cover:'flap'});
+    // 2: one cloud tap rains ten drops; change one part by tap, re-test through the keyboard.
+    await stage(1);await rain();await until(e=>e.bag.tests.length===1,'first rain test');
     await tap('[data-bag-dial="surface"]');await until(e=>e.bag.design.surface==='lotus','lotus surface');
     await keyboardPress('.lens-fallback [data-action="field-bag-test"]');await until(e=>e.bag.tests.length===2,'second rain test');
     // 3: circle the wrong part first, then name the changed part by keyboard and deliver.
-    await stage(2);await circleSpot('after','cover');result.wrongFeedback=await wrongFeedback('두 덮개는 같아');assert.equal(await ready(4),false);
+    await stage(2);await circleSpot('after','cover');result.wrongFeedback=await wrongFeedback('입구 덮개는 같아');assert.equal(await ready(4),false);
     await keyboardPlace('compare:surface','compare');await until(e=>e.bag.compared.part==='surface','comparison');await action('field-bag-deliver');
     await until(e=>e.bag.delivered,'bag delivered');
    }

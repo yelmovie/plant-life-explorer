@@ -2,6 +2,7 @@ import {MISSIONS,missionDone,openMission,rewardCount,canChooseGardenTheme,missio
 import {QUESTS} from './inquiry.js';
 import {assetImage} from './asset-catalog.js';
 import {icon} from './art.js';
+import {TRAIL_LENGTH,ENTRANCES,trailPoint} from './stage-map.js';
 
 export const REWARDS = [
   {asset:'reward_observatory',name:'표본 온실',title:'표본 온실에 불이 켜졌어!',why:'잎을 살피고 두 기준으로 나눈 기록을 남겼어.',next:'다음에는 겨울을 지낸 식물의 비밀을 찾자.',x:14,y:76},
@@ -36,14 +37,28 @@ export function worldMap(state,current=-1,recent=-1,interactive=true){
   return `<div class="island-map ${flowers?'has-flowers':''} ${state.finished?'world-awake':''}" style="--flower-color:${theme.color}" aria-label="${rewardCount(state)}개 장소가 깨어난 초록정원">${assetImage('map_trail_v2','island-ground',true)}
     ${REWARDS.map((r,i)=>{
       const done=missionDone(state,i),available=openMission(state,i),stamps=missionStamps(state,i),label=`${i+1}. ${r.name} ${done?'복구 완료':available?'탐구 가능':'아직 잠김'}${stamps.map(k=>' · '+STAMPS[k].name+' 스탬프').join('')}`;
-      const body=`${assetImage(r.asset,'world-building')}<span class="world-label"><b>${done?icon('check',15):i+1}</b><span>${r.name}${interactive?`<small>${icon(available?'unlock':'lock',12)}</small>`:''}</span>${stamps.map(k=>`<i class="world-stamp ${k}" aria-hidden="true">${(['direct','fixed'].includes(k)?assetImage('stamp_'+k,'stamp-img'):icon(STAMPS[k].icon,24))}</i>`).join('')}</span>${done?`<span class="world-light" aria-hidden="true">${icon('spark',16)}</span>`:''}${interactive&&i===next?'<span class="world-next">여기부터!</span>':''}`;
+      const body=`${assetImage(r.asset,'world-building')}<span class="world-label"><b>${done?icon('check',15):i+1}</b><span>${r.name}${interactive?`<small>${done?`${icon('spark',12)}복구 완료`:icon(available?'unlock':'lock',12)}</small>`:''}</span>${stamps.map(k=>`<i class="world-stamp ${k}" aria-hidden="true">${(['direct','fixed'].includes(k)?assetImage('stamp_'+k,'stamp-img'):icon(STAMPS[k].icon,24))}</i>`).join('')}</span>${done?`<span class="world-light" aria-hidden="true">${icon('spark',16)}</span>`:''}${interactive&&i===next?'<span class="world-next">여기부터!</span>':''}`;
       const position=interactive?`--stage-x:${r.x}%;--stage-y:${i===REWARDS.length-1?20:r.y}%`:`left:${r.x}%;top:${r.y}%`;
       const attrs=`class="world-node ${done?'restored':'sleeping'} ${available?'available':'locked'} ${i===next?'next-stop':''} ${current===i?'chosen':''} ${recent===i?'just-restored':''}" style="${position}"`;
       return interactive?`<button ${attrs} data-action="map-select" data-id="${i}" ${i===next?'aria-current="step"':''} ${available?'':`aria-disabled="true" data-reason="${REWARDS[mapPrerequisite(state,i)]?.name}을 깨우면 열려."`} aria-label="${label}">${body}</button>`:`<div ${attrs} role="img" aria-label="${label}">${body}</div>`;
     }).join('')}
     <div class="world-core ${rewardCount(state)===5?'charged':''}">${icon('leaf',27)}<span>${state.finished?'깨어난 정원':`${rewardCount(state)} / ${MISSIONS.length}`}</span></div>
-    ${flowers?`<div class="world-flowers" aria-hidden="true">${[[12,57],[18,66],[39,88],[48,83],[85,61],[71,22],[34,21],[54,87]].map(([x,y],i)=>`<span style="left:${x}%;top:${y}%;transform:rotate(${i*23}deg)">✿</span>`).join('')}</div>`:''}
+    ${flowers?flowerTrail(state,recent):''}
   </div>`;
+}
+
+// The flower path follows the walkable trail up to the furthest restored place and spreads as more are restored.
+// The stretch opened by the place just restored blooms in; the rest is already in flower.
+const FLOWER_SHAPE=[0,72,144,216,288].map(a=>`<ellipse class="petal" rx="7" ry="12" cy="-11" transform="rotate(${a})"/>`).join('')+'<circle class="heart" r="5.5"/>',FLOWER_STEP=44,trailTo=i=>i<0?0:i>=ENTRANCES.length-1?TRAIL_LENGTH:ENTRANCES[i].distance+60;
+function flowerTrail(state,recent){
+  const last=MISSIONS.reduce((n,_,i)=>missionDone(state,i)?i:n,-1),end=trailTo(last),before=trailTo(MISSIONS.reduce((n,_,i)=>missionDone(state,i)&&i!==recent?i:n,-1));
+  const band=[];for(let d=0;d<end;d+=12){const p=trailPoint(d);band.push(`${p.x.toFixed(0)},${p.y.toFixed(0)}`);}const tail=trailPoint(end);band.push(`${tail.x.toFixed(0)},${tail.y.toFixed(0)}`);
+  const blooms=[];
+  for(let d=FLOWER_STEP/2,n=0;d<end;d+=FLOWER_STEP,n++){
+    const p=trailPoint(d),side=n%2?1:-1,gap=30+(n*7)%12,x=p.x-p.dy*gap*side,y=p.y+p.dx*gap*side,size=1.05+((n*37)%5)*.08,fresh=recent>=0&&d>before;
+    blooms.push(`<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${(n*47)%72}) scale(${size.toFixed(2)})"><g class="trail-flower ${fresh?'fresh':''}" style="--i:${fresh?Math.round((d-before)/FLOWER_STEP):0}">${FLOWER_SHAPE}</g></g>`);
+  }
+  return `<svg class="trail-blooms" viewBox="0 0 1536 1024" aria-hidden="true"><polyline class="bloom-band" points="${band.join(' ')}"/><polyline class="bloom-edge" points="${band.join(' ')}"/><polyline class="bloom-petals" points="${band.join(' ')}"/>${blooms.join('')}</svg>`;
 }
 
 export function evidenceSummary(state,i){

@@ -371,7 +371,6 @@ body.large-text:is(#app,body) :is(.specimen-focus>span,.whole-specimen>span,.ins
 :is(#app,body) .world-label b{font-size:var(--font-size-xs)}
 :is(#app,body) .world-light{font-size:26px}
 :is(#app,body) .world-core{font-size:var(--font-size-xs)}
-:is(#app,body) .world-flowers span{font-size:22px}
 :is(#app,body) .map-caption{font-size:var(--font-size-xs)}
 :is(#app,body) .reward-preview h2{font-size:25px}
 :is(#app,body) .reward-preview p{font-size:var(--font-size-sm)}
@@ -426,7 +425,6 @@ body.large-text:is(#app,body) :is(.specimen-focus>span,.whole-specimen>span,.ins
 @media(max-width:600px){:is(#app,body) .world-label{font-size:var(--font-size-xs)}}
 @media(max-width:600px){:is(#app,body) .world-label b{font-size:var(--font-size-xs)}}
 @media(max-width:600px){:is(#app,body) .world-core{font-size:var(--font-size-xs)}}
-@media(max-width:600px){:is(#app,body) .world-flowers span{font-size:var(--font-size-xs)}}
 @media(max-width:600px){:is(#app,body) .world-light{font-size:var(--font-size-xs)}}
 @media(max-width:600px){:is(#app,body) .map-caption{font-size:var(--font-size-xs)}}
 @media(max-width:600px){:is(#app,body) .reward-preview h2{font-size:22px}}

@@ -39,9 +39,9 @@ export function observationRecord(s,i){
  switch(i){
   case 0:return Object.entries(s.leafEvidence).flatMap(([p,v])=>Object.keys(v).map(k=>`${({cherry:'벚나무',ginkgo:'은행나무',grass:'강아지풀'})[p]} · ${k==='shape'?'모양':'가장자리'} 관찰 기록`));
   case 1:return [...s.seasonalRecords.map(key=>{const [p,n]=key.split(':');return `${p==='cherry'?'벚나무':'씀바귀'} ${['다음 봄','여름','가을','겨울'][n]} 사진${s.seasonPhotos[key]?.underground?' · 땅속 포함':''}`;}),...(s.budsFound?.cherry?.length?[`벚나무 가지 끝 겨울눈 ${s.budsFound.cherry.length}개 찾음`]:[]),...(s.budsFound?.sowthistle?.length?['씀바귀 뿌리 머리 새눈 찾음']:[])];
-  case 2:return [...e.float.tested.map(id=>`${id==='air'?'공기 공간 모형: 수면에 뜸':'속을 채운 모형: 바닥으로 내려감'}`),...(s.experiment.step>=4?['물속에서 누른 잎자루: 공기 방울 관찰']:[])];
+  case 2:return [...e.float.tested.map(id=>`${id==='air'?'공기 방 모형: 수면에 뜸':'꽉 찬 모형: 바닥으로 내려감'}`),...(s.experiment.step>=4?['물속에서 누른 잎자루: 공기 방울 관찰']:[])];
   case 3:return ['water','grass','dry'].filter(t=>terrainCount(s,t)).map(t=>`${({water:'물가',grass:'풀밭',dry:'건조 구역'})[t]} ${terrainCount(s,t)}칸`).concat(e.garden.testedKey?['현장 정원의 빗물 시험 기록 있음']:[]);
-  case 4:return [...e.bag.tests.map((t,n)=>`현장 시험 ${n+1} · ${t.surface==='lotus'?'연잎 겉면':'보통 천'}, 입구 ${t.cover==='flap'?'닫힘':'열림'}, 주머니 ${t.pocket==='flap'?'닫힘':'열림'} → 물방울 ${t.rolls?'굴러감':'남음'}, 공책 ${t.notebookDry?'마름':'젖음'}, 주머니 ${t.pocketDry?'마름':'젖음'}`),...Object.keys(e.bag.comparisons).filter(k=>FIELD_BAG_ROLES[k]).map(k=>'현장에서 비교한 역할: '+FIELD_BAG_ROLES[k]),...s.tests.map((t,n)=>`본 탐구 시험 ${n+1} · ${t.surface==='lotus'?'연잎 겉면':'보통 천'}, 입구 ${t.cover==='flap'?'닫힘':'열림'} → 물방울 ${t.clean?'굴러감':'남음'}, 수첩 ${t.dry?'마름':'젖음'}`),...Object.keys(proof).filter(k=>proof[k]).map(k=>'본 탐구에서 비교한 역할: '+FIELD_BAG_ROLES[k])];
+  case 4:return [...e.bag.tests.map((t,n)=>`현장 시험 ${n+1} · ${t.surface==='lotus'?'연잎 겉면':'보통 천'}, 입구 ${t.cover==='flap'?'닫힘':'열림'} → 물방울 ${t.rolls?'굴러감':'남음'}, 공책 ${t.notebookDry?'마름':'젖음'}, 주머니 ${t.pocketDry?'마름':'젖음'}`),...Object.keys(e.bag.comparisons).filter(k=>FIELD_BAG_ROLES[k]).map(k=>'현장에서 비교한 역할: '+FIELD_BAG_ROLES[k]),...s.tests.map((t,n)=>`본 탐구 시험 ${n+1} · ${t.surface==='lotus'?'연잎 겉면':'보통 천'}, 입구 ${t.cover==='flap'?'닫힘':'열림'} → 물방울 ${t.clean?'굴러감':'남음'}, 수첩 ${t.dry?'마름':'젖음'}`),...Object.keys(proof).filter(k=>proof[k]).map(k=>'본 탐구에서 비교한 역할: '+FIELD_BAG_ROLES[k])];
   default:return [];
  }
 }

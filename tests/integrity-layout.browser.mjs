@@ -4,7 +4,7 @@ import {createRequire} from 'node:module';
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 const require=createRequire(import.meta.url),{chromium}=require(process.env.PLAYWRIGHT_MODULE_PATH||'C:/Users/bongb/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
-const output=new URL('../docs/reviews/integrity-20261024/',import.meta.url);await mkdir(output,{recursive:true});
+const output=new URL(process.env.JOURNEY_OUTPUT||'../docs/reviews/integrity-20261024/',import.meta.url);await mkdir(output,{recursive:true});
 const completed=JSON.parse(await readFile(new URL('completed-test-record.json',output),'utf8'));
 const browser=await chromium.launch({headless:true,executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',args:['--disable-webgl']});
 const report={started:new Date().toISOString(),fixture:'Actual fresh UI completion replayed in separate browser profiles; no real user data',layouts:[],errors:[],failures:[]};
@@ -19,13 +19,13 @@ const hands=[
  [['.dig-cover',44,true],['[data-link-target]',100,true]],
  [['[data-time-dial] [data-dial-face]',100,true],['[data-dial-card]',44,false],['[data-viewer]',100,false]],
  [['[data-time-dial] [data-dial-face]',100,true],['[data-dial-card]',44,false],['[data-viewer]',100,false]],
- [['.float-heft:not([data-done]) [data-heft-lift]',44,true],['.float-heft:not([data-done]) [data-heft-switch] .sw-track',44,true],['.float-heft:not([data-done]) [data-heft-pick]',44,true]],
+ [['.float-heft:not([data-done]) [data-heft-switch] .sw-track',44,true],['.float-heft:not([data-done]) [data-heft-pick]',44,true]],
  [['[data-float-item]',44,true],['[data-float-tank]',100,true],['[data-press-gauge]',20,false]],
- [['[data-float-band]',44,true],['[data-petiole]',100,true]],
- [['[data-garden-field]',100,true],['.field-garden-zone',44,false]],
- [['[data-garden-seed]',44,true],['.field-garden-zone',44,true]],
- [['[data-garden-sky]',44,true],['.field-garden-zone',44,false]],
- [['[data-bag-dial]',44,true],['[data-bag-stitch]',100,true],['.bag-canvas > .bag-art',100,false]],
+ [['[data-tank-model]',44,true],['[data-petiole]',100,true]],
+ [['.garden-cloud-btn',44,true],['.field-garden-zone',44,false]],
+ [['.garden-card',44,true],['.field-garden-zone',44,true]],
+ [['.garden-cloud-btn',44,true],['.field-garden-zone',44,false]],
+ [['[data-bag-dial]',44,true],['[data-bag-frame]',100,true],['.bag-canvas > .bag-art',100,false]],
  [['[data-bag-cloud]',44,true],['.bag-canvas > .bag-art',100,true]],
  [['[data-diff]',100,true]],
 ];

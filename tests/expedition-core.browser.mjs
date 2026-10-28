@@ -58,7 +58,7 @@ try{
  report.checks.push('Teacher preview manipulation and reload do not alter the saved student record');
  await page.evaluate(async()=>{const{freshState}=await import('/src/model.js');const{fieldMissionAction}=await import('/src/field-missions.js');const s=freshState(),u={};s.version=1;s.completed=[true,true,true,true,false,false,false,false,false,false];s.screen='activity';s.page=4;
   // Finish the float field mission through its own actions so the record stage opens.
-  for(const step of ['model:air|predict:float','model:solid|predict:sink','model:air|tank','model:solid|tank','model:air|observe:float','model:solid|observe:sink','reason:air-space|reason:air'])fieldMissionAction(s,u,'field-place',step);
+  for(const step of ['model:air|predict:float','model:solid|predict:sink','model:air|tank','model:solid|tank','reason:air-space|reason:air'])fieldMissionAction(s,u,'field-place',step);
   localStorage.setItem('green-garden-mvp-v2',JSON.stringify(s));});
  await page.reload();await page.locator('[data-action="journey-mode"][data-id="explore"]').first().click();await page.locator('[data-spatial="lab"] canvas').waitFor();await screenshot('lab-whole');
  await page.locator('[data-action="experiment-predict"][data-id="none"]').click();await page.locator('[data-action="lab-next"][data-id="cut"]').click();await page.locator('[data-spatial="lab"] canvas').waitFor();await screenshot('lab-cut');

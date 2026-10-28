@@ -200,6 +200,8 @@ body .toast { pointer-events: none; }
 #app .field-season-images { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
 #app .field-season-images > div { display: flex; flex-direction: column; align-items: stretch; gap: 8px; min-width: 0; }
 #app .field-season-images :is(svg,.season-atlas) { width: 100%; height: 165px; object-fit: contain; }
+/* Atlas quadrants are 3:2; keep that shape instead of filling the column. */
+#app .field-season-images .season-atlas { width: min(100%, 247px); height: auto; min-height: 0; aspect-ratio: 3 / 2; align-self: center; }
 #app .field-season-images .field-token { font-size: 18px; padding: 8px; }
 #app .field-link-targets { display: grid; gap: 8px; }
 #app .field-link-targets .field-target { padding: 8px; }
@@ -207,6 +209,7 @@ body .toast { pointer-events: none; }
 #app .field-frame-tray { margin-bottom: 16px; }
 #app .field-frame { display: flex; flex-direction: column; align-items: center; padding: 8px; gap: 8px; font-size: 18px; background: #fffced; border-radius: 14px; box-shadow: 0 5px 0 #c0c9a3; }
 #app .field-frame :is(svg,.season-atlas), #app .field-time-slot :is(svg,.season-atlas) { width: 100%; height: 115px; min-height: 0; object-fit: contain; }
+#app :is(.field-frame, .field-time-slot) .season-atlas { width: min(100%, 172px); height: auto; aspect-ratio: 3 / 2; }
 #app .field-time-slot { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; min-height: 158px; }
 #app .field-time-slot > b { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: #e3eac7; font: 20px/1 var(--font-display); }
 #app .field-bud-picture { max-width: 100%; }
@@ -266,9 +269,6 @@ body .toast { pointer-events: none; }
 #app .field-mission > .mission-feedback p { font-size: 18px; line-height: 1.45; margin: 0; }
 #app .field-mission > .btn { align-self: flex-end; }
 #app .field-mission .microcopy { width: fit-content; max-width: 100%; font-size: 16px; line-height: 1.4; padding: 5px 10px; margin: 3px 0; background: #fffcefe8; border-radius: 10px; }
-#app .field-access-help { align-self: flex-end; }
-#app .field-access-help > summary { display: flex; align-items: center; padding: 6px 10px; min-height: 48px; cursor: pointer; }
-#app .field-access-help[open] > summary { margin-bottom: 6px; }
 @keyframes float-model-bob { 50% { transform: translateY(5px); } }
 @media (prefers-reduced-motion: reduce) {
   #app .field-tank-model.is-floating { animation: none; }
@@ -317,11 +317,18 @@ body .expedition-loot p { margin: 4px 0; line-height: 1.5; }
 #app .exploration-activity .season-scene { flex: 1; height: auto; min-height: 160px; max-height: none; margin: 0; }
 #app .exploration-activity .season-pair { flex: 1; min-height: 180px; max-height: none; }
 #app .exploration-activity .evidence-photo .season-atlas { min-height: 140px; }
+/* Winter vs next spring: atlas quadrants keep their 3:2 shape so the question fits below. */
+#app .exploration-activity .season-pair:has(+ .season-question) { flex: 0 0 auto; height: auto; min-height: 0; max-height: none; }
+#app .exploration-activity .season-pair:has(+ .season-question) .evidence-photo { margin: 0; align-items: center; }
+#app .exploration-activity .season-pair:has(+ .season-question) .season-atlas { flex: none; width: min(100%, calc(clamp(110px, 100vh - 584px, 280px) * 1.5)); height: auto; min-height: 0; aspect-ratio: 3 / 2; }
+#app .exploration-activity .evidence-bridge:has(~ .season-question) { padding-block: 4px; }
+#app .exploration-activity .season-question { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; padding: 10px 12px; border-radius: 16px; background: #eef4e2; }
+#app .exploration-activity .season-question > p { grid-column: 1 / -1; margin: 0; font-weight: 700; color: #2f5a3a; }
+#app .exploration-activity .season-question .btn { min-height: 54px; margin: 0; text-align: center; }
+@media (max-width: 700px) { #app .exploration-activity .season-question { grid-template-columns: 1fr; } }
 #app .exploration-activity .experiment-stage[data-spatial] { height: auto; min-height: 160px; max-height: none; flex: 1; margin: 0; }
 #app .exploration-activity .habitat-focus { min-height: 96px; max-height: 180px; }
 #app .exploration-activity .habitat-focus > img { max-height: 170px; }
-#app .exploration-activity .link-board { margin-block: 0; }
-#app .exploration-activity .link-board .btn { min-height: 64px; padding: 8px; }
 #app .exploration-activity .garden-frame[data-spatial] { min-height: 192px; height: auto; flex: 1; margin: 0; max-width: none; }
 #app .exploration-activity .garden-grid { height: 100%; max-height: 100%; aspect-ratio: auto; }
 #app .exploration-activity .garden-cell { height: auto; min-height: 48px; }
@@ -452,6 +459,7 @@ html body[data-screen] .toast { top: calc(var(--hud-top) + 8px); max-width: min(
   #app .field-mission .field-tools { gap: 8px; }
   #app .field-season-pairs { gap: 12px; }
   #app .field-season-images :is(svg,.season-atlas) { height: 135px; min-height: 135px; }
+  #app .field-season-images .season-atlas { width: min(100%, 202px); height: auto; min-height: 0; }
   #app .field-season-images .field-token, #app .field-link-targets .field-target { font-size: 16px; }
   #app .field-restoration { gap: 10px; }
   #app .field-garden-zone { min-height: 205px; padding: 10px; }
@@ -488,14 +496,8 @@ html body[data-screen] .toast { top: calc(var(--hud-top) + 8px); max-width: min(
   #app .activity-5 .habitat-focus > img { width: 100%; height: 48px; }
   #app .activity-5 .habitat-focus p { display: none; }
   #app .activity-5 .learning-scene > .chain-title { grid-column: 2; grid-row: 1; align-self: center; }
-  #app .activity-5 .learning-scene > .link-board { grid-column: 1 / -1; grid-row: 2; height: 100%; min-height: 0; }
   #app .activity-5 .learning-scene > :is(.rule-result, .reason-cards) { grid-column: 1 / -1; grid-row: 3; }
   #app .activity-5 .chain-title { font-size: 16px; }
-  #app .activity-5 .link-board .btn { min-height: 64px; font-size: 16px; padding: 5px; gap: 2px; }
-  #app .activity-5 .link-board .btn small { font-size: 16px; }
-  #app .activity-5 .link-board .btn[data-action="habitat"] > svg { display: none; }
-  #app .activity-5 .link-board .btn[data-action="select-plant"] { position: relative; }
-  #app .activity-5 .link-board .btn[data-action="select-plant"] > svg { position: absolute; right: 6px; top: 6px; }
   #app .activity-5 .reason-cards { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 6px; }
   #app .activity-5 .reason-cards > p { grid-column: 1 / -1; font-size: 16px; }
   #app .activity-5 .reason-cards .btn { min-height: 64px; font-size: 16px; }
@@ -559,7 +561,6 @@ html body[data-screen] .toast { top: calc(var(--hud-top) + 8px); max-width: min(
   #app .activity-5 .habitat-focus > img { width: 100%; height: 48px; }
   #app .activity-5 .habitat-focus p { display: none; }
   #app .activity-5 .learning-scene > .chain-title { grid-column: 2; grid-row: 1; align-self: center; }
-  #app .activity-5 .learning-scene > .link-board { grid-column: 1 / -1; grid-row: 2; height: 100%; min-height: 0; }
   #app .activity-5 .learning-scene > :is(.rule-result,.reason-cards) { grid-column: 1 / -1; grid-row: 3; }
   #app .activity-5 .reason-cards { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 6px; }
   #app .activity-5 .reason-cards > p { grid-column: 1 / -1; }
@@ -587,7 +588,6 @@ html body[data-screen] .toast { top: calc(var(--hud-top) + 8px); max-width: min(
   #app .exploration-activity .learning-footer .btn { min-height: 60px; padding-inline: 28px; }
   #app .exploration-activity .specimen-pick { min-height: 72px; }
   #app .exploration-activity .specimen-pick img { height: 58px; }
-  #app .exploration-activity .link-board .btn { min-height: 88px; }
   #app .map-dpad { grid-template-columns: repeat(3, 60px); grid-template-rows: repeat(2, 60px); }
   #app .map-direction { min-height: 60px; min-width: 60px; }
 }
@@ -631,6 +631,7 @@ html body[data-screen] .toast { top: calc(var(--hud-top) + 8px); max-width: min(
   #app .field-frame-tray, #app .field-timeline { gap: 6px; }
   #app .field-frame { padding: 6px; font-size: 16px; }
   #app .field-frame :is(svg,.season-atlas), #app .field-time-slot :is(svg,.season-atlas) { height: 84px; }
+  #app :is(.field-frame, .field-time-slot) .season-atlas { width: min(100%, 126px); height: auto; }
   #app .field-time-slot { min-height: 140px; padding: 8px 5px; font-size: 16px; }
   #app .field-bag-parts { grid-template-columns: 1fr; }
   #app .field-bag-parts > div { display: grid; grid-template-columns: 1fr 1fr; }
@@ -750,6 +751,13 @@ body.large-text #app .exploration-activity .learning-scene { overflow: visible; 
 #app .linking .link-zone { border-color: #fffbe6; color: #2f4a26; background: #ffffff55; }
 #app .linking .link-zone.hover { background: #f6e27a88; border-style: solid; border-color: #f2c94c; }
 #app .link-zone.picked { color: #fff; background: #4f7a4c38; border: 2px solid #fffbe6; align-items: flex-end; text-shadow: 0 1px 3px #1d2e17; }
+/* Before the link: both drop cells stay visible and gently invite, and a ghost dot shows the pull. */
+#app .awaiting .link-zone:not(.picked) { border-color: #fffbe6; color: #2f4a26; background: #ffffff38; animation: zone-invite 1.6s ease-in-out infinite alternate; }
+#app .awaiting .link-zone { text-shadow: 0 0 6px #fffbe6, 0 0 2px #fffbe6; }
+@keyframes zone-invite { to { background: #fffbe670; border-color: #f2c94c; } }
+#app .link-ghost { position: absolute; left: 0; top: 0; z-index: 5; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%; background: radial-gradient(circle, #fff7c2 30%, #f2c94c 62%, #f2c94c00 74%); opacity: 0; pointer-events: none; animation: link-ghost 2.4s ease-in-out infinite; }
+@keyframes link-ghost { 0%, 12% { opacity: 0; transform: translate(var(--x1), var(--y1)); } 22% { opacity: .9; } 72% { opacity: .9; transform: translate(var(--x2), var(--y2)); } 86%, 100% { opacity: 0; transform: translate(var(--x2), var(--y2)); } }
+#app .linking .link-ghost { display: none; }
 #app .link-line { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 4; opacity: 0; }
 #app .link-line.show { opacity: 1; }
 #app .link-line line { stroke: #f2c94c; stroke-width: 5; stroke-linecap: round; stroke-dasharray: 2 9; filter: drop-shadow(0 1px 2px #3a2d1a80); }
@@ -766,7 +774,7 @@ body.large-text #app .exploration-activity .learning-scene { overflow: visible; 
 #app .regrow-mark { position: absolute; width: 34px; height: 34px; margin: -34px 0 0 -4px; background: radial-gradient(circle at 50% 50%, #fff 0 18%, #d9824f 20%); box-shadow: 0 3px 0 #9a4f2a; }
 #app .regrow-mark.ok { background: radial-gradient(circle at 50% 50%, #fff 0 18%, #6fa05a 20%); box-shadow: 0 3px 0 #3e6a33; }
 @media (max-width: 1100px) { #app .regrow-find { margin-top: 8px; padding: 6px 10px; } #app .regrow-pic .field-bud-picture { max-height: 120px; } #app .regrow-copy p { font-size: 17px; } }
-@media (prefers-reduced-motion: reduce) { #app .link-handle, #app .regrow-pin { animation: none; } }
+@media (prefers-reduced-motion: reduce) { #app .link-handle, #app .regrow-pin, #app .awaiting .link-zone { animation: none; } #app .link-ghost { display: none; } }
 
 /* The preview note sits over the map; let taps reach the places under it, keep its own button clickable. */
 #app .map-preview-note { pointer-events: none; }

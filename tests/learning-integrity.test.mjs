@@ -2,7 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {freshState,restoreState,awardStamp,missionStamps,testValid} from '../src/model.js';
 import {recordHint,recordResponse} from '../src/learning-records.js';
-import {fieldMissionAction,renderFieldMission} from '../src/field-missions.js';
+import {fieldMissionAction,renderFieldMission,renderFieldSteps} from '../src/field-missions.js';
 import {fieldBagPair,fieldBagTrial} from '../src/field-missions-state.js';
 import {carryFieldEvidence} from '../src/field-bridge.js';
 import {notebookEntry} from '../src/research-notebook.js';
@@ -33,22 +33,22 @@ test('이전 저장의 direct 스탬프와 없는 응답은 첫 정답의 증거
  const old=freshState();delete old.learningRecords;old.completed[0]=old.completed[1]=true;old.stamps.direct=[0];
  const r=restoreState(JSON.stringify(old));assert.equal(r.completed[0],true);assert.deepEqual(missionStamps(r,0),['unknown']);assert.match(notebookEntry(r,0).body,/확인되지 않음/);
 });
-test('주머니만 바꾼 두 시험은 주머니 그림·설명·젖음과 정확히 대응한다',()=>{
- const before=fieldBagTrial({surface:'lotus',cover:'flap',pocket:'open'}),after=fieldBagTrial({...before,pocket:'flap'});
- const pair=fieldBagPair({design:after,tests:[before,after]});assert.equal(pair.part,'pocket');
- assert.equal(before.notebookDry,after.notebookDry);assert.equal(before.rolls,after.rolls);assert.equal(before.pocketDry,false);assert.equal(after.pocketDry,true);
- assert.match(bagArt(before,false,before),/pocket-open/);assert.match(bagArt(after,false,after),/pocket-closed/);
- assert.match(bagArt(before),/주머니가 젖음/);assert.match(bagArt(after),/주머니가 마름/);
+test('입구 덮개만 바꾼 두 시험은 덮개 그림·설명·공책 젖음과 정확히 대응한다',()=>{
+ const before=fieldBagTrial({surface:'lotus',cover:'open'}),after=fieldBagTrial({...before,cover:'flap'});
+ const pair=fieldBagPair({design:after,tests:[before,after]});assert.equal(pair.part,'cover');
+ assert.equal(before.rolls,after.rolls);assert.equal(before.notebookDry,false);assert.equal(after.notebookDry,true);
+ assert.match(bagArt(before),/입구 덮개: 열림/);assert.match(bagArt(after),/입구 덮개: 닫힘/);
 });
 test('겉면만 비교하면 세 부품을 모두 확인했다는 결론을 만들지 않고 기존 시험을 이어 쓴다',()=>{
  const s=freshState(),u={};s.page=8;
  const act=(a,id='')=>fieldMissionAction(s,u,a,id);
  act('field-bag-predict','surface');
- for(const [part,value] of [['surface','plain'],['cover','flap'],['pocket','flap']])act('field-bag-part',part+':'+value);
+ for(const [part,value] of [['surface','plain'],['cover','flap']])act('field-bag-part',part+':'+value);
  act('field-bag-test');act('field-bag-part','surface:lotus');act('field-bag-test');act('field-bag-compare','surface');
  assert.match(act('field-bag-deliver'),/이번 비교로 확인한 역할/);assert.doesNotMatch(u.fieldMission.feedback,/두 덮개의 다른 역할을 시험으로 확인/);
  carryFieldEvidence(s,4);assert.equal(s.tests.length,2);assert.equal(s.design.surface,'lotus');assert.equal(s.testPrediction,'surface');assert.equal(s.inventionExplanations.surface.part,'surface');assert.equal(s.inventionExplanations.cover,undefined);assert.equal(testValid(s),false);
- u.fieldMission.mission=4;u.fieldMission.stage=2;assert.match(renderFieldMission(s,u),/조립으로 돌아가기/);assert.match(renderFieldMission(s,u),/비교 시험하기/);
+ u.fieldMission.mission=4;u.fieldMission.stage=2;// Going back to earlier stages is the step list's job; stage 3 keeps a single finish button.
+ assert.doesNotMatch(renderFieldMission(s,u),/조립으로 돌아가기|비교 시험하기/);assert.match(renderFieldSteps(s,u),/data-action="field-stage" data-id="0"/);
 });
 test('첫 예상은 관찰 이후 바뀌지 않고 노트 퀴즈와 읽음은 왕복 보존된다',()=>{
  const s=freshState(),u={};s.page=4;
@@ -87,7 +87,7 @@ test('잠금이 없는 환경에서는 보호되지 않은 저장을 수행하�
 });
 test('틀린 첫 예상과 관찰 뒤 고친 선택을 연결하되 원래 예상은 지우지 않는다',()=>{
  const s=freshState(),u={};s.page=4;
- fieldMissionAction(s,u,'field-predict','air:sink');fieldMissionAction(s,u,'field-test-model','air');fieldMissionAction(s,u,'field-observe-model','air:float');
+ fieldMissionAction(s,u,'field-predict','air:sink');fieldMissionAction(s,u,'field-test-model','air');
  assert.equal(s.fieldEvidence.float.predictions.air,'sink');
  const response=s.learningRecords[2].responses['field:float-predict:air'];assert.equal(response.first,'가라앉음');assert.equal(response.last,'뜸');assert.equal(response.correct,true);
  assert.match(notebookEntry(restoreState(JSON.stringify(s)),2).body,/가라앉음 → 뜸/);
@@ -98,4 +98,30 @@ test('동일 조건의 시험 기록을 다시 선택하면 반복 시험 없이
  s.inventionExplanations={surface:{key:'plain:open',before:'lotus:open',part:'surface'},cover:{key:'lotus:open',before:'lotus:flap',part:'cover'}};
  assert.equal(testValid(s),false);s.activeTestKey='lotus:flap';assert.equal(testValid(s),true);
  const r=restoreState(JSON.stringify(s));assert.equal(r.tests.length,3);assert.equal(testValid(r),true);
+});
+
+test('계절 현장 연결이 완성된 경우에만 실제 관찰과 예상을 다음 탐구로 이어 쓴다',()=>{
+ const s=freshState(),u={};s.page=2;
+ const act=(a,id)=>fieldMissionAction(s,u,a,id);
+ act('field-season-predict','tree:none');act('field-season-predict','herb:roots');
+ for(const [k,part,clue] of [['tree','trunk','branches'],['herb','root','rootbud']]){
+  act('field-season-link',`${k}:${part}`);
+  for(const [i,phase] of ['winter','bud','spring'].entries())act('field-order',`${k}:${phase}:${i}`);
+  act('field-season-clue',`${k}:${clue}`);
+ }
+ carryFieldEvidence(s,1);
+ assert.equal(s.seasonPrediction.cherry,'none');assert.equal(s.seasonPrediction.sowthistle,'roots');
+ assert.equal(s.seasonalRecords.length,4);assert.equal(s.linkedEvidence.length,4);assert.equal(s.completed[2],false);
+ const restored=restoreState(JSON.stringify(s));assert.deepEqual(restored.seasonalRecords,s.seasonalRecords);assert.deepEqual(restored.linkedEvidence,s.linkedEvidence);
+ const before=JSON.stringify(s.seasonPhotos);s.seasonPhotos['cherry:3'].underground=false;carryFieldEvidence(s,1);assert.equal(s.seasonPhotos['cherry:3'].underground,false);
+ const unfinished=freshState();carryFieldEvidence(unfinished,1);assert.deepEqual(unfinished.seasonPhotos,{});assert.notEqual(before,'{}');
+});
+
+test('현장 정원은 복구와 시험을 마친 경우에만 빈 정원에 이어지고 기존 작품은 보존한다',()=>{
+ function complete(s){s.page=6;const u={};for(const [env,z] of [['water','pond'],['grass','meadow'],['dry','ridge']])fieldMissionAction(s,u,'field-place-environment',`${env}:${z}`);for(const [plant,z] of [['hyacinth','pond'],['cherry','meadow'],['aloe','ridge']])fieldMissionAction(s,u,'field-place-plant',`${plant}:${z}`);fieldMissionAction(s,u,'field-garden-rain','');}
+ const s=freshState();complete(s);carryFieldEvidence(s,3);
+ assert.deepEqual(s.garden,{hyacinth:0,cherry:2,aloe:4});assert.equal(s.gardenReviewed,true);assert.deepEqual(s.gardenReasons,[]);assert.equal(s.completed[6],false);
+ const restored=restoreState(JSON.stringify(s));assert.deepEqual(restored.garden,s.garden);assert.deepEqual(restored.terrain,s.terrain);
+ const own=freshState();complete(own);own.terrain[0]='dry';carryFieldEvidence(own,3);assert.equal(own.terrain[0],'dry');assert.deepEqual(own.garden,{});
+ const unfinished=freshState();carryFieldEvidence(unfinished,3);assert.deepEqual(unfinished.garden,{});assert.equal(unfinished.gardenReviewed,false);
 });

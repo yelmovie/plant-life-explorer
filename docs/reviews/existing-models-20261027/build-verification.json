@@ -1,0 +1,48 @@
+{
+  "version": "0.5.0",
+  "builtAt": "2026-10-27T14:20:04.815Z",
+  "files": 179,
+  "result": "PASS",
+  "matched": [
+    {
+      "path": "assets/models/plant_cherry_full.glb",
+      "bytes": 4133180,
+      "sha256": "baae8f6677d4078b391f522edc163fc6d64a00dd8ec785f972242c73345d96b5"
+    },
+    {
+      "path": "src/spatial.js",
+      "bytes": 29099,
+      "sha256": "194ca561cf8abc1f7ecb9918680b06e828bf0c51e51c7946f853b1b2a751a933"
+    },
+    {
+      "path": "src/vendor/three/addons/libs/meshopt_decoder.module.js",
+      "bytes": 24848,
+      "sha256": "784315b6959c85459eab77f51776158cc381d7e7d77b919ff7c4935f088a7c5c"
+    },
+    {
+      "path": "assets/meshopt-license.txt",
+      "bytes": 1079,
+      "sha256": "d1bc307ff896c7fc65e3ff4823cc478194f7a5bc6436f99534ebede4d9e2017a"
+    },
+    {
+      "path": "src/frame.css",
+      "bytes": 26483,
+      "sha256": "7c18c55c627ced6491b62fc8e1e1b40648dcd4522e1521bccca54f1dd9ebdba5"
+    },
+    {
+      "path": "src/garden-view.js",
+      "bytes": 1939,
+      "sha256": "495a6d45d789b8c6aa1abcfc86dc5937a5571f817dc0f0459e97649cb902e9b4"
+    },
+    {
+      "path": "src/garden-environment.js",
+      "bytes": 7574,
+      "sha256": "bebc08a301c908b7c17e1fd00b478e945c9c0cbb1beeca3807c02b3864c58530"
+    },
+    {
+      "path": "src/season-environment.js",
+      "bytes": 7599,
+      "sha256": "35efcac688855df3812dd3b626a406c9f89c19ec40c497ed9ff904c6f55cb3ac"
+    }
+  ]
+}
