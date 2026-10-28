@@ -16,7 +16,7 @@ const obj=v=>v&&typeof v==='object'&&!Array.isArray(v)?v:{};
 const unique=(v,allowed)=>[...new Set(Array.isArray(v)?v.filter(x=>allowed.includes(x)):[])];
 const map=(v,keys,values)=>Object.fromEntries(keys.filter(k=>values.includes(obj(v)[k])).map(k=>[k,v[k]]));
 // The field bag has the same two parts as the core invention page, so its trials carry over as they are.
-const BAG_PARTS=['surface','cover'];
+const BAG_PARTS=['surface','cover'],BAG_UPGRADE={surface:'lotus',cover:'flap'};
 export const fieldBagKey=d=>`${d.surface}:${d.cover}`;
 const designOK=d=>['plain','lotus'].includes(d?.surface)&&['open','flap'].includes(d?.cover);
 const copy=d=>({surface:d.surface,cover:d.cover});
@@ -56,7 +56,9 @@ export function fieldSteps(e,m){
   case 1:return [e.seasons.links.tree==='trunk'&&e.seasons.links.herb==='root',ordered(e.seasons.tree)&&e.seasons.clues.tree==='branches',ordered(e.seasons.herb)&&e.seasons.clues.herb==='rootbud'];
   case 2:return [Object.keys(e.float.predictions).length===2,['air','solid'].every(m=>e.float.tested.includes(m)),e.float.observed.air==='float'&&e.float.observed.solid==='sink'&&e.float.reason==='air'];
   case 3:return [FIELD_ZONES.every(z=>e.garden.environments[z]===FIELD_ENV[z]),Object.entries(FIELD_PLANTS).every(([p,env])=>FIELD_ENV[e.garden.plants[p]]===env),fieldGardenValid(e.garden)&&e.garden.testedKey===fieldGardenKey(e.garden)];
-  case 4:{const b=e.bag,p=fieldBagPair(b),c=b.compared;return [b.assembled.length===2,!!p,!!p&&c.before===p.before.key&&c.after===p.after.key&&c.part===p.part&&b.delivered===fieldBagKey(b.design)];}
+  // Rain on the plain bag, add the two upgrades one at a time with a rain after each, then name the part that kept the notebook dry.
+  // A delivered bag (also from the older assemble-and-circle flow) counts as done.
+  case 4:{const b=e.bag,done=!!b.delivered&&b.delivered===fieldBagKey(b.design),both=fieldBagKey(b.design)==='lotus:flap'&&b.tests.at(-1)?.key==='lotus:flap'&&BAG_PARTS.every(k=>b.comparisons[k]);return [done||(!!b.prediction&&b.tests.length>0),done||both,done];}
   default:return [false,false,false];
  }
 }
@@ -140,22 +142,30 @@ function applyFieldActionCore(state,ui,action,id=''){
   e.garden.testedKey=fieldGardenKey(e.garden);return feedback(u,'복구 성공! 물가·풀밭·건조한 곳에 각각 알맞은 식물을 심었어.',true);
  }
  if(action==='field-bag-predict'){
-  if(!['surface','cover'].includes(a)||e.bag.prediction)return '';e.bag.prediction=a;return feedback(u,'처음 예상을 남겼어. 부품을 조립하고 비로 확인하자.',true);
+  if(!['surface','cover'].includes(a)||e.bag.prediction)return '';e.bag.prediction=a;return feedback(u,'예상을 남겼어. 먼저 보통 가방에 비를 내려 보자.',true);
  }
- if(action==='field-bag-part'){
-  if(!BAG_PARTS.includes(a)||!(a==='surface'?['plain','lotus']:['open','flap']).includes(b))return '';e.bag.design[a]=b;if(!e.bag.assembled.includes(a))e.bag.assembled.push(a);e.bag.delivered='';u.selected='';return feedback(u,'부품을 조립했어. 시험할 때는 한 번에 하나만 바꿔 보자.',true);
+ // One upgrade at a time: a new part goes on only after the last change has been rained on.
+ if(action==='field-bag-upgrade'){
+  const b=e.bag,value=BAG_UPGRADE[a];if(!value||b.design[a]===value)return '';
+  if(!b.tests.length||b.tests.at(-1).key!==fieldBagKey(b.design))return feedback(u,'지금 가방에 먼저 비를 내려 봐. 하나씩 바꿔야 무엇 때문인지 알 수 있어.');
+  b.design[a]=value;b.delivered='';return feedback(u,`${a==='surface'?'연잎 겉면을':'덮개를'} 달았어! 구름을 눌러 비를 내려 봐.`,true);
  }
  if(action==='field-bag-test'){
-  const b=e.bag;if(b.assembled.length!==2)return feedback(u,'두 자리의 부품을 먼저 직접 조립해 줘.');const t=fieldBagTrial(b.design);if(b.tests.at(-1)?.key===t.key)return feedback(u,'이 시험은 이미 있어. 부품 하나를 바꿔서 달라진 까닭을 비교해 봐.');
-  b.tests.push(t);if(b.tests.length>16)b.tests.shift();b.delivered='';return feedback(u,`같은 비 10방울! 겉면 물방울 ${t.rolls?'잘 굴러감':'남아 있음'} · 안쪽 공책 ${t.notebookDry?'마름':'젖음'}.`,true);
+  const b=e.bag;if(!b.prediction)return feedback(u,'비를 내리기 전에 무엇을 바꾸면 될지 먼저 예상해 줘.');const t=fieldBagTrial(b.design),before=b.tests.at(-1);
+  if(before?.key===t.key)return feedback(u,'이 가방은 벌써 시험했어. 부품 하나를 달고 다시 비를 내려 봐.');
+  b.tests.push(t);if(b.tests.length>16)b.tests.shift();b.delivered='';
+  const part=before&&BAG_PARTS.filter(k=>before[k]!==t[k]).length===1?BAG_PARTS.find(k=>before[k]!==t[k]):'';
+  if(part)b.comparisons[part]={before:before.key,after:t.key,part};
+  return feedback(u,part==='surface'?`연잎 겉면에서 물방울이 또르르 굴러가! 공책은 ${t.notebookDry?'뽀송해.':'아직 젖었어.'}`:part==='cover'?`덮개가 입구를 막아 공책이 ${t.notebookDry?'뽀송해!':'젖었어.'} 겉면 물방울은 ${t.rolls?'굴러가.':'남아 있어.'}`:`겉면에 물기가 남고, 공책이 ${t.notebookDry?'말랐어.':'젖었어.'}`,true);
  }
- if(action==='field-bag-compare'){
-  const p=fieldBagPair(e.bag);if(!p)return feedback(u,'겉면과 입구 덮개 중 하나만 다른 두 시험이 필요해. 나머지 부품은 그대로 두자.');if(a!==p.part)return feedback(u,p.part==='surface'?'입구 덮개는 같아. 바뀐 겉면과 물방울 움직임을 봐.':'겉면은 같아. 입구 덮개와 공책의 젖음을 봐.');
-  e.bag.compared={before:p.before.key,after:p.after.key,part:p.part};e.bag.comparisons[p.part]={...e.bag.compared};u.selected='';return feedback(u,FIELD_BAG_ROLES[a],true);
+ if(action==='field-bag-reset'){
+  const b=e.bag;b.design={surface:'plain',cover:'open'};b.tests=[];b.comparisons={};b.compared={before:'',after:'',part:''};b.delivered='';u.stage=0;return feedback(u,'처음 가방으로 돌아왔어. 다시 비를 내려 보자.',true);
  }
- if(action==='field-bag-deliver'){
-  const b=e.bag,p=fieldBagPair(b);if(!p||b.compared.before!==p.before.key||b.compared.after!==p.after.key||b.compared.part!==p.part)return feedback(u,'부품 하나만 바꾼 두 시험을 비교하고 바뀐 부품을 연결해 줘.');
-  b.delivered=fieldBagKey(b.design);return feedback(u,`비교 기록을 남겼어! 이번 비교로 확인한 역할: ${FIELD_BAG_ROLES[p.part]} 이 기록을 이어 써서 가방을 완성하자.`,true);
+ if(action==='field-bag-answer'){
+  const b=e.bag;if(!fieldSteps(e,4)[1])return feedback(u,'두 부품을 하나씩 달고 비를 내려 본 뒤에 골라 줘.');
+  if(a!=='cover')return feedback(u,'연잎 겉면만 달았을 때 공책은 어땠는지 시험 카드를 다시 봐.');
+  b.compared={...b.comparisons.cover};b.delivered=fieldBagKey(b.design);
+  return feedback(u,`맞아! 덮개가 입구로 오는 비를 막아 공책을 지켰어. 연잎 겉면은 물방울을 굴려 보냈어. ${b.prediction==='cover'?'처음 예상이 맞았어!':'처음엔 겉면만 바꾸면 된다고 생각했지? 시험으로 생각을 고쳤어.'}`,true);
  }
  return false;
 }

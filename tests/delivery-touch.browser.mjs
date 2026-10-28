@@ -113,22 +113,21 @@ try{
  check((await saved()).gardenPick==='aloe','4장: pick recorded (double tap safe)');
  const gardenBefore=(await saved()).garden;await complete(3);
 
- // 5장: the first objective matches the first-guess screen.
+ // 5장: guess → rain on the plain bag → one upgrade per rain → which part kept the notebook dry.
  await enter(4);const first=await page.locator('.mission-objective').innerText();
- check(/먼저 예상/.test(first)&&!/①②/.test(first),'5장: first objective names only the prediction on screen');
- await act('field-bag-predict','surface');check(/①②/.test(await page.locator('.mission-objective').innerText()),'5장: after the guess the objective moves to assembly');
- for(const [part,n] of [['surface',2],['cover',1]])for(let i=0;i<n;i++)await tap(`[data-bag-dial="${part}"]`);
- await field(`e.bag.assembled.length===2`);
- await stage(1);check(/구름/.test(await page.locator('.bag-hint').innerText()),'5장: rain step hint says to rain first');
+ check(/먼저 예상/.test(first)&&!/구름/.test(first),'5장: first objective names only the prediction on screen');
+ await act('field-bag-predict','surface');check(/구름/.test(await page.locator('.mission-objective').innerText()),'5장: after the guess the objective moves to the first rain');
  await tapCenter('[data-bag-cloud]');await field(`e.bag.tests.length===1`);
- check(/하나만/.test(await page.locator('.bag-hint').innerText()),'5장: after the first rain the hint asks for one change');
- await tap('[data-bag-dial="cover"]');await field(`e.bag.design.cover==='flap'`);await tapCenter('[data-bag-cloud]');await field(`e.bag.tests.length===2`);
- await stage(2);const d=await page.locator('[data-diff="after"]').boundingBox(),[cx,cy]=[d.x+d.width*.5,d.y+d.height*.22],r=Math.min(d.width,d.height)*.14;
- await touch(Array.from({length:29},(_,i)=>[cx+r*Math.cos(i/24*2*Math.PI),cy+r*Math.sin(i/24*2*Math.PI)]));await field(`e.bag.compared.part==='cover'`);
- await act('field-bag-deliver');await explore();
- await act('lotus-drop');await act('design-answer','roll');await page.locator('.learning-footer [data-action="complete"]').tap();
- await act('surface','plain');await act('run-test',undefined,'.test-control-row ');await until(()=>!document.querySelector('.water-demo.moving'));await act('test-explain','surface');
- await act('surface','lotus');await act('use-tested-design');await complete(4);
+ await stage(1);check(/하나만/.test(await page.locator('.bag-hint').innerText()),'5장: upgrade step asks for one part at a time');
+ await tap('[data-action="field-bag-upgrade"][data-id="surface"]');await field(`e.bag.design.surface==='lotus'`);
+ await page.locator('[data-action="field-bag-upgrade"][data-id="cover"]').tap({force:true});await page.waitForTimeout(300);
+ check((await saved()).fieldEvidence.bag.design.cover==='open','5장: the second part waits until the first change has been rained on');
+ await tapCenter('[data-bag-cloud]');await field(`e.bag.tests.length===2`);
+ await tap('[data-action="field-bag-upgrade"][data-id="cover"]');await field(`e.bag.design.cover==='flap'`);await tapCenter('[data-bag-cloud]');await field(`e.bag.tests.length===3`);
+ await stage(2);await tap('[data-action="field-bag-answer"][data-id="surface"]');check(/연잎 겉면만/.test(await page.locator('.guide-bubble').innerText()),'5장: a wrong answer points back to the trial cards');
+ await tap('[data-action="field-bag-answer"][data-id="cover"]');await field(`!!e.bag.delivered`);
+ await explore();check(await page.locator('.invention-summary').count()===1,'5장: the record page sums up the field trials without a second experiment');
+ await complete(4);
 
  // Final record → ending, then refresh keeps progress and the garden layout.
  await act('report');await act('report-tab','share');await act('share-later');await act('start-final');await act('final-habitat','water');await act('final-habitat','dry');await act('power-core');await page.locator('[data-story-action="exit"]').tap();

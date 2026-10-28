@@ -17,7 +17,7 @@ export function renderDesign(s,u={}){
 
 export function predictionLine(s){
  if(!s.testPrediction)return '';
- return `${s.fieldEvidence?.bag?.prediction?'현장에서 남긴 첫 예상':'처음 예상'}: ${s.testPrediction==='cover'?'입구로 오는 비도 막아야 해.':'연잎 겉면만 바꾸면 돼.'} 두 부품의 역할을 각각 확인해 보자.`;
+ return `${s.fieldEvidence?.bag?.prediction?'현장에서 남긴 첫 예상':'처음 예상'}: ${s.testPrediction==='cover'?'입구로 오는 비도 막아야 해.':'연잎 겉면만 바꾸면 돼.'} 시험으로 확인했어.`;
 }
 
 export function inventionHint(s){
@@ -33,7 +33,13 @@ export function inventionHint(s){
 const resultText=t=>`<span class="result-chip ${t.clean?'good':''}">겉면 · ${t.clean?'물방울·먼지 떨어짐':'물기·먼지 남음'}</span><span class="result-chip ${t.dry?'good':''}">안쪽 · ${t.dry?'수첩 뽀송':'수첩 젖음'}</span>`;
 const record=(t,label)=>`<article class="test-record"><strong>${label}</strong>${bagArt(t)}<span>${t.surface==='lotus'?'연잎 겉면':'보통 천'} · ${t.cover==='flap'?'덮개':'열린 입구'}</span><div>${resultText(t)}</div></article>`;
 
+// After the field mission the bag is already built and tested; the record page only sums it up.
+function testSummary(s,u){
+ const name=t=>t.surface==='plain'&&t.cover==='open'?'처음 가방':[t.surface==='lotus'?'+ 연잎 겉면':'',t.cover==='flap'?'+ 덮개':''].filter(Boolean).join(' ');
+ return `<div class="learning-layout test-layout invention-summary"><section class="learning-scene"><div class="summary-bag"><div class="compact-bag" data-spatial="bag">${bagArt(s.design)}</div><div class="notebook-result">${assetImage('notebook_dry')}<span>공책 뽀송!</span></div></div><div class="summary-records">${s.tests.slice(-3).map(t=>`<article class="summary-trial"><strong>${name(t)}</strong><span class="result-chip ${t.clean?'good':''}">물방울 ${t.clean?'굴러감':'남음'}</span><span class="result-chip ${t.dry?'good':''}">공책 ${t.dry?'뽀송':'젖음'}</span></article>`).join('')}</div></section><aside class="learning-note"><h2>발명 완성!</h2><div class="invention-proof summary-proof"><span class="done">✓ 연잎 겉면 · 물방울을 굴려 보내</span><span class="done">✓ 덮개 · 입구로 오는 비를 막아</span></div><p class="prediction-note">${predictionLine(s)}</p><div class="idea-application"><p>이 아이디어를 또 어디에 쓸까?</p>${button('비옷','idea-apply','coat',u.application==='coat')}${button('탐험 신발','idea-apply','shoes',u.application==='shoes')}<span>${u.application==='coat'?'겉은 물방울을 보내고, 후드로 틈을 가리면 어떨까?':u.application==='shoes'?'신발 겉면과 물이 들어오는 입구를 따로 살펴보자.':'골라 보면 리피가 아이디어를 말해 줘.'}</span></div></aside></div>`;
+}
 export function renderTests(s,u){
+ if(testValid(s)&&s.fieldBridges?.[4]&&!u.testing&&!u.replaying)return testSummary(s,u);
  const last=currentTrial(s),pair=comparisonPair(s),hint=inventionHint(s),moving=u.testing||u.replaying,proof=inventionEvidence(s);
  const routes=moving||last?`<svg class="water-paths" viewBox="0 0 500 300" role="img" aria-label="${s.design.cover==='open'?'입구로 물이 들어가요':'덮개를 따라 물이 바깥으로 흘러요'}"><path class="water-route" d="${s.design.cover==='open'?'M250 10V125L245 175':'M250 10L250 70L345 140L370 210'}"/><path class="water-route surface-route" d="${s.design.surface==='lotus'?'M160 125Q115 210 85 260':'M170 125L175 180'}"/></svg><div class="notebook-result">${assetImage((last?last.dry:s.design.cover==='flap')?'notebook_dry':'notebook_wet')}<span>가방 안 수첩</span></div>`:'';
  const compare=pair&&!u.testing?`<div class="test-comparison">${record(pair.before,'바꾸기 전')}${record(pair.last,'바꾼 뒤')}</div><div class="reason-cards comparison-question"><p>${pair.part==='surface'?'입구는 같고, 겉면만 바뀌었어.':'겉면은 같고, 입구만 바뀌었어.'} 무엇이 달라졌어?</p>${button('겉면이 물방울·먼지를 보내요','test-explain','surface',s.testExplanation?.part==='surface')}${button('덮개가 입구로 오는 비를 막아요','test-explain','cover',s.testExplanation?.part==='cover')}</div>`:last&&!u.testing?`<div class="latest-result" role="status">${resultText(last)}</div>`:'';

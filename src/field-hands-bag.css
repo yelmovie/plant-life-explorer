@@ -8,27 +8,9 @@
 #app .bag-say { margin: 6px auto 0; max-width: 460px; padding: 4px 12px; border-radius: 12px; background: #fffdf1eb; color: var(--scene-ink); font: 17px/1.4 var(--font-display); text-align: center; word-break: keep-all; }
 
 /* Tap dials on the numbered places: each tap clicks the next part in. */
-#app :is(.bag-dial, .bag-hot) { position: absolute; z-index: 5; width: 31%; height: 26%; min-height: 52px; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 4px; border: 3px dashed #fffbe6; border-radius: 16px; background: #ffffff38; color: var(--scene-ink); font: 16px/1.2 var(--font-display); text-align: center; word-break: keep-all; box-shadow: 0 0 0 2px #4f7a4c55; transition: background .16s, border-color .16s; }
-#app .bag-dial { cursor: pointer; touch-action: manipulation; }
-#app :is(.bag-dial, .bag-hot) > b { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--today-head-bottom, #2d5a3d); color: #fffced; font: 18px/1 var(--font-display); }
-#app :is(.bag-dial, .bag-hot) > span { padding: 2px 8px; border-radius: 10px; background: #fffdf1eb; }
-#app .bag-dial.set { border-style: solid; border-color: #8fb36a; background: #f2f9dc30; }
-#app .bag-dial.set > b { background: #5d8f4b; }
-#app .bag-dial:hover { background: #fff6c455; }
-#app .bag-dial:focus-visible { outline: 3px solid #b88a27; outline-offset: 3px; }
-#app .bag-dial.turn > b { animation: dial-turn .38s cubic-bezier(.2, 1.5, .4, 1); }
-#app .bag-dial.turn > span, #app .bag-dial.snap > span { animation: bag-snap-in .4s cubic-bezier(.2, 1.6, .4, 1); }
-#app .locked .bag-dial { cursor: default; opacity: .75; }
 @keyframes dial-turn { from { transform: rotate(-200deg) scale(.7); } to { transform: rotate(0); } }
 @keyframes bag-snap-in { 0% { transform: scale(1.25); } 55% { transform: scale(.92); } 100% { transform: none; } }
-#app .bag-hot { border-color: transparent; background: none; box-shadow: none; pointer-events: none; }
-#app .bag-hot.stuck { border: 3px solid #6fa05a; background: #f2f9dc66; }
-#app .bag-hot.stuck > span { background: #5d8f4b; color: #fff; }
 
-#app .dial-bench { grid-template-columns: minmax(0, 1fr); justify-items: center; }
-#app .dial-bench > .bag-stage { width: min(100%, 520px); }
-#app .bag-stitch-frame { position: relative; padding: 26px; border-radius: 30px; background: #f6efd8cc; }
-#app .bag-stitch-frame.just-sewn { animation: sewn-pop .5s cubic-bezier(.2, 1.5, .4, 1); box-shadow: 0 0 0 4px #8fb36a; }
 @keyframes sewn-pop { 40% { transform: scale(1.03); } }
 
 /* Rain by taps: a cloud above the bag and a big drop counter. */
@@ -80,38 +62,59 @@
 
 /* Explain: spot the difference by circling it with a finger. */
 #app .explain-bench { grid-template-columns: minmax(0, 1fr); }
-#app .spot-diff { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
-#app .diff-side { display: grid; gap: 6px; margin: 0; padding: 8px; border-radius: 18px; background: #fffcf0ed; min-width: 0; }
-#app .diff-side > figcaption { justify-self: center; padding: 2px 12px; border-radius: 999px; background: var(--today-head-bottom, #2d5a3d); color: #fffced; font: 17px/1.3 var(--font-display); }
-#app .diff-canvas { max-width: 280px; touch-action: none; user-select: none; -webkit-user-select: none; cursor: crosshair; }
-#app .diff-ink { position: absolute; inset: 0; z-index: 6; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
-#app .diff-ink path { fill: none; stroke: #e0662c; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
-#app .diff-ink path.closed, #app .diff-ink path.ok { stroke: #e0662c; fill: #f6e27a33; }
-#app .diff-ink path.ok { stroke: #4f8a3c; }
-#app .diff-ink path.miss { stroke: #9a8f78; stroke-dasharray: 6 6; }
-#app .diff-ink path.fade { opacity: 0; transition: opacity .4s; }
 #app .explain-bench .field-trial-card { padding: 6px 8px; }
-#app .diff-side .field-trial-card h4, #app .diff-side .trial-rain { display: none; }
-#app .bag-finish { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-#app .bag-finish > .btn:first-child { flex: 1 1 260px; }
 
 @media (max-width: 1100px) {
   #app .bag-bench { grid-template-columns: minmax(0, 1fr) minmax(240px, 1fr); gap: 8px 10px; }
-  #app .dial-bench, #app .explain-bench { grid-template-columns: minmax(0, 1fr); }
+  #app .explain-bench { grid-template-columns: minmax(0, 1fr); }
   #app .bag-canvas { max-width: 380px; }
-  #app :is(.bag-dial, .bag-hot) { font-size: 14px; }
   #app .bag-say { font-size: 16px; }
   #app .bag-stage.with-sky { padding-top: 86px; }
   #app .rain-bench .bag-canvas { max-width: 320px; }
-  #app .diff-canvas { max-width: 240px; }
   #app .trial-rain > span { display: none; }
   #app .trial-body li { font-size: 14px; }
   #app .trial-body li > b { font-size: 15px; }
 }
 @media (max-width: 760px) {
-  #app .bag-bench, #app .spot-diff { grid-template-columns: 1fr; }
+  #app .bag-bench { grid-template-columns: 1fr; }
   #app .rain-bench > .bag-results { grid-column: 1; grid-row: auto; }
 }
 @media (prefers-reduced-motion: reduce) {
-  #app :is(.bag-dial.turn > b, .bag-dial.turn > span, .bag-dial.snap > span, .bag-cloud, .bag-cloud.puff, .bag-cloud.rush, .rain-count.pop, .bag-stitch-frame.just-sewn, .field-trial-card[data-fresh], .rainbow::after) { animation: none; }
+  .bag-cloud, .bag-cloud.puff, .bag-cloud.rush, .rain-count.pop, .field-trial-card[data-fresh], .rainbow::after) { animation: none; }
 }
+
+/* Upgrade cards: put on one part at a time (the other waits until the rain has fallen). */
+#app .bag-upgrades { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+#app .bag-upgrade { display: grid; grid-template-columns: 60px minmax(0, 1fr); align-items: center; gap: 2px 10px; min-height: 80px; padding: 8px 10px; border: 2px solid #d3e0bd; border-radius: 18px; background: #fffdf3; box-shadow: 0 4px 0 #b8c99e; color: #2f4a26; text-align: left; cursor: pointer; }
+#app .bag-upgrade .bag-upgrade-pic { grid-row: 1 / 3; width: 60px; height: 60px; object-fit: contain; }
+#app .bag-upgrade strong { display: flex; align-items: center; gap: 4px; font: 18px/1.25 var(--font-display); font-weight: 400; }
+#app .bag-upgrade small { font-size: 14px; line-height: 1.3; color: #5a6b4a; }
+#app .bag-upgrade.on { border-color: #8fb86a; background: #e8f3d6; box-shadow: 0 2px 0 #8fb86a; transform: translateY(2px); }
+#app .bag-upgrade[aria-disabled="true"]:not(.on) { opacity: .55; }
+#app .bag-upgrade:not([aria-disabled="true"]):active { transform: translateY(3px); box-shadow: 0 1px 0 #b8c99e; }
+/* The same ten drops fall in every trial, so the rain row is shown once on the cloud, not on each small card. */
+#app .rain-bench .trial-rain { display: none; }
+#app .rain-bench .field-trial-card h4 { font-size: 17px; margin-bottom: 2px; }
+#app .bag-results .bag-reset { justify-self: end; min-height: 44px; padding: 4px 14px; font-size: 15px; }
+/* Question step: the three trials side by side, then two answers. */
+#app .explain-bench > .field-trials { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+#app .bag-answer { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+#app .bag-answer .btn { min-width: 160px; min-height: 56px; font-size: 20px; }
+#app .bag-answer .bag-say { flex-basis: 100%; text-align: center; }
+@media (max-width: 900px), (orientation: portrait) {
+  #app .explain-bench > .field-trials { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Record page after the field mission: the finished bag and its three trials, no second experiment. */
+#app .invention-summary .summary-bag { display: flex; align-items: center; justify-content: center; gap: 18px; }
+#app .invention-summary .summary-bag .compact-bag { width: min(320px, 46%); }
+#app .invention-summary .summary-bag .notebook-result { position: static; display: grid; justify-items: center; gap: 4px; }
+#app .invention-summary .summary-records { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+#app .invention-summary .summary-records .test-record { min-width: 0; }
+#app .invention-summary .summary-proof { display: grid; gap: 6px; }
+@media (max-width: 900px), (orientation: portrait) {
+  #app .invention-summary .summary-records { grid-template-columns: minmax(0, 1fr); }
+}
+#app .invention-summary .summary-trial { display: grid; gap: 6px; align-content: start; padding: 10px 12px; border-radius: 16px; background: #fffdf3; box-shadow: 0 3px 0 #d6cdb1; }
+#app .invention-summary .summary-trial strong { font: 18px/1.3 var(--font-display); font-weight: 400; color: #2f4a26; }
+#app .invention-summary .summary-trial .result-chip { justify-self: start; }

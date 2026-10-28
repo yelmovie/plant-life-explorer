@@ -40,16 +40,13 @@ test('입구 덮개만 바꾼 두 시험은 덮개 그림·설명·공책 젖음
  assert.equal(before.rolls,after.rolls);assert.equal(before.notebookDry,false);assert.equal(after.notebookDry,true);
  assert.match(bagArt(before),/입구 덮개: 열림/);assert.match(bagArt(after),/입구 덮개: 닫힘/);
 });
-test('겉면만 비교하면 세 부품을 모두 확인했다는 결론을 만들지 않고 기존 시험을 이어 쓴다',()=>{
+test('겉면만 달아 본 가방은 공책을 지킨 부품을 고를 수 없고 본 탐구로 넘기지 않는다',()=>{
  const s=freshState(),u={};s.page=8;
  const act=(a,id='')=>fieldMissionAction(s,u,a,id);
- act('field-bag-predict','surface');
- for(const [part,value] of [['surface','plain'],['cover','flap']])act('field-bag-part',part+':'+value);
- act('field-bag-test');act('field-bag-part','surface:lotus');act('field-bag-test');act('field-bag-compare','surface');
- assert.match(act('field-bag-deliver'),/이번 비교로 확인한 역할/);assert.doesNotMatch(u.fieldMission.feedback,/두 덮개의 다른 역할을 시험으로 확인/);
- carryFieldEvidence(s,4);assert.equal(s.tests.length,2);assert.equal(s.design.surface,'lotus');assert.equal(s.testPrediction,'surface');assert.equal(s.inventionExplanations.surface.part,'surface');assert.equal(s.inventionExplanations.cover,undefined);assert.equal(testValid(s),false);
- u.fieldMission.mission=4;u.fieldMission.stage=2;// Going back to earlier stages is the step list's job; stage 3 keeps a single finish button.
- assert.doesNotMatch(renderFieldMission(s,u),/조립으로 돌아가기|비교 시험하기/);assert.match(renderFieldSteps(s,u),/data-action="field-stage" data-id="0"/);
+ act('field-bag-predict','surface');act('field-bag-test');act('field-bag-upgrade','surface');act('field-bag-test');
+ assert.match(act('field-bag-answer','cover'),/하나씩 달고/);carryFieldEvidence(s,4);assert.equal(s.tests.length,0);assert.equal(testValid(s),false);
+ u.fieldMission.mission=4;u.fieldMission.stage=2;
+ assert.doesNotMatch(renderFieldMission(s,u),/조립|동그라미/);assert.match(renderFieldSteps(s,u),/data-action="field-stage" data-id="0"/);
 });
 test('첫 예상은 관찰 이후 바뀌지 않고 노트 퀴즈와 읽음은 왕복 보존된다',()=>{
  const s=freshState(),u={};s.page=4;

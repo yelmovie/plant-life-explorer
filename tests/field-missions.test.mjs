@@ -56,19 +56,18 @@ test('정원은 비로 땅을 만들고 맞는 땅에 심어 시험하며 같은
  drop('environment:grass','environment:meadow');assert.equal(fieldMissionReady(s,3),true);act('field-garden-ground');assert.equal(fieldMissionReady(s,3),true);
  act('field-place-environment','water:meadow');assert.equal(fieldMissionReady(s,3),false,'실제로 환경을 바꾸면 이전 시험은 더 이상 유효하지 않다');
 });
-test('가방 의뢰는 두 부품 조립·공정 비교·부품 역할·현재 설계 시험을 요구한다',()=>{
- const {s,act,drop}=setup(8);act('field-bag-test');assert.equal(s.fieldEvidence.bag.tests.length,0);
- for(const [p,v] of [['surface','plain'],['cover','flap']])drop(`part:${p}:${v}`,'part:'+p);
- act('field-bag-test');act('field-bag-test');assert.equal(s.fieldEvidence.bag.tests.length,1);
- drop('part:surface:lotus','part:surface');act('field-bag-test');assert.equal(fieldBagPair(s.fieldEvidence.bag).part,'surface');
- drop('compare:cover','compare');act('field-bag-deliver');assert.equal(fieldMissionReady(s,4),false);
- drop('compare:surface','compare');act('field-bag-deliver');assert.equal(fieldMissionReady(s,4),true);
- drop('part:cover:open','part:cover');assert.equal(fieldMissionReady(s,4),false);
+test('가방 의뢰는 첫 비·하나씩 달고 비·공책을 지킨 부품 고르기를 요구한다',()=>{
+ const {s,act}=setup(8),bag=()=>s.fieldEvidence.bag;act('field-bag-test');assert.equal(bag().tests.length,0,'예상 전에는 비를 내리지 않는다');
+ act('field-bag-predict','surface');act('field-bag-test');act('field-bag-test');assert.equal(bag().tests.length,1);assert.deepEqual(fieldSteps(s.fieldEvidence,4),[true,false,false]);
+ act('field-bag-upgrade','surface');act('field-bag-test');assert.equal(bag().comparisons.surface.part,'surface');
+ act('field-bag-upgrade','cover');act('field-bag-test');assert.equal(bag().comparisons.cover.before,'lotus:open');assert.deepEqual(fieldSteps(s.fieldEvidence,4),[true,true,false]);
+ assert.match(act('field-bag-answer','surface'),/연잎 겉면만 달았을 때/);assert.equal(fieldMissionReady(s,4),false);
+ assert.match(act('field-bag-answer','cover'),/처음엔 겉면만/);assert.equal(fieldMissionReady(s,4),true);
 });
-test('가방 두 부품을 함께 바꾼 시험은 공정 비교가 아니다',()=>{
- const {s,act,drop}=setup(8);for(const p of ['surface','cover'])drop(`part:${p}:${p==='surface'?'plain':'open'}`,'part:'+p);act('field-bag-test');
- drop('part:surface:lotus','part:surface');drop('part:cover:flap','part:cover');act('field-bag-test');assert.equal(fieldBagPair(s.fieldEvidence.bag),null);
- assert.equal(fieldSteps(s.fieldEvidence,4)[1],false);
+test('가방은 한 번에 한 부품만 달 수 있어 두 부품을 함께 바꾼 시험이 생기지 않는다',()=>{
+ const {s,act}=setup(8);act('field-bag-predict','cover');act('field-bag-test');act('field-bag-upgrade','surface');
+ assert.match(act('field-bag-upgrade','cover'),/먼저 비를 내려/);assert.equal(s.fieldEvidence.bag.design.cover,'open');
+ act('field-bag-test');assert.equal(fieldBagPair(s.fieldEvidence.bag).part,'surface');assert.equal(fieldSteps(s.fieldEvidence,4)[1],false);
 });
 test('선택 후 놓기와 드래그는 같은 결과를 만들고 무관한 조합은 상태를 바꾸지 않는다',()=>{
  const a=setup(0),b=setup(0);a.act('field-select','lens');a.act('field-drop','scan:maple:edge');b.drop('lens','scan:maple:edge');assert.deepEqual(a.s.fieldEvidence,b.s.fieldEvidence);

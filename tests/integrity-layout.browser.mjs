@@ -25,9 +25,9 @@ const hands=[
  [['.garden-cloud-btn',44,true],['.field-garden-zone',44,false]],
  [['.garden-card',44,true],['.field-garden-zone',44,true]],
  [['.garden-cloud-btn',44,true],['.field-garden-zone',44,false]],
- [['[data-bag-dial]',44,true],['[data-bag-frame]',100,true],['.bag-canvas > .bag-art',100,false]],
  [['[data-bag-cloud]',44,true],['.bag-canvas > .bag-art',100,true]],
- [['[data-diff]',100,true]],
+ [['.bag-upgrade',44,true],['[data-bag-cloud]',44,true]],
+ [['[data-action="field-bag-answer"]',44,true]],
 ];
 for(let m=0;m<5;m++)for(let stage=0;stage<3;stage++)scenarios.push([`field-${m+1}-${stage+1}`,m*2,{stage,hands:hands[m*3+stage]}]);
 const inProgress={...completed.fieldEvidence,
@@ -49,7 +49,7 @@ for(const [width,height] of sizes){
   try{
    await page.goto(process.env.JOURNEY_URL||'http://127.0.0.1:4328');await page.locator('main').waitFor();await page.evaluate(()=>document.fonts.ready);
    if(name==='field-bag'){await page.locator('[data-action="journey-mode"][data-id="field"]').first().tap();await page.locator('.today-panel .mission-journey [data-action="field-stage"][data-id="1"]').tap();}
-   if(name==='tests')await page.locator('.result-parts summary').tap();
+   if(name==='tests'&&await page.locator('.result-parts summary').count())await page.locator('.result-parts summary').tap();
    if(name==='notebook')await page.locator('[data-action="note-open"][data-id="4"]').tap();
    if(field){const step=`.today-panel .mission-journey [data-action="field-stage"][data-id="${field.stage}"]`;await page.locator('[data-action="journey-mode"][data-id="field"]').first().tap();await page.locator(step).tap();
     await page.locator(step+'[aria-current="step"]').waitFor();for(const [selector] of field.hands)await page.locator(selector).first().waitFor();}

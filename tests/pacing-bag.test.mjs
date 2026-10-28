@@ -8,33 +8,28 @@ import {learningAction} from '../src/learning.js';
 import {observationRecord,notebookEntry} from '../src/research-notebook.js';
 import {mountBagHands} from '../src/field-hands-bag.js';
 
-function comparedCover(){
+import {pageReady} from '../src/model.js';
+function fullBag(){
  const s=freshState(),u={};s.page=8;
  const act=(action,id='')=>fieldMissionAction(s,u,action,id);
- act('field-bag-predict','cover');act('field-bag-part','surface:lotus');act('field-bag-part','cover:flap');act('field-bag-test');
- act('field-bag-part','cover:open');act('field-bag-test');act('field-bag-compare','cover');act('field-bag-deliver');
+ act('field-bag-predict','surface');act('field-bag-test');act('field-bag-upgrade','surface');act('field-bag-test');act('field-bag-upgrade','cover');act('field-bag-test');act('field-bag-answer','cover');
  return {s,u,act};
 }
 
-test('완성 가방부터 시험해도 한 부품 비교 뒤 같은 시험을 반복하지 않고 기록을 이어 쓴다',()=>{
- const {s,u,act}=comparedCover();
- assert.equal(fieldMissionReady(s,4),true);assert.equal(s.fieldEvidence.bag.tests.length,2);
- assert.equal(s.fieldEvidence.bag.design.cover,'open');assert.doesNotMatch(u.fieldMission.feedback,/가방 완성!/);
- carryFieldEvidence(s,4);assert.equal(s.tests.length,2);assert.equal(testValid(s),false);
- s.design.linked=true;s.design.surface='plain';s.tests.push(testDesign(s.design));
- learningAction(s,u,'test-explain','surface');assert.equal(testValid(s),false,'겉면과 입구 역할을 알아도 젖는 가방은 최종 완성이 아니다');
- s.design={...s.design,surface:'lotus',cover:'flap'};s.activeTestKey=designKey(s.design);
- assert.equal(testValid(s),true);assert.equal(s.tests.length,3,'이미 시험한 완성 설계를 골라 같은 비를 반복하지 않는다');
- act('field-bag-part','cover:flap');act('field-bag-deliver');
- assert.equal(fieldMissionReady(s,4),false,'현재 설계를 시험하지 않은 상태의 비교 전달은 거부한다');
+test('현장에서 두 부품을 하나씩 시험하면 본 탐구는 같은 비를 반복하지 않고 바로 기록이 준비된다',()=>{
+ const {s,act}=fullBag();
+ assert.equal(fieldMissionReady(s,4),true);assert.equal(s.fieldEvidence.bag.tests.length,3);
+ carryFieldEvidence(s,4);assert.equal(s.tests.length,3);assert.equal(s.testPrediction,'surface');
+ assert.equal(testValid(s),true);assert.equal(pageReady(s,8),true);assert.equal(pageReady(s,9),true);
+ act('field-bag-answer','cover');assert.equal(s.fieldEvidence.bag.tests.length,3,'다시 골라도 시험은 늘지 않는다');
+ act('field-bag-reset');assert.equal(fieldMissionReady(s,4),false,'처음 가방으로 돌리면 다시 시험해야 한다');
 });
 
 test('연구노트는 이어받은 시험과 역할을 한 번만 보이고 실제 추가 시험은 보존한다',()=>{
- const {s,u}=comparedCover();carryFieldEvidence(s,4);
- s.design.surface='plain';s.tests.push(testDesign(s.design));learningAction(s,u,'test-explain','surface');
+ const {s}=fullBag();carryFieldEvidence(s,4);
  let rows=observationRecord(s,4);
  assert.equal(rows.filter(row=>/시험 \d/.test(row)).length,3);assert.equal(rows.filter(row=>/비교한 역할/.test(row)).length,2);
- assert.doesNotMatch(rows.join('\n'),/주머니/);assert.match(rows.join('\n'),/입구 열림.*공책 젖음/);
+ assert.match(rows.join(' / '),/입구 열림.*공책 젖음/);
  s.tests.push(testDesign(s.design));rows=observationRecord(s,4);
  assert.equal(rows.filter(row=>/시험 \d/.test(row)).length,4,'학생이 실제로 다시 한 시험을 복사 기록으로 지우지 않는다');
 });

@@ -45,6 +45,6 @@ export function fieldResponse(s,a,id) {
     case 'field-place-plant':return spec('plant:'+x,y===({hyacinth:'pond',cherry:'meadow',aloe:'ridge'})[x],`${named(x)}을 심을 자리`,'application');
     case 'field-bag-predict':if(e.bag.prediction)return;return spec('bag-prediction',x==='cover','비 오는 가방 예상','prediction',x==='surface'?'겉면만 바꾸면 됨':'입구로 오는 비도 막아야 함');
     // Finding that the cover keeps the notebook dry revises a first 'surface only' prediction.
-    case 'field-bag-compare':{const record=spec('bag-compare:'+e.bag.tests.at(-1)?.key,null,'시험에서 바뀐 부품','observation',x);return ok=>{record(ok);if(ok&&x==='cover')revise(s,m,['field:bag-prediction','core:bag-prediction'],'입구로 오는 비도 막아야 함');};}
+    case 'field-bag-answer':{if(!['surface','cover'].includes(x))return;const record=spec('bag-answer',null,'공책을 지킨 부품','observation',x==='cover'?'덮개':'연잎 겉면');return ok=>{record(ok);if(ok)revise(s,m,['field:bag-prediction','core:bag-prediction'],'입구로 오는 비도 막아야 함');};}
   }
 }

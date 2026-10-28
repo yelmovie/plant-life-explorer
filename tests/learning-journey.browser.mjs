@@ -136,27 +136,18 @@ try{
  await completePage();await missionDone(3);
 
  await enter(4);await a('field-bag-predict','surface');
- // Hand: tap dials (plain→lotus, open); choosing both assembles the bag.
- for(const [part,taps] of [['surface',2],['cover',1]])for(let i=0;i<taps;i++)await page.locator(`[data-bag-dial="${part}"]`).tap();
- await evidence(`(b=>b.assembled.length===2&&b.design.surface==='lotus'&&b.design.cover==='open')(JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.bag)`);
- await stage(1);const [cx,cy]=await center(page.locator('[data-bag-cloud]'));await page.mouse.click(cx,cy);
- await evidence(`JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.bag.tests.length===1`);await snap('cover-open-test');
- const openArt=await page.locator('[data-bag-stage] .bag-art').getAttribute('aria-label');
- await place('part:cover:flap','part:cover');await a('field-bag-test');await snap('cover-closed-test');
- const closedArt=await page.locator('[data-bag-stage] .bag-art').getAttribute('aria-label');assert.notEqual(openArt,closedArt);
- const trials=(await saved()).fieldEvidence.bag.tests;assert.equal(trials[0].notebookDry,false);assert.equal(trials[1].notebookDry,true);assert.equal(trials[0].rolls,trials[1].rolls);
- await stage(2);await place('compare:surface','compare');await hint();
- // Hand: circle the opening cover on the after picture.
- const diff=await page.locator('[data-diff="after"]').boundingBox();await stroke(ring([diff.x+.5*diff.width,diff.y+.22*diff.height],Math.min(diff.width,diff.height)*.14));
- await evidence(`JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.bag.compared.part==='cover'`);await a('field-bag-deliver');
- assert.match(await page.locator('.mission-feedback').innerText(),/입구 덮개/);
- report.checks.push('Cover-only comparison changes picture, accessible description and notebook result; surface result stays fixed');
- await explore();assert.equal((await saved()).testPrediction,'surface');
- await a('lotus-drop');await a('design-answer','roll');await completePage();
- // The field's cover comparison comes along, so only the surface needs one new trial.
- await a('surface','plain');await a('run-test',undefined,'.test-control-row ');await page.waitForFunction(()=>!document.querySelector('.water-demo.moving'));await a('test-explain','surface');
- await a('surface','lotus');await a('use-tested-design');assert.equal((await saved()).tests.length,3);
- report.checks.push('Inherited cover comparison plus one new surface comparison; final tested design reused without repeat rain');
+ // Hand: one cloud tap rains on the bag; each upgrade card goes on before its own rain.
+ const rain=async n=>{const [cx,cy]=await center(page.locator('[data-bag-cloud]'));await page.mouse.click(cx,cy);await evidence(`JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.bag.tests.length===${n}`);};
+ await rain(1);await snap('bag-plain-test');
+ await stage(1);await a('field-bag-upgrade','surface');
+ // A second part cannot go on before the rain: one change per trial.
+ await page.locator('[data-action="field-bag-upgrade"][data-id="cover"]').tap({force:true});assert.equal((await saved()).fieldEvidence.bag.design.cover,'open');
+ await rain(2);await a('field-bag-upgrade','cover');await rain(3);
+ const trials=(await saved()).fieldEvidence.bag.tests;assert.deepEqual(trials.map(t=>t.notebookDry),[false,false,true]);assert.deepEqual(trials.map(t=>t.rolls),[false,true,true]);
+ await stage(2);await a('field-bag-answer','surface');await hint();await a('field-bag-answer','cover');
+ report.checks.push('One upgrade per rain: plain → lotus surface → cover; only the cover keeps the notebook dry');
+ // The field already built and tested the bag, so the record page opens ready with a summary.
+ await explore();assert.equal((await saved()).page,9);assert.equal((await saved()).testPrediction,'surface');assert.equal(await page.locator('.invention-summary').count(),1);
  await snap('invention-compared');await completePage();await missionDone(4);
  await a('report');await a('note-open','4');await a('note-sticker');await a('note-check','4:0');await a('note-check','4:1');await close();
  await a('note-open','4');assert.equal(await page.locator('[data-action="note-sticker"]').getAttribute('aria-pressed'),'true');assert.match(await page.locator('.note-quiz-feedback').innerText(),/맞아/);await snap('notebook-records');await close();
