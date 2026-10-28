@@ -3,7 +3,7 @@ import {createRequire} from 'node:module';
 import {readFile,writeFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 const require=createRequire(import.meta.url),{chromium}=require(process.env.PLAYWRIGHT_MODULE_PATH||'C:/Users/bongb/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
-const output=new URL('../docs/reviews/integrity-20261024/',import.meta.url),url=process.env.JOURNEY_URL||'http://127.0.0.1:4328',key='green-garden-mvp-v2';
+const output=new URL(process.env.JOURNEY_OUTPUT||'../docs/reviews/integrity-20261024/',import.meta.url),url=process.env.JOURNEY_URL||'http://127.0.0.1:4328',key='green-garden-mvp-v2';
 const completed=JSON.parse(await readFile(new URL('completed-test-record.json',output),'utf8'));
 const browser=await chromium.launch({headless:true,executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',args:['--disable-webgl']});
 const report={started:new Date().toISOString(),storage:[],webgl:[],errors:[]};
@@ -32,7 +32,7 @@ try{
  }
  {
   const {context,page:a}=await fixture(JSON.stringify({...completed,screen:'home'}));const b=await context.newPage();await b.goto(url);await settled(b);
-  await a.locator('[data-action="settings"]').click();await a.locator('[data-action="reset-prompt"]').click();
+  await a.locator('[data-action="settings"]').click();await a.locator('#dialog [data-action="reset-prompt"]').click();
   await b.locator('[data-action="begin"]').click();const newest=await settled(b);
   await a.locator('#save-status').waitFor();await a.locator('[data-action="reset"]').click();assert.equal(await settled(a),newest);
   assert.match(await a.locator('#dialog').innerText(),/기록 보관과 복구/);
@@ -42,17 +42,23 @@ try{
 await browser.close();
 // This is a separate WebGL-capable session; disabled WebGL is not a model failure.
 const glBrowser=await chromium.launch({headless:true,executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']});
-for(const [kind,activity] of [['leaf',0],['lab',4],['garden',6],['bag',8]]){
+for(const [kind,activity] of [['leaf',0],['season',2],['lab',4],['garden',6],['bag',8]]){
  const context=await glBrowser.newContext({viewport:{width:1180,height:820}}),page=await context.newPage();page.on('pageerror',e=>report.errors.push(e.message));
  await page.addInitScript(({s,key,activity})=>localStorage.setItem(key,JSON.stringify({...s,screen:'activity',page:activity})),{s:completed,key,activity});
  try{
   await page.goto(url);const support=await page.evaluate(()=>{const canvas=document.createElement('canvas'),gl=canvas.getContext('webgl2');if(!gl)return null;const ext=gl.getExtension('WEBGL_debug_renderer_info');return ext?gl.getParameter(ext.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER);});
   if(!support){report.webgl.push({kind,supported:false,verified:false});continue;}
-  const host=page.locator(`[data-spatial="${kind}"]`);await page.locator(`[data-spatial="${kind}"].spatial-ready canvas`).waitFor({state:'attached'});
+  const host=page.locator(`[data-spatial="${kind}"]`);
+  if(kind==='bag'){
+   await page.locator('[data-spatial="bag"][data-spatial-reference-only="true"]').waitFor();
+   assert.equal(await host.locator('canvas').count(),0);assert.ok(await host.locator('img').first().evaluate(img=>img.complete&&img.naturalWidth>0));
+   report.webgl.push({kind,referenceIllustration:true,visible:true});continue;
+  }
+  await page.locator(`[data-spatial="${kind}"].spatial-ready canvas`).waitFor({state:'attached'});
   if(kind==='bag')await host.locator('[data-view="flat"]').click();
   await page.waitForTimeout(1800);assert.notEqual(await host.getAttribute('data-spatial-unavailable'),'true');
   const box=await host.locator('canvas').boundingBox();assert.ok(box.width>100&&box.height>80);
-  await host.locator('[data-view="rotate"]').click();await host.locator('[data-view="zoom"]').click();
+  await host.locator(kind==='garden'?'[data-view="orbit"]':'[data-view="rotate"]').click();await host.locator('[data-view="zoom"]').click();
   await page.screenshot({path:fileURLToPath(new URL('webgl-'+kind+'.png',output)),fullPage:true});
   await host.locator('[data-view="flat"]').click();assert.match(await host.getAttribute('class'),/spatial-flat/);
   report.webgl.push({kind,supported:true,renderer:support,canvas:box,rotateAndZoom:true,pictureToggle:true});

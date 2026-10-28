@@ -12,6 +12,7 @@ export function coreResponse(s,u,a,id) {
   const spec=(key,ok,label,phase='observation',value=id)=>()=>add(s,m,'core:'+key,value,ok,label,phase);
   switch(a){
     case 'feature-answer': if(u.recheck===`${plant}:${u.region||'shape'}`)return; return spec(`leaf:${plant}:${u.region||'shape'}`,id===(u.region==='edge'?(plant==='cherry'?'yes':'no'):plant),`${named(plant)} · ${u.region==='edge'?'가장자리':'모양'}`);
+    case 'assign-group':if(!['edge','narrow'].includes(s.rule)||!['cherry','ginkgo','grass'].includes(selected)||!['yes','no'].includes(id))return;return spec(`classify:${s.rule}:${selected}`,id===((s.rule==='edge'?selected==='cherry':selected==='grass')?'yes':'no'),`${named(selected)} · ${s.rule==='edge'?'톱니 분류':'모양 분류'}`,'application',s.rule==='edge'?(id==='yes'?'톱니 있음':'톱니 없음'):(id==='yes'?'길쭉함':'다른 모양'));
     case 'check-rule': if(Object.keys(s.groups).length<3)return; return spec('classify:'+s.rule,['cherry','ginkgo','grass'].every(p=>s.groups[p]===((s.rule==='edge'?p==='cherry':p==='grass')?'yes':'no')),'잎 분류 · '+(s.rule==='edge'?'톱니':'모양'),'application',Object.entries(s.groups).map(([p,g])=>`${named(p)}: ${s.rule==='edge'?(g==='yes'?'톱니 있음':'톱니 없음'):(g==='yes'?'길쭉함':'다른 모양')}`).join(' / '));
     case 'classification-proof':if(!u.ruleCheck?.valid)return;return spec('proof:'+s.rule,id.split(':')[1]===(s.rule==='edge'?'edge':'shape'),'분류 근거','application',`${named(id.split(':')[0])} · ${id.endsWith(':edge')?'가장자리':'모양'}`);
     case 'season-predict':if(s.undergroundSeen.includes(s.seasonPlant)||s.seasonPrediction[s.seasonPlant])return;return spec('season:'+s.seasonPlant,id==='roots',`${named(s.seasonPlant)} 겨울 땅속`,'prediction');
@@ -20,7 +21,7 @@ export function coreResponse(s,u,a,id) {
     case 'experiment-answer':{if(s.experiment.step<4)return;const record=spec('experiment-answer',id==='air','누른 잎자루에서 나온 방울');return ()=>{record();if(id==='air')revise(s,m,['core:experiment-predict'],named('bubbles'));};}
     case 'habitat':if(!plantNames[selected]||s.habitats[selected]===id)return;return spec('habitat:'+selected,id===({hyacinth:'water',aloe:'dry',cherry:'grass'})[selected],`${named(selected)}의 환경`,'application');
     case 'habitat-feature':return spec('feature:'+selected,id===selected,`${named(selected)}의 특징`,'application');
-    case 'habitat-answer':if(!s.habitatFeatures[selected])return;return spec('reason:'+selected,id===selected,`${named(selected)}의 생활에 도움`,'application');
+    case 'habitat-answer':if(!['hyacinth','aloe','cherry'].includes(selected)||!['hyacinth','aloe','cherry'].includes(id)||s.habitats[selected]!==({hyacinth:'water',aloe:'dry',cherry:'grass'})[selected])return;return spec('reason:'+selected,id===selected,`${named(selected)}의 특징과 생활 연결`,'application');
     case 'garden-answer':if(!Number.isInteger(s.garden[selected]))return;return spec('garden:'+selected,id===selected&&s.terrain[s.garden[selected]]===({hyacinth:'water',aloe:'dry',cherry:'grass'})[selected],`${named(selected)}을 심은 까닭`,'application');
     case 'design-answer':if(!s.design.observed&&!s.design.linked)return;return spec('design-answer',id==='roll','연잎의 특징을 쓰는 방법');
     case 'test-predict':if(s.testPrediction)return;return spec('bag-prediction',id==='cover','비 오는 가방 예상','prediction',id==='surface'?'겉면만 바꾸면 됨':'입구로 오는 비도 막아야 함');
@@ -31,7 +32,7 @@ export function fieldResponse(s,a,id) {
   const [x,y,z]=id.split(':'),e=s.fieldEvidence,m=Math.floor(s.page/2);
   const spec=(key,ok,label,phase='observation',value=y)=>(observedCorrect)=>add(s,m,'field:'+key,value,ok??observedCorrect,label,phase);
   switch(a){
-    case 'field-sort':if(!e.leaves.scans[y]?.includes(x==='edge'?'edge':'shape'))return;return spec(`sort:${x}:${y}`,z===((x==='edge'?y!=='pine':y==='pine')?'yes':'no'),`${named(y)} · ${x==='edge'?'톱니 분류':'모양 분류'}`,'application',x==='edge'?(z==='yes'?'톱니 있음':'톱니 없음'):(z==='yes'?'길쭉함':'다른 모양'));
+    case 'field-sort':if(!['edge','narrow'].includes(x)||!['maple','pine','camellia'].includes(y)||!['yes','no'].includes(z)||!['shape','edge'].every(k=>e.leaves.scans.maple?.includes(k)))return;return spec(`sort:${x}:${y}`,z===((x==='edge'?y!=='pine':y==='pine')?'yes':'no'),`${named(y)} · ${x==='edge'?'톱니 분류':'모양 분류'}`,'application',x==='edge'?(z==='yes'?'톱니 있음':'톱니 없음'):(z==='yes'?'길쭉함':'다른 모양'));
     case 'field-season-predict':if(e.seasons.predictions[x])return;return spec('season-predict:'+x,y==='roots',`${x==='tree'?'벚나무':'씀바귀'} 겨울 예상`,'prediction');
     case 'field-season-link':{const ok=y===(x==='tree'?'trunk':'root'),record=spec('season-link:'+x,ok,`${x==='tree'?'벚나무':'씀바귀'} 살아 있던 부분`);return ()=>{record();if(ok)revise(s,m,['field:season-predict:'+x],named('roots'));};}
     case 'field-season-clue':return spec('season-clue:'+x,y===(x==='tree'?'branches':'rootbud'),`${x==='tree'?'벚나무':'씀바귀'} 그림에서 고른 근거`);

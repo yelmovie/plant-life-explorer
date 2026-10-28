@@ -1,6 +1,6 @@
-// Field mission 3 by hand. Signature move: press and hold.
+// Field mission 3 by hand. Tap to compare; pressing a floating model is optional play.
 // Step 1: push a switch up/down to predict.
-// Step 2: tap a model into the tank, press it under water and hold against the push back.
+// Step 2: tap each model into the tank; optionally push the floating one down and release it.
 // Step 3: slice the petiole open (its air rooms bubble by themselves), pick the matching model.
 const HOLD_MS=1300,SINK_MS=1800;
 // Cut axis of the petiole picture (bottom-left end to top-right end), in picture fractions.
@@ -46,23 +46,33 @@ export function mountFloatHands(root,ui,onAction){
 
  // Step 2: push a model under and hold. Air fights back; the filled one is already on the bottom.
  const gauge=root.querySelector('[data-press-gauge]');
- const pushable=(m,id,pending)=>{let full=false;
+ const pushable=(m,id)=>{let full=false;
   press(m,{
    can:()=>!m.classList.contains('settling'),
    start:()=>{full=false;m.classList.remove('pop');m.classList.add('pushing');gauge?.classList.add('on');if(id==='solid')speak('이미 바닥이라 더 내려가지 않아. 누르지 않아도 가라앉아 있네.');},
    tick:p=>{gauge?.style.setProperty('--p',id==='air'?p:p*.12);if(id!=='air')return;
     m.style.transform=`translateY(${p*tank.clientHeight*.36}px)`;m.style.setProperty('--shake',p);
     if(p>=1&&!full){full=true;gauge?.classList.add('full');speak('물이 위로 밀어 올려! 손이 떨려!');}},
-   end:(p,cancelled)=>{m.classList.remove('pushing');gauge?.classList.remove('on','full');gauge?.style.setProperty('--p',0);if(id!=='air')return;
+   end:p=>{m.classList.remove('pushing');gauge?.classList.remove('on','full');gauge?.style.setProperty('--p',0);if(id!=='air')return;
     m.style.removeProperty('--shake');m.classList.add('settling','pop');m.style.transform='';later(()=>m.classList.remove('settling'),950);later(()=>ripple(xOf(m)),300);
-    if(!pending)return speak(p>=1?'놓자마자 퐁! 다시 떠올랐어.':'꾹 눌러도 손을 떼면 다시 떠오르네.');
-    if(p>=1&&!cancelled){pending=false;speak('손을 떼자 퐁! 튀어 올랐어.');later(()=>onAction('field-place','model:air|tank'),1300);}
-    else speak('조금 더 오래 꾹 눌러 버텨 봐!');}
+    speak(p>=1?'놓자마자 퐁! 다시 떠올랐어.':'꾹 눌러도 손을 떼면 다시 떠오르네.');}
   });
  };
- if(!stage3)tank.querySelectorAll('[data-tank-model]').forEach(m=>pushable(m,m.dataset.tankModel,false));
+ if(!stage3){
+  const dropped=u.floatDrop;delete u.floatDrop;
+  tank.querySelectorAll('[data-tank-model]').forEach(m=>{
+   const id=m.dataset.tankModel;pushable(m,id);
+   if(id!==dropped)return;
+   // The trial is already saved. This animation can be cancelled without losing the observation.
+   const to=m.getBoundingClientRect(),top=tank.getBoundingClientRect().top;
+   m.style.transform=`translateY(${top-to.top-to.height}px)`;void m.offsetWidth;
+   m.classList.add('settling');m.style.transform='';later(()=>ripple(xOf(m)),220);
+   later(()=>m.classList.remove('settling'),id==='air'?950:SINK_MS);
+   speak(id==='air'?'둥실! 물 위에 떴어. 더 살펴보려면 꾹 눌렀다 놓아 봐.':'손을 대지 않아도 스르르 가라앉네…');
+  });
+ }
 
- // Bench models: one tap drops it in (one model at a time).
+ // A tap records the trial just like the keyboard path. Holding is never a completion gate.
  let busy=false;
  root.querySelectorAll('[data-float-item]').forEach(el=>{
   const id=el.dataset.floatItem;
@@ -70,13 +80,8 @@ export function mountFloatHands(root,ui,onAction){
    if(busy)return;
    // No prediction yet: the state's feedback asks for one first.
    if(el.dataset.ready!=='true')return onAction('field-place',`model:${id}|tank`);
-   busy=true;const x=id==='air'?.32:.68;
-   const m=document.createElement('div');m.className=`float-model in-tank rest-${id}`;m.style.setProperty('--x',x);m.append(el.querySelector('img').cloneNode());tank.append(m);
-   const to=m.getBoundingClientRect(),top=tank.getBoundingClientRect().top;
-   m.style.transform=`translateY(${top-to.top-to.height}px)`;el.style.visibility='hidden';void m.offsetWidth;
-   m.classList.add('settling');m.style.transform='';later(()=>ripple(x),220);u.floatX={...u.floatX,[id]:x};
-   if(id==='air'){later(()=>m.classList.remove('settling'),950);speak('둥실! 이제 꾹 눌러 물속으로 밀어 넣어 봐.');pushable(m,id,true);}
-   else{speak('손을 대지 않아도 스르르 가라앉네…');later(()=>onAction('field-place','model:solid|tank'),SINK_MS+500);}
+   busy=true;u.floatX={...u.floatX,[id]:id==='air'?.32:.68};u.floatDrop=id;
+   onAction('field-place',`model:${id}|tank`);
   });
  });
 

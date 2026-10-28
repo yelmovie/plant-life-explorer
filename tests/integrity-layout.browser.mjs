@@ -8,8 +8,8 @@ const output=new URL(process.env.JOURNEY_OUTPUT||'../docs/reviews/integrity-2026
 const completed=JSON.parse(await readFile(new URL('completed-test-record.json',output),'utf8'));
 const browser=await chromium.launch({headless:true,executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',args:['--disable-webgl']});
 const report={started:new Date().toISOString(),fixture:'Actual fresh UI completion replayed in separate browser profiles; no real user data',layouts:[],errors:[],failures:[]};
-const sizes=[[1180,820],[1024,768],[780,833],[768,1024]];
-const scenarios=[['leaves',0],['seasons',2],['lab',4],['garden',6],['design',8],['tests',9],['field-bag',8],['notebook',null],['ending',null]];
+const sizes=(process.env.LAYOUT_SIZES||'1180x820,1024x768,780x833,768x1024').split(',').map(s=>s.split('x').map(Number));
+const scenarios=[['leaves',0],['classification',1],['season-records',3],['habitats',5],['garden-records',7],['seasons',2],['lab',4],['garden',6],['design',8],['tests',9],['field-bag',8],['notebook',null],['ending',null]];
 // Field missions in progress, so every hand tool (not just finished screens) is laid out.
 // Each entry: [selector, minimum px on both sides, must be reachable by touch].
 const hands=[
@@ -42,7 +42,7 @@ const settle=page=>page.evaluate(()=>Promise.all(document.getAnimations().filter
 const reach=el=>{el.scrollIntoView({block:'center',inline:'nearest'});const r=el.getBoundingClientRect(),x=r.x+r.width/2,y=r.y+r.height/2,hit=document.elementFromPoint(x,y);return {ok:x>=0&&x<innerWidth&&y>=0&&y<innerHeight&&!!hit&&(el===hit||el.contains(hit)),hit:hit?hit.tagName+'.'+String(hit.className?.baseVal??hit.className).slice(0,40):null};};
 for(const [width,height] of sizes){
  const context=await browser.newContext({viewport:{width,height},hasTouch:true});
- for(const [name,activity,field] of scenarios){
+ for(const [name,activity,field] of scenarios.filter(([name])=>!process.env.LAYOUT_SCENARIOS||process.env.LAYOUT_SCENARIOS.split(',').includes(name))){
   const page=await context.newPage();page.setDefaultTimeout(30000);page.on('pageerror',e=>report.errors.push(e.message));
   const state={...structuredClone(completed),...(field?{fieldEvidence:structuredClone(inProgress)}:{}),screen:activity!==null?'activity':name==='ending'?'ending':'report',page:activity??9};
   await page.addInitScript(s=>localStorage.setItem('green-garden-mvp-v2',JSON.stringify(s)),state);
@@ -92,5 +92,5 @@ for(const [width,height] of [[1180,580],[768,1024],[1024,768]]){
  try{await page.setViewportSize({width,height});const next=page.locator('[data-action="complete"]');await next.scrollIntoViewIfNeeded();await next.tap();await page.locator('#dialog[open]').waitFor();await page.locator('#dialog .dialog-top [data-action="close"]').tap();await page.screenshot({path:fileURLToPath(new URL(`large-text-${width}x${height}.png`,output)),fullPage:true});report.layouts.push({size:[width,height],name:'large-text-rotation',passed:true});}
  catch(error){report.failures.push({size:[width,height],name:'large-text-rotation',error:error.message});}
 }
-await browser.close();report.finished=new Date().toISOString();await writeFile(new URL('layout.json',output),JSON.stringify(report,null,2));
+await browser.close();report.finished=new Date().toISOString();await writeFile(new URL(process.env.LAYOUT_REPORT||'layout.json',output),JSON.stringify(report,null,2));
 console.log(JSON.stringify({passed:report.layouts.length,failures:report.failures,errors:report.errors}));if(report.failures.length||report.errors.length)process.exitCode=1;

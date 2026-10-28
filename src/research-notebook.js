@@ -1,12 +1,12 @@
 import {assetImage} from './asset-catalog.js';
-import {missionDone,terrainCount,inventionEvidence} from './model.js';
-import {normalizeFieldEvidence,FIELD_BAG_ROLES} from './field-missions-state.js';
+import {missionDone,terrainCount,inventionEvidence,PLANTS} from './model.js';
+import {normalizeFieldEvidence,FIELD_BAG_ROLES,FIELD_LEAVES} from './field-missions-state.js';
 import {BUD_TOTAL,budsFoundCount} from './winter-buds.js';
 
 const ENTRIES = [
  {title:'잎 모양 탐정',subtitle:'작은 잎에서 찾은 다른 점',asset:'cherry_leaf',color:'leaf',saw:'벚나무·은행나무·강아지풀의 잎을 자세히 살펴봤다.',found:'잎은 모양과 가장자리가 서로 달랐다. 같은 기준으로 모으면 식물을 나눌 수 있었다.',try:'새로 만난 잎도 모양과 가장자리로 나눠 보고 싶다.'},
  {title:'겨울을 건너 봄으로',subtitle:'안 보여도 살아 있는 부분',asset:'cherry_seasons_v2',color:'flower',saw:'겨울 사진과 다음 봄 사진을 나란히 놓아 보았다.',found:'겨울에 잎이 없어도 살아 있는 줄기나 뿌리가 남았다. 봄이 되자 그곳에서 다시 자랐다.',try:'우리 학교 화단도 겨울과 봄에 같은 자리에서 찍어 보고 싶다.'},
- {title:'물속에서 뽀글뽀글',subtitle:'공기 방울이 알려 준 비밀',asset:'expedition_petiole_clear_20261023',color:'water',saw:'물속에 넣은 부레옥잠 잎자루를 눌러 보았다.',found:'공기 방울이 나왔다! 잎자루 속 공기는 부레옥잠이 물에 뜨는 데 도움을 준다.',try:'식물마다 몸속에 무엇을 저장하는지 더 찾아보고 싶다.'},
+ {title:'잎자루 속 공기 방',subtitle:'공기 방울이 알려 준 비밀',asset:'expedition_petiole_clear_20261023',color:'water',saw:'부레옥잠 잎자루 속 공간과 공기 방울을 살펴보았다.',found:'공기 방울이 나왔다! 잎자루 속 공기는 부레옥잠이 물에 뜨는 데 도움을 준다.',try:'식물마다 몸속에 무엇을 저장하는지 더 찾아보고 싶다.'},
  {title:'내 손으로 만든 정원',subtitle:'식물마다 어울리는 자리',asset:'reward_garden',color:'garden',saw:'물가·풀밭·건조 구역을 만들고 식물을 놓아 보았다.',found:'부레옥잠은 물가에, 벚나무는 풀밭에, 알로에는 건조 구역에 어울렸다. 식물의 특징을 생각해서 자리를 골랐다.',try:'집이나 학교에서 식물을 기를 때 물과 땅의 조건을 먼저 살펴보겠다.'},
  {title:'자연에서 빌린 가방 아이디어',subtitle:'관찰이 생활 속 발명이 되었어',asset:'bag_lotus_closed',color:'invention',saw:'연잎 위 물방울을 보고 가방 겉면과 입구를 바꾸어 시험했다.',found:'연잎을 본뜬 겉면은 물방울을 굴려 보냈고, 덮개는 입구로 들어오는 비를 막았다. 두 부품이 하는 일이 달랐다.',try:'우산이나 신발에도 식물의 특징을 써 볼 수 있을까?'},
 ];
@@ -14,13 +14,20 @@ const ENTRIES = [
 export const NOTE_QUIZZES = [
  {question:'잎을 나눌 때 필요한 것은?',choices:['같은 기준','내가 좋아하는 색만'],answer:0,feedback:'맞아! 같은 기준으로 나누면 서로 비교하기 쉬워.',hint:'모양이나 가장자리처럼 모두에게 똑같이 적용할 기준을 떠올려 봐.'},
  {question:'겨울에 잎이 없으면 식물은 모두 죽은 걸까?',choices:['그렇다','줄기나 뿌리가 살아 있을 수 있다'],answer:1,feedback:'맞아! 살아 남은 부분에서 봄에 다시 자라기도 해.',hint:'겨울과 다음 봄 사진에서 같은 줄기와 땅속 뿌리를 찾아봐.'},
- {question:'누른 잎자루에서 나온 공기 방울은?',choices:['잎자루 속 공기의 단서','잎자루 속 흙의 단서'],answer:0,feedback:'맞아! 직접 본 현상이 공기 공간을 설명하는 증거가 돼.',hint:'물속에서 공기가 빠져나오면 무엇이 보일까?'},
+ {question:'잎자루에서 관찰한 공기 방울은 무엇의 단서일까?',choices:['잎자루 속 공기의 단서','잎자루 속 흙의 단서'],answer:0,feedback:'맞아! 직접 본 현상이 공기 공간을 설명하는 증거가 돼.',hint:'잎자루 안의 빈 공간과 위로 올라오는 방울을 떠올려 봐.'},
  {question:'알로에가 건조 구역에서 도움이 되는 특징은?',choices:['잎에 물을 저장한다','잎자루 속 공기로 물에 뜬다'],answer:0,feedback:'맞아! 물이 적은 곳에서는 저장한 물이 도움이 돼.',hint:'알로에의 두꺼운 잎 속에는 무엇이 있었지?'},
  {question:'연잎 겉면만 바꾸면 열린 입구도 막아 줄까?',choices:['입구도 저절로 막힌다','입구를 막는 덮개는 따로 필요하다'],answer:1,feedback:'맞아! 자연의 아이디어와 필요한 부품을 함께 써서 생활 문제를 해결했어.',hint:'겉면을 굴러가는 물과 입구로 떨어지는 비는 길이 달라.'},
 ];
 
+const leafGroups=s=>({...s.groupsByRule,[s.rule]:s.groups});
+function leafRecordSummary(s){
+ const field=normalizeFieldEvidence(s.fieldEvidence).leaves;
+ const observed=Object.values(s.leafEvidence).reduce((n,e)=>n+Number(!!e.shape)+Number(!!e.edge),0)+Object.values(field.scans).reduce((n,scans)=>n+scans.length,0);
+ const sorted=['edge','narrow'].reduce((n,rule)=>n+Object.keys(field[rule]).length+Object.keys(leafGroups(s)[rule]||{}).length,0);
+ return observed||sorted?`관찰 ${observed}곳 · 분류 ${sorted}개`:'이전에 마친 관찰 기록';
+}
 const entryRecord=(s,i)=>[
- Object.values(s.leafEvidence).some(e=>e.shape||e.edge)?`${Object.values(s.leafEvidence).reduce((n,e)=>n+Number(!!e.shape)+Number(!!e.edge),0)}개의 잎 특징`:'이전에 마친 관찰 기록',
+ leafRecordSummary(s),
  `${s.seasonalRecords.length}장의 계절 기록 · 겨울눈 ${budsFoundCount(s)}/${BUD_TOTAL}`,
  s.experimentAnswer==='air'?'공기 방울의 까닭을 찾았어':'식물과 환경을 이어 봤어',
  `물가 ${terrainCount(s,'water')}칸 · 풀밭 ${terrainCount(s,'grass')}칸 · 건조 ${terrainCount(s,'dry')}칸`,
@@ -37,11 +44,19 @@ const esc=v=>String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"
 export function observationRecord(s,i){
  const e=normalizeFieldEvidence(s.fieldEvidence),proof=inventionEvidence(s);
  switch(i){
-  case 0:return Object.entries(s.leafEvidence).flatMap(([p,v])=>Object.keys(v).map(k=>`${({cherry:'벚나무',ginkgo:'은행나무',grass:'강아지풀'})[p]} · ${k==='shape'?'모양':'가장자리'} 관찰 기록`));
+  case 0:{
+   const feature=k=>k==='shape'?'모양':'가장자리',group=(rule,answer)=>rule==='edge'?(answer==='yes'?'톱니 있음':'큰 톱니 없음'):(answer==='yes'?'가늘고 긴 잎':'그 밖의 잎');
+   return [...FIELD_LEAVES.flatMap(p=>e.leaves.scans[p.id].map(k=>`${p.name} · ${feature(k)} 관찰 기록`)),...Object.entries(s.leafEvidence).flatMap(([id,v])=>Object.keys(v).map(k=>`${PLANTS.find(p=>p.id===id)?.name||id} · ${feature(k)} 관찰 기록`)),...['edge','narrow'].flatMap(rule=>[...FIELD_LEAVES.filter(p=>e.leaves[rule][p.id]).map(p=>`${p.name} · ${rule==='edge'?'가장자리':'모양'} 기준 분류: ${group(rule,e.leaves[rule][p.id])}`),...PLANTS.filter(p=>leafGroups(s)[rule]?.[p.id]).map(p=>`${p.name} · 새 표본 분류: ${group(rule,leafGroups(s)[rule][p.id])}`)])];
+  }
   case 1:return [...s.seasonalRecords.map(key=>{const [p,n]=key.split(':');return `${p==='cherry'?'벚나무':'씀바귀'} ${['다음 봄','여름','가을','겨울'][n]} 사진${s.seasonPhotos[key]?.underground?' · 땅속 포함':''}`;}),...(s.budsFound?.cherry?.length?[`벚나무 가지 끝 겨울눈 ${s.budsFound.cherry.length}개 찾음`]:[]),...(s.budsFound?.sowthistle?.length?['씀바귀 뿌리 머리 새눈 찾음']:[])];
-  case 2:return [...e.float.tested.map(id=>`${id==='air'?'공기 방 모형: 수면에 뜸':'꽉 찬 모형: 바닥으로 내려감'}`),...(s.experiment.step>=4?['물속에서 누른 잎자루: 공기 방울 관찰']:[])];
+  case 2:return [...e.float.tested.map(id=>`${id==='air'?'공기 방 모형: 수면에 뜸':'꽉 찬 모형: 바닥으로 내려감'}`),...(s.experiment.step>=4?[s.fieldBridges?.[2]&&e.float.reason==='air'?'현장에서 연 잎자루 단면: 공기 공간과 방울 관찰':'물속에서 누른 잎자루: 공기 방울 관찰']:[])];
   case 3:return ['water','grass','dry'].filter(t=>terrainCount(s,t)).map(t=>`${({water:'물가',grass:'풀밭',dry:'건조 구역'})[t]} ${terrainCount(s,t)}칸`).concat(e.garden.testedKey?['현장 정원의 빗물 시험 기록 있음']:[]);
-  case 4:return [...e.bag.tests.map((t,n)=>`현장 시험 ${n+1} · ${t.surface==='lotus'?'연잎 겉면':'보통 천'}, 입구 ${t.cover==='flap'?'닫힘':'열림'} → 물방울 ${t.rolls?'굴러감':'남음'}, 공책 ${t.notebookDry?'마름':'젖음'}, 주머니 ${t.pocketDry?'마름':'젖음'}`),...Object.keys(e.bag.comparisons).filter(k=>FIELD_BAG_ROLES[k]).map(k=>'현장에서 비교한 역할: '+FIELD_BAG_ROLES[k]),...s.tests.map((t,n)=>`본 탐구 시험 ${n+1} · ${t.surface==='lotus'?'연잎 겉면':'보통 천'}, 입구 ${t.cover==='flap'?'닫힘':'열림'} → 물방울 ${t.clean?'굴러감':'남음'}, 수첩 ${t.dry?'마름':'젖음'}`),...Object.keys(proof).filter(k=>proof[k]).map(k=>'본 탐구에서 비교한 역할: '+FIELD_BAG_ROLES[k])];
+  case 4:{
+   // The bridge copies the field trials into the start of the core history; show that shared prefix once.
+   const carried=s.fieldBridges?.[4]&&e.bag.delivered&&e.bag.tests.every((t,i)=>s.tests[i]?.key===t.key)?e.bag.tests.length:0;
+   const extraProof=Object.keys(proof).filter(k=>proof[k]&&(e.bag.comparisons[k]?.before!==s.inventionExplanations[k]?.before||e.bag.comparisons[k]?.after!==s.inventionExplanations[k]?.key));
+   return [...e.bag.tests.map((t,n)=>`현장 시험 ${n+1} · ${t.surface==='lotus'?'연잎 겉면':'보통 천'}, 입구 ${t.cover==='flap'?'닫힘':'열림'} → 물방울 ${t.rolls?'굴러감':'남음'}, 공책 ${t.notebookDry?'마름':'젖음'}`),...Object.keys(e.bag.comparisons).filter(k=>FIELD_BAG_ROLES[k]).map(k=>'현장에서 비교한 역할: '+FIELD_BAG_ROLES[k]),...s.tests.slice(carried).map((t,n)=>`이어 한 시험 ${carried+n+1} · ${t.surface==='lotus'?'연잎 겉면':'보통 천'}, 입구 ${t.cover==='flap'?'닫힘':'열림'} → 물방울 ${t.clean?'굴러감':'남음'}, 수첩 ${t.dry?'마름':'젖음'}`),...extraProof.map(k=>'이어 비교한 역할: '+FIELD_BAG_ROLES[k])];
+  }
   default:return [];
  }
 }

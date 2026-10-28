@@ -44,7 +44,7 @@ test('모형 실험은 예상, 두 실험, 관찰 결과와 공기 공간의 연
  drop('reason:air-space','reason:air');assert.equal(fieldMissionReady(s,2),true);
  assert.equal(s.fieldEvidence.float.predictions.air,'sink','틀린 예상도 관찰을 거쳐 성공할 수 있고 처음 예상은 보존된다');
 });
-test('정원은 비로 땅을 만들고, 맞는 땅에만 심고, 마지막 비로 시험하며 옮기면 다시 시험한다',()=>{
+test('정원은 비로 땅을 만들고 맞는 땅에 심어 시험하며 같은 자리를 다시 눌러도 시험을 보존한다',()=>{
  const {s,act,drop,u}=setup(6);act('field-garden-rain');assert.equal(fieldMissionReady(s,3),false);
  drop('plant:hyacinth','plant:pond');assert.deepEqual(s.fieldEvidence.garden.plants,{},'비를 내려 땅이 생기기 전에는 심을 수 없다');
  act('field-garden-ground');assert.deepEqual(s.fieldEvidence.garden.environments,{pond:'water',meadow:'grass',ridge:'dry'});
@@ -52,7 +52,9 @@ test('정원은 비로 땅을 만들고, 맞는 땅에만 심고, 마지막 비�
  for(const [plant,z] of [['hyacinth','pond'],['cherry','meadow'],['aloe','ridge']])drop('plant:'+plant,'plant:'+z);
  assert.equal(fieldMissionReady(s,3),false);act('field-garden-rain');assert.equal(fieldMissionReady(s,3),true);
  drop('plant:aloe','plant:meadow');assert.equal(fieldMissionReady(s,3),true,'틀린 자리는 거절되어 시험 결과가 그대로다');
- drop('plant:cherry','plant:meadow');assert.equal(fieldMissionReady(s,3),false);act('field-garden-rain');assert.equal(fieldMissionReady(s,3),true);
+ drop('plant:cherry','plant:meadow');assert.equal(fieldMissionReady(s,3),true);
+ drop('environment:grass','environment:meadow');assert.equal(fieldMissionReady(s,3),true);act('field-garden-ground');assert.equal(fieldMissionReady(s,3),true);
+ act('field-place-environment','water:meadow');assert.equal(fieldMissionReady(s,3),false,'실제로 환경을 바꾸면 이전 시험은 더 이상 유효하지 않다');
 });
 test('가방 의뢰는 두 부품 조립·공정 비교·부품 역할·현재 설계 시험을 요구한다',()=>{
  const {s,act,drop}=setup(8);act('field-bag-test');assert.equal(s.fieldEvidence.bag.tests.length,0);

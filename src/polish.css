@@ -231,7 +231,7 @@ body.large-text:is(#app,body) .btn{font-size:max(18px,var(--font-size-md))}
 @media(max-width:560px){:is(#app,body) .home-eyebrow{font-size:var(--font-size-xs)}}
 @media(max-width:560px){:is(#app,body) .home-copy>p{font-size:19px}}
 @media(max-width:560px){:is(#app,body) .home-copy>p strong{font-size:23px}}
-@media(max-width:560px){:is(#app,body) .home-actions>.btn{font-size:var(--font-size-sm)}}
+@media(max-width:560px){:is(#app,body) .home-actions .btn{font-size:var(--font-size-sm)}}
 @media(max-width:560px){:is(#app,body) .home-actions>span{font-size:var(--font-size-xs)}}
 @media(max-width:560px){:is(#app,body) .adventure-label h2{font-size:20px}}
 @media(max-width:560px){:is(#app,body) .home-missions strong{font-size:var(--font-size-sm)}}

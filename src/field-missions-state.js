@@ -55,7 +55,7 @@ export function fieldSteps(e,m){
   case 1:return [e.seasons.links.tree==='trunk'&&e.seasons.links.herb==='root',ordered(e.seasons.tree)&&e.seasons.clues.tree==='branches',ordered(e.seasons.herb)&&e.seasons.clues.herb==='rootbud'];
   case 2:return [Object.keys(e.float.predictions).length===2,['air','solid'].every(m=>e.float.tested.includes(m)),e.float.observed.air==='float'&&e.float.observed.solid==='sink'&&e.float.reason==='air'];
   case 3:return [FIELD_ZONES.every(z=>e.garden.environments[z]===FIELD_ENV[z]),Object.entries(FIELD_PLANTS).every(([p,env])=>FIELD_ENV[e.garden.plants[p]]===env),fieldGardenValid(e.garden)&&e.garden.testedKey===fieldGardenKey(e.garden)];
-  case 4:{const b=e.bag,p=fieldBagPair(b),c=b.compared;return [b.assembled.length===2,!!p,!!p&&c.before===p.before.key&&c.after===p.after.key&&c.part===p.part&&b.design.surface==='lotus'&&b.design.cover==='flap'&&b.delivered===fieldBagKey(b.design)];}
+  case 4:{const b=e.bag,p=fieldBagPair(b),c=b.compared;return [b.assembled.length===2,!!p,!!p&&c.before===p.before.key&&c.after===p.after.key&&c.part===p.part&&b.delivered===fieldBagKey(b.design)];}
   default:return [false,false,false];
  }
 }
@@ -118,18 +118,18 @@ function applyFieldActionCore(state,ui,action,id=''){
   e.float.reason='air';u.selected='';return feedback(u,'공기 공간과 뜨는 결과를 연결했어. 부레옥잠의 부푼 잎자루를 이해하는 원리 모형이야.',true);
  }
  if(action==='field-place-environment'){
-  if(!['water','grass','dry'].includes(a)||!FIELD_ZONES.includes(b))return '';removeValue(e.garden.environments,a);e.garden.environments[b]=a;e.garden.testedKey='';u.selected='';const ok=FIELD_ENV[b]===a;
+  if(!['water','grass','dry'].includes(a)||!FIELD_ZONES.includes(b))return '';const previous=fieldGardenKey(e.garden);removeValue(e.garden.environments,a);e.garden.environments[b]=a;if(previous!==fieldGardenKey(e.garden))e.garden.testedKey='';u.selected='';const ok=FIELD_ENV[b]===a;
   return feedback(u,ok?'빗물이 머무르는 모습과 환경을 이었어.':'자리의 빗물 단서를 봐. 오래 고여 있어, 고르게 배어들어, 아니면 빠르게 빠져?',ok);
  }
  // One rain on the three bare beds shows where water pools, soaks in, or runs off; that makes each bed's ground.
  if(action==='field-garden-ground'){
-  FIELD_ZONES.forEach(z=>{e.garden.environments[z]=FIELD_ENV[z];});e.garden.testedKey='';return feedback(u,'빗물이 고인 곳은 물가, 스며든 곳은 풀밭, 흘러간 곳은 건조한 곳이 됐어.',true);
+  const previous=fieldGardenKey(e.garden);FIELD_ZONES.forEach(z=>{e.garden.environments[z]=FIELD_ENV[z];});if(previous!==fieldGardenKey(e.garden))e.garden.testedKey='';return feedback(u,'빗물이 고인 곳은 물가, 스며든 곳은 풀밭, 흘러간 곳은 건조한 곳이 됐어.',true);
  }
  // A plant only goes into ground that suits it; a wrong bed keeps the card and says why.
  if(action==='field-place-plant'){
   if(!Object.hasOwn(FIELD_PLANTS,a)||!FIELD_ZONES.includes(b))return '';if(!FIELD_ZONES.every(z=>e.garden.environments[z]))return feedback(u,'먼저 구름을 눌러 비를 내리고 땅을 살펴봐.');
   u.selected='';if(FIELD_ENV[b]!==FIELD_PLANTS[a]){u.gardenMiss=b;return feedback(u,GARDEN_CLUE[a],false);}
-  removeValue(e.garden.plants,b);e.garden.plants[a]=b;e.garden.testedKey='';return feedback(u,'딱 맞는 땅이야! 식물의 특징과 땅의 환경이 잘 맞아.',true);
+  const previous=fieldGardenKey(e.garden);removeValue(e.garden.plants,b);e.garden.plants[a]=b;if(previous!==fieldGardenKey(e.garden))e.garden.testedKey='';return feedback(u,'딱 맞는 땅이야! 식물의 특징과 땅의 환경이 잘 맞아.',true);
  }
  if(action==='field-garden-rain'){
   if(!fieldGardenValid(e.garden))return feedback(u,'아직 맞지 않는 자리가 있어. 먼저 물이 오래 고이는지, 흙에 배어드는지, 빠르게 빠지는지 봐. 식물 한 개의 특징과 연결하고 다시 시험해 봐.');
@@ -151,8 +151,7 @@ function applyFieldActionCore(state,ui,action,id=''){
  }
  if(action==='field-bag-deliver'){
   const b=e.bag,p=fieldBagPair(b);if(!p||b.compared.before!==p.before.key||b.compared.after!==p.after.key||b.compared.part!==p.part)return feedback(u,'부품 하나만 바꾼 두 시험을 비교하고 바뀐 부품을 연결해 줘.');
-  if(b.design.surface!=='lotus'||b.design.cover!=='flap')return feedback(u,'물방울은 잘 굴러가고, 안쪽 공책은 마르게 설계해 줘.');
-  b.delivered=fieldBagKey(b.design);return feedback(u,`탐험 가방 완성! 이번 비교로 확인한 역할: ${FIELD_BAG_ROLES[p.part]} 나머지 부품은 이 비교만으로 확인했다고 할 수 없어.`,true);
+  b.delivered=fieldBagKey(b.design);return feedback(u,`비교 기록을 남겼어! 이번 비교로 확인한 역할: ${FIELD_BAG_ROLES[p.part]} 이 기록을 이어 써서 가방을 완성하자.`,true);
  }
  return false;
 }

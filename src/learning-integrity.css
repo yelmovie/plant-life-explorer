@@ -16,7 +16,8 @@
 #app .learning-footer > div { flex-wrap:wrap; }
 #app .learning-footer .btn { white-space:normal; }
 #app .garden-cell { touch-action:pan-y pinch-zoom; }
-#app .field-token, #app .plant-card { touch-action:none; }
+#app .field-token, #app .plant-card, #app .garden-plant-pick { touch-action:none; }
+#app .garden-frame.drop-ready { box-shadow: 0 0 0 5px #a6d27f8c; }
 #app .field-token { cursor:grab; }
 #app .field-target, #app .mission-tool, #app .mission-step, #app .part-card,
 #app .learning-tabs .btn, #app .reason-cards .btn { min-height:48px; min-width:48px; }

@@ -4,6 +4,9 @@ import {normalizeFieldEvidence} from './field-missions-state.js';
 // Carry only actual choices and tested comparisons. Never award a core completion.
 export function carryFieldEvidence(s, mission) {
   s.fieldBridges??=Array(5).fill(false);
+  if(!fieldMissionReady(s,mission))return;
+  // Existing field saves already contain the two explanations; do not ask for them again.
+  if(mission===1)s.seasonExplained=[...new Set([...s.seasonExplained,'cherry','sowthistle'])];
   if(s.fieldBridges[mission])return;
   const e=normalizeFieldEvidence(s.fieldEvidence);
   // Carry only observations and placements actually completed in the field.
@@ -44,9 +47,9 @@ export function carryFieldEvidence(s, mission) {
   s.fieldBridges[mission]=true;
 }
 export const BRIDGE_NOTES=[
-  '새 표본 적용 · 현장에서 찾은 모양과 가장자리 기준을 벚나무·은행나무·강아지풀에 써 보자.',
-  '현장에서 이은 겨울과 봄의 기록을 다시 보고, 두 식물의 변화를 설명해 보자.',
+  '현장에서 쓴 기준 하나를 골라 새 잎 세 장에 적용해 보자. 잎을 나누는 행동이 곧 기록이 돼.',
+  '겨울과 봄을 잇고 새로 자란 곳까지 찾았어. 그 발견을 연구노트에 담았어.',
   '현장에서 잎자루 속 공기 방을 확인했어. 이번에는 부레옥잠·알로에·벚나무의 특징과 사는 곳을 이어 보자.',
-  '현장에서 복구한 정원을 가져왔어. 자리를 살펴보고 까닭을 고르거나 땅 모양을 바꿔 보자.',
+  '식물이 살 곳과 까닭을 정원에 이어 썼어. 바로 복구하거나 원하는 만큼 더 꾸며도 좋아.',
   '현장 가방 이어 쓰기 · 현장에서 한 시험과 비교 증거를 가져왔어. 아직 확인하지 않은 부품 하나만 더 비교해 보자.'
 ];

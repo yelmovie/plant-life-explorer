@@ -8,7 +8,7 @@ export const QUESTS=[
  {problem:'비가 오면 탐험 가방과 수첩이 젖어.',task:'연잎의 특징을 써 보고, 부품 하나를 바꿔 같은 비로 시험해 줘.',reward:'발명 공방이 열리고 네 가방이 전시돼.',learn:'식물의 특징을 본떠 생활 물건을 만들어요.',life:'비 오는 날 내 가방의 겉면과 덮개를 살펴봐.'},
 ];
 export const HABITAT_FACTS={
- hyacinth:{feature:'볼록한 잎자루 속에 공기가 있어',life:'물 위에 떠서 생활하는 데 도움이 돼',source:'잎자루를 물속에서 눌러 본 기록'},
+ hyacinth:{feature:'볼록한 잎자루 속에 공기가 있어',life:'물 위에 떠서 생활하는 데 도움이 돼',source:'잎자루 속을 살펴본 실험 기록'},
  aloe:{feature:'두꺼운 잎에 물을 저장해',life:'물이 적은 곳에서 저장한 물을 쓸 수 있어',source:'알로에 관찰 자료'},
  cherry:{feature:'땅속으로 뻗은 뿌리가 있어',life:'흙에서 물을 빨아들여 생활해',source:'벚나무 관찰 자료'},
 };

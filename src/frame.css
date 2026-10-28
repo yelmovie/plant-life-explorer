@@ -90,7 +90,7 @@
 }
 #app .mission-objective.step-done { background: #eef7dc; border-color: #b9d39a; }
 #app .mission-objective.step-done .objective-num { background: #5d8f4b; }
-#app .mission-objective .objective-next { min-height: 48px; animation: frame-nudge 2.8s ease-in-out 1.2s infinite; }
+#app .mission-objective .objective-next { min-height: 48px; color: #fff; animation: frame-nudge 2.8s ease-in-out 1.2s infinite; }
 #app .field-mission .mission-workspace {
   padding: 12px; border-radius: 22px; background: var(--stage-panel);
   border: 2px solid rgb(255 255 255 / .75); box-shadow: 0 10px 26px #2b3d2a1f;
@@ -295,22 +295,11 @@ dialog::backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; backgro
   #app .garden-workbench {
     display: grid; height: 100%; min-height: 0;
     grid-template-columns: minmax(0, 1fr) clamp(220px, 21vw, 290px);
-    grid-template-rows: auto auto minmax(0, 1fr); gap: 12px;
+    grid-template-rows: auto minmax(0, 1fr) auto; gap: 10px;
   }
   #app .garden-workbench .garden-frame[data-spatial] { grid-column: 1; grid-row: 1 / -1; height: 100%; min-height: 0; }
-  #app .garden-workbench .garden-modes { grid-column: 2; grid-row: 1; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); align-items: stretch; }
-  #app .garden-workbench .garden-modes .btn { white-space: normal; min-width: 0; }
-  #app .garden-workbench :is(.terrain-tools,.garden-plant-tray) {
-    grid-column: 2; grid-row: 2; display: flex; flex-direction: column; align-items: stretch;
-    gap: 6px; min-height: 0; flex-wrap: nowrap;
-  }
-  #app .garden-workbench .garden-plant-pick { width: 100%; min-width: 0; min-height: 64px; }
-  #app .garden-workbench .terrain-tools .btn { justify-content: flex-start; min-height: 48px; }
-  #app .garden-workbench .terrain-tools { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); }
-  #app .garden-workbench .terrain-tools .btn { white-space: normal; min-width: 0; padding-inline: 8px; }
-  #app .garden-workbench .terrain-tools .btn:last-child { grid-column: 1 / -1; }
-  #app .garden-workbench .terrain-tools .habitat-picture { width: 42px; height: 36px; }
-  #app .garden-workbench .garden-feedback { grid-column: 2; grid-row: 3; align-self: start; min-height: 0; max-height: 100%; overflow-y: auto; padding: 10px; }
+  #app .garden-workbench .garden-palette { grid-column: 2; grid-row: 1; }
+  #app .garden-workbench .garden-feedback { grid-column: 2; grid-row: 2; align-self: start; min-height: 0; max-height: 100%; overflow-y: auto; padding: 10px; }
   #app .garden-workbench .garden-feedback .reason-cards { flex-direction: column; align-items: stretch; }
   #app .garden-workbench .garden-feedback .reason-cards .btn { flex: none; width: 100%; min-width: 0; white-space: normal; }
   #app .garden-workbench .garden-feedback .direct-hint { text-align: left; }
@@ -318,15 +307,46 @@ dialog::backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; backgro
   #app .garden-feedback .garden-terrain-status { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); }
   #app .garden-feedback .garden-terrain-status > :nth-child(n+3) { grid-column: 1 / -1; }
   #app .garden-workbench .garden-terrain-status > .btn { white-space: normal; }
-  #app .activity-7 .garden-workbench { grid-template-rows: auto minmax(0, 1fr) auto; }
-  #app .activity-7 .garden-workbench .garden-plant-tray { grid-row: 1; }
-  #app .activity-7 .garden-workbench .garden-feedback { grid-row: 2; }
-  #app .activity-7 .garden-workbench > .btn { grid-column: 2; grid-row: 3; }
+  #app .garden-workbench > .btn { grid-column: 2; grid-row: 3; }
 }
 @media (max-width: 900px), (orientation: portrait) {
   #app .garden-workbench { display: flex; flex-direction: column; height: auto; gap: 10px; }
   #app .garden-workbench .garden-frame[data-spatial] { flex: none; height: clamp(420px, 52dvh, 640px); min-height: 420px; }
-  #app .garden-workbench :is(.garden-modes,.terrain-tools,.garden-plant-tray) { flex-wrap: wrap; }
+  #app .garden-palette :is(.terrain-tools,.garden-plant-tray) { grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); }
+}
+/* Garden palette: land tiles and plants side by side; each can be dragged onto the garden or tapped then placed. */
+#app .garden-palette {
+  display: flex; flex-direction: column; gap: 6px; min-width: 0; padding: 10px;
+  border-radius: 18px; background: #fffcedeb; box-shadow: 0 4px 14px #294c3518;
+}
+#app .garden-palette .palette-label { display: flex; align-items: baseline; gap: 6px; margin: 0; font: 17px/1.2 var(--font-display); color: #2f5a3b; }
+#app .garden-palette .palette-label small { font: 14px/1.2 var(--font-body); color: #53664a; }
+#app .garden-palette .terrain-tools { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; min-height: 0; margin: 0; }
+#app .garden-palette .terrain-tools .btn {
+  display: flex; align-items: center; justify-content: flex-start; gap: 6px; min-width: 0; min-height: 52px;
+  padding: 4px 8px; font-size: 16px; line-height: 1.2; white-space: normal; cursor: grab; touch-action: none;
+}
+#app .garden-palette .terrain-tools .habitat-picture { flex: none; width: 40px; height: 34px; }
+#app .garden-palette .soil-swatch { flex: none; width: 34px; height: 26px; border-radius: 6px; background: linear-gradient(#8a6440, #6d4c2e); box-shadow: inset 0 -3px 0 #4e3520; }
+#app .garden-palette .garden-plant-tray { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; min-height: 0; }
+#app .garden-palette .garden-plant-pick {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0;
+  width: auto; min-width: 0; min-height: 86px; padding: 4px; text-align: center; cursor: grab;
+}
+#app .garden-palette .garden-plant-pick img { width: auto; height: 44px; }
+#app .garden-palette .garden-plant-pick span { font-size: 16px; line-height: 1.2; }
+#app .garden-palette .garden-plant-pick small { font-size: 14px; line-height: 1.2; }
+#app .garden-palette > .btn { min-height: 48px; }
+#app .garden-palette :is(.terrain-tools .btn, .garden-plant-pick).drag-origin { opacity: .45; }
+#app .garden-feedback .garden-move-tip { margin: 0; font-size: 15px; line-height: 1.35; color: #53664a; }
+/* Short landscape screens: a slimmer palette leaves room for the progress panel under it. */
+@media (min-width: 901px) and (orientation: landscape) and (max-height: 820px) {
+  #app .garden-palette { gap: 4px; padding: 8px; }
+  #app .garden-palette .palette-label small { display: none; }
+  #app .garden-palette .terrain-tools .btn { min-height: 48px; }
+  #app .garden-palette .terrain-tools .habitat-picture { width: 34px; height: 28px; }
+  #app .garden-palette .garden-plant-pick { min-height: 70px; }
+  #app .garden-palette .garden-plant-pick img { height: 34px; }
 }
 
 /* ── 7. Stacked layouts (portrait, ≤900px): 오늘의 연구 + Leafy become one strip above a full-width stage. ── */
@@ -384,6 +404,12 @@ dialog::backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; backgro
 #app .habitat-option small { color: #6b7262; font-size: 14px; }
 #app .habitat-option.picked { border-color: #d08a3a; background: #fff3e0; }
 #app .habitat-options.text .habitat-option { min-height: 84px; }
+#app .habitat-options.text .habitat-option small { font-size: 16px; line-height: 1.4; }
+#app .season-discovery, #app .garden-reason-saved { display: flex; align-items: center; gap: var(--space-sm, 8px); padding: var(--space-md, 16px); border-radius: 16px; background: #e3f0d3; color: #2f4a26; font-size: 20px; line-height: 1.4; word-break: keep-all; }
+#app .season-discovery svg, #app .garden-reason-saved svg { flex-shrink: 0; }
+#app .activity-1 .sort-board .bin-target { min-height: 48px; }
+#app .dig-cover { min-height: 48px; }
+#app .swipe-bin:focus-visible { outline: 3px solid #f2c94c; outline-offset: 3px; }
 #app .habitat-next { margin-top: 4px; min-height: 56px; font-size: 18px; }
 #app .habitat-all { margin: 0; color: #2f6b34; font: 18px/1.4 var(--font-display); }
 @media (max-width: 900px) {

@@ -1,5 +1,5 @@
 // Stage 5 by hand, one gesture family per step:
-//  0 assemble: tap each numbered place to click the next part in; choosing all three assembles the bag.
+//  0 assemble: tap each numbered place to click the next part in; choosing both assembles the bag.
 //  1 compare: tap once for ten drops; the trial is recorded once they have landed.
 //  2 explain:  spot-the-difference — draw a circle around the part that differs between the two trials.
 // State still changes only through the existing field actions; gesture progress lives in the DOM / ui.fieldMission.
@@ -11,10 +11,11 @@ const LAND={cover:.22,surface:.46};
 const FALL=420,AFTER=600;
 
 export function mountBagHands(root,ui,onAction){
- const offs=[],timers=[];
+ const offs=[],timers=[],animations=new Set();let disposed=false;
  const ctx={root,ui,onAction,
   on:(el,type,fn,opt)=>{el.addEventListener(type,fn,opt);offs.push(()=>el.removeEventListener(type,fn,opt));},
-  later:(fn,ms)=>timers.push(setTimeout(fn,ms)),
+  later:(fn,ms)=>{if(!disposed)timers.push(setTimeout(()=>{if(!disposed)fn();},ms));},
+  animate:(el,frames,options,done)=>{if(disposed)return;const animation=el.animate(frames,options);animations.add(animation);animation.onfinish=()=>{if(!disposed)done?.();};},
   calm:matchMedia('(prefers-reduced-motion: reduce)').matches,
   say:text=>{const el=root.querySelector('[data-bag-say]');if(el)el.textContent=text;}};
  const frame=root.querySelector('[data-bag-frame]');
@@ -22,13 +23,13 @@ export function mountBagHands(root,ui,onAction){
  const sky=root.querySelector('[data-bag-stage][data-rain]');
  if(sky)mountRain(sky,ctx);
  root.querySelectorAll('[data-diff]').forEach(box=>mountCircle(box,ctx));
- return ()=>{offs.forEach(off=>off());timers.forEach(clearTimeout);};
+ return ()=>{disposed=true;offs.forEach(off=>off());timers.forEach(clearTimeout);animations.forEach(animation=>{animation.onfinish=null;animation.cancel();});animations.clear();};
 }
 
 const fieldMission=ui=>ui.fieldMission??={};
 const replay=(el,cls)=>{el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls);};
 
-// Tap dial. While assembling (frame present) the choice stays local until all three places are chosen;
+// Tap dial. While assembling (frame present) the choice stays local until both places are chosen;
 // while testing it swaps the part right away so the next rain compares one change.
 function mountDial(dial,{ui,onAction,on,later,say},frame){
  const part=dial.dataset.bagDial,values=dial.dataset.values.split('|'),labels=dial.dataset.labels.split('|');
@@ -49,7 +50,7 @@ function mountDial(dial,{ui,onAction,on,later,say},frame){
 }
 
 // Rain by taps; the trial is recorded once every drop has landed.
-function mountRain(stage,{onAction,on,later,calm,say}){
+function mountRain(stage,{onAction,on,later,animate,calm,say}){
  const cloud=stage.querySelector('[data-bag-cloud]'),canvas=stage.querySelector('[data-bag-canvas]'),count=stage.querySelector('[data-rain-count]');
  const art=canvas.querySelector('.bag-art'),lotus=art.classList.contains('lotus-surface'),k=calm?.2:1;
  let n=0,landed=0,phase='rain';
@@ -60,11 +61,11 @@ function mountRain(stage,{onAction,on,later,calm,say}){
   const [part,fx]=RAIN[i],kind=outcome(part),el=document.createElement('i'),c=box(cloud),b=box(canvas);
   el.className='rain-drop'+(beat?' beat':'');stage.append(el);
   const x=b.x+fx*b.w,y0=c.y+c.h*.7,y1=b.y+LAND[part]*b.h,dir=fx<.4?-1:1,at=(dx,dy,s='')=>`translate(${x+dx}px,${y1+dy}px) ${s}`;
-  el.animate([{transform:`translate(${x}px,${y0}px)`},{transform:at(0,0)}],{duration:FALL*k,easing:'ease-in',fill:'forwards'}).onfinish=()=>{
+  animate(el,[{transform:`translate(${x}px,${y0}px)`},{transform:at(0,0)}],{duration:FALL*k,easing:'ease-in',fill:'forwards'},()=>{
    if(kind==='bead'||kind==='stain'){el.remove();rest(kind,fx,LAND[part]);}
-   else{el.classList.add(kind);el.animate(kind==='roll'?[{transform:at(0,0,'scale(1.1,.9)')},{transform:at(dir*b.w*.14,b.h*.04),offset:.45},{transform:at(dir*b.w*.24,b.h*.5),opacity:0}]:[{transform:at(0,0)},{transform:at(0,b.h*.12,'scale(.4)'),opacity:0}],{duration:AFTER*k,easing:'ease-out',fill:'forwards'});}
+   else{el.classList.add(kind);animate(el,kind==='roll'?[{transform:at(0,0,'scale(1.1,.9)')},{transform:at(dir*b.w*.14,b.h*.04),offset:.45},{transform:at(dir*b.w*.24,b.h*.5),opacity:0}]:[{transform:at(0,0)},{transform:at(0,b.h*.12,'scale(.4)'),opacity:0}],{duration:AFTER*k,easing:'ease-out',fill:'forwards'});}
    if(++landed===RAIN.length)later(finish,AFTER*k);
-  };
+  });
  };
  const finish=()=>{phase='done';say(lotus?'물방울이 동글동글 맺혀 굴러가!':'겉면에 젖은 얼룩이 남았어.');later(()=>onAction('field-bag-test',''),900*k+200);};
  on(cloud,'pointerdown',e=>{

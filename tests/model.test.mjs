@@ -2,7 +2,7 @@ import {recordResponse} from '../src/learning-records.js';
 import {completeInvention} from './invention-fixture.mjs';
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {PLANTS,recordFeature,comparisonPair,freshState,restoreState,pageReady,evidenceCount,openMission,testDesign,testValid,gardenValid,canFinish,PAGE_ROUTES,previousRoute} from '../src/model.js';
+import {PLANTS,recordFeature,comparisonPair,freshState,restoreState,pageReady,evidenceCount,openMission,testDesign,testValid,gardenValid,canFinish,PAGE_ROUTES,previousRoute,plantAt} from '../src/model.js';
 test('새 연구는 첫 미션만 열리고 빈 활동은 통과하지 못한다',()=>{
  const s=freshState(); assert.equal(evidenceCount(s),0);assert.equal(openMission(s,0),true);assert.equal(openMission(s,1),false);
  for(let i=0;i<10;i++)assert.equal(pageReady(s,i),false);
@@ -48,6 +48,14 @@ test('손상된 저장과 외부 문자열은 안전하게 복원한다',()=>{
 test('저장 왕복은 활동과 정원 데이터를 보존한다',()=>{
  const s=freshState();s.completed[0]=true;s.observation.cherry=['shape'];s.terrain[4]='water';s.garden.hyacinth=4;
  assert.deepEqual(restoreState(JSON.stringify(s)),s);
+});
+test('더 심은 식물은 어울리는 빈 땅에 있을 때만 복원되고 학습 확인을 바꾸지 않는다',()=>{
+ const s=freshState();s.terrain=['water','water','water','grass','grass','grass','dry','dry','dry',...Array(15).fill('empty')];s.garden={hyacinth:0,cherry:3,aloe:6};s.gardenReasons=['hyacinth','cherry','aloe'];
+ s.gardenExtras=[{id:'hyacinth',cell:1},{id:'aloe',cell:7},{id:'aloe',cell:2},{id:'cherry',cell:3},{id:'cherry',cell:4},{id:'cherry',cell:4},{id:'tulip',cell:5}];
+ const restored=restoreState(JSON.stringify(s));
+ assert.deepEqual(restored.gardenExtras,[{id:'hyacinth',cell:1},{id:'aloe',cell:7},{id:'cherry',cell:4}]);
+ assert.deepEqual(plantAt(restored,7),{id:'aloe',extra:true});assert.deepEqual(plantAt(restored,6),{id:'aloe',extra:false});assert.equal(plantAt(restored,9),null);
+ assert.equal(gardenValid(restored),true);
 });
 test('증거는 미션 두 장을 마쳐야 획득하며 엔딩은 현재 산출물을 검증한다',()=>{
  const s=freshState();s.completed[0]=true;assert.equal(evidenceCount(s),0);s.completed[1]=true;assert.equal(evidenceCount(s),1);

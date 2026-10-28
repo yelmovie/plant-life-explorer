@@ -43,23 +43,36 @@ export function mountLens(bench,ui,onAction){
 export function mountLeafSwipe(root,ui,onAction){
  const box=root.querySelector('[data-swipe-sort]'),card=box?.querySelector('[data-swipe-top]');if(!card)return ()=>{};
  const u=ui.fieldMission??={},rule=box.dataset.swipeSort,vertical=box.dataset.axis==='y',bins=[...box.querySelectorAll('[data-swipe-bin]')],slow=reduced()?.3:1;
- let drag=null,timer=0,flying=false;
+ let drag=null,timer=0,flying=false,animation=null,disposed=false;
+ const offs=[],on=(el,type,fn)=>{el.addEventListener(type,fn);offs.push(()=>el.removeEventListener(type,fn));};
  const binAt=(x,y)=>bins.find(b=>{const r=b.getBoundingClientRect();return x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom;});
  const lean=d=>Math.abs(d)<50?'':d<0?'yes':'no';
  const mark=answer=>bins.forEach(b=>b.classList.toggle('lean',b.dataset.swipeBin===answer));
  const pose=(dx,dy)=>`translate(${dx}px,${dy}px) rotate(${vertical?dy*.02:dx*.07}deg)`;
  const fly=(answer,dx,dy)=>{
+  if(flying||disposed)return;
   flying=true;const bin=bins.find(b=>b.dataset.swipeBin===answer),c=card.getBoundingClientRect(),t=bin.getBoundingClientRect();
   const tx=dx+t.left+t.width/2-(c.left+c.width/2),ty=dy+t.top+t.height/2-(c.top+c.height/2);
   card.classList.add('thrown');mark(answer);
-  card.animate([{transform:pose(dx,dy)},{transform:`translate(${tx}px,${ty}px) rotate(${vertical?0:(answer==='yes'?-1:1)*25}deg) scale(.25)`,opacity:.35}],{duration:340*slow,easing:'cubic-bezier(.4,0,.9,.6)',fill:'forwards'}).onfinish=()=>{
+  animation=card.animate([{transform:pose(dx,dy)},{transform:`translate(${tx}px,${ty}px) rotate(${vertical?0:(answer==='yes'?-1:1)*25}deg) scale(.25)`,opacity:.35}],{duration:340*slow,easing:'cubic-bezier(.4,0,.9,.6)',fill:'forwards'});
+  animation.onfinish=()=>{
+   if(disposed)return;
    bin.classList.add('catch');u.leafThrown=card.dataset.swipeCard;
    timer=setTimeout(()=>onAction('field-place',`leaf:${card.dataset.swipeCard}|sort:${rule}:${answer}`),160*slow);
   };
  };
+ // The same throw works with one tap or keyboard activation when a flick is awkward.
+ for(const bin of bins){
+  bin.setAttribute('role','button');bin.tabIndex=0;
+  bin.setAttribute('aria-label',card.querySelector('strong').textContent+' · '+bin.querySelector('strong').textContent+' 바구니에 넣기');
+  bin.style.cursor='pointer';bin.style.touchAction='manipulation';
+  const choose=e=>{e.preventDefault();e.stopPropagation();if(!drag)fly(bin.dataset.swipeBin,0,0);};
+  on(bin,'click',choose);
+  on(bin,'keydown',e=>{if(e.key==='Enter'||e.key===' ')choose(e);});
+ }
  const back=moved=>{card.classList.add('return');card.style.transform='';mark('');if(moved){box.classList.remove('too-slow');void box.offsetWidth;box.classList.add('too-slow');}else{card.classList.remove('nudge');void card.offsetWidth;card.classList.add('nudge');}};
- card.addEventListener('pointerdown',e=>{if(e.button>0||flying)return;e.preventDefault();e.stopPropagation();card.setPointerCapture?.(e.pointerId);card.classList.remove('return','nudge');card.classList.add('grabbed');drag={id:e.pointerId,x:e.clientX,y:e.clientY,trail:[[e.timeStamp,e.clientX,e.clientY]]};});
- card.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.id)return;e.preventDefault();const dx=e.clientX-drag.x,dy=e.clientY-drag.y;card.style.transform=pose(dx,dy);drag.trail.push([e.timeStamp,e.clientX,e.clientY]);if(drag.trail.length>8)drag.trail.shift();mark(binAt(e.clientX,e.clientY)?.dataset.swipeBin||lean(vertical?dy:dx));});
+ on(card,'pointerdown',e=>{if(e.button>0||flying)return;e.preventDefault();e.stopPropagation();card.setPointerCapture?.(e.pointerId);card.classList.remove('return','nudge');card.classList.add('grabbed');drag={id:e.pointerId,x:e.clientX,y:e.clientY,trail:[[e.timeStamp,e.clientX,e.clientY]]};});
+ on(card,'pointermove',e=>{if(!drag||e.pointerId!==drag.id)return;e.preventDefault();const dx=e.clientX-drag.x,dy=e.clientY-drag.y;card.style.transform=pose(dx,dy);drag.trail.push([e.timeStamp,e.clientX,e.clientY]);if(drag.trail.length>8)drag.trail.shift();mark(binAt(e.clientX,e.clientY)?.dataset.swipeBin||lean(vertical?dy:dx));});
  const end=e=>{if(!drag||e.pointerId!==drag.id)return;const d=drag;drag=null;card.classList.remove('grabbed');
   const dx=e.clientX-d.x,dy=e.clientY-d.y,dist=vertical?dy:dx;
   if(e.type==='pointercancel')return back(false);
@@ -67,6 +80,6 @@ export function mountLeafSwipe(root,ui,onAction){
   const old=d.trail.find(([t])=>e.timeStamp-t<=100)||d.trail[0],dt=Math.max(16,e.timeStamp-old[0]),v=((vertical?e.clientY-old[2]:e.clientX-old[1]))/dt;
   const answer=binAt(e.clientX,e.clientY)?.dataset.swipeBin||(Math.abs(v)>.5&&Math.abs(dist)>30&&Math.sign(v)===Math.sign(dist)?(v<0?'yes':'no'):'');
   if(answer)fly(answer,dx,dy);else back(Math.hypot(dx,dy)>12);};
- card.addEventListener('pointerup',end);card.addEventListener('pointercancel',end);
- return ()=>clearTimeout(timer);
+ on(card,'pointerup',end);on(card,'pointercancel',end);
+ return ()=>{disposed=true;clearTimeout(timer);animation?.cancel();offs.forEach(off=>off());};
 }

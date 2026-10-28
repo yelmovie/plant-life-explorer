@@ -74,20 +74,16 @@ try{
  await stage(1);assert.equal(await page.locator('[data-swipe-top]').getAttribute('data-swipe-card'),'maple');
  await stroke(line(await center(page.locator('[data-swipe-top]')),await center(page.locator('[data-swipe-bin="no"]')),8));
  await evidence(`JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.leaves.edge.maple==='no'`);await hint();
- for(const p of ['maple','pine','camellia'])await place('leaf:'+p,'sort:edge:'+(p==='pine'?'no':'yes'));
+ for(const p of ['maple','pine','camellia']){await page.locator('[data-swipe-top][data-swipe-card="'+p+'"]').waitFor();await page.locator('[data-swipe-bin="'+(p==='pine'?'no':'yes')+'"]').tap();await evidence(`JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.leaves.edge.${p}==='${p==='pine'?'no':'yes'}'`);}
  await stage(2);for(const p of ['maple','pine','camellia'])await place('leaf:'+p,'sort:narrow:'+(p==='pine'?'yes':'no'));
- await explore();
- await a('feature-answer','ginkgo');await a('region','shape');await a('feature-answer','cherry');await a('feature-answer','yes');
- const next=page.getByRole('button',{name:'은행나무 관찰하기',exact:true});await next.tap();
- await a('feature-answer','ginkgo');await a('feature-answer','no');await page.getByRole('button',{name:'강아지풀 관찰하기',exact:true}).tap();
- await a('feature-answer','grass');await a('feature-answer','no');
- await snap('leaves-recorded');await completePage();
- // The field already sorted by both rules, so one rule with its proof finishes the new leaves.
- for(const rule of ['edge']){
-  await a('rule',rule);
-  for(const p of ['cherry','ginkgo','grass']){await a('select-plant',p);await a('assign-group',(rule==='edge'?p==='cherry':p==='grass')?'yes':'no');}
-  assert.equal(await page.locator('[data-action="check-rule"]').count(),0);await a('classification-proof',rule==='edge'?'cherry:edge':'grass:shape');
- }
+ await explore();assert.equal((await saved()).page,1);
+ // New leaves use one sorting decision each; there is no second observation quiz or proof quiz.
+ assert.equal(await page.locator('[data-action="feature-answer"]').count(),0);
+ await a('rule','edge');
+ for(const p of ['cherry','ginkgo','grass']){await a('select-plant',p);await a('assign-group',p==='cherry'?'yes':'no');}
+ assert.equal(await page.locator('[data-action="classification-proof"]').count(),0);
+ assert.deepEqual((await saved()).leafEvidence,{},'classification does not invent detailed shape observations');
+ await snap('leaves-classified');
  await completePage();await missionDone(0);
 
  await enter(1);await a('field-season-predict','tree:none');await a('field-season-predict','herb:none');
@@ -106,19 +102,22 @@ try{
  }
  await explore();assert.equal((await saved()).seasonPrediction.cherry,'none');
  assert.equal((await saved()).page,3);assert.equal((await saved()).seasonalRecords.length,4);
- for(const plant of ['cherry','sowthistle']){await a('season-plant',plant);await a('season-explain','growth');}
+ assert.deepEqual([...(await saved()).seasonExplained].sort(),['cherry','sowthistle']);assert.equal(await page.locator('[data-action="season-explain"]').count(),0);await snap('season-discovery');
  await completePage();await missionDone(1);
 
  await enter(2);
  // Hand: push the air model's switch down (sink).
  const knob=await center(page.locator('[data-heft="air"] .sw-knob'));await stroke(line(knob,[knob[0],knob[1]+80],8));
  await evidence(`JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.float.predictions.air==='sink'`);await place('model:solid','predict:float');await stage(1);
- for(const model of ['air','solid'])await place('model:'+model,'tank');await stage(2);
- await hint();await place('reason:air-space','reason:air');
+ for(const model of ['air','solid']){await page.locator('[data-float-item="'+model+'"]').tap();await evidence(`JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.float.tested.includes('${model}')`);}await stage(2);
+ await hint();const pet=await page.locator('[data-petiole]').boundingBox();
+ await stroke(line([pet.x+pet.width*.21,pet.y+pet.height*.875],[pet.x+pet.width*.89,pet.y+pet.height*.125],36));
+ await page.locator('.float-lab[data-phase="reason"]').waitFor();await page.locator('[data-tank-model="air"]').tap();
+ await evidence(`JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.float.reason==='air'`);
  // The field cut already showed the petiole's air, so the repeated lab page is skipped.
  await explore();assert.equal((await saved()).page,5);
- for(const [p,habitat] of [['hyacinth','water'],['aloe','dry'],['cherry','grass']]){await a('habitat-plant',p);await a('habitat',habitat);await a('habitat-feature',p);await a('habitat-answer',p);}
- await completePage();await missionDone(2);
+ for(const [p,habitat] of [['hyacinth','water'],['aloe','dry'],['cherry','grass']]){await a('habitat-plant',p);await a('habitat',habitat);assert.equal(await page.locator('[data-action="habitat-feature"]').count(),0);await a('habitat-answer',p);}
+ await snap('habitats-linked');await completePage();await missionDone(2);
 
  // One cloud tap rains on the bare beds and makes their ground.
  await enter(3);await a('field-garden-ground');

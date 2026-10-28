@@ -4,9 +4,12 @@ import {playDragSound} from './audio.js';
 // The card lifts and leans with the hand, is pulled toward a nearby box, then drops in or springs home.
 const still=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
 const buzz=ms=>{try{navigator.vibrate?.(ms);}catch{/* Vibration is optional. */}};
-let hold=null,quietUntil=0;
+let hold=null,quietUntil=0,hooks={};
 
-export function installCardDrag(onDrop){
+// hooks.move(id,x,y) follows a card over the garden board (x is null once it leaves);
+// hooks.cancel(id) runs when a card is let go anywhere but the board.
+export function installCardDrag(onDrop,dragHooks={}){
+ hooks=dragHooks;
  document.addEventListener('pointerdown',e=>{
   if(hold||e.button!==0)return;const el=e.target.closest('[data-drag]');if(!el)return;
   hold={el,id:el.dataset.drag,pointer:e.pointerId,x:e.clientX,y:e.clientY,lifted:false};
@@ -45,6 +48,8 @@ function target(h){
  let best=null,dist=Infinity;
  for(const el of document.querySelectorAll('[data-drop]')){
   if(el.dataset.drop==='tray'?!h.placed:el.contains(h.el))continue;
+  // Picture cells hidden under a live 3D garden are not where the hand is pointing.
+  if(!el.matches('[data-spatial]')&&el.closest('.spatial-ready:not(.spatial-flat)'))continue;
   const r=el.getBoundingClientRect(),pad=28;
   if(h.px<r.left-pad||h.px>r.right+pad||h.py<r.top-pad||h.py>r.bottom+pad)continue;
   const d=Math.hypot(h.px-(r.left+r.width/2),h.py-(r.top+r.height/2));if(d<dist){dist=d;best=el;}
@@ -56,12 +61,16 @@ function step(){
  const w=h.home.width,ht=h.home.height,calm=still();
  let tx=h.px-h.dx,ty=h.py-h.dy;
  const over=target(h);
- if(over!==h.over){h.over?.classList.remove('drop-ready');over?.classList.add('drop-ready');h.over=over;if(over)buzz(6);}
- if(over){const b=over.getBoundingClientRect();tx+=(b.left+b.width/2-w/2-tx)*.2;ty+=(b.top+b.height/2-ht/2-ty)*.2;}
+ if(over!==h.over){h.over?.classList.remove('drop-ready');over?.classList.add('drop-ready');if(h.over?.dataset.drop==='garden-board')hooks.move?.(h.id,null,null);h.over=over;if(over)buzz(6);}
+ const board=over?.dataset.drop==='garden-board';
+ if(board){
+  // Over the garden the card shrinks and rides just above the finger, so the tile underneath stays visible.
+  const s=h.scale;tx=h.px-h.dx*(1-s)-w*s/2;ty=h.py-18-ht*s-h.dy*(1-s);hooks.move?.(h.id,h.px,h.py);
+ }else if(over){const b=over.getBoundingClientRect();tx+=(b.left+b.width/2-w/2-tx)*.2;ty+=(b.top+b.height/2-ht/2-ty)*.2;}
  const k=calm?1:.36;h.cx+=(tx-h.cx)*k;h.cy+=(ty-h.cy)*k;
  const vx=h.px-h.lastX;h.lastX=h.px;
  h.tilt+=((calm?0:Math.max(-14,Math.min(14,vx*1.2)))-h.tilt)*.18;
- h.scale+=((over?.dataset.drop==='group'?.9:1.07)-h.scale)*.22;
+ h.scale+=((board?.62:over?.dataset.drop==='group'?.9:1.07)-h.scale)*.22;
  h.ghost.style.transform=`translate3d(${h.cx}px,${h.cy}px,0) rotate(${h.tilt}deg) scale(${h.scale})`;
  h.frame=requestAnimationFrame(step);
 }
@@ -77,13 +86,14 @@ function release(dropped,onDrop){
  document.body.classList.remove('card-dragging');h.over?.classList.remove('drop-ready');
  // Decide from the final finger position, not the last animation frame.
  const done=()=>{h.ghost.remove();h.el.classList.remove('drag-origin');},calm=still(),bin=dropped&&target(h);
+ if(bin?.dataset.drop!=='garden-board')hooks.cancel?.(h.id);
  if(!bin){
   playDragSound('back');const r=h.el.isConnected?h.el.getBoundingClientRect():h.home;
   fly(h,r.left,r.top,1,1,'cubic-bezier(.34,1.56,.64,1)',calm?0:430).then(done);return;
  }
  playDragSound('drop');buzz(18);
- const slot=(bin.querySelector('.bin-slots,.classify-leaves')||bin).getBoundingClientRect();
- fly(h,slot.left+slot.width/2-h.home.width/2,slot.top+slot.height/2-h.home.height/2,.5,.25,'cubic-bezier(.55,0,.8,.45)',calm?0:240).then(()=>{done();onDrop(h.id,bin);});
+ const slot=bin.dataset.drop==='garden-board'?{left:h.px,top:h.py,width:0,height:0}:(bin.querySelector('.bin-slots,.classify-leaves')||bin).getBoundingClientRect();
+ fly(h,slot.left+slot.width/2-h.home.width/2,slot.top+slot.height/2-h.home.height/2,.5,.25,'cubic-bezier(.55,0,.8,.45)',calm?0:240).then(()=>{done();onDrop(h.id,bin,{x:h.px,y:h.py});});
 }
 
 // After a card lands, its new copy pops in, the box bounces, and leaf bits scatter.

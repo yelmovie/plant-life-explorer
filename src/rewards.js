@@ -1,5 +1,6 @@
 import {MISSIONS,missionDone,openMission,rewardCount,canChooseGardenTheme,missionStamps} from './model.js';
 import {QUESTS} from './inquiry.js';
+import {normalizeFieldEvidence} from './field-missions-state.js';
 import {assetImage} from './asset-catalog.js';
 import {icon} from './art.js';
 import {TRAIL_LENGTH,ENTRANCES,trailPoint} from './stage-map.js';
@@ -62,8 +63,11 @@ function flowerTrail(state,recent){
 }
 
 export function evidenceSummary(state,i){
+  const leaves=normalizeFieldEvidence(state.fieldEvidence).leaves,groups={...state.groupsByRule,[state.rule]:state.groups};
+  const observed=Object.values(state.observation).flat().length+Object.values(leaves.scans).reduce((n,spots)=>n+spots.length,0);
+  const sorted=['edge','narrow'].reduce((n,rule)=>n+Object.keys(leaves[rule]).length+Object.keys(groups[rule]||{}).length,0);
   return [
-    `${Object.values(state.observation).flat().length}가지 잎의 특징을 찾았어.`,
+    `잎의 특징 ${observed}곳을 살피고 ${sorted}개의 분류 기록을 남겼어.`,
     `${state.seasonalRecords.length}장의 계절 기록으로 겨울과 봄을 연결했어.`,
     '공기와 물을 저장하는 특징을 세 식물의 환경과 연결했어.',
     `${Object.keys(state.garden).length}종의 식물이 네가 만든 정원에 자리 잡았어.`,

@@ -13,6 +13,7 @@ import {STORAGE_KEY,LEGACY_STORAGE_KEY} from '../src/model.js';
 
 test('현장 오답과 본 탐구의 첫 응답이 함께 칭찬·노트에 남고 재도전은 완료를 막지 않는다',()=>{
  const s=freshState(),u={plant:'cherry',region:'shape'};
+ fieldMissionAction(s,u,'field-scan','maple:shape');
  fieldMissionAction(s,u,'field-scan','maple:edge');
  fieldMissionAction(s,u,'field-sort','edge:maple:no');
  fieldMissionAction(s,u,'field-sort','edge:maple:yes');
