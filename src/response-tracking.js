@@ -1,6 +1,6 @@
 import {recordResponse} from './learning-records.js';
 const plantNames={cherry:'벚나무',ginkgo:'은행나무',grass:'강아지풀',hyacinth:'부레옥잠',aloe:'알로에',sowthistle:'씀바귀',maple:'단풍나무',pine:'소나무',camellia:'동백나무'};
-const labels={yes:'큰 톱니 있음',no:'큰 톱니 없음',roots:'뿌리가 남음',none:'아무것도 없음',bubbles:'공기 방울이 나옴',air:'공기',soil:'흙',water:'물가',grass:'풀밭',dry:'건조 구역',growth:'살아 있던 부분에서 다시 자람',gone:'모두 사라짐',roll:'겉면의 물방울이 굴러감',close:'입구도 저절로 막힘',surface:'겉면',cover:'입구 덮개',float:'뜸',sink:'가라앉음',trunk:'줄기와 뿌리',root:'뿌리',leaf:'새로 나온 잎',branches:'같은 가지에서 새눈이 돋음',rootbud:'땅속 뿌리에서 새싹이 돋음',color:'꽃 색깔만 같음',pond:'물이 고이는 자리',meadow:'물이 배어드는 자리',ridge:'물이 빠지는 자리'};
+const labels={yes:'톱니 있음',no:'톱니 없음',roots:'뿌리가 남음',none:'아무것도 없음',bubbles:'공기 방울이 나옴',air:'공기',soil:'흙',water:'물가',grass:'풀밭',dry:'건조 구역',growth:'살아 있던 부분에서 다시 자람',gone:'모두 사라짐',roll:'겉면의 물방울이 굴러감',close:'입구도 저절로 막힘',surface:'겉면',cover:'입구 덮개',float:'뜸',sink:'가라앉음',trunk:'줄기와 뿌리',root:'뿌리',leaf:'새로 나온 잎',branches:'같은 가지에서 새눈이 돋음',rootbud:'땅속 뿌리에서 새싹이 돋음',color:'꽃 색깔만 같음',pond:'물이 고이는 자리',meadow:'물이 배어드는 자리',ridge:'물이 빠지는 자리'};
 const named=id=>plantNames[id]||labels[id]||id;
 const add=(s,m,key,id,ok,label,phase)=>recordResponse(s,m,key,named(id),ok,label,phase);
 function revise(s,m,keys,value){

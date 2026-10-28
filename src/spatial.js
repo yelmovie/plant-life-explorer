@@ -2,6 +2,7 @@ import * as THREE from './vendor/three/three.module.min.js';
 import {GLTFLoader} from './vendor/three/addons/loaders/GLTFLoader.js';
 import {MeshoptDecoder} from './vendor/three/addons/libs/meshopt_decoder.module.js';
 import {icon} from './art.js';
+import {SPATIAL_FAIL} from './runtime-support.js';
 import {seasonSoil,seasonBlossoms} from './season-environment.js';
 import {createGardenTerrain} from './garden-environment.js';
 import {GARDEN_VIEWS,gardenCameraFrame} from './garden-view.js';
@@ -68,12 +69,14 @@ export function reuseGarden(nextHost,state,ui){
 export function gardenCellAt(x,y){return activeGarden?.cellAt(x,y);}
 export function gardenDragOver(id,x,y){activeGarden?.dragOver(id,x,y);}
 export function gardenDragEnd(){activeGarden?.dragEnd();}
+// Why the 3D view fell back to pictures: the file did not arrive (network), arrived but could not be read (model), or the device cannot draw 3D (webgl).
+const failReason=err=>/fetch|responded|network|load/i.test(String(err?.message??err))?'network':'model';
 export function mountSpatial(host,s,u,send,paint){
  unmountSpatial();
  if(!host?.isConnected)return;
  // Keep the supplied bag illustration until an actual bag GLB is available.
  if(host.dataset.spatial==='bag'){host.dataset.spatialReferenceOnly='true';return;}
- try{renderer??=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:'low-power'});}catch{host.dataset.spatialUnavailable='true';return;}
+ try{renderer??=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:'low-power'});}catch{host.dataset.spatialUnavailable='true';host.dataset.spatialReason='webgl';return;}
  const kind=host.dataset.spatial,abort=new AbortController(),signal=abort.signal;
  renderer.shadowMap.enabled=kind==='season'||kind==='garden';renderer.shadowMap.type=THREE.PCFSoftShadowMap;
  let disposed=false,frame=0,drag=null,flat=false,unavailable=false;
@@ -94,12 +97,12 @@ export function mountSpatial(host,s,u,send,paint){
  const mesh=(geometry,material,x=0,y=0,z=0,parent=group)=>{const m=new THREE.Mesh(geometry,material);m.position.set(x,y,z);parent.add(m);return m;};
  const box=(w,h,d,color,x=0,y=0,z=0,parent=group)=>mesh(new THREE.BoxGeometry(w,h,d),mat(color),x,y,z,parent);
  const sphere=(x,y,z,sx,sy,sz,color,parent=group)=>{const m=mesh(new THREE.SphereGeometry(1,24,16),mat(color),x,y,z,parent);m.scale.set(sx,sy,sz);return m;};
- const model=(key,parent=group,scale=1,x=0,y=0,z=0,onLoad)=>{const holder=new THREE.Group();holder.position.set(x,y,z);holder.scale.setScalar(scale);parent.add(holder);loadModel(key).then(src=>{if(disposed)return;const copy=src.clone();holder.add(copy);onLoad?.(copy);draw();}).catch(()=>{models.delete(key);if(disposed)return;host.dataset.modelFailed=key;showFallback();});return holder;};
+ const model=(key,parent=group,scale=1,x=0,y=0,z=0,onLoad)=>{const holder=new THREE.Group();holder.position.set(x,y,z);holder.scale.setScalar(scale);parent.add(holder);loadModel(key).then(src=>{if(disposed)return;const copy=src.clone();holder.add(copy);onLoad?.(copy);draw();}).catch(err=>{models.delete(key);if(disposed)return;host.dataset.modelFailed=key;showFallback(failReason(err));});return holder;};
  let tiles=[],bubbles=[],gardenSurface,placePlants=()=>{},marker;const gardenPlants=new Map(),extraMaterials=[];
  let seasonTap=null,seasonPlant='cherry',fit=1;
  if(kind==='leaf'){
   const key={cherry:'cherry_leaf',ginkgo:'ginkgo_leaf',grass:'grass_leaf'}[u.plant]||'cherry_leaf';
-  const texture=loadTexture(key);texture.ready.then(()=>draw()).catch(()=>{textures.delete(key);if(!disposed)showFallback();});
+  const texture=loadTexture(key);texture.ready.then(()=>draw()).catch(err=>{textures.delete(key);if(!disposed)showFallback(failReason(err));});
   // The leaf rests on the scan table's turntable: petiole at the origin, blade leaning back, a soft shadow under it.
   const geometry=new THREE.PlaneGeometry(LEAF_SIZE,LEAF_SIZE,28,28),p=geometry.attributes.position;
   for(let i=0;i<p.count;i++)p.setZ(i,Math.sin(p.getX(i)*1.5)*.1+Math.cos(p.getY(i))* .12);
@@ -225,9 +228,10 @@ export function mountSpatial(host,s,u,send,paint){
  const showMarker=cell=>{if(!marker)return;marker.visible=cell!==undefined;if(marker.visible)marker.position.set(cell%6-2.5,0,Math.floor(cell/6)-1.5);};
  const plantOn=cell=>[...gardenPlants.values()].find(p=>p.visible&&p.userData.cell===cell);
  gardenControls();
- function showFallback(){
-  unavailable=true;flat=true;host.dataset.spatialUnavailable='true';host.classList.add('spatial-flat');
-  const toggle=controls.querySelector('[data-view="flat"]');toggle.textContent='그림으로 보는 중';toggle.disabled=true;toggle.title='입체 자료를 불러오지 못해 그림으로 보여요.';
+ function showFallback(reason='model'){
+  unavailable=true;flat=true;host.dataset.spatialUnavailable='true';host.dataset.spatialReason=reason;host.classList.add('spatial-flat');
+  console.warn('[입체 대체]',reason,host.dataset.modelFailed||'');
+  const toggle=controls.querySelector('[data-view="flat"]');toggle.textContent='그림으로 보는 중';toggle.disabled=true;toggle.title=SPATIAL_FAIL[reason]||SPATIAL_FAIL.model;
  }
  const raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2();
  const hit=(e,tilesOnly=false)=>{const r=canvas.getBoundingClientRect();pointer.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);raycaster.setFromCamera(pointer,camera);
@@ -290,7 +294,7 @@ export function mountSpatial(host,s,u,send,paint){
   if(s.page===6&&u.gardenMode!=='plant'&&d.cells.size)paint([...d.cells]);else if((s.page===7||u.gardenMode==='plant')&&tap){const tile=hit(e);if(tile)send('garden-cell',String(tile.userData.cell));}}else if(kind==='lab'){if(s.experiment.step===0&&Math.abs(e.clientX-d.x)>55)send('lab-next','cut');else if(s.experiment.step>=3&&Math.hypot(e.clientX-d.x,e.clientY-d.y)<12)send('press-petiole');}else if(seasonTap&&Math.hypot(e.clientX-d.x,e.clientY-d.y)<12)seasonTap(e);};
  const cancel=e=>{if(!drag||drag.id!==e.pointerId)return;const d=drag;drag=null;if(kind!=='garden')return;showMarker();if(d.plant){placePlants();gardenControls();draw();}else if(!d.orbit&&d.cells.size)paint([...d.cells]);};
  canvas.addEventListener('pointerup',finish,{signal});canvas.addEventListener('pointercancel',cancel,{signal});canvas.addEventListener('lostpointercapture',cancel,{signal});
- canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();showFallback();},{signal});
+ canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();showFallback('webgl');},{signal});
  canvas.addEventListener('contextmenu',e=>{if(kind==='garden')e.preventDefault();},{signal});
  canvas.addEventListener('wheel',e=>{e.preventDefault();view.zoom=Math.max(kind==='garden'?.65:.8,Math.min(kind==='garden'?2:1.7,view.zoom-e.deltaY*.001));views.set(kind,view);draw();},{passive:false,signal});
  const animated=bubbles.length||kind==='garden';

@@ -130,6 +130,9 @@ try{
  await snap('garden-designed');
  // Reasons chosen for the same plants in mission 3 come along; nothing is asked twice.
  assert.deepEqual([...(await saved()).gardenReasons].sort(),['aloe','cherry','hyacinth']);
+ // The carried-over garden is not 'ready' by itself: the student keeps it (or changes it) and picks one spot to introduce.
+ assert.equal(await page.locator('.learning-footer [data-action="complete"]').getAttribute('aria-disabled'),'true');
+ await a('garden-pick','cherry');assert.equal((await saved()).gardenPick,'cherry');
  await completePage();await missionDone(3);
 
  await enter(4);await a('field-bag-predict','surface');

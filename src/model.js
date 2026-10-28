@@ -4,9 +4,9 @@ import {normalizeBuds} from './winter-buds.js';
 export const STORAGE_KEY = 'green-garden-mvp-v2';
 export const LEGACY_STORAGE_KEY = 'green-garden-mvp-v1';
 export const PLANTS = [
-  {id:'cherry',name:'벚나무',edge:true,narrow:false,shape:'넓고 끝이 뾰족한 잎',edgeText:'큰 톱니가 보여',habitat:'grass',reason:'땅에 뿌리를 내려 물을 빨아들여'},
-  {id:'ginkgo',name:'은행나무',edge:false,narrow:false,shape:'부채처럼 넓게 펼쳐진 잎',edgeText:'큰 톱니가 보이지 않아'},
-  {id:'grass',name:'강아지풀',edge:false,narrow:true,shape:'가늘고 길쭉한 잎',edgeText:'큰 톱니가 보이지 않아'},
+  {id:'cherry',name:'벚나무',edge:true,narrow:false,shape:'넓고 끝이 뾰족한 잎',edgeText:'가장자리에 톱니가 있어',habitat:'grass',reason:'땅에 뿌리를 내려 물을 빨아들여'},
+  {id:'ginkgo',name:'은행나무',edge:false,narrow:false,shape:'부채처럼 넓게 펼쳐진 잎',edgeText:'가장자리에 톱니가 없어'},
+  {id:'grass',name:'강아지풀',edge:false,narrow:true,shape:'가늘고 길쭉한 잎',edgeText:'가장자리에 톱니가 없어'},
 ];
 export const HABITAT_PLANTS = [
   {id:'hyacinth',name:'부레옥잠',habitat:'water',reason:'잎자루 속 공기가 물에 뜨는 데 도움을 줘'},
@@ -66,7 +66,7 @@ export const PAGES = [
 // Index 4 (초봄) is a view-only stop between winter and the next spring; records keep keys 0-3.
 export const SEASONS=['봄','여름','가을','겨울','초봄'];
 export function freshState() {
-  return {version:2,learningRecords:emptyLearningRecords(),fieldBridges:Array(5).fill(false),notebook:normalizeNotebook(),fieldEvidence:normalizeFieldEvidence(null),journeyRequired:Array(5).fill(false),legacyCompleted:[],legacyFinished:false,leafEvidence:{},groupsByRule:{edge:{},narrow:{}},classificationEvidence:{},seasonPhotos:{},seasonExplanation:'',seasonExplained:[],habitatFeatures:{},experimentAnswer:'',gardenReviewed:false,testExplanation:null,inventionRevision:2,inventionExplanations:{},testPrediction:'',activeTestKey:'',seasonPrediction:{},undergroundSeen:[],budsFound:normalizeBuds(),misses:Array(5).fill(0),stamps:{direct:[],fixed:[],helped:[],unknown:[]},sharing:{status:'pending',question:'',response:''},highlight:0,screen:'home',page:0,completed:Array(10).fill(false),observation:{cherry:[],ginkgo:[],grass:[]},rule:'edge',groups:{},seasonPlant:'cherry',season:1,underground:false,seasonalRecords:[],linkedEvidence:[],experiment:{step:0,compared:false,prediction:''},habitats:{},reasons:{},terrain:Array(24).fill('empty'),garden:{},gardenExtras:[],gardenReasons:[],design:{surface:'plain',cover:'open',linked:false},tests:[],reportSubmitted:[],finalChecks:{classification:false,habitat:false,garden:false,invention:false},finished:false,gardenTheme:'pink',largeText:false,soundEnabled:true,adminUnlocked:false};
+  return {version:2,learningRecords:emptyLearningRecords(),fieldBridges:Array(5).fill(false),notebook:normalizeNotebook(),fieldEvidence:normalizeFieldEvidence(null),journeyRequired:Array(5).fill(false),legacyCompleted:[],legacyFinished:false,leafEvidence:{},groupsByRule:{edge:{},narrow:{}},classificationEvidence:{},seasonPhotos:{},seasonExplanation:'',seasonExplained:[],habitatFeatures:{},experimentAnswer:'',gardenReviewed:false,testExplanation:null,inventionRevision:2,inventionExplanations:{},testPrediction:'',activeTestKey:'',seasonPrediction:{},undergroundSeen:[],budsFound:normalizeBuds(),misses:Array(5).fill(0),stamps:{direct:[],fixed:[],helped:[],unknown:[]},sharing:{status:'pending',question:'',response:''},highlight:0,screen:'home',page:0,completed:Array(10).fill(false),observation:{cherry:[],ginkgo:[],grass:[]},rule:'edge',groups:{},seasonPlant:'cherry',season:1,underground:false,seasonalRecords:[],linkedEvidence:[],experiment:{step:0,compared:false,prediction:''},habitats:{},reasons:{},terrain:Array(24).fill('empty'),garden:{},gardenExtras:[],gardenReasons:[],gardenPick:'',design:{surface:'plain',cover:'open',linked:false},tests:[],reportSubmitted:[],finalChecks:{classification:false,habitat:false,garden:false,invention:false},finished:false,gardenTheme:'pink',largeText:false,soundEnabled:true,adminUnlocked:false};
 }
 export function presetTerrain(){return Array.from({length:24},(_,i)=>['water','grass','dry'][Math.floor((i%6)/2)]);}
 export function evidenceCount(s){return MISSIONS.filter((_,i)=>s.completed[i*2]&&s.completed[i*2+1]).length;}
@@ -133,7 +133,8 @@ export function pageReady(s,p){
     case 5:return pageReady(s,4)&&HABITAT_PLANTS.every(p=>s.habitats[p.id]===p.habitat&&s.habitatFeatures[p.id]===p.id&&s.reasons[p.id]===p.id);
     // New rules (3-cell area, prediction) apply only to pages not yet completed; saved completions keep the old rule.
     case 6:return s.gardenReviewed&&(s.completed[6]?['water','grass','dry'].every(t=>s.terrain.includes(t)):terrainReady(s)&&gardenPlaced(s));
-    case 7:return pageReady(s,6)&&gardenValid(s);
+    // A garden carried over from the field still needs the student's own keep-or-change pick; saved completions keep the old rule.
+    case 7:return pageReady(s,6)&&gardenValid(s)&&(s.completed[7]||!!s.gardenPick);
     case 8:return s.design.linked&&(s.completed[8]||!!s.testPrediction);
     case 9:return s.design.linked&&testValid(s);
     default:return false;
@@ -173,6 +174,7 @@ export function restoreState(raw){
       if(Number.isInteger(v.garden?.[p.id])&&v.garden[p.id]>=0&&v.garden[p.id]<24)s.garden[p.id]=v.garden[p.id];
     }
     if(Array.isArray(v.terrain)&&v.terrain.length===24)s.terrain=v.terrain.map(t=>member(t,['water','grass','dry','empty'])?t:'empty');
+    if(HABITAT_PLANTS.some(p=>p.id===v.gardenPick))s.gardenPick=v.gardenPick;
     if(Array.isArray(v.gardenReasons))s.gardenReasons=[...new Set(v.gardenReasons.filter(id=>HABITAT_PLANTS.some(p=>p.id===id)))];
     // Extra copies only decorate: each sits alone on land that suits it.
     if(Array.isArray(v.gardenExtras))for(const x of v.gardenExtras){const p=HABITAT_PLANTS.find(p=>p.id===x?.id);if(p&&Number.isInteger(x.cell)&&s.terrain[x.cell]===p.habitat&&!plantAt(s,x.cell))s.gardenExtras.push({id:p.id,cell:x.cell});}

@@ -45,7 +45,7 @@ export function observationRecord(s,i){
  const e=normalizeFieldEvidence(s.fieldEvidence),proof=inventionEvidence(s);
  switch(i){
   case 0:{
-   const feature=k=>k==='shape'?'모양':'가장자리',group=(rule,answer)=>rule==='edge'?(answer==='yes'?'톱니 있음':'큰 톱니 없음'):(answer==='yes'?'가늘고 긴 잎':'그 밖의 잎');
+   const feature=k=>k==='shape'?'모양':'가장자리',group=(rule,answer)=>rule==='edge'?(answer==='yes'?'톱니 있음':'톱니 없음'):(answer==='yes'?'가늘고 긴 잎':'그 밖의 잎');
    return [...FIELD_LEAVES.flatMap(p=>e.leaves.scans[p.id].map(k=>`${p.name} · ${feature(k)} 관찰 기록`)),...Object.entries(s.leafEvidence).flatMap(([id,v])=>Object.keys(v).map(k=>`${PLANTS.find(p=>p.id===id)?.name||id} · ${feature(k)} 관찰 기록`)),...['edge','narrow'].flatMap(rule=>[...FIELD_LEAVES.filter(p=>e.leaves[rule][p.id]).map(p=>`${p.name} · ${rule==='edge'?'가장자리':'모양'} 기준 분류: ${group(rule,e.leaves[rule][p.id])}`),...PLANTS.filter(p=>leafGroups(s)[rule]?.[p.id]).map(p=>`${p.name} · 새 표본 분류: ${group(rule,leafGroups(s)[rule][p.id])}`)])];
   }
   case 1:return [...s.seasonalRecords.map(key=>{const [p,n]=key.split(':');return `${p==='cherry'?'벚나무':'씀바귀'} ${['다음 봄','여름','가을','겨울'][n]} 사진${s.seasonPhotos[key]?.underground?' · 땅속 포함':''}`;}),...(s.budsFound?.cherry?.length?[`벚나무 가지 끝 겨울눈 ${s.budsFound.cherry.length}개 찾음`]:[]),...(s.budsFound?.sowthistle?.length?['씀바귀 뿌리 머리 새눈 찾음']:[])];

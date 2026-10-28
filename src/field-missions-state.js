@@ -1,9 +1,10 @@
 import {fieldResponse} from './response-tracking.js';
 // New challenge evidence never replaces the original saved research records.
 export const FIELD_LEAVES = [
- {id:'maple',name:'단풍나무',edge:true,narrow:false,shape:'손바닥처럼 여러 갈래',clue:'갈래 사이와 가장자리를 따라 작은 톱니를 봐.'},
- {id:'pine',name:'소나무',edge:false,narrow:true,shape:'바늘처럼 가늘고 길어',clue:'폭보다 길이가 훨씬 길어. 이 그림에는 큰 톱니가 없어.'},
- {id:'camellia',name:'동백나무',edge:true,narrow:false,shape:'넓고 타원에 가까워',clue:'반들반들한 잎도 가장자리에는 작은 톱니가 있어.'},
+ // The edge rule is only whether teeth are there (size does not matter); clues are per rule.
+ {id:'maple',name:'단풍나무',edge:true,narrow:false,shape:'손바닥처럼 여러 갈래',edgeSeen:'톱니가 줄지어 있어',clue:{edge:'갈래마다 가장자리를 따라가 봐. 톱날 같은 톱니가 줄지어 있어.',narrow:'손바닥처럼 넓게 갈라져 있어. 가늘고 긴 잎은 아니야.'}},
+ {id:'pine',name:'소나무',edge:false,narrow:true,shape:'바늘처럼 가늘고 길어',edgeSeen:'매끈해. 톱니가 없어',clue:{edge:'돋보기로 크게 봐도 가장자리가 매끈하게 이어져. 톱니가 없어.',narrow:'폭보다 길이가 훨씬 길어.'}},
+ {id:'camellia',name:'동백나무',edge:true,narrow:false,shape:'넓고 타원에 가까워',edgeSeen:'작은 톱니가 줄지어 있어',clue:{edge:'반들반들한 잎도 가장자리를 크게 보면 작은 톱니가 줄지어 있어. 작아도 톱니야.',narrow:'넓고 타원에 가까워. 가늘고 긴 잎은 아니야.'}},
 ];
 export const FIELD_ORDER=['winter','bud','spring'];
 export const FIELD_ZONES=['pond','meadow','ridge'];
@@ -77,12 +78,15 @@ function applyFieldActionCore(state,ui,action,id=''){
  if(action==='field-scan'){
   const p=FIELD_LEAVES.find(p=>p.id===a);if(!p||!['shape','edge'].includes(b))return '';
   if(!e.leaves.scans[a].includes(b))e.leaves.scans[a].push(b);
-  return feedback(u,b==='shape'?`${p.name}: ${p.shape}.`:p.edge?'가장자리를 따라 작은 톱니가 이어져 있어.':'가장자리에서 큰 톱니가 보이지 않아.',true);
+  return feedback(u,b==='shape'?`${p.name}: ${p.shape}.`:`${p.name} 가장자리: ${p.edgeSeen}.`,true);
  }
  if(action==='field-sort'){
   const p=FIELD_LEAVES.find(p=>p.id===b);if(!p||!['edge','narrow'].includes(a)||!['yes','no'].includes(c))return '';
   if(!['shape','edge'].every(k=>e.leaves.scans.maple.includes(k)))return feedback(u,'먼저 단풍나무의 모양과 가장자리를 돋보기로 살펴봐.');
-  e.leaves[a][b]=c;u.selected='';const ok=c===(p[a]?'yes':'no');return feedback(u,ok?`${p.name}을 같은 기준으로 놓았어.`:`리피: ${p.clue} 지금 기준은 ${a==='edge'?'톱니가 있는지':'가늘고 긴지'}야.`,ok);
+  e.leaves[a][b]=c;u.selected='';const ok=c===(p[a]?'yes':'no');if(!ok)return feedback(u,`리피: ${p.clue[a]} 지금 기준은 ${a==='edge'?'톱니가 있는지':'가늘고 긴지'}야. 다시 넣어 봐.`);
+  // Short reply per card; the last card names the next thing to do instead of repeating praise.
+  const left=FIELD_LEAVES.filter(q=>e.leaves[a][q.id]!==(q[a]?'yes':'no')).length;
+  return feedback(u,left?`✓ ${p.name} · ${a==='edge'?(c==='yes'?'톱니 있음':'톱니 없음'):(c==='yes'?'가늘고 긴 잎':'가늘고 길지 않은 잎')}. 남은 카드 ${left}장.`:a==='edge'?'✓ 톱니 기준으로 다 나눴어! 위의 “다음 도전”에서 같은 잎을 모양 기준으로 다시 나눠 봐.':'✓ 모양 기준으로도 다 나눴어! 아래 버튼으로 가서 처음 보는 잎에 기준을 써 보자.',true);
  }
  if(action==='field-season-predict'){
   if(!['tree','herb'].includes(a)||!['roots','none'].includes(b)||e.seasons.predictions[a])return '';

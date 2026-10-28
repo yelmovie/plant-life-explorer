@@ -2,7 +2,7 @@ import {createSaveStore} from './safe-storage.js';
 import {recordHint,recordResponse} from './learning-records.js';
 import {carryFieldEvidence} from './field-bridge.js';
 import {QUESTS} from './inquiry.js';
-import {mountSpatialSafely} from './runtime-support.js';
+import {mountSpatialSafely,SPATIAL_FAIL} from './runtime-support.js';
 import {ASSETS,THUMBS,assetImage,warmImage,warmMission,warmFile} from './asset-catalog.js';
 const SEASON_MODELS=['season_cherry_bare','season_sowthistle_root','season_sowthistle_rosette','season_sowthistle_flowers'];
 import {STORAGE_KEY,LEGACY_STORAGE_KEY,PLANTS,HABITAT_PLANTS,HABITATS,MISSIONS,PAGES,SEASONS,freshState,restoreState,plantAt,terrainReady,evidenceCount,missionDone,openMission,pageReady,gardenValid,designKey,testDesign,testValid,canFinish,PAGE_ROUTES,routeIndex,previousRoute} from './model.js';
@@ -27,7 +27,7 @@ window.addEventListener('storage',event=>saveStore.changed(event.key));
 if(state.screen==='activity'&&!missionDone(state,Math.floor(state.page/2)))state.journeyRequired[Math.floor(state.page/2)]=true;
 if(!soundStored()&&state.soundEnabled===false)setSound(false);
 let ui={plant:'cherry',zoom:1,rotation:0,selected:'cherry',map:Math.min(4,evidenceCount(state)),brush:'water',undo:[],finalTab:0,testing:false,paused:false,region:'shape',bubbling:false};
-let spatialModule,spatialEpoch=0,lastScreen,spatialFailureShown=false;
+let spatialModule,spatialEpoch=0,lastScreen;const spatialFailureShown=new Set();
 let toastTimer,paintActive=false,paintLast=-1,testRun=0;
 const $=(s)=>document.querySelector(s);
 const btn=(label,action,cls='',attrs='')=>`<button class="btn ${cls}" data-action="${action}" ${attrs}>${label}</button>`;
@@ -48,7 +48,7 @@ function save(){if(state.finished&&!state.legacyFinished&&!canFinish(state))stat
 function downloadRecord(raw,name){const url=URL.createObjectURL(new Blob([raw],{type:'application/json;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 function saveHelp(){modal('기록 보관과 복구',`<p>이 브라우저·주소의 기록이야. 원본 보관 파일은 읽지 못한 내용도 그대로 담으며, 파일 보관만으로 복구가 된 것은 아니야.</p><p>현재 활동 파일은 보관용이야. 앱에서 파일 가져오기는 제공하지 않아. 다른 탭의 최신 기록을 열면 이 탭에서 저장하지 못한 선택은 사라져. 먼저 파일로 보관해 줘.</p>`,btn('현재 활동 파일 보관','save-export','soft')+(saveStore.original!==null?btn('저장 원본 파일 보관','save-original','soft'):'')+(saveStore.status==='failed'?btn('다시 저장하기','save-retry','primary'):'')+(['invalid','failed'].includes(saveStore.status)&&saveStore.backup()?btn('마지막 정상 기록으로 복구','save-recover','soft'):'')+btn('저장된 최신 기록 열기','save-reload','soft')+btn('계속 살펴보기','close','soft'));}
 function toast(message){if(state.screen==='activity'){const target=app.querySelector('.activity-feedback')||app.querySelector('.guide-bubble');if(target){target.textContent=message;target.classList.remove('nudge');void target.offsetWidth;target.classList.add('nudge');}$('#announcer').textContent=message;return;}clearTimeout(toastTimer);$('.toast')?.remove();const el=document.createElement('div');el.className='toast';el.setAttribute('aria-hidden','true');el.textContent=message;document.body.append(el);$('#announcer').textContent=message;toastTimer=setTimeout(()=>el.remove(),2400);}
-function modal(title,body,buttons='',cls=''){mapController?.stop();if(!body.includes('reward-scene'))dialog.classList.remove('reward-dialog');dialog.classList.toggle('settings-dialog',cls==='settings');dialog.classList.toggle('tool-dialog',cls==='tools');dialog.classList.toggle('notebook-dialog',cls==='notebook');dialog.innerHTML=`<div class="dialog-top"><span class="eyebrow">초록정원 연구기지</span>${btn(icon('close'),'close','icon-btn','aria-label="닫기"')}</div><h2 id="dialog-title">${title}</h2>${body}<div class="dialog-actions">${buttons||btn('알겠어','close','primary')}</div>`;dialog.setAttribute('aria-labelledby','dialog-title');if(!dialog.open)dialog.showModal();}
+function modal(title,body,buttons='',cls=''){mapController?.stop();if(!body.includes('reward-scene'))dialog.classList.remove('reward-dialog');dialog.classList.toggle('settings-dialog',cls==='settings');dialog.classList.toggle('tool-dialog',cls==='tools');dialog.classList.toggle('notebook-dialog',cls==='notebook');dialog.innerHTML=`<div class="dialog-top"><span class="eyebrow">초록정원 연구기지</span>${btn(icon('close'),'close','icon-btn','aria-label="닫기"')}</div><h2 id="dialog-title">${title}</h2>${cls==='settings'?body:`<div class="dialog-body">${body}</div>`}<div class="dialog-actions">${buttons||btn('알겠어','close','primary')}</div>`;dialog.setAttribute('aria-labelledby','dialog-title');if(!dialog.open)dialog.showModal();}
 function cancelTest(){testRun++;ui.testing=false;ui.paused=false;ui.bubbling=false;ui.replaying=false;}
 function nav(screen){cancelTest();state.screen=screen;save();render();window.scrollTo(0,0);if(screen==='ending')showStory('outro');}
 function startPage(p){cancelTest();const mission=Math.floor(p/2);if(!missionDone(state,mission))state.journeyRequired[mission]=true;if(Math.floor(state.page/2)!==mission)ui.fieldMission=undefined;ui.activityFeedback='';ui.activityMode=!missionDone(state,mission)&&state.journeyRequired[mission]&&!fieldMissionReady(state,mission)?'field':'explore';if(ui.activityMode==='explore'&&fieldMissionReady(state,mission)){carryFieldEvidence(state,mission);if(p%2===0&&!state.completed[p]&&pageReady(state,p)){state.completed[p]=true;p++;}}state.page=p;state.screen='activity';ui.selected=p===5||p===7?'hyacinth':'cherry';ui.plant='cherry';ui.region='shape';ui.zoom=1;ui.rotation=0;ui.undo=[];ui.gardenMode=p===7||state.gardenReviewed?'plant':'terrain';save();render();window.scrollTo(0,0);}
@@ -81,7 +81,11 @@ function showSpatialFallback(host){
  const controls=document.createElement('div');controls.className='spatial-controls';
  controls.innerHTML='<button type="button" data-action="spatial-retry" data-view="flat" title="그림으로 탐구를 이어가거나 입체 자료를 다시 불러올 수 있어.">입체 재시도</button>';
  host.append(controls);
- if(!spatialFailureShown){spatialFailureShown=true;toast('입체 자료를 불러오지 못했어. 그림으로 같은 탐구를 이어갈 수 있어.');}
+ // A failed import never ran spatial.js, so it is a network failure; the reason is kept on the host for checking.
+ const reason=host.dataset.spatialReason||='network';console.warn('[입체 대체]',reason);
+ controls.firstChild.title=SPATIAL_FAIL[reason]||SPATIAL_FAIL.network;
+ // One notice per cause per session: later screens fall back quietly and never wait on 3D.
+ if(!spatialFailureShown.has(reason)){spatialFailureShown.add(reason);toast(SPATIAL_FAIL[reason]||SPATIAL_FAIL.network);}
 }
 function render(){playMusic(state.screen==='ending'?'ending':'main');const previousGarden=app.querySelector('[data-spatial="garden"].spatial-ready');fieldCleanup?.();fieldCleanup=null;mapController?.destroy();mapController=null;if(!previousGarden)spatialModule?.unmountSpatial();const epoch=++spatialEpoch;document.body.dataset.screen=state.screen;document.body.classList.toggle('activity-open',state.screen==='activity');const focus=document.activeElement;const focusId=focus?.id;const focusAction=focus?.dataset?.action,focusData=focus?.dataset?.id;document.body.classList.toggle('large-text',state.largeText);app.innerHTML=header()+({home,map:mapPage,activity,report,final:finalPage,ending}[state.screen]||home)();if(state.screen!==lastScreen){lastScreen=state.screen;const main=app.querySelector('main');if(main){main.classList.add('screen-enter');main.addEventListener('animationend',e=>{if(e.target===main)main.classList.remove('screen-enter');});}}bindPinch();const fieldHost=app.querySelector('.field-mission');if(fieldHost)fieldCleanup=mountFieldInteractions(fieldHost,state,ui,action);if(state.screen==='map'){mapController=mountStageMap(app.querySelector('.stage-map'),ui,i=>action('map-arrive',String(i)));warmMission(Math.max(0,nextMapMission(state)));}if(state.screen==='home')warmImage('/assets/videos/intro-poster.webp');const host=app.querySelector('[data-spatial]');const reused=previousGarden&&host?.dataset.spatial==='garden'&&spatialModule?.reuseGarden(host,state,ui);if(previousGarden&&!reused)spatialModule?.unmountSpatial();if(host&&!reused)mountSpatialSafely(()=>import('./spatial.js'),()=>epoch===spatialEpoch&&host.isConnected,module=>{spatialModule=module;module.mountSpatial(host,state,ui,action,cells=>{remember();for(const i of cells)paintCell(i,false);render();});if(host.dataset.spatialUnavailable==='true'&&!host.classList.contains('spatial-ready'))throw new Error('Spatial renderer unavailable');},()=>showSpatialFallback(host));const target=focusId?document.getElementById(focusId):focusAction?app.querySelector(`[data-action="${CSS.escape(focusAction)}"]${focusData!==undefined?`[data-id="${CSS.escape(focusData)}"]`:''}`):null;target?.focus({preventScroll:true});}
 
@@ -198,7 +202,7 @@ async function action(a,id,el){
  case 'map-locked-next':dialog.close();mapController?.goTo(Number(id));return;
  case 'map-overview':mapController?.toggleOverview();return;
  case 'map-retry':render();return;
- case 'spatial-retry':spatialFailureShown=false;render();return;
+ case 'spatial-retry':spatialFailureShown.clear();render();return;
  case 'select-mission':if(openMission(state,Number(id))){ui.map=Number(id);nav('map');}return;
  case 'enter-mission':if(!openMission(state,ui.map)){explainLockedMission(ui.map);return;}dialog.close();startPage(ui.map*2+(state.completed[ui.map*2]&&!state.completed[ui.map*2+1]?1:0));return;
  case 'specimen':ui.activityFeedback='';ui.plant=id;ui.region='shape';ui.zoom=1;ui.rotation=0;render();return;

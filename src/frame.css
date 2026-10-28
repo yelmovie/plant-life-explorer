@@ -420,3 +420,27 @@ dialog::backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; backgro
   #app .habitat-option { min-height: 80px; font-size: 16px; padding: 8px; }
   #app .habitat-option .habitat-picture { width: 64px; height: 50px; }
 }
+
+/* Touch users can open the select-then-place buttons from the objective row (same panel as keyboard focus). */
+#app .mission-objective .objective-keys { min-height: 48px; padding: 6px 14px; font-size: 16px; background: #fffdf3; color: #2f4a26; border: 2px solid #b9d39a; box-shadow: 0 3px 0 #b9d39a; }
+#app .mission-objective .objective-keys[aria-pressed="true"] { background: #e3f0cf; }
+#app .field-mission .keys-panel { bottom: 92px; max-height: 40vh; }
+#app .swipe-done > span { font-size: 16px; color: #4b6440; }
+/* Tap path for the petiole cut: the first tap leaves a marker at one end. */
+#app .petiole-cut .cut-mark { position: absolute; z-index: 3; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%; background: #f2c94c; box-shadow: 0 0 0 4px #fffbe6, 0 0 14px #f2c94ccc; pointer-events: none; animation: link-glow 1s ease-in-out infinite alternate; }
+
+/* Every dialog keeps its title row and buttons in view; only the body scrolls (same pattern as settings). */
+body #dialog[open]:not(.settings-dialog) { display: flex; flex-direction: column; overflow: hidden; }
+body #dialog > :is(.dialog-top, h2, .dialog-actions) { flex-shrink: 0; }
+body #dialog > .dialog-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+body #dialog > .dialog-body > p { font-size: var(--font-size-sm); color: var(--muted); }
+
+
+/* Mission 4 page 2: keep-or-change check for the student's own garden. */
+#app .garden-confirm { display: grid; gap: 5px; margin-top: 0; padding: 8px 10px; border-radius: 16px; background: #fff8e1; border: 2px solid #f2c94c; }
+#app .garden-confirm > p { margin: 0; font-size: 16px; line-height: 1.4; color: var(--scene-ink, #2f4a26); }
+#app .garden-confirm-picks { display: grid; gap: 5px; }
+#app .garden-confirm-picks .btn { display: grid; justify-items: start; gap: 2px; min-height: 44px; padding: 4px 12px; text-align: left; white-space: normal; }
+/* Changing the land is the other choice, so it looks different from the three spots. */
+#app .garden-confirm > .btn { min-height: 44px; padding: 4px 12px; font-size: 16px; background: transparent; border: 2px dashed #c9a94a; box-shadow: none; }
+#app .garden-confirm-picks .btn small { font-size: 15px; line-height: 1.35; }

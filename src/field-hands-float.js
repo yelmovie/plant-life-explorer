@@ -4,7 +4,9 @@
 // Step 3: slice the petiole open (its air rooms bubble by themselves), pick the matching model.
 const HOLD_MS=1300,SINK_MS=1800;
 // Cut axis of the petiole picture (bottom-left end to top-right end), in picture fractions.
-const AXIS=[[.21,.875],[.89,.125]],CUT_BINS=20,CUT_NEED=.7;
+// A cut counts once most of the stalk's length is covered, however fast or few the finger samples are
+// (gaps between samples are filled). Two taps far apart along the stalk make the same cut.
+const AXIS=[[.21,.875],[.89,.125]],CUT_BINS=20,CUT_NEED=.6,CUT_NEAR=.16;
 const HINT={reason:'공기 방을 봤지? 같은 원리로 떠 있던 모형을 수조에서 <b>톡</b> 눌러 봐.'};
 
 export function mountFloatHands(root,ui,onAction){
@@ -100,18 +102,27 @@ export function mountFloatHands(root,ui,onAction){
  // Step 3b: slice along the petiole; the skin opens once most of its length is traced.
  const count=root.querySelector('.petiole-count'),trail=pet.querySelector('.cut-trail polyline');
  if(lab.dataset.phase==='cut'){
-  let d=null;const seen=new Set(),[[ax,ay],[bx,by]]=AXIS,vx=bx-ax,vy=by-ay,len2=vx*vx+vy*vy;
+  let d=null,mark=null;const seen=new Set(),[[ax,ay],[bx,by]]=AXIS,vx=bx-ax,vy=by-ay,len2=vx*vx+vy*vy;
   const norm=e=>{const r=pet.getBoundingClientRect();return [(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height];};
-  on(pet,'pointerdown',e=>{if(e.button>0||pet.classList.contains('open'))return;e.preventDefault();d={id:e.pointerId,pts:[]};pet.setPointerCapture?.(e.pointerId);pet.classList.add('cutting');});
-  on(pet,'pointermove',e=>{if(!d||e.pointerId!==d.id)return;const [x,y]=norm(e),t=((x-ax)*vx+(y-ay)*vy)/len2,dist=Math.hypot(x-(ax+t*vx),y-(ay+t*vy));
-   d.pts.push(`${x.toFixed(3)},${y.toFixed(3)}`);trail.setAttribute('points',d.pts.slice(-60).join(' '));
-   if(dist<.13&&t>=0&&t<=1)seen.add(Math.floor(t*CUT_BINS));
-   if(seen.size/CUT_BINS<CUT_NEED)return;
-   d=null;u.floatCut=true;pet.classList.remove('cutting');pet.classList.add('open','just-open');trail.setAttribute('points','');
+  const along=([x,y])=>{const t=((x-ax)*vx+(y-ay)*vy)/len2;return {t,near:t>=-.05&&t<=1.05&&Math.hypot(x-(ax+t*vx),y-(ay+t*vy))<CUT_NEAR};};
+  const cover=(t0,t1)=>{const [a,b]=[t0,t1].map(t=>Math.max(0,Math.min(CUT_BINS-1,Math.floor(t*CUT_BINS)))).sort((p,q)=>p-q);for(let i=a;i<=b;i++)seen.add(i);};
+  const open=()=>{d=null;mark?.remove();mark=null;u.floatCut=true;pet.classList.remove('cutting');pet.classList.add('open','just-open');trail.setAttribute('points','');
    count.textContent='공기 방이 가득해! 톡 누르면 뽀글';speak('짠! 잎자루 속 빈 방에서 공기가 뽀글뽀글 나와!');
    pet.querySelectorAll('[data-air-room]').forEach((r,i)=>later(()=>bubble(r),250+i*120));
-   later(()=>{lab.dataset.phase='reason';pet.dataset.petiole='reason';hint(HINT.reason);tank.classList.add('choose');},1400);});
-  const up=e=>{if(!d||e.pointerId!==d.id)return;d=null;pet.classList.remove('cutting');trail.setAttribute('points','');if(seen.size)speak('잎자루를 따라 끝까지 쓱 그어 봐.');};
+   later(()=>{lab.dataset.phase='reason';pet.dataset.petiole='reason';hint(HINT.reason);tank.classList.add('choose');},1400);};
+  on(pet,'pointerdown',e=>{if(e.button>0||pet.classList.contains('open'))return;e.preventDefault();const p=norm(e);d={id:e.pointerId,pts:[],last:along(p),start:p,moved:false};pet.setPointerCapture?.(e.pointerId);pet.classList.add('cutting');});
+  on(pet,'pointermove',e=>{if(!d||e.pointerId!==d.id)return;
+   for(const ev of e.getCoalescedEvents?.()||[e]){const p=norm(ev),a=along(p);if(Math.hypot(p[0]-d.start[0],p[1]-d.start[1])>.04)d.moved=true;
+    d.pts.push(`${p[0].toFixed(3)},${p[1].toFixed(3)}`);if(a.near)cover(d.last.near?d.last.t:a.t,a.t);d.last=a;}
+   trail.setAttribute('points',d.pts.slice(-60).join(' '));
+   if(seen.size/CUT_BINS>=CUT_NEED)open();});
+  const up=e=>{if(!d||e.pointerId!==d.id)return;const tapAt=!d.moved&&e.type==='pointerup'?along(d.start):null,p=d.start;d=null;pet.classList.remove('cutting');trail.setAttribute('points','');
+   if(tapAt?.near){
+    // Tap path: the first tap marks one end, a second tap further along the stalk cuts between them.
+    if(mark&&Math.abs(tapAt.t-mark.t)>=CUT_NEED){cover(mark.t,tapAt.t);return open();}
+    mark?.remove();mark=Object.assign(document.createElement('i'),{className:'cut-mark'});mark.t=tapAt.t;mark.style.cssText=`left:${p[0]*100}%;top:${p[1]*100}%`;pet.append(mark);
+    return speak('여기부터! 잎자루 반대쪽 끝을 눌러 봐.');}
+   if(seen.size)speak('잎자루를 따라 끝까지 쓱 그어 봐. 끝과 끝을 차례로 눌러도 돼.');};
   on(pet,'pointerup',up);on(pet,'pointercancel',up);
  }
 

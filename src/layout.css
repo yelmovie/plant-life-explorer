@@ -715,7 +715,7 @@ body.large-text #app .exploration-activity .learning-scene { overflow: visible; 
 @keyframes lens-clue-pop { from { transform: scale(.6); opacity: 0; } to { transform: none; opacity: 1; } }
 #app .lens-fallback { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 /* Float over the stage while focused so opening it never pushes the controls below it. */
-#app .lens-fallback:focus-within { position: fixed; left: 50%; bottom: 16px; z-index: 60; transform: translateX(-50%); width: min(560px, 92vw); height: auto; max-height: 50vh; overflow: auto; clip-path: none; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 10px; border-radius: 16px; background: #fffdf3; box-shadow: 0 10px 30px #1d2e1755; }
+#app .lens-fallback:focus-within, #app .field-mission .keys-panel { position: fixed; left: 50%; bottom: 16px; z-index: 60; transform: translateX(-50%); width: min(560px, 92vw); height: auto; max-height: 50vh; overflow: auto; clip-path: none; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 10px; border-radius: 16px; background: #fffdf3; box-shadow: 0 10px 30px #1d2e1755; }
 #app .field-lens { position: absolute; left: 150px; top: 58px; z-index: 6; width: 118px; height: 118px; transform: translate(-50%,-50%); border-radius: 50%; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; }
 #app .field-lens.dragging { cursor: grabbing; }
 #app .field-lens::after { content: ''; position: absolute; left: 50%; top: 50%; width: 22px; height: 76px; margin-left: -11px; border-radius: 11px; background: linear-gradient(90deg,#6b4220,#b07a3e 45%,#6b4220); transform: rotate(45deg) translateY(66px); transform-origin: 50% 0; box-shadow: 0 6px 10px #2b1e0f40; z-index: -1; }
