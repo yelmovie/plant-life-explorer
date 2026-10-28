@@ -378,7 +378,9 @@ body.large-text:is(#app,body) :is(.specimen-focus>span,.whole-specimen>span,.ins
 :is(#app,body) .seed-progress strong{font-size:var(--font-size-sm)}
 :is(#app,body) .theme-picker>span{font-size:var(--font-size-xs)}
 :is(#app,body) .theme-choice{font-size:var(--font-size-sm)}
-:is(#app,body) .flower-swatch{font-size:25px}
+:is(#app,body) .flower-swatch{width:26px;height:26px;flex:none}
+:is(#app,body) .flower-swatch .petal{fill:var(--flower-color)}
+:is(#app,body) .flower-swatch .heart{fill:var(--flower-heart,#f4d36b)}
 :is(#app,body) .theme-picker small{font-size:var(--font-size-xs)}
 :is(#app,body) .reward-dialog h2{font-size:26px}
 :is(#app,body) .reward-why{font-size:var(--font-size-sm)}
@@ -429,7 +431,7 @@ body.large-text:is(#app,body) :is(.specimen-focus>span,.whole-specimen>span,.ins
 @media(max-width:600px){:is(#app,body) .map-caption{font-size:var(--font-size-xs)}}
 @media(max-width:600px){:is(#app,body) .reward-preview h2{font-size:22px}}
 @media(max-width:600px){:is(#app,body) .theme-choice{font-size:var(--font-size-sm)}}
-@media(max-width:600px){:is(#app,body) .flower-swatch{font-size:22px}}
+@media(max-width:600px){:is(#app,body) .flower-swatch{width:22px;height:22px}}
 @media(max-width:600px){:is(#app,body) .adventure-brief h2{font-size:21px}}
 @media(max-width:600px){:is(#app,body) .adventure-brief p{font-size:var(--font-size-sm)}}
 @media(max-width:600px){:is(#app,body) .invention-steps li{font-size:var(--font-size-sm)}}

@@ -21,7 +21,7 @@ export const stampBadges=(state,i)=>missionStamps(state,i).map(k=>`<span class="
 export function stampBoard(state){
   return `<ul class="stamp-board">${REWARDS.map((r,i)=>`<li><strong>${r.name}</strong> ${missionDone(state,i)?`${stampBadges(state,i)}<small class="life-link">${QUESTS[i].life}</small>`:'<small>탐구를 마치면 스탬프가 찍혀.</small>'}</li>`).join('')}</ul>`;
 }
-export const THEMES={pink:{name:'분홍 꽃길',color:'#df8199'},yellow:{name:'노랑 꽃길',color:'#e3b746'},blue:{name:'하늘 꽃길',color:'#7eaec8'}};
+export const THEMES={pink:{name:'분홍 꽃길',color:'#df8199',heart:'#f4d36b'},yellow:{name:'노랑 꽃길',color:'#efac2c',heart:'#c2602a'},blue:{name:'하늘 꽃길',color:'#7eaec8',heart:'#f4d36b'}};
 
 export function seedProgress(state){
   return `<div class="seed-progress" aria-label="빛씨앗 ${rewardCount(state)}개, 전체 5개"><div class="seed-dots">${MISSIONS.map((m,i)=>`<span class="seed-dot ${missionDone(state,i)?'lit':''}" title="${m.short}: ${missionDone(state,i)?'씨앗 획득':'탐구 전'}">${icon(missionDone(state,i)?'leaf':'lock',20)}</span>`).join('')}</div><strong>빛씨앗 ${rewardCount(state)} / 5</strong></div>`;
@@ -29,13 +29,13 @@ export function seedProgress(state){
 
 export function themePicker(state){
   if(!canChooseGardenTheme(state))return '';
-  return `<div class="theme-picker"><span>계절 탐구 선물 · 꽃길 꾸미기</span><div>${Object.entries(THEMES).map(([id,t])=>`<button class="theme-choice ${state.gardenTheme===id?'selected':''}" data-action="garden-theme" data-id="${id}" aria-pressed="${state.gardenTheme===id}" style="--flower-color:${t.color}"><span class="flower-swatch" aria-hidden="true">✿</span>${t.name}${state.gardenTheme===id?icon('check',15):''}</button>`).join('')}</div><small>원하는 색을 골라도 돼. 탐구 결과에는 영향을 주지 않아.</small></div>`;
+  return `<div class="theme-picker"><span>계절 탐구 선물 · 꽃길 꾸미기</span><div>${Object.entries(THEMES).map(([id,t])=>`<button class="theme-choice ${state.gardenTheme===id?'selected':''}" data-action="garden-theme" data-id="${id}" aria-pressed="${state.gardenTheme===id}" style="--flower-color:${t.color};--flower-heart:${t.heart}"><svg class="flower-swatch" viewBox="-11 -11 22 22" aria-hidden="true">${BLOSSOM}</svg>${t.name}${state.gardenTheme===id?icon('check',15):''}</button>`).join('')}</div><small>원하는 색을 골라도 돼. 탐구 결과에는 영향을 주지 않아.</small></div>`;
 }
 
 export function worldMap(state,current=-1,recent=-1,interactive=true){
   const flowers=canChooseGardenTheme(state),theme=THEMES[state.gardenTheme]||THEMES.pink;
   const next=nextMapMission(state);
-  return `<div class="island-map ${flowers?'has-flowers':''} ${state.finished?'world-awake':''}" style="--flower-color:${theme.color}" aria-label="${rewardCount(state)}개 장소가 깨어난 초록정원">${assetImage('map_trail_v2','island-ground',true)}
+  return `<div class="island-map ${flowers?'has-flowers':''} ${state.finished?'world-awake':''}" style="--flower-color:${theme.color};--flower-heart:${theme.heart}" aria-label="${rewardCount(state)}개 장소가 깨어난 초록정원">${assetImage('map_trail_v2','island-ground',true)}
     ${REWARDS.map((r,i)=>{
       const done=missionDone(state,i),available=openMission(state,i),stamps=missionStamps(state,i),label=`${i+1}. ${r.name} ${done?'복구 완료':available?'탐구 가능':'아직 잠김'}${stamps.map(k=>' · '+STAMPS[k].name+' 스탬프').join('')}`;
       const body=`${assetImage(r.asset,'world-building')}<span class="world-label"><b>${done?icon('check',15):i+1}</b><span>${r.name}${interactive?`<small>${done?`${icon('spark',12)}복구 완료`:icon(available?'unlock':'lock',12)}</small>`:''}</span>${stamps.map(k=>`<i class="world-stamp ${k}" aria-hidden="true">${(['direct','fixed'].includes(k)?assetImage('stamp_'+k,'stamp-img'):icon(STAMPS[k].icon,24))}</i>`).join('')}</span>${done?`<span class="world-light" aria-hidden="true">${icon('spark',16)}</span>`:''}${interactive&&i===next?'<span class="world-next">여기부터!</span>':''}`;
@@ -50,16 +50,28 @@ export function worldMap(state,current=-1,recent=-1,interactive=true){
 
 // The flower path follows the walkable trail up to the furthest restored place and spreads as more are restored.
 // The stretch opened by the place just restored blooms in; the rest is already in flower.
-const FLOWER_SHAPE=[0,72,144,216,288].map(a=>`<ellipse class="petal" rx="7" ry="12" cy="-11" transform="rotate(${a})"/>`).join('')+'<circle class="heart" r="5.5"/>',FLOWER_STEP=44,trailTo=i=>i<0?0:i>=ENTRANCES.length-1?TRAIL_LENGTH:ENTRANCES[i].distance+60;
+// Drawn like the map's own wildflowers: small clumps of soft blossoms with leaves at the path edge, a few petals on the path.
+const BLOSSOM=[0,72,144,216,288].map(a=>`<ellipse class="petal" rx="3.4" ry="5.2" cy="-4.6" transform="rotate(${a})"/>`).join('')+'<circle class="heart" r="1.9"/>';
+const LEAF='<ellipse class="leaf" rx="2.6" ry="6.5"/>';
+// Each clump: blossoms (x, y, size) and leaves (x, y, angle) around its root; three shapes so the edge never looks stamped.
+const CLUMPS=[
+ {b:[[0,0,1],[8,4,.8],[-6,6,.7]],l:[[3,10,20],[-9,1,-35]]},
+ {b:[[0,0,.9],[-8,-2,.75]],l:[[6,6,40],[-3,9,-15],[-12,5,-50]]},
+ {b:[[0,0,1.05],[7,-5,.7],[9,5,.85],[-5,7,.65]],l:[[-8,2,-30],[2,11,10]]}];
+const FLOWER_STEP=40,trailTo=i=>i<0?0:i>=ENTRANCES.length-1?TRAIL_LENGTH:ENTRANCES[i].distance+60;
+const r1=n=>((n*9301+49297)%233280)/233280;
 function flowerTrail(state,recent){
   const last=MISSIONS.reduce((n,_,i)=>missionDone(state,i)?i:n,-1),end=trailTo(last),before=trailTo(MISSIONS.reduce((n,_,i)=>missionDone(state,i)&&i!==recent?i:n,-1));
   const band=[];for(let d=0;d<end;d+=12){const p=trailPoint(d);band.push(`${p.x.toFixed(0)},${p.y.toFixed(0)}`);}const tail=trailPoint(end);band.push(`${tail.x.toFixed(0)},${tail.y.toFixed(0)}`);
-  const blooms=[];
-  for(let d=FLOWER_STEP/2,n=0;d<end;d+=FLOWER_STEP,n++){
-    const p=trailPoint(d),side=n%2?1:-1,gap=30+(n*7)%12,x=p.x-p.dy*gap*side,y=p.y+p.dx*gap*side,size=1.05+((n*37)%5)*.08,fresh=recent>=0&&d>before;
-    blooms.push(`<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${(n*47)%72}) scale(${size.toFixed(2)})"><g class="trail-flower ${fresh?'fresh':''}" style="--i:${fresh?Math.round((d-before)/FLOWER_STEP):0}">${FLOWER_SHAPE}</g></g>`);
+  const blooms=[],petals=[];
+  for(let d=FLOWER_STEP/2,n=0;d<end;d+=FLOWER_STEP*(.8+r1(n)*.5),n++){
+    const p=trailPoint(d),side=r1(n+7)<.5?1:-1,gap=24+r1(n+3)*10,x=p.x-p.dy*gap*side,y=p.y+p.dx*gap*side,c=CLUMPS[n%3],fresh=recent>=0&&d>before;
+    const art=c.l.map(([lx,ly,a])=>`<g transform="translate(${lx} ${ly}) rotate(${a})">${LEAF}</g>`).join('')+c.b.map(([bx,by,k])=>`<g transform="translate(${bx} ${by}) scale(${k}) rotate(${Math.round(r1(n+bx)*72)})">${BLOSSOM}</g>`).join('');
+    blooms.push(`<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${(1.15+r1(n+11)*.3).toFixed(2)})"><g class="trail-flower ${fresh?'fresh':''}" style="--i:${fresh?Math.round((d-before)/FLOWER_STEP):0}">${art}</g></g>`);
+    // A petal or two dropped on the path itself.
+    if(r1(n+5)<.75){const q=trailPoint(d+FLOWER_STEP/2),o=(r1(n+9)-.5)*14;petals.push(`<ellipse class="fallen" rx="2.2" ry="3.4" cx="${(q.x-q.dy*o).toFixed(1)}" cy="${(q.y+q.dx*o).toFixed(1)}" transform="rotate(${Math.round(r1(n+2)*180)} ${(q.x-q.dy*o).toFixed(1)} ${(q.y+q.dx*o).toFixed(1)})"/>`);}
   }
-  return `<svg class="trail-blooms" viewBox="0 0 1536 1024" aria-hidden="true"><polyline class="bloom-band" points="${band.join(' ')}"/><polyline class="bloom-edge" points="${band.join(' ')}"/><polyline class="bloom-petals" points="${band.join(' ')}"/>${blooms.join('')}</svg>`;
+  return `<svg class="trail-blooms" viewBox="0 0 1536 1024" aria-hidden="true"><defs><radialGradient id="petal-tint" cx=".5" cy=".85" r=".9"><stop offset="0" class="tint light"/><stop offset=".55" class="tint"/><stop offset="1" class="tint deep"/></radialGradient></defs><polyline class="bloom-band" points="${band.join(' ')}"/>${petals.join('')}${blooms.join('')}</svg>`;
 }
 
 export function evidenceSummary(state,i){
