@@ -15,7 +15,18 @@ wrangler pages deploy dist --project-name leafy-garden --branch main
 
 `dist/`는 빌드 산출물이며 Git에 포함하지 않는다. 실행용 이미지·모형·글꼴만 배포하고 참고 자료·교육과정 원본·검증 화면은 배포에서 제외한다. 원본과 캡처는 로컬 프로젝트에 보존한다.
 
-## 최근 배포 — 2026-10-27
+## 최근 배포 — 2026-10-28
+
+- 기능 커밋: `e87da5e0476e16efa1608316fb26d6ed2db9732e` (`main`·`sort-board-drag`, GitHub push 완료)
+- 배포 주소: https://f7dc2dd0.leafy-garden.pages.dev
+- 운영 주소: https://leafy-garden.pages.dev
+- 바뀐 것: 정원 꾸미기를 끌어다 놓기 하나로 정리(땅 타일·식물 한 팔레트, 놓일 칸 표시, 심은 식물 옮기기·밖으로 빼서 뽑기, 같은 식물 여러 그루, 칠하기가 식물을 덮지 않음). 모든 스테이지를 마치면 홈에 처음부터 다시하기(확인 후 초기화). 5개 미션 활동 흐름 점검 반영(`docs/reviews/PLAY-REVIEW-20261028.md`).
+- 빌드: 177파일·118에셋·45,550,278바이트, esbuild 번들 사용(wrangler 4.154.0에 포함된 esbuild 0.28.2). `dirty=true`는 추적하지 않는 `output/` 폴더 때문이며 배포물과 무관하다.
+- 배포 전 JavaScript **45개 문법 검사**, **115/115 테스트**를 통과했다. 브라우저 테스트(`*.browser.mjs`)는 이번에 돌리지 않았다.
+- 운영 주소의 `build-info.json` 커밋이 배포 커밋과 같고, `app.bundle.js`·`spatial.js`에 새 정원 조작 코드가 들어 있음을 확인했다. 운영 주소 첫 화면 표시와 페이지 오류 0건을 확인했다.
+- 정원 조작은 로컬 미리보기에서 마우스·스크립트 포인터로 확인했다. 실물 태블릿 손가락 조작은 미검증이다.
+
+## 이전 배포 — 2026-10-27 (OG 이미지)
 
 - 기능 커밋: `55c5fa68557ac35f69ea75464e7bab66307073d6` (`main`, GitHub push 완료)
 - 배포 주소: https://40bc3574.leafy-garden.pages.dev
