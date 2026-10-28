@@ -15,7 +15,18 @@ wrangler pages deploy dist --project-name leafy-garden --branch main
 
 `dist/`는 빌드 산출물이며 Git에 포함하지 않는다. 실행용 이미지·모형·글꼴만 배포하고 참고 자료·교육과정 원본·검증 화면은 배포에서 제외한다. 원본과 캡처는 로컬 프로젝트에 보존한다.
 
-## 최근 배포 — 2026-10-28
+## 최근 배포 — 2026-10-28 (납품 전 최소 수정)
+
+- 기능 커밋: `daa03138c580025aab4f74013f43ffe59776ecff` (`sort-board-drag`, GitHub push 안 함)
+- 배포 주소: https://2a2fa2fb.leafy-garden.pages.dev
+- 운영 주소: https://leafy-garden.pages.dev
+- 바뀐 것: 1장 톱니 있음/없음 통일·돋보기 4배, 3장 긋기 판정 보간·양 끝 두 번 누르기, 현장 임무 '버튼으로 하기', 팝업 버튼 고정, 2·5장 예상 단계 안내, 4장 '내 정원 확인', 3D 실패 원인 구분(README '납품 전 최소 수정' 참고).
+- 빌드: 177파일·118에셋·45,570,403바이트, esbuild 번들. `dirty=true`는 추적하지 않는 `output/` 폴더 때문이다.
+- 배포 전 JavaScript 45개 문법 검사, 118/118 테스트, 전체 여정 브라우저 테스트, 터치 전용 점검 24항목(`tests/delivery-touch.browser.mjs`, 로컬 dist)을 통과했다.
+- 운영 주소의 `build-info.json` 커밋이 배포 커밋과 같고, `app.bundle.js` SHA-256이 로컬 dist와 같으며 새 기능 코드가 들어 있음을 확인했다. 운영 주소 첫 화면 표시와 콘솔 오류 0건을 확인했다.
+- 실물 태블릿 손가락 조작·성능은 미검증이다.
+
+## 이전 배포 — 2026-10-28
 
 - 기능 커밋: `e87da5e0476e16efa1608316fb26d6ed2db9732e` (`main`·`sort-board-drag`, GitHub push 완료)
 - 배포 주소: https://f7dc2dd0.leafy-garden.pages.dev
