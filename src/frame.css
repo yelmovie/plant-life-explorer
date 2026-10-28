@@ -230,7 +230,8 @@ dialog::backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; backgro
 #app .activity-4 .lab-scene .spatial-controls > span { display: none; }
 #app .activity-4 .lab-scene.spatial-flat::after { display: none; }
 @media (min-width: 901px) and (orientation: landscape) {
-  body #app .exploration-activity.activity-4 .learning-scene {
+  /* Lab page only: the field mission on the same page keeps the full-width workspace. */
+  body #app .exploration-activity.activity-4:not(.field-mission-view) .learning-scene {
     display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(260px, 1fr);
     grid-template-rows: minmax(0, 1fr); height: 100%; min-height: 0;
     align-items: stretch; align-content: stretch; gap: 14px; overflow: hidden;
