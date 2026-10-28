@@ -15,7 +15,16 @@ wrangler pages deploy dist --project-name leafy-garden --branch main
 
 `dist/`는 빌드 산출물이며 Git에 포함하지 않는다. 실행용 이미지·모형·글꼴만 배포하고 참고 자료·교육과정 원본·검증 화면은 배포에서 제외한다. 원본과 캡처는 로컬 프로젝트에 보존한다.
 
-## 최근 배포 — 2026-10-28 (납품 전 최소 수정)
+## 최근 배포 — 2026-10-28 (5장 간소화·꽃길·3장 배치)
+
+- 기능 커밋: `56ad5155ac24f24f63d9e5a9aecd479efd246fd6` (`sort-board-drag`)
+- 배포 주소: https://08ad75e4.leafy-garden.pages.dev
+- 운영 주소: https://leafy-garden.pages.dev
+- 바뀐 것: 5장 발명 공방을 예상·첫 비 → 부품 하나씩 달고 비 → 공책 지킨 부품 고르기로 간소화(기록 페이지 요약), 꽃길을 지도 화풍의 작은 들꽃 무리로 교체, 3장 현장 임무 화면 왼쪽 쏠림 수정.
+- 배포 전 JavaScript 45개 문법 검사, 118/118 테스트, 전체 여정·터치 전용(26항목)·레이아웃(115항목)·런타임 브라우저 테스트를 통과했다.
+- 운영 주소의 `build-info.json` 커밋이 배포 커밋과 같고 `app.bundle.js`·`bundle.css` SHA-256이 로컬 dist와 같음을 확인했다. 실물 태블릿 조작은 미검증이다.
+
+## 이전 배포 — 2026-10-28 (납품 전 최소 수정)
 
 - 기능 커밋: `daa03138c580025aab4f74013f43ffe59776ecff` (`sort-board-drag`, GitHub push 안 함)
 - 배포 주소: https://2a2fa2fb.leafy-garden.pages.dev
