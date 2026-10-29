@@ -8,7 +8,7 @@ const require=createRequire(import.meta.url);
 const {chromium}=require(process.env.PLAYWRIGHT_MODULE_PATH||'C:/Users/bongb/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const output=new URL(process.env.JOURNEY_OUTPUT||'../docs/reviews/delivery-20261028/',import.meta.url);await mkdir(output,{recursive:true});
 const url=process.env.JOURNEY_URL||'http://127.0.0.1:4351',KEY='green-garden-mvp-v2';
-const chrome={headless:true,executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe'};
+const chrome={headless:true,executablePath:process.env.BROWSER_EXECUTABLE||'C:/Program Files/Google/Chrome/Application/chrome.exe'};
 const browser=await chromium.launch({...chrome,args:['--disable-webgl']});
 const report={started:new Date().toISOString(),url,checks:[],dialogs:[],spatial:[],errors:[]};
 const check=(ok,msg)=>{assert.ok(ok,msg);report.checks.push(msg);};
@@ -129,7 +129,7 @@ try{
  await complete(4);
 
  // Final record → ending, then refresh keeps progress and the garden layout.
- await act('report');await act('report-tab','share');await act('share-later');await act('start-final');await act('final-habitat','water');await act('final-habitat','dry');await act('power-core');await page.locator('[data-story-action="exit"]').tap();
+ await act('report');await act('start-final');await act('final-habitat','water');await act('final-habitat','dry');await act('power-core');await page.locator('[data-story-action="exit"]').tap();
  const end=await saved();check(end.finished===true,'Ending reached by touch only');
  await page.reload();const after=await saved();report.gardenAfter={before:gardenBefore,after:after.garden,pick:after.gardenPick,finished:after.finished,screen:after.screen};check(after.finished&&['hyacinth','cherry','aloe'].every(k=>after.garden[k]===gardenBefore[k])&&after.gardenPick==='aloe','Refresh keeps the ending, garden layout and pick');
  const toasts=await page.evaluate(()=>window.__toasts);report.toasts=toasts;

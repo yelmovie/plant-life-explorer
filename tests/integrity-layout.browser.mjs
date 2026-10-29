@@ -6,7 +6,7 @@ import {fileURLToPath} from 'node:url';
 const require=createRequire(import.meta.url),{chromium}=require(process.env.PLAYWRIGHT_MODULE_PATH||'C:/Users/bongb/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const output=new URL(process.env.JOURNEY_OUTPUT||'../docs/reviews/integrity-20261024/',import.meta.url);await mkdir(output,{recursive:true});
 const completed=JSON.parse(await readFile(new URL('completed-test-record.json',output),'utf8'));
-const browser=await chromium.launch({headless:true,executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',args:['--disable-webgl']});
+const browser=await chromium.launch({headless:true,executablePath:process.env.BROWSER_EXECUTABLE||'C:/Program Files/Google/Chrome/Application/chrome.exe',args:['--disable-webgl']});
 const report={started:new Date().toISOString(),fixture:'Actual fresh UI completion replayed in separate browser profiles; no real user data',layouts:[],errors:[],failures:[]};
 const sizes=(process.env.LAYOUT_SIZES||'1180x820,1024x768,780x833,768x1024').split(',').map(s=>s.split('x').map(Number));
 const scenarios=[['leaves',0],['classification',1],['season-records',3],['habitats',5],['garden-records',7],['seasons',2],['lab',4],['garden',6],['design',8],['tests',9],['field-bag',8],['notebook',null],['ending',null]];

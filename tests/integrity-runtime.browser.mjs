@@ -5,7 +5,7 @@ import {fileURLToPath} from 'node:url';
 const require=createRequire(import.meta.url),{chromium}=require(process.env.PLAYWRIGHT_MODULE_PATH||'C:/Users/bongb/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const output=new URL(process.env.JOURNEY_OUTPUT||'../docs/reviews/integrity-20261024/',import.meta.url),url=process.env.JOURNEY_URL||'http://127.0.0.1:4328',key='green-garden-mvp-v2';
 const completed=JSON.parse(await readFile(new URL('completed-test-record.json',output),'utf8'));
-const browser=await chromium.launch({headless:true,executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',args:['--disable-webgl']});
+const browser=await chromium.launch({headless:true,executablePath:process.env.BROWSER_EXECUTABLE||'C:/Program Files/Google/Chrome/Application/chrome.exe',args:['--disable-webgl']});
 const report={started:new Date().toISOString(),storage:[],webgl:[],errors:[]};
 async function settled(page){return page.evaluate(key=>navigator.locks.request(key,()=>localStorage.getItem(key)),key);}
 async function fixture(raw,extra){const context=await browser.newContext({viewport:{width:1024,height:768}}),page=await context.newPage();page.on('pageerror',e=>report.errors.push(e.message));await page.addInitScript(({raw,key,extra})=>{if(!sessionStorage.getItem('fixture')){localStorage.setItem(key,raw);if(extra)localStorage.setItem(key+'-last-good',extra);sessionStorage.setItem('fixture','1');}},{raw,key,extra});await page.goto(url);return {context,page};}
@@ -41,7 +41,7 @@ try{
 }catch(error){report.failure=error.stack;process.exitCode=1;}
 await browser.close();
 // This is a separate WebGL-capable session; disabled WebGL is not a model failure.
-const glBrowser=await chromium.launch({headless:true,executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']});
+const glBrowser=await chromium.launch({headless:true,executablePath:process.env.BROWSER_EXECUTABLE||'C:/Program Files/Google/Chrome/Application/chrome.exe',args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']});
 for(const [kind,activity] of [['leaf',0],['season',2],['lab',4],['garden',6],['bag',8]]){
  const context=await glBrowser.newContext({viewport:{width:1180,height:820}}),page=await context.newPage();page.on('pageerror',e=>report.errors.push(e.message));
  await page.addInitScript(({s,key,activity})=>localStorage.setItem(key,JSON.stringify({...s,screen:'activity',page:activity})),{s:completed,key,activity});

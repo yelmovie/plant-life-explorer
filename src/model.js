@@ -141,7 +141,7 @@ export function pageReady(s,p){
     default:return false;
   }
 }
-export function canFinish(s){return evidenceCount(s)===5&&pageReady(s,7)&&pageReady(s,9)&&(s.finalChecks.classification||s.finalChecks.habitat)&&['shared','later'].includes(s.sharing.status);}
+export function canFinish(s){return evidenceCount(s)===5&&pageReady(s,7)&&pageReady(s,9)&&(s.finalChecks.classification||s.finalChecks.habitat);}
 export function restoreState(raw){
   const s=freshState();
   try {

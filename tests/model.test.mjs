@@ -61,7 +61,7 @@ test('증거는 미션 두 장을 마쳐야 획득하며 엔딩은 현재 산출
  const s=freshState();s.completed[0]=true;assert.equal(evidenceCount(s),0);s.completed[1]=true;assert.equal(evidenceCount(s),1);
  s.completed.fill(true);Object.keys(s.finalChecks).forEach(k=>s.finalChecks[k]=true);assert.equal(canFinish(s),false);
  s.terrain=['water','grass','dry','water','grass','dry','water','grass','dry',...Array(15).fill('empty')];s.garden={hyacinth:0,cherry:1,aloe:2};s.gardenReasons=['hyacinth','cherry','aloe'];
- s.design={surface:'lotus',cover:'flap',linked:true};s.tests=[testDesign({surface:'plain',cover:'flap'}),testDesign(s.design)];s.testExplanation={key:'lotus:flap',before:'plain:flap',part:'surface'};s.gardenReviewed=true;s.sharing.status='later';completeInvention(s);assert.equal(canFinish(s),true);s.terrain[0]='empty';assert.equal(canFinish(s),false);
+ s.design={surface:'lotus',cover:'flap',linked:true};s.tests=[testDesign({surface:'plain',cover:'flap'}),testDesign(s.design)];s.testExplanation={key:'lotus:flap',before:'plain:flap',part:'surface'};s.gardenReviewed=true;completeInvention(s);assert.equal(canFinish(s),true,'가방 소개 기록 없이도 엔딩을 연다');s.terrain[0]='empty';assert.equal(canFinish(s),false);
 });
 test('보고서 연결은 새로고침해도 보존하고 완료한 미션만 복원한다',()=>{
  const s=freshState();s.completed[0]=true;s.completed[1]=true;s.completed[4]=true;s.completed[5]=true;

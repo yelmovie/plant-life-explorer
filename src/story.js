@@ -1,5 +1,5 @@
 import {STORIES, captionAt} from './story-data.js';
-import {isSoundOn, setSound, stopFeedback, suspendMusic} from './audio.js';
+import {isSoundOn, setSound, stopFeedback, playMusic} from './audio.js';
 
 let activeCleanup;
 
@@ -7,8 +7,8 @@ let activeCleanup;
 export function playStory(kind, {onFinish = () => {}, replay = false} = {}) {
   const story = STORIES[kind];
   if (!story) return;
-  // The intro film has no soundtrack of its own, so the main theme keeps playing under it.
-  const resumeMusic = kind === 'intro' ? () => {} : suspendMusic();
+  // Neither film has a soundtrack of its own: the intro plays over the main theme, the outro over the ending theme.
+  if (kind === 'outro') playMusic('ending', true);
   activeCleanup?.();
   stopFeedback();
   const previousFocus = document.activeElement;
@@ -63,7 +63,6 @@ export function playStory(kind, {onFinish = () => {}, replay = false} = {}) {
     screen.remove();
     video.querySelector('source').removeAttribute('src');
     video.load();
-    resumeMusic();
     app.inert = wasInert;
     document.body.classList.remove('story-playing');
     if (previousFocus?.isConnected) previousFocus.focus({preventScroll: true});

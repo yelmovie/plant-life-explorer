@@ -1,4 +1,4 @@
-// One music player owns both themes. The outro film and hidden tabs suspend it; the silent intro film plays over it.
+// One music player owns both themes. Hidden tabs suspend it; the story films play over it.
 // Sound preferences are separate from research records and survive a record reset.
 export const SOUND_KEY='green-garden-sound';
 const MUSIC_KEY='green-garden-music',VOLUME_KEY='green-garden-music-volume';
@@ -18,9 +18,10 @@ export function setMusic(on){musicEnabled=Boolean(on);save(MUSIC_KEY,musicEnable
 export function setMusicVolume(value){musicVolume=volumeValue(value);save(VOLUME_KEY,String(musicVolume));if(musicPlayer)musicPlayer.volume=musicVolume/100;}
 let musicPlayer,selectedTheme='main',loadedTheme=null,endedTheme=null,unlocked=false;
 const musicHolds=new Set();
-export function playMusic(theme='main'){
+// replay: a theme that already played to its end starts again (the ending theme does not loop).
+export function playMusic(theme='main',replay=false){
   if(!Object.hasOwn(MUSIC_TRACKS,theme))return;
-  if(selectedTheme!==theme){selectedTheme=theme;endedTheme=null;}
+  if(selectedTheme!==theme||replay){selectedTheme=theme;endedTheme=null;}
   syncMusic();
 }
 // Called from a user click, never from the initial render's autoplay attempt.

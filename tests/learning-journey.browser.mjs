@@ -7,7 +7,7 @@ const require=createRequire(import.meta.url);
 const {chromium}=require(process.env.PLAYWRIGHT_MODULE_PATH||'C:/Users/bongb/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const output=new URL(process.env.JOURNEY_OUTPUT||'../docs/reviews/integrity-20261024/',import.meta.url);await mkdir(output,{recursive:true});
 const url=process.env.JOURNEY_URL||'http://127.0.0.1:4328';
-const browser=await chromium.launch({headless:true,executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',args:['--disable-webgl']});
+const browser=await chromium.launch({headless:true,executablePath:process.env.BROWSER_EXECUTABLE||'C:/Program Files/Google/Chrome/Application/chrome.exe',args:['--disable-webgl']});
 const context=await browser.newContext({viewport:{width:1180,height:820},hasTouch:true});
 const page=await context.newPage();page.setDefaultTimeout(30000);
 const report={started:new Date().toISOString(),url,mode:'WebGL disabled; isolated fresh browser; touch emulation and keyboard',missions:[],checks:[],errors:[],snapshots:[],layout:[]};
@@ -151,7 +151,7 @@ try{
  await a('report');await a('note-open','4');await a('note-sticker');await a('note-check','4:0');await a('note-check','4:1');await close();
  await a('note-open','4');assert.equal(await page.locator('[data-action="note-sticker"]').getAttribute('aria-pressed'),'true');assert.match(await page.locator('.note-quiz-feedback').innerText(),/맞아/);await snap('notebook-records');await close();
  const before=await saved();await page.reload();assert.deepEqual(await saved(),before);await a('note-open','4');assert.equal(await page.locator('.note-read-sticker.stuck').count(),1);await close();
- await a('report-tab','share');await a('share-later');await a('start-final');await a('final-habitat','water');await a('final-habitat','dry');await a('power-core');await page.locator('[data-story-action="exit"]').tap();
+ await a('start-final');await a('final-habitat','water');await a('final-habitat','dry');await a('power-core');await page.locator('[data-story-action="exit"]').tap();
  assert.equal((await saved()).finished,true);await snap('ending');
  await a('home');await a('begin');await a('report');await a('note-open','4');assert.equal(await page.locator('.note-read-sticker.stuck').count(),1);await close();
  report.checks.push('Fresh completion: 5 field missions, carried observations, new plant application, ending and research notebook; home/re-entry retains notebook');

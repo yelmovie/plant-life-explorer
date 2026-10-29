@@ -163,7 +163,6 @@ async function action(a,id,el){
  case 'journey-reward':if(missionDone(state,Math.floor(state.page/2)))showReward(Math.floor(state.page/2));return;
  case 'map-theme':modal('꽃길 꾸미기',themePicker(state));return;
  case 'map-garden':modal('내가 심은 정원',gardenGrid(true));return;
- case 'report-tab':ui.reportTab=id;render();return;
  case 'note-open':{const i=Math.max(0,Math.min(4,Number(id)||0));ui.notePage=i;const note=notebookEntry(state,i);modal(note.title,note.body,btn('← 앞 기록','note-open','soft',`data-id="${(i+4)%5}"`)+btn('다음 기록 →','note-open','soft',`data-id="${(i+1)%5}"`)+btn('노트 덮기','close','primary'),'notebook');return;}
  case 'note-check':{const [i,answer]=id.split(':').map(Number),question=NOTE_QUIZZES[i];if(!question||![0,1].includes(answer))return;const note=state.notebook[i];note.firstAnswer??=answer;note.answer=answer;note.attempts++;save();await action('note-open',String(i));return;}
  case 'note-sticker':{const i=ui.notePage??0;state.notebook[i].read=!state.notebook[i].read;save();await action('note-open',String(i));return;}
@@ -234,8 +233,8 @@ async function action(a,id,el){
  case 'next-mission':{const next=Number(id)+1;if(next>4||!openMission(state,next))return;dialog.close();ui.map=next;nav('map');return;}
  case 'reward-detail':if(missionDone(state,Number(id)))showReward(Number(id));return;
  case 'garden-theme':if(!missionDone(state,1)||!THEMES[id])return;state.gardenTheme=id;save();render();if(dialog.open){if(dialog.classList.contains('reward-dialog'))showReward(ui.rewardFocus);else modal('꽃길 꾸미기',themePicker(state));}return;
- case 'report':dialog.close();ui.reportTab='discover';if(!state.adminUnlocked&&evidenceCount(state)!==5){toast('먼저 다섯 가지 연구 증거를 모아 줘.');return;}nav('report');return;
- case 'start-final':if(['shared','later'].includes(state.sharing.status))nav('final');return;
+ case 'report':dialog.close();if(!state.adminUnlocked&&evidenceCount(state)!==5){toast('먼저 다섯 가지 연구 증거를 모아 줘.');return;}nav('report');return;
+ case 'start-final':nav('final');return;
  case 'final-classify':state.finalChecks.classification=id==='yes';if(id!=='yes')toast('새 표본의 잎도 가늘고 길어. 우리가 정한 기준과 비교해 봐.');break;
  case 'final-habitat':ui.finalFeedback=id==='dry'?'물을 저장하는 줄기와 물이 부족한 환경을 연결했어.':'물을 저장하는 특징은 물이 부족한 환경과 어떻게 관련될까?';recordResponse(state,3,'final:habitat',HABITATS[id]||id,id==='dry','새 상황 · 선인장이 사는 곳','application');state.finalChecks.habitat=id==='dry';break;
  case 'final-garden':state.finalChecks.garden=pageReady(state,7);if(!state.finalChecks.garden){modal('정원의 환경을 다시 확인하자','<p>바뀐 지형이나 식물 위치가 있어. 정원으로 돌아가 배치와 근거를 확인해 줘.</p>',btn('정원 확인하기','repair-garden','primary'));return;}toast('물가·풀밭·건조 구역의 식물 배치를 확인했어!');break;
@@ -243,7 +242,6 @@ async function action(a,id,el){
  case 'final-invention':state.finalChecks.invention=id==='right'&&testValid(state);if(id==='wrong')toast('가방의 열린 입구는 표면을 바꿔도 막히지 않아. 덮개가 필요해.');else if(!testValid(state)){modal('현재 설계를 다시 시험하자','<p>설계가 시험 뒤 바뀌었어. 지금 가방으로 시험을 완료해 줘.</p>',btn('테스트센터로','repair-test','primary'));return;}break;
  case 'repair-test':dialog.close();startPage(9);return;
  case 'power-core':if(!canFinish(state)){toast('새 식물의 환경과 내 결과물을 확인해 줘.');return;}state.finished=true;nav('ending');return;
- case 'print':window.print();return;
  }
  save();render();
 }

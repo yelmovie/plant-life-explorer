@@ -8,7 +8,7 @@ const require=createRequire(import.meta.url);
 const {chromium}=require(process.env.PLAYWRIGHT_MODULE_PATH);
 const output=new URL(process.env.JOURNEY_OUTPUT,import.meta.url);
 const completed=JSON.parse(await readFile(new URL('completed-test-record.json',output),'utf8'));
-const url=process.env.JOURNEY_URL,browser=await chromium.launch({headless:true,executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',args:['--disable-webgl']});
+const url=process.env.JOURNEY_URL,browser=await chromium.launch({headless:true,executablePath:process.env.BROWSER_EXECUTABLE||'C:/Program Files/Google/Chrome/Application/chrome.exe',args:['--disable-webgl']});
 const report={checks:[],errors:[]};
 async function fixture(state){
  const context=await browser.newContext({viewport:{width:1024,height:768},hasTouch:true}),page=await context.newPage();
@@ -21,11 +21,12 @@ const action=(page,name,id)=>page.locator(`[data-action="${name}"]${id===undefin
 try{
  {
   const state=freshState();state.screen='activity';state.page=1;state.completed[0]=true;state.fieldEvidence.leaves=completed.fieldEvidence.leaves;state.groups={cherry:'yes',ginkgo:'no',grass:'no'};
-  const {context,page}=await fixture(state);await action(page,'check-rule');
+  const {context,page}=await fixture(state);
+  assert.equal(await page.locator('[data-action="check-rule"]').count(),0);assert.equal(await page.locator('.sort-summary').count(),1);
   assert.notEqual(await page.locator('[data-action="complete"]').getAttribute('aria-disabled'),'true');
   assert.equal(await page.locator('[data-action="classification-proof"]').count(),0);
   await page.reload();assert.notEqual(await page.locator('[data-action="complete"]').getAttribute('aria-disabled'),'true');
-  report.checks.push('Existing sorted-leaf save: one verification records actual classification; reload stays ready');await context.close();
+  report.checks.push('Field-sorted save: chapter 1 record shows the field sort without a second sort; reload stays ready');await context.close();
  }
  {
   const state=freshState();state.screen='activity';state.page=2;state.completed[0]=state.completed[1]=true;state.fieldEvidence.seasons=completed.fieldEvidence.seasons;
