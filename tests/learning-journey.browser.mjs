@@ -77,10 +77,9 @@ try{
  for(const p of ['maple','pine','camellia']){await page.locator('[data-swipe-top][data-swipe-card="'+p+'"]').waitFor();await page.locator('[data-swipe-bin="'+(p==='pine'?'no':'yes')+'"]').tap();await evidence(`JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.leaves.edge.${p}==='${p==='pine'?'no':'yes'}'`);}
  await stage(2);for(const p of ['maple','pine','camellia'])await place('leaf:'+p,'sort:narrow:'+(p==='pine'?'yes':'no'));
  await explore();assert.equal((await saved()).page,1);
- // New leaves use one sorting decision each; there is no second observation quiz or proof quiz.
+ // The field already sorted by both rules: the record page shows that sort and asks for nothing new.
  assert.equal(await page.locator('[data-action="feature-answer"]').count(),0);
- await a('rule','edge');
- for(const p of ['cherry','ginkgo','grass']){await a('select-plant',p);await a('assign-group',p==='cherry'?'yes':'no');}
+ assert.equal(await page.locator('[data-action="assign-group"]').count(),0);
  assert.equal(await page.locator('[data-action="classification-proof"]').count(),0);
  assert.deepEqual((await saved()).leafEvidence,{},'classification does not invent detailed shape observations');
  await snap('leaves-classified');

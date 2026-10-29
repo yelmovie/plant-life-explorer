@@ -126,7 +126,8 @@ export function pageReady(s,p){
   const mission=Math.floor(p/2);if(p%2&&!s.completed[p]&&s.journeyRequired?.[mission]&&!fieldMissionReady(s,mission))return false;
   switch(p){
     case 0:return fieldMissionReady(s,0)||PLANTS.every(x=>['shape','edge'].every(f=>s.leafEvidence[x.id]?.[f]?.answer===(f==='shape'?x.id:x.edge?'yes':'no')));
-    case 1:return pageReady(s,0)&&['edge','narrow'].some(rule=>classificationComplete(s,rule));
+    // The field already sorted by both rules, so the record page does not ask for a second sort.
+    case 1:return pageReady(s,0)&&(fieldMissionReady(s,0)||['edge','narrow'].some(rule=>classificationComplete(s,rule)));
     case 2:return ['cherry','sowthistle'].every(plant=>[0,3].every(n=>s.seasonalRecords.includes(`${plant}:${n}`)&&s.seasonPhotos[`${plant}:${n}`]));
     case 3:return pageReady(s,2)&&['cherry','sowthistle'].every(plant=>s.seasonExplained.includes(plant)&&[0,3].every(n=>s.seasonalRecords.includes(`${plant}:${n}`)));
     case 4:return s.experiment.step>=4&&s.experimentAnswer==='air';

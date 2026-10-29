@@ -459,6 +459,17 @@ body .note-next-idea p { font-size: var(--font-size-sm); }
 #app .activity-1 .sort-board .bin-slots { position: relative; z-index: 1; flex: 1; display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 8px; align-items: center; min-height: calc(var(--card-h) * .78); pointer-events: none; }
 #app .activity-1 .sort-board .bin-slots > .plant-card { height: calc(var(--card-h) * .78); pointer-events: auto; }
 #app .activity-1 .sort-board .bin-empty { grid-column: 1 / -1; text-align: center; font-size: var(--font-size-xs); color: #7d8b68; }
+/* Chapter 1 record after the field: the field sort, read-only, as two compact rule rows. */
+#app .activity-1 .sort-summary { display: flex; flex-direction: column; gap: 8px; }
+#app .activity-1 .sort-summary .chain-title { margin: 4px 0 0; }
+#app .activity-1 .sort-summary .sort-bins { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+#app .activity-1 .sort-summary .sort-bin { display: flex; flex-direction: column; align-items: center; gap: 6px; min-height: 0; padding: 8px 10px; border: 2px solid #b9d39a; border-radius: 18px; background: #f2f7e5; }
+#app .activity-1 .sort-summary .sort-bin + .sort-bin { background: #f7f1e2; border-color: #cdbb8d; }
+#app .activity-1 .sort-summary .bin-target { padding: 2px 14px; border-radius: 999px; background: #2f5a3a; color: #fff; font-size: var(--font-size-xs); font-weight: 700; }
+#app .activity-1 .sort-summary .sort-bin + .sort-bin .bin-target { background: #84683a; }
+#app .activity-1 .sort-summary .bin-slots { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+#app .activity-1 .sort-summary .plant-card { display: flex; flex-direction: column; align-items: center; width: 96px; min-height: 0; padding: 4px; }
+#app .activity-1 .sort-summary .plant-card :is(img, .asset-image) { width: 64px; height: 64px; object-fit: contain; }
 body.card-dragging #app .activity-1 .sort-bin { animation: bin-invite 1.1s ease-in-out infinite; }
 #app .activity-1 .sort-board .sort-bin.drop-ready { border-style: solid; border-color: #4f8a3c; background: #e3f0cd; transform: scale(1.025); box-shadow: 0 0 0 5px #a6d27f5c,0 10px 24px #3d532b2a; animation: none; }
 #app .activity-1 .sort-board .sort-tray.drop-ready { transform: scale(1.01); box-shadow: inset 0 3px 9px #8a744a38,0 0 0 4px #c9b27a80; }

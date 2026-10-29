@@ -202,6 +202,9 @@ body .toast { pointer-events: none; }
 #app .field-season-images :is(svg,.season-atlas) { width: 100%; height: 165px; object-fit: contain; }
 /* Atlas quadrants are 3:2; keep that shape instead of filling the column. */
 #app .field-season-images .season-atlas { width: min(100%, 247px); height: auto; min-height: 0; aspect-ratio: 3 / 2; align-self: center; }
+/* The soil cover, glowing dot and drop cells are placed on the box, so the box hugs the picture. */
+#app .field-season-images :is(.season-dig, .link-target) { width: min(100%, 247px); align-self: center; }
+#app .field-season-images :is(.season-dig, .link-target) > .season-atlas { width: 100%; }
 #app .field-season-images .field-token { font-size: 18px; padding: 8px; }
 #app .field-link-targets { display: grid; gap: 8px; }
 #app .field-link-targets .field-target { padding: 8px; }
@@ -460,6 +463,7 @@ html body[data-screen] .toast { top: calc(var(--hud-top) + 8px); max-width: min(
   #app .field-season-pairs { gap: 12px; }
   #app .field-season-images :is(svg,.season-atlas) { height: 135px; min-height: 135px; }
   #app .field-season-images .season-atlas { width: min(100%, 202px); height: auto; min-height: 0; }
+  #app .field-season-images :is(.season-dig, .link-target) { width: min(100%, 202px); }
   #app .field-season-images .field-token, #app .field-link-targets .field-target { font-size: 16px; }
   #app .field-restoration { gap: 10px; }
   #app .field-garden-zone { min-height: 205px; padding: 10px; }

@@ -71,8 +71,7 @@ try{
   if(p==='pine'){await bin.tap();await bin.tap();}else await bin.tap();await field(`e.leaves.edge.${p}==='${p==='pine'?'no':'yes'}'`);}
  check((await saved()).fieldEvidence.leaves.edge.camellia==='yes','1장: a fast double tap throws one card only');
  await stage(2);for(const p of ['maple','pine','camellia']){await page.locator(`[data-swipe-top][data-swipe-card="${p}"]`).waitFor();await tap(`[data-swipe-bin="${p==='pine'?'yes':'no'}"]`);await field(`e.leaves.narrow.${p}`);}
- await explore();check(/새 잎에 적용/.test(await page.locator('.sort-board').innerText()),'1장: the new-leaf page says it applies the rule to new leaves');
- await act('rule','edge');for(const p of ['cherry','ginkgo','grass']){await act('select-plant',p);await act('assign-group',p==='cherry'?'yes':'no');}
+ await explore();check(await page.locator('.sort-board').count()===0&&/단풍나무/.test(await page.locator('.sort-summary').innerText()),'1장: the record page shows the field sort instead of sorting new leaves again');
  await complete(0);
 
  // 2장: dial and string drag are done with the visible button panel.

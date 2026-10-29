@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {freshState,restoreState,pageReady,PLANTS} from '../src/model.js';
+import {freshState,restoreState,pageReady} from '../src/model.js';
 import {fieldMissionAction} from '../src/field-missions.js';
 import {carryFieldEvidence} from '../src/field-bridge.js';
 import {learningAction,renderActivity} from '../src/learning.js';
@@ -19,22 +19,20 @@ function seasons(s){
   fieldMissionAction(s,u,'field-season-clue',`${plant}:${clue}`);
  }
 }
-test('두 기준을 배운 뒤 새 잎은 한 기준으로 적용하고 관찰하지 않은 세부 특징은 만들지 않는다',()=>{
- for(const rule of ['edge','narrow']){
-  const s=freshState(),u={activityMode:'explore',selected:'cherry'};
-  assert.equal(pageReady(s,0),false);leaves(s);assert.equal(pageReady(s,0),true);
-  s.page=1;learningAction(s,u,'rule',rule);
-  for(const p of PLANTS){u.selected=p.id;learningAction(s,u,'assign-group',p[rule]?'yes':'no');}
-  assert.equal(pageReady(s,1),true);assert.deepEqual(s.leafEvidence,{});
-  const restored=restoreState(JSON.stringify(s));assert.equal(pageReady(restored,1),true);assert.deepEqual(restored.leafEvidence,{});
-  assert.doesNotMatch(renderActivity(restored,u,()=>''),/data-action="classification-proof"/);
-  u.selected='cherry';learningAction(s,u,'assign-group',PLANTS[0][rule]?'no':'yes');assert.equal(pageReady(s,1),false);
- }
+test('현장에서 두 기준으로 나눈 1장은 새 잎을 다시 나누지 않고 기록을 마친다',()=>{
+ const s=freshState(),u={activityMode:'explore'};s.journeyRequired[0]=true;
+ assert.equal(pageReady(s,1),false);
+ leaves(s);assert.equal(pageReady(s,0),true);assert.equal(pageReady(s,1),true);
+ assert.deepEqual(s.leafEvidence,{});assert.deepEqual(s.groups,freshState().groups);
+ s.page=1;const html=renderActivity(s,u,()=>'');
+ assert.doesNotMatch(html,/sort-board|data-action="assign-group"/);assert.match(html,/단풍나무/);
+ assert.equal(pageReady(restoreState(JSON.stringify(s)),1),true);
 });
-test('이전 분류 저장의 확인 버튼도 실제 배치를 근거로 완료하며 틀린 배치는 통과하지 않는다',()=>{
- const s=freshState(),u={};leaves(s);s.page=1;s.groups={cherry:'yes',ginkgo:'no',grass:'no'};
- assert.equal(pageReady(s,1),false);learningAction(s,u,'check-rule');assert.equal(pageReady(s,1),true);
- delete s.classificationEvidence.edge;s.groups.cherry='no';learningAction(s,u,'check-rule');assert.equal(pageReady(s,1),false);
+test('현장 분류를 다 마치지 않으면 1장 기록도 마칠 수 없다',()=>{
+ const s=freshState(),u={};s.journeyRequired[0]=true;s.page=0;
+ for(const feature of ['shape','edge'])fieldMissionAction(s,u,'field-scan',`maple:${feature}`);
+ for(const id of ['maple','pine','camellia'])fieldMissionAction(s,u,'field-sort',`edge:${id}:${id!=='pine'?'yes':'no'}`);
+ assert.equal(pageReady(s,1),false);
 });
 test('완료 전 이어 쓰기를 눌러도 이후의 실제 계절 증거를 막지 않고 설명은 한 번만 한다',()=>{
  const s=freshState();carryFieldEvidence(s,1);assert.equal(s.fieldBridges[1],false);assert.deepEqual(s.seasonExplained,[]);

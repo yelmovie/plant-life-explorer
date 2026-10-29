@@ -7,7 +7,7 @@ import {worldMap,evidenceSummary,REWARDS,stampBoard} from './rewards.js';
 import {checkClassification,classificationKey,seasonEvidenceReady,HABITAT_FACTS,habitatChain} from './inquiry.js';
 import {renderDesign,renderTests} from './invention.js';
 import {renderFieldMission,renderFieldSteps,fieldFeedback} from './field-missions.js';
-import {fieldMissionReady} from './field-missions-state.js';
+import {fieldMissionReady,normalizeFieldEvidence,FIELD_LEAVES} from './field-missions-state.js';
 import {EXPEDITIONS,earnedTools,renderToolPack} from './expedition.js';
 import {renderResearchNotebook} from './research-notebook.js';
 import {BUD_GOAL,BUD_TOTAL,lookForBud,nextBudSpot,budsFoundCount} from './winter-buds.js';
@@ -55,7 +55,14 @@ function leaves(s,u){
   const choices=region==='shape'?PLANTS.map(p=>[p.id,p.shape]):[['yes','톱니가 있어요'],['no','톱니가 없어요']];
   return layout(`<div class="specimen-tray">${PLANTS.map(item=>`<button class="specimen-pick ${p.id===item.id?'selected':''}" data-action="specimen" data-id="${item.id}" aria-pressed="${p.id===item.id}">${leafArt(item.id)}<strong>${item.name}</strong>${leafBadge(s,item.id)}</button>`).join('')}</div><div class="specimen-stage leaf-stage ${region}" data-spatial="leaf"><div class="specimen-art" id="specimen-art" style="transform:scale(${u.zoom}) rotate(${u.rotation}deg)">${leafArt(p.id)}</div><span class="scene-badge">${region==='shape'?'잎 전체':'잎의 가장자리'} · 관찰 그림</span></div><div class="learning-tabs">${button((s.leafEvidence[p.id]?.shape?icon('check',16)+' ':'')+'잎 전체 보기','region','shape',region==='shape')}${button((s.leafEvidence[p.id]?.edge?icon('check',16)+' ':'')+'가장자리 보기','region','edge',region==='edge')}</div><div class="feature-choices">${u.recheck===`${p.id}:${region}`?button(icon('zoom',20)+' 잎을 다시 살펴보기','region',region):choices.map(([id,label])=>button(label,'feature-answer',id,s.leafEvidence[p.id]?.[region]?.answer===id)).join('')}</div><details class="optional-tools"><summary>더 크게 보거나 돌리기</summary><div class="tool-row"><label>확대 <input id="zoom" aria-label="표본 확대" type="range" min="1" max="1.7" step=".05" value="${u.zoom}"><output id="zoom-value">${Math.round(u.zoom*100)}%</output></label>${button('돌리기','rotate')}</div></details>`,panel('찾은 특징',PLANTS.map(p=>`<section><strong>${p.name}</strong>${row(!!s.leafEvidence[p.id]?.shape,!!s.leafEvidence[p.id]?.shape?p.shape:'모양 찾기')}${row(!!s.leafEvidence[p.id]?.edge,!!s.leafEvidence[p.id]?.edge?p.edgeText:'가장자리 찾기')}</section>`).join('')));
 }
+// After the field mission the record page only shows the field sort; the same two rules are not asked again.
+function fieldSortSummary(s){
+ const e=normalizeFieldEvidence(s.fieldEvidence).leaves;
+ const rules=[['edge','톱니로 나누기',['톱니가 있어','톱니가 없어']],['narrow','모양으로 나누기',['가늘고 길쭉해','다른 모양이야']]];
+ return layout(`<div class="work-board sort-summary"><p class="direct-hint"><b>현장 기록</b> · 현장에서 두 기준으로 나눈 잎이야. 기준이 바뀌면 같은 잎도 다른 상자에 들어가.</p>${rules.map(([rule,title,labels])=>`<h3 class="chain-title">${title}</h3><div class="sort-bins">${['yes','no'].map((g,i)=>`<div class="sort-bin filled"><span class="bin-target">${labels[i]}</span><div class="bin-slots">${FIELD_LEAVES.filter(p=>e[rule][p.id]===g).map(p=>`<span class="plant-card placed">${assetImage('field_leaf_'+p.id,'',true)}<strong>${p.name}</strong></span>`).join('')}</div></div>`).join('')}</div>`).join('')}</div>`,panel('표본 서랍 복구',`${row(true,'톱니 기준')}${row(true,'잎 모양 기준')}<p>현장에서 나눈 기록을 가져왔어. 확인하고 관찰 렌즈를 받자.</p>`));
+}
 function classify(s,u){
+ if(fieldMissionReady(s,0))return fieldSortSummary(s);
  const applied=fieldMissionReady(s,0),checked=u.ruleCheck?.key===classificationKey(s)?u.ruleCheck:classificationComplete(s,s.rule)?checkClassification(s):null;
  const labels=s.rule==='edge'?['톱니가 있어','톱니가 없어']:['가늘고 길쭉해','다른 모양이야'];
  // One sorting board: leaves physically move from the tray into a box and leave an empty slot behind.
