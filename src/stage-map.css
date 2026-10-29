@@ -71,6 +71,10 @@
 #app .map-navigation-copy strong{font-family:var(--font-display);font-size:18px;font-weight:400;color:#35573b}
 #app .map-navigation-copy>span{font-size:12px;color:#728069}
 #app .map-navigation-copy .btn{font-size:14px;min-height:44px;padding:6px 0;justify-content:flex-start;color:#3d684a;text-decoration:underline;text-underline-offset:4px}
+#app .map-navigation-copy [data-action="map-pan"]{gap:4px}
+#app .map-navigation-copy [data-action="map-pan"][aria-pressed="true"]{padding:6px 10px;border-radius:12px;background:#e3f0cf;text-decoration:none;box-shadow:inset 0 0 0 2px #9fc07c}
+#app .stage-map-viewport.hand-on{cursor:grab;touch-action:none}
+#app .stage-map-viewport.hand-on.grabbing{cursor:grabbing}
 #app .map-next-card{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px 22px;min-width:420px;padding:18px 22px;border-radius:24px;background:#fffdf2f5;border:1px solid #fffdf7;box-shadow:0 8px 24px #24402b18}
 #app .map-next-card h2{font-size:24px;margin:4px 0;color:#2b5136;line-height:1.2}
 #app .map-next-card p{font-size:14px;line-height:1.5;margin:0;color:#617056;max-width:280px}

@@ -28,18 +28,21 @@ export function mountStageMap(root,ui,onArrive){
   const road=document.createElementNS('http://www.w3.org/2000/svg','svg');road.setAttribute('viewBox','0 0 1536 1024');road.setAttribute('aria-hidden','true');road.classList.add('map-road');road.innerHTML=`<polyline points="${TRAIL.map(p=>p.join(',')).join(' ')}"/>`;world.prepend(road);
   let distance=Number.isFinite(ui.mapDistance)?ui.mapDistance:ENTRANCES[0].distance+90,target=null,frame=0,lastTime=0,scale=1,offsetX=0,offsetY=0,disposed=false;
   let overview=ui.mapOverview===true;
+  // Hand mode: dragging the map pans a free camera; moving Leafy again returns to following.
+  let hand=false,free=null,grab=null,dragged=false;
   const blocked=()=>document.querySelector('#dialog')?.open||root.querySelector('.map-load-error');
   const near=()=>ENTRANCES.findIndex(e=>Math.abs(e.distance-distance)<24);
   let previousEntrance=near(); // Returning to a door does not immediately re-enter it.
   function draw(){
     const p=trailPoint(distance),width=viewport.clientWidth,height=viewport.clientHeight;
     scale=(overview?Math.min:Math.max)(width/1536,height/1024);
-    offsetX=overview?(width-1536*scale)/2:Math.max(width-1536*scale,Math.min(0,width*.5-p.x*scale));
-    offsetY=overview?(height-1024*scale)/2:Math.max(height-1024*scale,Math.min(0,height*.6-p.y*scale));
+    offsetX=overview?(width-1536*scale)/2:Math.max(width-1536*scale,Math.min(0,free?free.x:width*.5-p.x*scale));
+    offsetY=overview?(height-1024*scale)/2:Math.max(height-1024*scale,Math.min(0,free?free.y:height*.6-p.y*scale));
     world.style.transform=`translate(${offsetX}px,${offsetY}px) scale(${scale})`;world.style.setProperty('--map-scale',scale);
     actor.style.left=`${p.x/1536*100}%`;actor.style.top=`${p.y/1024*100}%`;
     ui.mapDistance=distance;ui.mapOverview=overview;
     const button=root.querySelector('[data-action="map-overview"]');button.setAttribute('aria-pressed',String(overview));button.textContent=overview?'리피 따라 보기':'지도 한눈에 보기';
+    root.querySelector('[data-action="map-pan"]')?.setAttribute('aria-pressed',String(hand));viewport.classList.toggle('hand-on',hand);
   }
   function stop(){target=null;held.clear();root.querySelectorAll('.map-direction').forEach(b=>b.classList.remove('pressed'));actor.classList.remove('walking');cancelAnimationFrame(frame);frame=0;lastTime=0;}
   function arrive(i){stop();previousEntrance=i;root.querySelector('.map-walk-status').textContent=`${REWARDS[i].name}에 도착했어.`;onArrive(i);}
@@ -54,9 +57,15 @@ export function mountStageMap(root,ui,onArrive){
     const entrance=near();if(target===null&&entrance>=0&&entrance!==previousEntrance){arrive(entrance);return;}previousEntrance=entrance;
     if(held.size||target!==null)frame=requestAnimationFrame(tick);else lastTime=0;
   }
-  function start(){if(!frame)frame=requestAnimationFrame(tick);}
+  function start(){free=null;if(!frame)frame=requestAnimationFrame(tick);}
   function goTo(i){if(!ENTRANCES[i]||blocked())return;stop();target={distance:ENTRANCES[i].distance,id:i};root.querySelector('.map-walk-status').textContent=`${REWARDS[i].name}로 이동 중이야.`;start();}
-  viewport.addEventListener('click',e=>{if(e.target.closest('button'))return;const box=viewport.getBoundingClientRect(),point=projectToTrail((e.clientX-box.left-offsetX)/scale,(e.clientY-box.top-offsetY)/scale);if(point.gap>90)return;stop();target={distance:point.distance};start();viewport.focus({preventScroll:true});},{signal});
+  viewport.addEventListener('pointerdown',e=>{if(!hand||e.button>0||blocked())return;grab={id:e.pointerId,x:e.clientX,y:e.clientY,ox:offsetX,oy:offsetY};dragged=false;},{signal});
+  viewport.addEventListener('pointermove',e=>{if(grab?.id!==e.pointerId)return;const dx=e.clientX-grab.x,dy=e.clientY-grab.y;if(!dragged&&Math.hypot(dx,dy)<6)return;if(!dragged){dragged=true;viewport.setPointerCapture(e.pointerId);viewport.classList.add('grabbing');}free={x:grab.ox+dx,y:grab.oy+dy};draw();},{signal});
+  const letGo=e=>{if(grab?.id!==e.pointerId)return;grab=null;viewport.classList.remove('grabbing');};
+  viewport.addEventListener('pointerup',letGo,{signal});viewport.addEventListener('pointercancel',letGo,{signal});
+  // A drag never ends in a tap on a place or the road.
+  viewport.addEventListener('click',e=>{if(!dragged)return;dragged=false;e.preventDefault();e.stopPropagation();},{signal,capture:true});
+  viewport.addEventListener('click',e=>{if(e.target.closest('button')||hand)return;const box=viewport.getBoundingClientRect(),point=projectToTrail((e.clientX-box.left-offsetX)/scale,(e.clientY-box.top-offsetY)/scale);if(point.gap>90)return;stop();target={distance:point.distance};start();viewport.focus({preventScroll:true});},{signal});
   for(const button of root.querySelectorAll('[data-map-direction]')){
     button.addEventListener('pointerdown',e=>{if(e.button!==0||blocked())return;e.preventDefault();stop();button.setPointerCapture(e.pointerId);held.add(button.dataset.mapDirection);button.classList.add('pressed');start();},{signal});
     button.addEventListener('click',e=>{if(e.detail!==0||blocked())return;stop();const p=trailPoint(distance),v=vectors[button.dataset.mapDirection],sign=Math.sign(v[0]*p.dx+v[1]*p.dy);target={distance:Math.max(0,Math.min(length,distance+sign*64))};start();},{signal});
@@ -69,5 +78,5 @@ export function mountStageMap(root,ui,onArrive){
   document.addEventListener('keyup',e=>{const direction=keys[e.key]||keys[e.key.toLowerCase()];held.delete(direction);if(!held.size&&target===null)stop();},{signal});
   const observer=new ResizeObserver(()=>{stop();draw();});observer.observe(viewport);
   addEventListener('orientationchange',stop,{signal});draw();
-  return {goTo,stop,toggleOverview(){stop();overview=!overview;draw();},destroy(){disposed=true;stop();observer.disconnect();controller.abort();}};
+  return {goTo,stop,toggleOverview(){stop();overview=!overview;hand=false;free=null;draw();},toggleHand(){stop();hand=!hand;free=null;if(hand)overview=false;draw();},destroy(){disposed=true;stop();observer.disconnect();controller.abort();}};
 }

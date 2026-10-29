@@ -177,7 +177,7 @@ export function fieldMissionAction(state,ui,action,id=''){
 export function mountFieldInteractions(root,state,ui,onAction){
  if(!root)return ()=>{};
  // Button mode: every select-then-place button on the screen goes into one visible panel, since touch users cannot Tab to them.
- if(root.classList.contains('keys-on')){const panel=document.createElement('div');panel.className='keys-panel';panel.setAttribute('role','group');panel.setAttribute('aria-label','버튼으로 하기');root.querySelectorAll('.lens-fallback').forEach(f=>panel.append(...f.childNodes));if(panel.childElementCount)root.append(panel);}
+ if(root.classList.contains('keys-on')){const panel=document.createElement('div');panel.className='keys-panel';panel.setAttribute('role','group');panel.setAttribute('aria-label','버튼으로 하기');root.querySelectorAll('.lens-fallback').forEach(f=>panel.append(...f.childNodes));if(panel.childElementCount)(root.querySelector('.rain-bench > .bag-results')||root).append(panel);}
  let drag=null,ghost=null,blockedClick=false,blockTimer;
  const clear=()=>{ghost?.remove();ghost=null;root.querySelectorAll('.field-drag-over').forEach(el=>el.classList.remove('field-drag-over'));if(drag?.el?.hasPointerCapture?.(drag.pointer))drag.el.releasePointerCapture(drag.pointer);drag=null;};
  const down=event=>{const el=event.target.closest('[data-field-item]');if(!el||!root.contains(el)||event.button>0)return;drag={el,item:el.dataset.fieldItem,x:event.clientX,y:event.clientY,pointer:event.pointerId,moved:false};el.setPointerCapture?.(event.pointerId);};

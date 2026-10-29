@@ -96,6 +96,10 @@
 #app .rain-bench .trial-rain { display: none; }
 #app .rain-bench .field-trial-card h4 { font-size: 17px; margin-bottom: 2px; }
 #app .bag-results .bag-reset { justify-self: end; min-height: 44px; padding: 4px 14px; font-size: 15px; }
+/* Rain bench button mode: the rain button sits under the result cards instead of floating over the bag. */
+#app .field-mission .bag-results > .keys-panel { grid-column: 2; position: static; transform: none; width: auto; max-height: none; overflow: visible; display: flex; padding: 0; background: none; box-shadow: none; }
+#app .bag-results:has(> .keys-panel) { grid-template-columns: minmax(0, 1fr) auto; }
+#app .bag-results:has(> .keys-panel) > :not(.bag-reset, .keys-panel) { grid-column: 1 / -1; }
 /* Question step: the three trials side by side, then two answers. */
 #app .explain-bench > .field-trials { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 #app .bag-answer { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }

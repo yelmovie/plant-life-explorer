@@ -7,7 +7,8 @@ let activeCleanup;
 export function playStory(kind, {onFinish = () => {}, replay = false} = {}) {
   const story = STORIES[kind];
   if (!story) return;
-  const resumeMusic = suspendMusic();
+  // The intro film has no soundtrack of its own, so the main theme keeps playing under it.
+  const resumeMusic = kind === 'intro' ? () => {} : suspendMusic();
   activeCleanup?.();
   stopFeedback();
   const previousFocus = document.activeElement;

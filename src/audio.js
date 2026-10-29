@@ -1,4 +1,4 @@
-// One music player owns both themes. Story films and hidden tabs suspend it.
+// One music player owns both themes. The outro film and hidden tabs suspend it; the silent intro film plays over it.
 // Sound preferences are separate from research records and survive a record reset.
 export const SOUND_KEY='green-garden-sound';
 const MUSIC_KEY='green-garden-music',VOLUME_KEY='green-garden-music-volume';
