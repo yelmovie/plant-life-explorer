@@ -39,3 +39,7 @@ docs/sources/*.hwp
 
 # Archived unused runtime assets and duplicate delivery leftovers
 _unused/
+
+# Local generated previews/captures and npm cache
+output/
+.npm-cache/
