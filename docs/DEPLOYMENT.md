@@ -19,7 +19,17 @@ wrangler pages deploy dist --project-name leafy-garden --branch main
 
 이 Mac에는 시스템 Node가 없다. 도구는 외장 SSD에만 둔다: Node `DevCaches/tools/node-v24.22.2-darwin-arm64`, wrangler `DevCaches/tools/wrangler-4.154.0`(exFAT라 `--no-bin-links`로 설치). wrangler 로그인 정보는 `HOME=DevCaches/tools/wrangler-home`으로 실행해 SSD에 저장한다. 빌드는 `ESBUILD_MODULE_PATH`를 그 wrangler의 `node_modules/esbuild`로 지정한다. exFAT가 만드는 `._*` 파일은 업로드 전에 `dist`에서 지운다.
 
-## 최근 배포 — 2026-10-29 (비 내리기 버튼·인트로 배경음·지도 손바닥)
+## 최근 배포 — 2026-10-29 (2) (연구노트 손글씨 페이지·보고서 간소화·엔딩 음악)
+
+- 기능 커밋: `1490b68d66c2cf4fd4f4e77e68db58a7b8cfb82d` (`sort-board-drag`, GitHub push 안 함). 직전 커밋 `eda0df4`(1장 새 잎 다시 나누기 제거, 2장 겨울/봄 덮개·칸 비율)도 이번에 처음 배포됐다.
+- 배포 주소: https://0fbc1e7f.leafy-garden.pages.dev
+- 운영 주소: https://leafy-garden.pages.dev
+- 바뀐 것: 연구노트를 왼쪽 사진·스티커·기억 퀴즈, 오른쪽 학생 손글씨 기록(처음 생각·본 것·바뀐 생각)으로 개편하고 준비된 정리·선생님용 기록은 접힌 칸으로 옮김. 보고서의 '가방 소개하기'(친구와 이야기) 단계와 인쇄 버튼 제거. 아웃트로 영상 중 엔딩 테마를 처음부터 재생.
+- 빌드 177파일·118에셋·45,584,023바이트. `dirty=true`는 줄바꿈(CRLF/LF)만 다른 작업 파일과 추적하지 않는 파일 때문이며 내용은 커밋과 같다.
+- 배포 전 JavaScript 45개 문법 검사, 117/117 테스트를 통과했다(보고서 친구 소개 테스트 1개 제거). 브라우저 테스트(`*.browser.mjs`)는 돌리지 않았다.
+- 운영 주소의 `build-info.json` 커밋이 배포 커밋과 같고 `/`·`app.bundle.js`·`bundle.css`·`sw.js` SHA-256이 로컬 dist와 같음을 확인했다. 운영 주소 첫 화면 로드 시 콘솔 오류 0건. 연구노트·엔딩 화면 직접 조작과 실물 태블릿은 미검증이다.
+
+## 이전 배포 — 2026-10-29 (비 내리기 버튼·인트로 배경음·지도 손바닥)
 
 - 기능 커밋: `78ba77829ccfb58fa34b6c642f30c7706dd62ff3` (`sort-board-drag`, GitHub push 안 함)
 - 배포 주소: https://e6ab0df7.leafy-garden.pages.dev
