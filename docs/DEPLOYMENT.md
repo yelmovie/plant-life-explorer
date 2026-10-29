@@ -15,7 +15,21 @@ wrangler pages deploy dist --project-name leafy-garden --branch main
 
 `dist/`는 빌드 산출물이며 Git에 포함하지 않는다. 실행용 이미지·모형·글꼴만 배포하고 참고 자료·교육과정 원본·검증 화면은 배포에서 제외한다. 원본과 캡처는 로컬 프로젝트에 보존한다.
 
-## 최근 배포 — 2026-10-28 (5장 간소화·꽃길·3장 배치)
+## Mac에서 배포할 때
+
+이 Mac에는 시스템 Node가 없다. 도구는 외장 SSD에만 둔다: Node `DevCaches/tools/node-v24.22.2-darwin-arm64`, wrangler `DevCaches/tools/wrangler-4.154.0`(exFAT라 `--no-bin-links`로 설치). wrangler 로그인 정보는 `HOME=DevCaches/tools/wrangler-home`으로 실행해 SSD에 저장한다. 빌드는 `ESBUILD_MODULE_PATH`를 그 wrangler의 `node_modules/esbuild`로 지정한다. exFAT가 만드는 `._*` 파일은 업로드 전에 `dist`에서 지운다.
+
+## 최근 배포 — 2026-10-29 (비 내리기 버튼·인트로 배경음·지도 손바닥)
+
+- 기능 커밋: `78ba77829ccfb58fa34b6c642f30c7706dd62ff3` (`sort-board-drag`, GitHub push 안 함)
+- 배포 주소: https://e6ab0df7.leafy-garden.pages.dev
+- 운영 주소: https://leafy-garden.pages.dev
+- 바뀐 것: 5장 '버튼으로 하기'의 비 내리기 버튼을 결과 카드 아래(처음 가방으로 옆)로 옮겨 가방·문구 가림 해소, 인트로 영상(자체 소리 거의 무음) 중에도 메인 배경음 유지, 지도 화면 손바닥 '손으로 밀기' 토글(끌어서 지도 보기, 리피 이동 시 다시 따라가기).
+- 이 Mac에서 처음 배포했다(위 'Mac에서 배포할 때'). 빌드 180파일·118에셋·45,568,498바이트, esbuild 번들. `dirty=true`는 줄바꿈(CRLF/LF)만 다른 작업 파일과 추적하지 않는 파일 때문이며 내용은 커밋과 같다.
+- 배포 전 JavaScript 45개 문법 검사, 118/118 테스트를 통과했다. 브라우저 테스트(`*.browser.mjs`)는 Playwright가 없어 돌리지 않았고, 로컬 dist와 운영 주소에서 인트로 배경음·지도 손바닥 버튼·콘솔 오류 0건을 직접 확인했다.
+- 운영 주소의 `build-info.json` 커밋이 배포 커밋과 같고 `/`·`app.bundle.js`·`bundle.css`·`sw.js` SHA-256이 로컬 dist와 같음을 확인했다. 실물 태블릿 조작은 미검증이다.
+
+## 이전 배포 — 2026-10-28 (5장 간소화·꽃길·3장 배치)
 
 - 기능 커밋: `56ad5155ac24f24f63d9e5a9aecd479efd246fd6` (`sort-board-drag`)
 - 배포 주소: https://08ad75e4.leafy-garden.pages.dev
