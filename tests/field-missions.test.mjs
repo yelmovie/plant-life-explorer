@@ -1,5 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
+import {renderActivity} from '../src/learning.js';
+import {freshState} from '../src/model.js';
 import {normalizeFieldEvidence,fieldMissionReady,fieldBagPair,fieldSteps} from '../src/field-missions-state.js';
 import {fieldMissionAction,renderFieldMission} from '../src/field-missions.js';
 const setup=page=>{const s={page,fieldEvidence:normalizeFieldEvidence(null)},u={};return {s,u,act:(a,id)=>fieldMissionAction(s,u,a,id),drop:(item,target)=>fieldMissionAction(s,u,'field-place',`${item}|${target}`)};};
@@ -17,7 +19,8 @@ test('새 표본은 관찰 두 곳과 두 가지 기준의 실제 배치가 모�
  for(const id of ['maple','pine','camellia'])drop('leaf:'+id,`sort:edge:${id==='pine'?'no':'yes'}`);
  assert.equal(fieldMissionReady(s,0),false);
  for(const id of ['maple','pine','camellia']){act('field-select','leaf:'+id);act('field-drop',`sort:narrow:${id==='pine'?'yes':'no'}`);}
- assert.equal(fieldMissionReady(s,0),true);assert.match(renderFieldMission(s,u,0),/현장 복구 성공/);
+ assert.equal(fieldMissionReady(s,0),true);
+ const full=Object.assign(freshState(),{screen:'activity',page:0,fieldEvidence:s.fieldEvidence});full.journeyRequired[0]=true;assert.match(renderActivity(full,{...u,activityMode:'field'},()=>''),/현장 임무 성공.*발견을 연구 노트에 담기/,'리피가 다음에 누를 곳을 알려 준다');
 });
 test('계절 사진의 잘못된 연결과 중복 사진 순서는 증거가 되지 않는다',()=>{
  const {s,drop,act}=setup(2);act('field-season-clue','tree:branches');act('field-season-clue','herb:rootbud');drop('season:tree','link:tree:leaf');drop('season:herb','link:herb:root');
@@ -56,13 +59,16 @@ test('정원은 비로 땅을 만들고 맞는 땅에 심어 시험하며 같은
  drop('environment:grass','environment:meadow');assert.equal(fieldMissionReady(s,3),true);act('field-garden-ground');assert.equal(fieldMissionReady(s,3),true);
  act('field-place-environment','water:meadow');assert.equal(fieldMissionReady(s,3),false,'실제로 환경을 바꾸면 이전 시험은 더 이상 유효하지 않다');
 });
-test('가방 의뢰는 첫 비·하나씩 달고 비·공책을 지킨 부품 고르기를 요구한다',()=>{
+test('가방 의뢰는 첫 비·연잎만·덮개만·둘 다 비 시험·공책을 지킨 것 고르기를 요구한다',()=>{
  const {s,act}=setup(8),bag=()=>s.fieldEvidence.bag;act('field-bag-test');assert.equal(bag().tests.length,0,'예상 전에는 비를 내리지 않는다');
  act('field-bag-predict','surface');act('field-bag-test');act('field-bag-test');assert.equal(bag().tests.length,1);assert.deepEqual(fieldSteps(s.fieldEvidence,4),[true,false,false]);
  act('field-bag-upgrade','surface');act('field-bag-test');assert.equal(bag().comparisons.surface.part,'surface');
- act('field-bag-upgrade','cover');act('field-bag-test');assert.equal(bag().comparisons.cover.before,'lotus:open');assert.deepEqual(fieldSteps(s.fieldEvidence,4),[true,true,false]);
- assert.match(act('field-bag-answer','surface'),/연잎 겉면만 달았을 때/);assert.equal(fieldMissionReady(s,4),false);
- assert.match(act('field-bag-answer','cover'),/처음엔 겉면만/);assert.equal(fieldMissionReady(s,4),true);
+ act('field-bag-upgrade','cover');act('field-bag-test');assert.equal(bag().comparisons.cover.before,'lotus:open');
+ assert.equal(bag().tests.at(-1).notebookDry,true,'둘 다 달면 공책이 뽀송');assert.deepEqual(fieldSteps(s.fieldEvidence,4),[true,false,false],'덮개만 단 가방은 아직');
+ act('field-bag-upgrade','surface');assert.deepEqual(bag().design,{surface:'plain',cover:'flap'},'연잎 겉면을 뗄 수 있다');act('field-bag-test');
+ assert.equal(bag().tests.at(-1).notebookDry,false,'덮개만 달면 천에 빗물이 스며든다');assert.deepEqual(fieldSteps(s.fieldEvidence,4),[true,true,false]);
+ assert.match(act('field-bag-answer','surface'),/연잎 겉면만 단 가방/);assert.match(act('field-bag-answer','cover'),/덮개만 단 가방/);assert.equal(fieldMissionReady(s,4),false);
+ assert.match(act('field-bag-answer','both'),/둘이 함께.*처음엔 겉면만/);assert.equal(fieldMissionReady(s,4),true);
 });
 test('가방은 한 번에 한 부품만 달 수 있어 두 부품을 함께 바꾼 시험이 생기지 않는다',()=>{
  const {s,act}=setup(8);act('field-bag-predict','cover');act('field-bag-test');act('field-bag-upgrade','surface');

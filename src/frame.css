@@ -65,7 +65,7 @@
 #app .exploration-activity .guide-talk .guide-bubble.mission-feedback { border-left-width: 2px; border-color: #879f70; }
 #app .exploration-activity .guide-talk .guide-bubble.success { background: #eef7dc; border-color: #6d9a50; }
 #app .exploration-activity .guide-talk .guide-bubble.success::after { background: #eef7dc; border-color: #6d9a50; }
-#app .guide-avatar { display: flex; align-items: flex-end; gap: 4px; padding-left: 6px; min-height: 0; }
+#app .guide-avatar { display: flex; align-items: flex-end; gap: 4px; padding-left: 6px; min-height: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer; }
 #app .exploration-activity .guide-avatar .guide-mascot { order: 0; height: clamp(100px, 19vh, 176px); min-height: 0; width: auto; max-width: 130px; flex-shrink: 1; }
 #app .exploration-activity .guide-avatar .guide-partner {
   order: 1; margin-bottom: 8px; padding: 3px 12px; font-size: 16px; line-height: 1.25;
@@ -90,7 +90,7 @@
 }
 #app .mission-objective.step-done { background: #eef7dc; border-color: #b9d39a; }
 #app .mission-objective.step-done .objective-num { background: #5d8f4b; }
-#app .mission-objective .objective-next { min-height: 48px; color: #fff; animation: frame-nudge 2.8s ease-in-out 1.2s infinite; }
+#app .objective-next { min-height: 48px; color: #fff; animation: frame-nudge 2.8s ease-in-out 1.2s infinite; }
 #app .field-mission .mission-workspace {
   padding: 12px; border-radius: 22px; background: var(--stage-panel);
   border: 2px solid rgb(255 255 255 / .75); box-shadow: 0 10px 26px #2b3d2a1f;
@@ -392,7 +392,7 @@ dialog::backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; backgro
 }
 .large-text #app .exploration-activity .field-guide { overflow: visible; }
 @media (prefers-reduced-motion: reduce) {
-  #app .mission-objective .objective-next, #app .field-mission .mission-loot { animation: none; }
+  #app .objective-next, #app .field-mission .mission-loot { animation: none; }
 }
 @media print { #app .today-panel, #app .guide-talk { display: none; } }
 /* Habitat card: one plant, one question at a time; answers stack into a three-step chain. */
@@ -442,8 +442,8 @@ dialog::backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; backgro
 }
 
 /* Touch users can open the select-then-place buttons from the objective row (same panel as keyboard focus). */
-#app .mission-objective .objective-keys { min-height: 48px; padding: 6px 14px; font-size: 16px; background: #fffdf3; color: #2f4a26; border: 2px solid #b9d39a; box-shadow: 0 3px 0 #b9d39a; }
-#app .mission-objective .objective-keys[aria-pressed="true"] { background: #e3f0cf; }
+#app .objective-keys { min-height: 48px; padding: 6px 14px; font-size: 16px; background: #fffdf3; color: #2f4a26; border: 2px solid #b9d39a; box-shadow: 0 3px 0 #b9d39a; }
+#app .objective-keys[aria-pressed="true"] { background: #e3f0cf; }
 #app .field-mission .keys-panel { bottom: 92px; max-height: 40vh; }
 #app .swipe-done > span { font-size: 16px; color: #4b6440; }
 /* Tap path for the petiole cut: the first tap leaves a marker at one end. */
@@ -464,3 +464,92 @@ body #dialog > .dialog-body > p { font-size: var(--font-size-sm); color: var(--m
 /* Changing the land is the other choice, so it looks different from the three spots. */
 #app .garden-confirm > .btn { min-height: 44px; padding: 4px 12px; font-size: 16px; background: transparent; border: 2px dashed #c9a94a; box-shadow: none; }
 #app .garden-confirm-picks .btn small { font-size: 15px; line-height: 1.35; }
+
+/* 자동 진행 sits right under the sound/settings icons. */
+#app .topbar .header-tools { position: relative; }
+#app .topbar .auto-play-dock { position: absolute; top: 100%; right: 0; margin-top: 8px; }
+#app .topbar .auto-play-dock .btn { min-height: 44px; white-space: nowrap; }
+#app .today-panel .field-step-tools { display: flex; gap: 6px; }
+#app .today-panel .field-step-tools .btn { flex: 1 1 0; min-width: 0; min-height: 48px; padding: 4px 8px; font-size: 16px; justify-content: center; white-space: nowrap; }
+
+/* Every activity: the left panel and the workspace fit one screen without scrollbars; Leafy shrinks first. */
+#app .exploration-activity .field-guide, #app .exploration-activity .today-panel { overflow: hidden; }
+#app .exploration-activity .today-panel { flex-shrink: 0; }
+#app .exploration-activity .guide-talk { flex: 1 1 auto; min-height: 0; }
+#app .exploration-activity .guide-avatar { flex: 1 1 0; min-height: 0; }
+#app .exploration-activity .guide-avatar .guide-mascot { height: 100%; max-height: clamp(100px, 19vh, 176px); min-height: 0; }
+
+/* 리피의 부탁: a wider letter that fits one screen without scrolling; the ruled lines follow the line height. */
+body #dialog.brief-dialog { width: min(860px, calc(100% - 46px)); max-width: min(860px, calc(100% - 46px)); }
+body #dialog.brief-dialog > .dialog-body { overflow-x: hidden; }
+body #dialog.brief-dialog .expedition-brief { grid-template-columns: 120px minmax(0,1fr); gap: 18px; }
+body #dialog.brief-dialog .brief-leafy { width: 120px; height: 170px; }
+body #dialog.brief-dialog .lipi-letter { margin: 10px 0 12px; padding: 18px 22px 12px; font-size: 23px; line-height: 32px; background: repeating-linear-gradient(#fffaf0 0 31px, #e9dfc4 31px 32px); }
+body #dialog.brief-dialog .mission-loot { padding: 8px 12px; font-size: 17px; }
+body #dialog.brief-dialog .mission-loot > img { width: 52px; height: 58px; }
+@media (max-height: 760px) {
+  body #dialog.brief-dialog .lipi-letter { font-size: 21px; line-height: 29px; background: repeating-linear-gradient(#fffaf0 0 28px, #e9dfc4 28px 29px); }
+  body #dialog.brief-dialog .brief-leafy { width: 100px; height: 140px; }
+  body #dialog.brief-dialog .expedition-brief { grid-template-columns: 100px minmax(0,1fr); }
+}
+/* 다음 도전 waits at the bottom-right corner of the workspace once the step is done. */
+#app .field-mission-view .field-layout { position: relative; }
+#app .field-mission-view .field-layout > .objective-next { position: absolute; right: 26px; bottom: 26px; z-index: 8; min-height: 52px; padding: 8px 20px; font-size: 19px; box-shadow: 0 4px 0 #173824, 0 10px 22px #1d3a2440; }
+/* Every stage: the workspace reaches the bottom of the panel, so 다음 도전 always lands in the same corner. */
+#app .field-mission .mission-workspace { flex: 1 1 auto; }
+
+/* Where to tap next: the step left to do glows with a bouncing arrow, and so do the buttons that lead there. */
+@keyframes guide-pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.04); } }
+@keyframes guide-arrow-left { 0%,100% { transform: translate(0,-50%) scaleX(-1); } 50% { transform: translate(-7px,-50%) scaleX(-1); } }
+@keyframes guide-arrow-right { 0%,100% { transform: translate(0,-50%); } 50% { transform: translate(7px,-50%); } }
+#app .today-steps .mission-step.next-up { position: relative; border: 2px solid #e2b33c; background: #fff6d6; box-shadow: 0 0 0 4px #f2c94c66; animation: guide-pulse 1.4s ease-in-out infinite; }
+#app .today-steps .mission-step.next-up::after { content: '▶'; position: absolute; right: 8px; top: 50%; color: #c9862b; font-size: 18px; animation: guide-arrow-left 1s ease-in-out infinite; }
+#app .field-layout > .objective-next, #app .learning-footer .btn.primary.go-now { animation: guide-pulse 1.4s ease-in-out infinite; }
+#app .field-layout > .objective-next::before, #app .learning-footer .btn.primary.go-now::before { content: '▶'; position: absolute; right: calc(100% + 10px); top: 50%; color: #e2a53a; font-size: 22px; text-shadow: 0 2px 0 #fffbe8; animation: guide-arrow-right 1s ease-in-out infinite; pointer-events: none; }
+#app .learning-footer .btn.primary.go-now { position: relative; }
+@media (prefers-reduced-motion: reduce) {
+  #app .today-steps .mission-step.next-up, #app .today-steps .mission-step.next-up::after, #app .field-layout > .objective-next, #app .field-layout > .objective-next::before, #app .learning-footer .btn.primary.go-now, #app .learning-footer .btn.primary.go-now::before { animation: none; }
+}
+
+/* 연구 노트: the season photos the student took, pinned like snapshots. */
+.note-season-snaps { margin: 8px 0 4px; }
+.note-season-snaps > b, .note-garden-snap > b { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; font: 17px/1.3 var(--font-display); color: #3f5d3b; }
+.note-season-snaps > div { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 12px; }
+.note-season-snaps .season-snap { margin: 0; }
+.note-season-snaps .note-snap-art { height: auto; min-height: 0; aspect-ratio: 1 / 1; border-radius: 6px; }
+.note-season-snaps .note-snap-art .soil-cover { font-size: 0; }
+
+/* 보상 창: a wide two-column card that fits one screen. The restored place is on the left, what was learned and earned on the right. */
+body dialog.reward-dialog { width: min(920px, calc(100% - 40px)); max-width: min(920px, calc(100% - 40px)); }
+body dialog.reward-dialog > .dialog-body { display: grid; grid-template-columns: minmax(240px, 34%) minmax(0, 1fr); column-gap: 22px; align-content: start; text-align: left; }
+body dialog.reward-dialog > .dialog-body > * { grid-column: 2; margin-block: 4px; }
+body dialog.reward-dialog > .dialog-body > .reward-scene { grid-column: 1; grid-row: 1 / span 12; align-self: center; height: clamp(180px, 34vh, 260px); margin: 0; }
+body dialog.reward-dialog .reward-why, body dialog.reward-dialog .reward-proof, body dialog.reward-dialog .reward-next { font-size: 16px; line-height: 1.45; }
+body dialog.reward-dialog .reward-life { justify-content: flex-start; font-size: 16px; }
+body dialog.reward-dialog .expedition-loot { gap: 12px; padding: 8px 14px; margin: 6px 0; border-radius: 16px; }
+body dialog.reward-dialog .expedition-loot .loot-tool { width: 60px; height: 66px; }
+body dialog.reward-dialog .expedition-loot h3 { font-size: 19px; margin: 0 0 2px; }
+body dialog.reward-dialog .expedition-loot p { font-size: 16px; line-height: 1.4; margin: 2px 0; }
+body dialog.reward-dialog .reward-stamps { justify-content: flex-start; }
+@media (max-height: 780px) {
+  body dialog.reward-dialog > .dialog-body > .reward-scene { height: clamp(150px, 28vh, 210px); }
+  body dialog.reward-dialog .reward-why, body dialog.reward-dialog .reward-proof, body dialog.reward-dialog .reward-next { font-size: 16px; line-height: 1.35; }
+  body dialog.reward-dialog > .dialog-body > * { margin-block: 1px; }
+  body dialog.reward-dialog .expedition-loot { padding: 6px 12px; }
+}
+/* Stage 2's flower-colour gift: one compact row in the right column. */
+body dialog.reward-dialog .theme-picker { padding: 6px 0 0; }
+body dialog.reward-dialog .theme-picker > div { flex-wrap: nowrap; gap: 6px; margin: 4px 0; }
+body dialog.reward-dialog .theme-choice { min-height: 48px; padding: 4px 9px; font-size: 16px; }
+body dialog.reward-dialog .theme-picker small { display: none; }
+.note-garden-snap { margin: 8px 0 4px; }
+.note-garden-snap > b { display: block; margin-bottom: 6px; font: 17px/1.3 var(--font-display); color: #3f5d3b; }
+.note-garden-snap .note-photo { max-width: 360px; margin: 0; }
+.note-garden-snap .garden-grid { gap: 3px; padding: 6px; }
+#app .garden-photo { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin-top: 6px; }
+@media (max-height: 740px) {
+  body dialog.reward-dialog .expedition-loot { padding: 4px 12px; }
+  body dialog.reward-dialog .expedition-loot .loot-tool { width: 48px; height: 52px; }
+  body dialog.reward-dialog > .dialog-body > * { margin-block: 0; }
+  body dialog.reward-dialog .reward-why, body dialog.reward-dialog .reward-proof, body dialog.reward-dialog .reward-next { line-height: 1.3; }
+}

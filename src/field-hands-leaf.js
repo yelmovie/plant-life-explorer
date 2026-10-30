@@ -12,8 +12,8 @@ function drawnRect(img){const r=img.getBoundingClientRect(),nw=img.naturalWidth|
 export function mountLens(bench,ui,onAction){
  const lens=bench.querySelector('[data-lens]'),glass=lens.querySelector('.field-lens-glass'),zoom=glass.querySelector('img'),u=ui.fieldMission??={},Z=4;
  const gauge=bench.querySelector('[data-clue-gauge]'),total=2;
- let drag=null,timer=0,spot='',queued=[],dragged=false;
- const record=key=>{u.lastFound=key;onAction('field-place','lens|scan:'+key);};
+ let drag=null,timer=0,spot='',queued=[],dragged=false,glide=0,watcher=null;
+ const record=key=>{u.lastFound=key;watcher?.(true);watcher=null;onAction('field-place','lens|scan:'+key);};
  // Sparkles stay on the leaf where a clue was found.
  const sparks=()=>bench.querySelectorAll('[data-spark]').forEach(s=>{const [id,kind]=s.dataset.spark.split(':'),box=s.closest('[data-lens-leaf]'),img=box.querySelector('img');if(!img?.naturalWidth)return;const r=drawnRect(img),b=box.getBoundingClientRect(),[x,y]=LENS_SPOTS[id][kind][0];s.style.left=r.left-b.left+x*r.width+'px';s.style.top=r.top-b.top+y*r.height+'px';s.classList.add('placed');});
  const bump=()=>{if(!gauge)return;const n=Math.min(total,Number(gauge.dataset.clueGauge)+1);gauge.dataset.clueGauge=n;gauge.querySelector('b').textContent=`단서 ${n}/${total}`;gauge.querySelector('.clue-bar i').style.width=n/total*100+'%';gauge.classList.remove('tick');void gauge.offsetWidth;gauge.classList.add('tick');};
@@ -44,8 +44,16 @@ export function mountLens(bench,ui,onAction){
   const [,id,kind]=key.split(':'),img=bench.querySelector(`[data-lens-leaf="${id}"] img`),r=drawnRect(img),[x,y]=LENS_SPOTS[id][kind][0];goto(r.left+x*r.width,r.top+y*r.height);};
  // Scan buttons may sit in the button-mode panel outside the bench, so listen on the whole mission.
  const host=bench.closest('.field-mission')||bench;host.addEventListener('click',tap,true);
+ // 자동 진행: the lens glides onto the clue and rests there, so the clue is found the same way a hand finds it.
+ bench.autoScan=key=>new Promise(done=>{
+  const [id,kind]=key.split(':'),img=bench.querySelector(`[data-lens-leaf="${id}"] img`);if(!img||!LENS_SPOTS[id]?.[kind])return done(false);
+  const r=drawnRect(img),b=bench.getBoundingClientRect(),[x,y]=LENS_SPOTS[id][kind][0],to={x:r.left-b.left+x*r.width,y:r.top-b.top+y*r.height},from={...(u.lens??to)};
+  const ms=reduced()?0:1100,t0=performance.now();watcher=done;cancelAnimationFrame(glide);
+  const step=now=>{const k=ms?Math.min(1,(now-t0)/ms):1,e=k<.5?2*k*k:1-(-2*k+2)**2/2;place(from.x+(to.x-from.x)*e,from.y+(to.y-from.y)*e);if(k<1)glide=requestAnimationFrame(step);};
+  glide=requestAnimationFrame(step);setTimeout(()=>{if(watcher===done){watcher=null;done(false);}},ms+2500);
+ });
  bench.querySelectorAll('[data-lens-leaf] img').forEach(img=>img.complete||img.addEventListener('load',settle,{once:true}));addEventListener('resize',settle);settle();
- return ()=>{clearTimeout(timer);removeEventListener('resize',settle);host.removeEventListener('click',tap,true);};
+ return ()=>{clearTimeout(timer);cancelAnimationFrame(glide);delete bench.autoScan;removeEventListener('resize',settle);host.removeEventListener('click',tap,true);};
 }
 
 // Flick the top card toward a basket. A fast flick or letting go over a basket throws it;

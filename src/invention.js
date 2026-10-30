@@ -30,7 +30,7 @@ export function predictionRecord(s){
  const trials=[...new Map(s.tests.map(t=>[t.key,t])).values()];
  if(trials.length)rows.push({kind:'result',label:'시험 결과',text:trials.map(t=>`${trialLabel(t)} 공책 ${t.dry?'뽀송':'젖음'}`).join(' → ')});
  if(coverConcluded(s)){
-  rows.push({kind:'conclusion',label:'알아낸 것',text:'덮개가 입구로 오는 비를 막아 공책을 지켰어.'});
+  rows.push({kind:'conclusion',label:'알아낸 것',text:'연잎 겉면과 덮개가 함께 공책을 지켰어. 하나만 달면 젖었어.'});
   rows.push({kind:'change',label:'',text:s.testPrediction==='cover'?'예상을 시험으로 확인했어.':'시험으로 생각을 고쳤어.'});
  }
  return rows;

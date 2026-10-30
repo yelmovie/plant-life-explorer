@@ -45,9 +45,9 @@ try{
  await page.locator('[data-action="reward-map"]').click();assert.equal(await page.locator('.world-node.restored').count(),1);
  // The tool pack lives on the mission screen (the map keeps only navigation).
  await page.locator('.map-next-card [data-action="map-select"]').click();await page.locator('#dialog [data-action="enter-mission"]').click();
- await page.locator('[data-action="tool-pack"]').click();assert.equal(await page.locator('.expedition-tool.earned').count(),1);
+ await page.locator('[data-action="settings"]').click();await page.locator('#dialog [data-action="tool-pack"]').click();assert.equal(await page.locator('.expedition-tool.earned').count(),1);
  await page.locator('[data-action="expedition-use"][data-id="0"]').click();assert.match(await page.locator('#dialog').innerText(),/땅속/);await close();
- await page.locator('[data-action="map"]').first().click();
+ await page.locator('[data-action="back"]').first().click();
  await page.reload();assert.equal(await page.locator('.world-node.restored').count(),1);report.checks.push('Two core completion buttons award exactly one seed/tool; restored place, next unlock, usable tool clue and reload persist');
  const student=await saved();
  await page.getByRole('button',{name:'설정',exact:true}).click();await page.locator('details[data-key="teacher"]>summary').click();await page.locator('details[data-key="tools"]>summary').click();await page.locator('[data-action="admin-unlock"]').click();await close();

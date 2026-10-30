@@ -113,9 +113,9 @@ try{
  const gardenBefore=(await saved()).garden;await complete(3);
 
  // 5장: guess → rain on the plain bag → one upgrade per rain → which part kept the notebook dry.
- await enter(4);const first=await page.locator('.mission-objective').innerText();
+ await enter(4);const first=await page.locator('.field-objective').innerText();
  check(/먼저 예상/.test(first)&&!/구름/.test(first),'5장: first objective names only the prediction on screen');
- await act('field-bag-predict','surface');check(/구름/.test(await page.locator('.mission-objective').innerText()),'5장: after the guess the objective moves to the first rain');
+ await act('field-bag-predict','surface');check(/구름/.test(await page.locator('.field-objective').innerText()),'5장: after the guess the objective moves to the first rain');
  await tapCenter('[data-bag-cloud]');await field(`e.bag.tests.length===1`);
  await stage(1);check(/하나만/.test(await page.locator('.bag-hint').innerText()),'5장: upgrade step asks for one part at a time');
  await tap('[data-action="field-bag-upgrade"][data-id="surface"]');await field(`e.bag.design.surface==='lotus'`);

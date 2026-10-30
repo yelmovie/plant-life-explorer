@@ -218,8 +218,6 @@ body .note-diary .note-folds details[open] { grid-column: 1 / -1; padding-bottom
 body .note-diary .note-folds summary { display: flex; align-items: center; min-height: 44px; font: var(--font-size-xs)/1.3 var(--font-body); color: #5a7247; cursor: pointer; }
 body .note-diary .note-folds details :is(p,li) { margin: 6px 0; font: var(--font-size-xs)/1.55 var(--font-body); color: #3e4d38; }
 body .note-diary .note-folds details small { display: block; font-size: var(--font-size-xs); color: #6c7660; }
-body .note-teacher .student-record { margin: 8px 0 0; padding: 8px 0 0; background: none; border: 0; border-top: 1px solid #e3e6d6; border-radius: 0; }
-body .note-teacher h4 { margin: 0; font: 700 var(--font-size-xs)/1.4 var(--font-body); color: #426541; }
 body .notebook-dialog .dialog-actions { display: flex; gap: 10px; margin-top: 14px; }
 
 /* One celebration scene, with a child's handwritten diary instead of a long list. */
@@ -454,7 +452,7 @@ body .note-next-idea p { font-size: var(--font-size-sm); }
 
 /* Sorting board: leaves move from the tray into a box (leaving an empty slot),
    and one footer holds progress and the check. Drag motion lives in card-drag.js. */
-#app .activity-1 .sort-board { --card-h: clamp(118px,18vh,166px); width: min(100%, 880px); }
+#app .activity-1 .sort-board { --card-h: clamp(100px,15vh,150px); width: min(100%, 880px); }
 #app .activity-1 .sort-board:has(.reason-cards) { --card-h: clamp(92px,13vh,128px); }
 #app .activity-1 .sort-board .sort-rules { align-self: center; flex-wrap: nowrap; gap: 4px; margin: 0; padding: 4px; border-radius: 16px; background: #edefdf; }
 #app .activity-1 .sort-board .sort-rules .btn { min-height: 44px; padding: 6px 16px; border: 0; background: transparent; box-shadow: none; color: #46603d; }
@@ -519,6 +517,14 @@ body.card-dragging #app .activity-1 .sort-bin { animation: bin-invite 1.1s ease-
 @keyframes bin-invite { 50% { border-color: #6fa15a; background-color: #eaf4d8; } }
 @keyframes bin-bounce { 0%,100% { transform: none; } 35% { transform: scale(1.045,.955); } 65% { transform: scale(.985,1.02); } }
 @keyframes card-pop { 0% { transform: scale(.4) rotate(-8deg); opacity: 0; } 70% { transform: scale(1.08) rotate(2deg); opacity: 1; } 100% { transform: none; } }
+/* Short tablet screens (1024×768, 1280×720): the whole sort board fits without scrolling. */
+@media (max-height:780px) {
+  #app .activity-1 .sort-board { --card-h: clamp(92px,12vh,104px); gap: 8px; }
+  #app .activity-1 .sort-board > .direct-hint { font-size: 16px; line-height: 1.35; }
+}
+@media (max-height:740px) {
+  #app .activity-1 .sort-board { --card-h: 84px; }
+}
 @media (max-height:650px) {
   #app .activity-1 .sort-board { --card-h: 104px; gap: 8px; padding: 10px 14px 12px; }
   #app .activity-1 .sort-board:has(.reason-cards) { --card-h: 92px; }

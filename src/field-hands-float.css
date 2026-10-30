@@ -110,3 +110,16 @@
  #app .float-model.settling { transition-duration: .2s !important; }
  #app .air-bubble { animation: none !important; opacity: 1; transform: translateY(-40px); }
 }
+/* Short screens (1280×720, 1024×768): the field mission fits without a scrollbar. */
+@media (max-height: 780px) {
+ #app .float-origin { margin-bottom: 4px; padding: 6px 12px; }
+ #app .float-origin-pic { width: 64px; height: 48px; }
+ #app .float-origin p { font-size: 15px; line-height: 1.4; }
+ #app .heft-palm { min-height: 160px; padding-bottom: 40px; }
+ #app .float-tank { min-height: 180px; }
+ #app .petiole-cut { max-width: 250px; }
+ #app .sw-label { min-height: 38px; }
+ #app .sw-track { height: 120px; }
+ #app .heft-switch.set-float .sw-knob { transform: translateY(-36px) !important; }
+ #app .heft-switch.set-sink .sw-knob { transform: translateY(36px) !important; }
+}

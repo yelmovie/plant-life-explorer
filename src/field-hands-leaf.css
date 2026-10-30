@@ -98,3 +98,23 @@
   #app :is(.leaf-spark.placed, .clue-drawer, .clue-drawer .drawer-box, .clue-drawer .field-leaf-picture, .swipe-card, .swipe-bin, .swipe-bin-leaves > span) { animation: none !important; }
   #app .swipe-card.return { transition-duration: .1s; }
 }
+
+/* 잎 관찰 작업공간: fills the stage down to the footer; leaves and the magnifier grow with the screen height. */
+#app .field-mission.mission-0 .mission-workspace { flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; }
+#app .field-mission.mission-0 .lens-bench { flex: 1 1 auto; display: flex; flex-direction: column; justify-content: space-evenly; }
+#app .field-mission.mission-0 .lens-leaf .field-leaf-picture { height: clamp(165px, 27vh, 280px); }
+#app .field-mission.mission-0 .field-lens { width: 136px; height: 136px; }
+#app .field-mission.mission-0 .lens-clue { font-size: 18px; }
+@media (max-height: 760px) {
+ #app .field-mission.mission-0 .lens-leaf .field-leaf-picture { height: clamp(140px, 24vh, 200px); }
+ #app .field-mission.mission-0 .lens-hint { min-height: 96px; }
+ #app .swipe-sort.axis-y { grid-template-rows: auto 160px auto; }
+ #app .axis-y .swipe-card .field-leaf-picture { height: 80px; }
+}
+/* When 다음 도전 is showing, the clue chips keep clear of its corner. */
+#app .field-layout:has(> .objective-next) .field-mission.mission-0 .lens-bench { padding-bottom: 62px; }
+#app .field-layout:has(> .objective-next) .field-mission.mission-0 .lens-leaf .field-leaf-picture { height: clamp(140px, 22vh, 240px); }
+@media (max-height: 780px) {
+  #app .field-layout:has(> .objective-next) .field-mission.mission-0 .lens-leaf .field-leaf-picture { height: clamp(110px, 16vh, 150px); }
+  #app .field-layout:has(> .objective-next) .field-mission.mission-0 .lens-hint { min-height: 84px; }
+}

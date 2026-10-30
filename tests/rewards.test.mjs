@@ -22,7 +22,7 @@ test('가방 네 조합의 결과와 한 부품 비교 안내',()=>{
  const s=freshState();assert.match(inventionHint(s).title,/비/);
  for(const surface of ['plain','lotus'])for(const cover of ['open','flap']){
   s.design={surface,cover,linked:true};const result=testDesign(s.design);s.tests=[result];
-  assert.equal(result.clean,surface==='lotus');assert.equal(result.dry,cover==='flap');assert.equal(testValid(s),false);assert.match(inventionHint(s).text,/하나만/);
+  assert.equal(result.clean,surface==='lotus');assert.equal(result.dry,surface==='lotus'&&cover==='flap','둘 다 달아야 공책이 마른다');assert.equal(testValid(s),false);assert.match(inventionHint(s).text,/하나만/);
  }
  s.tests.unshift(testDesign({surface:'plain',cover:'flap'}));s.testExplanation={key:'lotus:flap',before:'plain:flap',part:'surface'};assert.equal(testValid(s),false);completeInvention(s);assert.equal(testValid(s),true);
  s.design.cover='open';assert.equal(testValid(s),false);assert.match(inventionHint(s).title,/시험/);
@@ -48,7 +48,7 @@ test('모든 활동·보고·엔딩 화면이 오류 없이 그려지고 엔딩�
  for(let p=0;p<10;p++){s.page=p;assert.ok(renderActivity(s,u,()=>'').length>100);}
  s.season=3;s.page=2;assert.match(renderActivity(s,u,()=>''),/겨울 땅속에는 무엇이 남아 있을까/);
  s.page=5;s.habitats.hyacinth='grass';const board=renderActivity(s,u,()=>'');// A wrong home stays marked on the card with a clue instead of a drawn line.
- assert.match(board,/habitat-option picked" data-action="habitat" data-id="grass"/);assert.match(board,/풀밭 흙 위에서는 부레옥잠이/);
+ assert.match(board,/habitat-option picked" data-action="habitat" data-id="grass"/);assert.match(board,/들판 흙 위에서는 부레옥잠이/);
  assert.ok(renderReport(s).length&&renderFinal(s,()=>'').length);
  const end=renderEnding(s,()=>'');assert.match(end,/이해한 내용은 연구노트의 선택과 관찰 근거/);assert.doesNotMatch(end,/📷|○/);
 });

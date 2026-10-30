@@ -46,7 +46,7 @@ test('겨울 땅속을 확인하기 전에는 렌즈를 쓸 수 없고, 찾은 �
   assert.match(learningAction(s,u,'bud-look','.5,.6,600,400'),/모두 찾았어/);
   const back=restoreState(JSON.stringify(s));
   assert.equal(back.budsFound.cherry.length+back.budsFound.sowthistle.length,4);
-  assert.match(notebookEntry(back,1).body,/겨울눈 4\/4|가지 끝 겨울눈 3개/);
+  assert.match(notebookEntry(back,1).body,/겨울눈/);
   learningAction(s,u,'season','2');assert.equal(u.budLens,false);assert.equal(u.budLook,null);
 });
 

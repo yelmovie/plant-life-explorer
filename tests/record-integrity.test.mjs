@@ -14,12 +14,12 @@ import {REWARDS} from '../src/rewards.js';
 import {josa,repairPlantLabel} from '../src/josa.js';
 
 const CLAIMS=/시험으로 확인했어|생각을 고쳤어/;
-function bagRun(prediction,steps=['test','surface','test','cover','test','answer']){
+function bagRun(prediction,steps=['test','surface','test','cover','test','surface','test','answer']){
  const s=freshState(),u={};s.page=8;
  const act=(action,id='')=>fieldMissionAction(s,u,action,id);
  act('field-bag-predict',prediction);
  const said=[];
- for(const step of steps)said.push(step==='test'?act('field-bag-test'):step==='answer'?act('field-bag-answer','cover'):act('field-bag-upgrade',step));
+ for(const step of steps)said.push(step==='test'?act('field-bag-test'):step==='answer'?act('field-bag-answer','both'):act('field-bag-upgrade',step));
  return {s,u,act,said};
 }
 const text=html=>html.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ');
@@ -28,13 +28,15 @@ test('A. 첫 예상이 틀리면 첫 예상·시험 결과·결론을 따로 쓰
  const {s,said}=bagRun('surface');
  assert.match(said.at(-1),/시험으로 생각을 고쳤어/);
  carryFieldEvidence(s,4);
+ // The record page starts empty; here the student redoes the same three rains on that page.
+ s.tests=s.fieldEvidence.bag.tests.map(testDesign);
  const rows=predictionRecord(s);
  assert.deepEqual(rows.map(r=>r.kind),['prediction','result','conclusion','change']);
  assert.equal(rows[0].text,'연잎 겉면만 바꾸면 돼.','첫 예상은 학생이 고른 그대로');
- assert.equal(rows[1].text,'처음 가방 공책 젖음 → 연잎 겉면 공책 젖음 → 연잎 겉면+덮개 공책 뽀송');
+ assert.equal(rows[1].text,'처음 가방 공책 젖음 → 연잎 겉면 공책 젖음 → 연잎 겉면+덮개 공책 뽀송 → 덮개 공책 젖음');
  assert.equal(rows[3].text,'시험으로 생각을 고쳤어.');
  const page=text(renderTests(s,{}));
- assert.match(page,/현장에서 남긴 첫 예상 연잎 겉면만 바꾸면 돼\. 시험 결과 .* 알아낸 것 덮개가 입구로 오는 비를 막아 공책을 지켰어\. 시험으로 생각을 고쳤어\./);
+ assert.match(page,/현장에서 남긴 첫 예상 연잎 겉면만 바꾸면 돼\. 시험 결과 .* 알아낸 것 연잎 겉면과 덮개가 함께 공책을 지켰어\. 하나만 달면 젖었어\. 시험으로 생각을 고쳤어\./);
  assert.doesNotMatch(page,/시험으로 확인했어/,'틀린 예상을 확인한 것처럼 쓰지 않는다');
  // The student notebook shows the revision from the saved response, not a pre-written thought.
  const r=s.learningRecords[4].responses['field:bag-prediction'];
@@ -47,7 +49,7 @@ test('B. 첫 예상이 맞으면 "예상을 시험으로 확인했어"만 쓰고
  assert.match(said.at(-1),/처음 예상을 시험으로 확인했어/);assert.doesNotMatch(said.at(-1),/고쳤어/);
  carryFieldEvidence(s,4);
  const page=text(renderTests(s,{}));
- assert.match(page,/입구로 오는 비도 막아야 해\..*알아낸 것 덮개가.*예상을 시험으로 확인했어\./);
+ assert.match(page,/입구로 오는 비도 막아야 해\..*알아낸 것 연잎 겉면과 덮개가 함께.*예상을 시험으로 확인했어\./);
  assert.doesNotMatch(page,/생각을 고쳤어/);
  const r=s.learningRecords[4].responses['field:bag-prediction'];
  assert.equal(r.changes,0);assert.equal(r.first,r.last);
@@ -65,12 +67,12 @@ test('C. 시험 도중 새로고침하면 첫 예상과 한 시험만 남고, �
  const rows=predictionRecord(peek);
  assert.deepEqual(rows.map(r=>r.kind),['prediction','result'],'결론과 생각 수정은 아직 없다');
  assert.equal(rows[1].text,'처음 가방 공책 젖음 → 연잎 겉면 공책 젖음');
- const u={};for(const [a,id] of [['field-bag-upgrade','cover'],['field-bag-test',''],['field-bag-answer','cover']])fieldMissionAction(back,u,a,id);
+ const u={};for(const [a,id] of [['field-bag-upgrade','cover'],['field-bag-test',''],['field-bag-upgrade','surface'],['field-bag-test',''],['field-bag-answer','both']])fieldMissionAction(back,u,a,id);
  carryFieldEvidence(back,4);
  assert.match(predictionLine(back),/시험으로 생각을 고쳤어/);
  // Pressing the answer again (연타) does not add trials or a second revision.
- fieldMissionAction(back,u,'field-bag-answer','cover');
- assert.equal(back.fieldEvidence.bag.tests.length,3);assert.equal(back.learningRecords[4].responses['field:bag-prediction'].changes,1);
+ fieldMissionAction(back,u,'field-bag-answer','both');
+ assert.equal(back.fieldEvidence.bag.tests.length,4);assert.equal(back.learningRecords[4].responses['field:bag-prediction'].changes,1);
 });
 
 test('C. 본 탐구에서 예상만 고른 화면은 아직 시험하지 않았으니 확인했다고 쓰지 않는다',()=>{
@@ -115,7 +117,7 @@ test('두 기준 분류를 마친 안내는 실제 다음 버튼과 화면(두 �
 test('식물·장소 이름 뒤 조사는 받침과 ㄹ 받침에 맞춘다',()=>{
  assert.equal(josa('동백나무','은/는'),'동백나무는');assert.equal(josa('벚나무','은/는'),'벚나무는');
  assert.equal(josa('알로에','을/를'),'알로에를');assert.equal(josa('부레옥잠','을/를'),'부레옥잠을');
- assert.equal(josa('물가','과/와'),'물가와');assert.equal(josa('건조 구역','과/와'),'건조 구역과');assert.equal(josa('풀밭','과/와'),'풀밭과');
+ assert.equal(josa('물가','과/와'),'물가와');assert.equal(josa('건조 구역','과/와'),'건조 구역과');assert.equal(josa('들판','과/와'),'들판과');
  assert.equal(josa('물가','이야/야'),'물가야');assert.equal(josa('빈 땅','이야/야'),'빈 땅이야');
  const to=Object.fromEntries(REWARDS.map(r=>[r.name,josa(r.name,'으로/로')]));
  assert.deepEqual(to,{'표본 온실':'표본 온실로','계절 꽃돔':'계절 꽃돔으로','물길 실험실':'물길 실험실로','나의 연구정원':'나의 연구정원으로','발명 공방':'발명 공방으로'});
@@ -125,7 +127,7 @@ test('식물·장소 이름 뒤 조사는 받침과 ㄹ 받침에 맞춘다',()=
 test('사는 곳 잇기 문구에 개발용 조사 표기가 없고 식물마다 조사가 맞다',()=>{
  const said={};
  for(const [plant,habitat] of [['hyacinth','water'],['aloe','dry'],['cherry','grass']]){const s=freshState(),u={selected:plant};said[plant]=learningAction(s,u,'habitat',habitat);}
- assert.equal(said.hyacinth,'부레옥잠을 물가와 이었어.');assert.equal(said.aloe,'알로에를 건조 구역과 이었어.');assert.equal(said.cherry,'벚나무를 풀밭과 이었어.');
+ assert.equal(said.hyacinth,'부레옥잠을 물가와 이었어.');assert.equal(said.aloe,'알로에를 건조 구역과 이었어.');assert.equal(said.cherry,'벚나무를 들판과 이었어.');
  for(const plant of ['hyacinth','aloe','cherry']){
   const s=freshState();s.page=5;const html=text(renderActivity(s,{activityMode:'explore',habitatPlant:plant},null));
   const name=HABITAT_PLANTS.find(p=>p.id===plant).name;
@@ -149,7 +151,7 @@ test('예전 저장의 "알로에을 심을 자리" 같은 기록 이름은 불�
  assert.equal(repairPlantLabel('알로에을 심을 자리'),'알로에를 심을 자리');
  assert.equal(repairPlantLabel('벚나무을 심은 까닭'),'벚나무를 심은 까닭');
  assert.equal(repairPlantLabel('부레옥잠을 심을 자리'),'부레옥잠을 심을 자리');
- const records=normalizeLearningRecords([0,0,0,{known:true,responses:{'core:plant:aloe':{label:'알로에을 심을 자리',first:'풀밭',last:'건조 구역',attempts:2,wrong:1,changes:1,phase:'application'}}}]);
+ const records=normalizeLearningRecords([0,0,0,{known:true,responses:{'core:plant:aloe':{label:'알로에을 심을 자리',first:'들판',last:'건조 구역',attempts:2,wrong:1,changes:1,phase:'application'}}}]);
  const r=records[3].responses['core:plant:aloe'];
- assert.equal(r.label,'알로에를 심을 자리');assert.equal(r.first,'풀밭');assert.equal(r.last,'건조 구역');
+ assert.equal(r.label,'알로에를 심을 자리');assert.equal(r.first,'들판');assert.equal(r.last,'건조 구역');
 });

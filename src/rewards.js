@@ -82,7 +82,7 @@ export function evidenceSummary(state,i){
   return [
     `잎의 특징 ${observed}곳을 살피고 ${sorted}개의 분류 기록을 남겼어.`,
     `${state.seasonalRecords.length}장의 계절 기록으로 겨울과 봄을 연결했어.`,
-    '공기와 물을 저장하는 특징을 세 식물의 환경과 연결했어.',
+    '잎자루 속 공기, 잎에 저장한 물, 땅속에 내린 뿌리를 세 식물이 사는 곳과 연결했어.',
     `${Object.keys(state.garden).length}종의 식물이 네가 만든 정원에 자리 잡았어.`,
     `${new Set(state.tests.map(t=>t.key)).size}가지 설계를 실제로 시험하고 비교했어.`,
   ][i];

@@ -20,10 +20,7 @@
 #app .garden-cloud-btn:not([aria-disabled="true"]) .garden-cloud-art { animation: garden-cloud-call 1.6s ease-in-out infinite; }
 #app .garden-cloud-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 #9cc3d6; }
 #app .garden-cloud-btn[aria-disabled="true"] { opacity: .65; cursor: default; }
-#app .garden-cloud-art { position: relative; width: 58px; height: 34px; border-radius: 20px; background: #fff; box-shadow: inset 0 -4px 0 #d4e6ee, 0 0 0 2px #9cc3d6; }
-#app .garden-cloud-art::before, #app .garden-cloud-art::after { content: ''; position: absolute; border-radius: 50%; background: #fff; box-shadow: 0 0 0 2px #9cc3d6; z-index: -1; }
-#app .garden-cloud-art::before { left: 8px; top: -14px; width: 26px; height: 26px; }
-#app .garden-cloud-art::after { left: 26px; top: -20px; width: 30px; height: 30px; }
+#app .garden-cloud-art { position: relative; width: 58px; height: 34px; background: url('/assets/generated/rain_cloud_clay.webp') center / contain no-repeat; }
 @keyframes garden-cloud-call { 50% { transform: translateY(-3px); } }
 
 /* Plant cards above the beds: drag one onto a bed, or tap it and then the bed. */

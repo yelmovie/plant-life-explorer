@@ -1,7 +1,7 @@
 import {assetImage} from './asset-catalog.js';
 import {icon,plantArt,seasonArt,bagArt} from './art.js';
 import {mountGardenHands} from './field-hands-garden.js';
-import {FIELD_LEAVES,FIELD_ORDER,FIELD_ZONES,FIELD_ENV,FIELD_PLANTS,normalizeFieldEvidence,fieldSteps,fieldMissionReady,fieldBagPair,fieldBagKey,applyFieldAction} from './field-missions-state.js';
+import {FIELD_LEAVES,FIELD_ZONES,FIELD_PLANTS,normalizeFieldEvidence,fieldSteps,fieldMissionReady,fieldBagKey,applyFieldAction,FIELD_BAG_VARIANTS} from './field-missions-state.js';
 import {mountFloatHands} from './field-hands-float.js';
 import {mountBagHands} from './field-hands-bag.js';
 import {mountLens,mountLeafSwipe} from './field-hands-leaf.js';
@@ -11,13 +11,13 @@ const esc=v=>String(v??'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(
 const btn=(label,action,id='',cls='')=>`<button type="button" class="btn mission-tool ${cls}" data-action="${action}" data-id="${esc(id)}">${label}</button>`;
 const source=(label,item,u,cls='')=>`<button type="button" class="mission-tool field-token ${u.selected===item?'selected':''} ${cls}" data-action="field-select" data-id="${esc(item)}" data-field-item="${esc(item)}" aria-pressed="${u.selected===item}" draggable="false">${label}</button>`;
 const target=(label,id,cls='')=>`<button type="button" class="field-target ${cls}" data-action="field-drop" data-id="${esc(id)}" data-field-drop="${esc(id)}">${label}</button>`;
-const envNames={water:'물가',grass:'풀밭',dry:'건조한 곳'};
+const envNames={water:'물가',grass:'들판',dry:'건조한 곳'};
 const plantNames={hyacinth:'부레옥잠',cherry:'벚나무',aloe:'알로에'};
 // Both models copy a water hyacinth leaf stalk: same outside, only the inside differs.
 const modelName=id=>id==='air'?'공기 방 모형':'꽉 찬 모형';
 const modelInside=id=>id==='air'?'속에 공기 방이 여러 개':'속을 흙으로 꽉 채웠어';
 const stages=[['돋보기로 관찰 연습','톱니 기준으로 나누기','모양 기준으로 다시 나누기'],['살아 있는 부분 잇기','나무 시간 잇기','풀 시간 잇기'],['결과 예상하기','같은 수조에서 시험','관찰 결과 연결하기'],['비 내려 땅 살펴보기','알맞은 땅에 심기','정원에 비 내리기'],['예상하고 첫 비','하나씩 달고 비 시험','공책 지킨 부품 찾기']];
-const objectives=[['관찰 연습 · 단풍나무의 가운데와 가장자리를 돋보기로 살펴봐.','기준 1 · 표본 카드를 톱니가 있는 잎과 없는 잎으로 나눠 봐. 바구니를 눌러도 돼.','기준 2 · 같은 잎을 이번에는 가늘고 긴 모양인지로 다시 나눠 봐.'],['겨울에 살아 있는 부분을 다음 봄의 같은 부분에 이어 줘.','시간 다이얼을 돌려 같은 벚나무가 겨울을 지나 다시 자라는 모습을 지켜봐.','땅속 카메라로 씀바귀가 다시 자라는 모습을 보고 새싹이 돋은 곳을 찾아 줘.'],['두 모형을 물에 넣으면 어떻게 될지 스위치로 예상해 줘.','두 모형을 같은 수조에 넣어 뜨는 모습을 비교해 봐.','잎자루를 잘라 공기 방을 보고, 떠 있던 모형과 이어 줘.'],['구름을 눌러 비를 내리고, 빗물이 고이는 곳·스며드는 곳·흘러가는 곳을 살펴봐.','세 식물을 각각 잘 살 수 있는 땅으로 옮겨 심어 줘.','정원에 비를 내려 세 식물이 잘 자라는지 확인해 봐.'],['구름을 눌러 보통 가방에 비를 내려 봐.','연잎 겉면과 덮개를 하나씩 달고, 달 때마다 비를 내려 봐.','시험 카드를 견줘 보고 공책을 지킨 부품을 골라 줘.']];
+const objectives=[['관찰 연습 · 단풍나무의 가운데와 가장자리를 돋보기로 살펴봐.','기준 1 · 표본 카드를 톱니가 있는 잎과 없는 잎으로 나눠 봐. 바구니를 눌러도 돼.','기준 2 · 같은 잎을 이번에는 가늘고 긴 모양인지로 다시 나눠 봐.'],['겨울에 살아 있는 부분을 다음 봄의 같은 부분에 이어 줘.','시간 다이얼을 돌려 같은 벚나무가 겨울을 지나 다시 자라는 모습을 지켜봐.','땅속 카메라로 씀바귀 뿌리를 보고, 봄에 새싹이 땅 위로 올라온 곳을 찾아 줘.'],['두 모형을 물에 넣으면 어떻게 될지 스위치로 예상해 줘.','두 모형을 같은 수조에 넣어 뜨는 모습을 비교해 봐.','잎자루를 잘라 공기 방을 보고, 떠 있던 모형과 이어 줘.'],['구름을 눌러 비를 내리고, 빗물이 고이는 곳·스며드는 곳·흘러가는 곳을 살펴봐.','세 식물을 각각 잘 살 수 있는 땅으로 옮겨 심어 줘.','정원에 비를 내려 세 식물이 잘 자라는지 확인해 봐.'],['구름을 눌러 보통 가방에 비를 내려 봐.','연잎만, 덮개만, 둘 다 단 가방에 하나씩 비를 내려 봐.','네 가방을 견줘 보고 공책을 지킨 것을 골라 줘.']];
 
 function leafPicture(id){
  return assetImage('field_leaf_'+id,'field-leaf-picture leaf-'+id,true);
@@ -46,7 +46,7 @@ function seasons(e,u,stage){
  if(stage===0)return `<p class="lens-hint season-hint"><span>겨울 그림의 <b>흙을 문질러</b> 걷어 내고, 빛나는 점을 옆 <b>다음 봄 그림</b>으로 끌어 <b>같은 부분이 있는 칸</b>에 놓아 봐.</span></p><div class="field-season-pairs">${['tree','herb'].map(kind=>{const plant=kind==='tree'?'cherry':'sowthistle',linked=e.seasons.links[kind],dug=linked||u.dug?.[kind],[hx,hy]=LINK_HANDLE[kind],right=linked===(kind==='tree'?'trunk':'root'),awaiting=dug&&!right;return `<article class="field-season-pair ${awaiting?'awaiting':''}" data-season-pair="${kind}"><h3>${kind==='tree'?'벚나무':'씀바귀'}</h3><div class="field-season-images"><div><div class="season-dig" data-dig="${kind}">${seasonArt(plant,3,true)}${dug?`<span class="link-handle ${linked?'linked':''}" data-link-handle="${kind}" style="left:${hx*100}%;top:${hy*100}%"></span>`:`<div class="dig-cover" style="top:${DIG_TOP*100}%">${'<i></i>'.repeat(DIG_CELLS)}</div>`}</div><p class="season-cap">겨울 · ${right?'이었어':linked?'점을 다시 끌어 봐':dug?'점을 옆 그림으로 끌어 봐':'흙을 문질러 봐'}</p></div><div><div class="link-target" data-link-target="${kind}" style="--cut:${LINK_CUT[kind]*100}%">${seasonArt(plant,0,true)}<span class="link-zone upper ${linked==='leaf'?'picked':''}">새로 나온 잎</span><span class="link-zone lower ${linked&&linked!=='leaf'?'picked':''}">${kind==='tree'?'같은 줄기와 뿌리':'살아 있던 뿌리'}</span></div><p class="season-cap">다음 봄${awaiting?' · 같은 부분 칸에 놓기':''}</p></div></div><svg class="link-line" aria-hidden="true"><line/></svg>${awaiting?'<span class="link-ghost" aria-hidden="true"></span>':''}<div class="lens-fallback">${(kind==='tree'?['trunk','leaf']:['root','leaf']).map(part=>target(`${part==='trunk'?'같은 줄기와 뿌리':part==='root'?'살아 있던 뿌리':'새로 나온 잎'}에 잇기`,`link:${kind}:${part}`)).join('')}</div></article>`;}).join('')}</div>`;
  const kind=stage===1?'tree':'herb';
  // Keyboard path: one full turn of the hand, then evidence buttons for where it regrew.
- const keys=btn('바늘 한 바퀴 돌리기','field-season-turn',kind)+btn('같은 가지에서 새눈이 돋았어','field-season-clue',kind+':branches')+btn('땅속 뿌리에서 새싹이 돋았어','field-season-clue',kind+':rootbud')+btn('꽃 색깔만 같아','field-season-clue',kind+':color');
+ const keys=btn('바늘 한 바퀴 돌리기','field-season-turn',kind)+btn('겨울눈에서 새잎과 꽃이 나왔어','field-season-clue',kind+':branches')+btn('뿌리가 살아 있어 땅 위로 새싹이 났어','field-season-clue',kind+':rootbud')+btn('꽃 색깔만 같아','field-season-clue',kind+':color');
  return timeDial(e,u,kind,keys);
 }
 function modelArt(id){return assetImage(id==='air'?'float_model_air':'float_model_solid','field-float-model',true);}
@@ -98,10 +98,14 @@ function trialCard(t,label,changed='',attrs=''){
  const rows=[['surface',`① ${t.surface==='lotus'?'연잎 겉면':'보통 천'}`,t.rolls?'물방울 굴러감':'물방울 남음',t.rolls],['cover',`② 입구 ${t.cover==='flap'?'닫힘':'열림'}`,t.notebookDry?'공책 마름':'공책 젖음',t.notebookDry]];
  return `<article class="field-trial-card" ${attrs}><h4>${label}</h4><p class="trial-rain" aria-label="같은 비 10방울">${'<i></i>'.repeat(10)}<span aria-hidden="true">같은 비 10방울</span></p><ul class="trial-body">${rows.map(([p,a,r,ok])=>`<li class="${changed===p?'changed':''} ${ok?'dry':'wet'}"><span>${a}</span><b>${r}</b></li>`).join('')}</ul></article>`;
 }
+// Comparing the three rains: big bag pictures side by side, what changed, and the notebook result in one glance.
+function compareCard(t,label){
+ return `<article class="bag-compare-card ${t.notebookDry?'dry':'wet'}"><h4>${label}</h4><div class="compare-pic">${bagArt(t)}</div><p class="compare-result">${t.notebookDry?'공책 뽀송!':'공책 젖음'}</p><small>${t.notebookDry?'빗물이 굴러가고 덮개가 입구를 막았어':t.rolls?'열린 입구로 비가 들어갔어':t.cover==='flap'?'천에 빗물이 스며들었어':'천도 젖고 입구로도 들어갔어'}</small></article>`;
+}
 const bagHint=html=>`<p class="lens-hint bag-hint"><span>${html}</span></p>`;
-// Mission 5: rain on the plain bag, put on the lotus surface and the cover one at a time (rain after each), then name the part that kept the notebook dry.
+// Mission 5: rain on the plain bag, then on lotus only, cover only and both (one change per rain), then say what kept the notebook dry.
 const UPGRADES=[['surface','lotus','연잎 겉면','bag_lotus_open','물방울이 또르르'],['cover','flap','덮개','research_bag_closed','입구를 위에서 덮어']];
-const trialName=t=>t.surface==='plain'&&t.cover==='open'?'처음 가방':[t.surface==='lotus'?'+ 연잎 겉면':'',t.cover==='flap'?'+ 덮개':''].filter(Boolean).join(' ');
+const trialName=t=>({'plain:open':'처음 가방','lotus:open':'연잎 겉면만','plain:flap':'덮개만','lotus:flap':'연잎 겉면 + 덮개'})[`${t.surface}:${t.cover}`];
 function trials(b,fresh,n=3){
  if(!b.tests.length)return '<p class="trial-empty">아직 비를 내리지 않았어.</p>';
  return `<div class="field-trials">${b.tests.slice(-n).map((t,i,a)=>{const prev=i?a[i-1]:null,changed=prev?['surface','cover'].find(k=>prev[k]!==t[k]):'';return trialCard(t,trialName(t),changed,i===a.length-1&&fresh?'data-fresh':'');}).join('')}</div>`;
@@ -113,34 +117,46 @@ function invention(e,u,stage){
  const rainBtn=`<div class="lens-fallback">${btn(icon('drop')+' 비 내리기','field-bag-test','','primary')}</div>`;
  if(stage===0)return `<div class="bag-bench rain-bench">${bagHint(last?'보통 가방은 공책이 젖었어. 이제 하나씩 바꿔 보자!':'구름을 <b>톡</b> 눌러 보통 가방에 비를 내려 봐.')}${rainStage(b,!last,last?'공책이 젖었어…':'구름을 눌러 봐.')}<div class="bag-results">${trials(b,fresh)}</div>${rainBtn}</div>`;
  if(stage===1){
-  const both=fieldSteps(e,4)[1],count=UPGRADES.filter(([p,v])=>b.design[p]===v).length;
-  const hint=both?'두 부품을 다 달았어! 다음 도전에서 무엇이 공책을 지켰는지 찾아보자.':untested?'구름을 <b>톡</b> 눌러 비를 내려 봐. 무엇이 달라질까?':count?'이번엔 나머지 하나를 달고 다시 비를 내려 봐.':'<b>하나만</b> 골라 가방에 달아 봐. 달 때마다 비를 내려서 확인해.';
-  const cards=UPGRADES.map(([part,value,name,asset,tip])=>{const on=b.design[part]===value,wait=!on&&untested;return `<button type="button" class="bag-upgrade ${on?'on':''}" data-action="field-bag-upgrade" data-id="${part}" aria-pressed="${on}" ${on?'aria-disabled="true" data-reason="벌써 달았어."':wait?'aria-disabled="true" data-reason="먼저 비를 내려서 지금 가방을 확인해 봐."':''}>${assetImage(asset,'bag-upgrade-pic',true)}<strong>${on?icon('check',16)+' '+name:name+' 달기'}</strong><small>${tip}</small></button>`;}).join('');
+  const both=fieldSteps(e,4)[1],left=FIELD_BAG_VARIANTS.filter(k=>!b.tests.some(t=>t.key===k)).map(k=>trialName({surface:k.split(':')[0],cover:k.split(':')[1]}));
+  const hint=both?'세 가방을 다 시험했어! 다음 도전에서 무엇이 공책을 지켰는지 찾아보자.':untested?'구름을 <b>톡</b> 눌러 비를 내려 봐. 무엇이 달라질까?':`부품을 <b>하나만</b> 달거나 떼고 비를 내려 봐. 남은 가방: <b>${left.join(' · ')}</b>`;
+  const cards=UPGRADES.map(([part,value,name,asset,tip])=>{const on=b.design[part]===value;return `<button type="button" class="bag-upgrade ${on?'on':''}" data-action="field-bag-upgrade" data-id="${part}" aria-pressed="${on}" ${untested?'aria-disabled="true" data-reason="먼저 비를 내려서 지금 가방을 확인해 봐."':''}>${assetImage(asset,'bag-upgrade-pic',true)}<strong>${on?icon('check',16)+' '+name+' 떼기':name+' 달기'}</strong><small>${tip}</small></button>`;}).join('');
   return `<div class="bag-bench rain-bench">${bagHint(hint)}${rainStage(b,untested,untested?'구름을 눌러 비를 내려 봐!':both?'공책이 뽀송해!':'부품 하나를 골라 달아 봐.')}<div class="bag-results"><div class="bag-upgrades">${cards}</div>${trials(b,fresh,2)}${b.tests.length>1&&!both?btn('처음 가방으로','field-bag-reset','','bag-reset'):''}</div>${rainBtn}</div>`;
  }
  const solved=!!b.delivered;
- return `<div class="bag-bench explain-bench">${bagHint(solved?'공방 복구 완료! 아래 버튼으로 가서 기록을 받아 가자.':'시험 카드를 견줘 봐. <b>공책</b>을 젖지 않게 지킨 건 뭐였을까?')}${trials(b,false)}<div class="field-predict-choices bag-answer">${solved?`<p class="bag-say">✓ 덮개가 입구로 오는 비를 막아 공책을 지켰어. 연잎 겉면은 물방울을 굴려 보냈어.</p>`:btn('연잎 겉면','field-bag-answer','surface')+btn('덮개','field-bag-answer','cover')}</div></div>`;
+ const cards=['plain:open',...FIELD_BAG_VARIANTS].map(k=>b.tests.findLast(t=>t.key===k)).filter(Boolean).map(t=>compareCard(t,trialName(t))).join('');
+ return `<div class="bag-bench explain-bench">${bagHint(solved?'공방 복구 완료! 아래 버튼으로 가서 기록을 받아 가자.':'네 가방을 견줘 봐. <b>공책</b>이 뽀송한 가방은 어느 것일까?')}<div class="bag-compare">${cards}</div><div class="bag-question">${solved?`<p class="bag-say">✓ 연잎 겉면은 빗물이 스며들지 않게, 덮개는 입구로 비가 들어오지 않게 막아. 둘이 함께 공책을 지켰어.</p>`:`<p class="bag-ask">공책을 젖지 않게 지킨 부품은?</p><div class="field-predict-choices bag-answer">${btn(assetImage('bag_lotus_open','bag-answer-pic',true)+'<span>연잎 겉면</span>','field-bag-answer','surface')}${btn(assetImage('research_bag_closed','bag-answer-pic',true)+'<span>덮개</span>','field-bag-answer','cover')}${btn(assetImage('bag_lotus_closed','bag-answer-pic',true)+'<span>둘 다 함께</span>','field-bag-answer','both')}</div>`}</div></div>`;
 }
 const DEFAULT_FEEDBACK='손으로 직접 해 봐. 어려우면 위의 “버튼으로 하기”를 눌러도 돼.';
 // A first-guess screen comes before the step's main task; the objective names only what is on screen.
 const objective=(e,m,stage)=>stage===0&&m===1&&!['tree','herb'].every(k=>e.seasons.predictions[k])?'먼저 예상 · 겨울에 잎이 보이지 않을 때 땅속은 어떨지 두 식물마다 골라 줘.'
  :stage===0&&m===4&&!e.bag.prediction?'먼저 예상 · 비가 와도 공책이 젖지 않으려면 무엇을 바꿔야 할지 골라 줘.':objectives[m][stage];
 const stageOf=u=>Number.isInteger(u?.stage)&&u.stage>=0&&u.stage<3?u.stage:0;
+// The first field step still to do (any order), so the screen can point the student at it.
+export function fieldTodo(state,ui,page=state.page){
+ const mission=Math.floor(page/2);if(mission<0||mission>4)return null;
+ const done=fieldSteps(normalizeFieldEvidence(state.fieldEvidence),mission),i=done.findIndex(v=>!v);
+ return i<0?null:{i,label:stages[mission][i],currentDone:!!done[stageOf(ui.fieldMission)]};
+}
+// 다음 도전 sits outside the scrolling workspace, pinned to the main panel's bottom-right corner on every stage.
+export function fieldNextButton(state,ui,page=state.page){
+ const t=fieldTodo(state,ui,page);if(!t?.currentDone)return '';
+ return btn((t.i===stageOf(ui.fieldMission)+1?'다음 도전 ':`${t.i+1}번 임무로 가기 `)+icon('arrow',18),'field-stage',String(t.i),'primary objective-next');
+}
 export function renderFieldMission(state,ui,page=state.page){
  const mission=Math.floor(page/2);if(mission<0||mission>4)return '';
  const e=normalizeFieldEvidence(state.fieldEvidence),u=ui.fieldMission??={},done=fieldSteps(e,mission);
  if(u.mission!==mission){u.mission=mission;u.stage=Math.max(0,done.findIndex(v=>!v));u.selected='';u.feedback='';}
  const stage=stageOf(u);
- const views=[leaves,seasons,floatLab,garden,invention],ready=done.every(Boolean);
- // The select-then-place buttons (.lens-fallback) can be shown on screen for touch users, not only on keyboard focus.
- const keysBtn=`<button type="button" class="btn mission-tool objective-keys" data-action="field-keys" aria-pressed="${!!u.keys}">${u.keys?'손으로 하기':'버튼으로 하기'}</button>`;
- return `<section class="field-mission mission-${mission} ${u.keys?'keys-on':''}" aria-label="리피와 현장 탐구"><div class="mission-objective ${done[stage]?'step-done':''}"><span><b class="objective-num" aria-hidden="true">${done[stage]?icon('check',18):stage+1}</b>${objective(e,mission,stage)}</span>${done[stage]&&stage<2?btn('다음 도전 '+icon('arrow',18),'field-stage',String(stage+1),'primary objective-next'):''}${keysBtn}</div>${ready?'<div class="mission-loot" role="status">현장 복구 성공! 발견한 단서를 본 탐구에도 써 보자.</div>':''}<div class="mission-workspace">${views[mission](e,u,stage)}</div>${mission===2?'<p class="microcopy">두 모형은 진짜 식물이 아니라, 부레옥잠 잎자루를 흉내 낸 실험 모형이야.</p>':''}</section>`;
+ const views=[leaves,seasons,floatLab,garden,invention];
+ return `<section class="field-mission mission-${mission} ${u.keys?'keys-on':''}" aria-label="리피와 현장 탐구"><div class="mission-workspace">${views[mission](e,u,stage)}</div>${mission===2?'<p class="microcopy">두 모형은 진짜 식물이 아니라, 부레옥잠 잎자루를 흉내 낸 실험 모형이야.</p>':''}</section>`;
 }
 // The step list and Leafy's reply live in the activity's left "오늘의 연구" panel.
 export function renderFieldSteps(state,ui,page=state.page){
  const mission=Math.floor(page/2);if(mission<0||mission>4)return '';
- const done=fieldSteps(normalizeFieldEvidence(state.fieldEvidence),mission),stage=stageOf(ui.fieldMission);
- return `<div class="mission-journey today-steps">${stages[mission].map((label,i)=>`<button class="mission-step ${i===stage?'active':''} ${done[i]?'done':''}" data-action="field-stage" data-id="${i}" ${i===stage?'aria-current="step"':''}><b>${done[i]?icon('check',16):i+1}</b><span>${label}</span></button>`).join('')}</div>`;
+ const e=normalizeFieldEvidence(state.fieldEvidence),done=fieldSteps(e,mission),u=ui.fieldMission??{},stage=stageOf(u);
+ // The select-then-place (.lens-fallback) buttons for touch users are switched on here.
+ const keysBtn=`<button type="button" class="btn mission-tool objective-keys" data-action="field-keys" aria-pressed="${!!u.keys}">${u.keys?'손으로 하기':'버튼으로 하기'}</button>`;
+ return `<div class="mission-journey today-steps">${stages[mission].map((label,i)=>`<button class="mission-step ${i===stage?'active':''} ${done[i]?'done':''} ${done[stage]&&i===done.findIndex(v=>!v)?'next-up':''}" data-action="field-stage" data-id="${i}" ${i===stage?'aria-current="step"':''}><b>${done[i]?icon('check',16):i+1}</b><span>${label}</span></button>`).join('')}</div><p class="field-objective sr-only">${objective(e,mission,stage)}</p><div class="field-step-tools">${keysBtn}</div>`;
 }
 export const fieldFeedback=ui=>({text:ui.fieldMission?.feedback||DEFAULT_FEEDBACK,success:!!ui.fieldMission?.success});
 

@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import {freshState,restoreState,pageReady,presetTerrain} from '../src/model.js';
 import {learningAction} from '../src/learning.js';
 import {normalizeFieldEvidence} from '../src/field-missions-state.js';
-import {fieldMissionAction,renderFieldMission} from '../src/field-missions.js';
+import {fieldMissionAction,renderFieldMission,renderFieldSteps} from '../src/field-missions.js';
 
 test('톱니 기준은 크기와 상관없이 있음/없음 하나로 판정하고, 오답 힌트는 지금 기준의 단서만 준다',()=>{
  const s={page:0,fieldEvidence:normalizeFieldEvidence({leaves:{scans:{maple:['shape','edge']}}})};
@@ -29,7 +29,7 @@ test('현장에서 넘어온 기본 정원은 자리 하나를 골라야 기록�
 
 test('예상 화면에서는 위 안내도 예상만 말하고, 잎자루는 버튼으로도 먼저 잘라 봐야 모형을 이을 수 있다',()=>{
  const s={page:8,fieldEvidence:normalizeFieldEvidence(null)};
- assert.match(renderFieldMission(s,{}),/먼저 예상/);assert.doesNotMatch(renderFieldMission(s,{}),/①② 자리를 톡톡/);
+ assert.match(renderFieldSteps(s,{}),/먼저 예상/);assert.doesNotMatch(renderFieldMission(s,{}),/①② 자리를 톡톡/);
  const f={page:4,fieldEvidence:normalizeFieldEvidence({float:{predictions:{air:'float',solid:'sink'},tested:['air','solid']}})},u={mission:2,stage:2};
  let html=renderFieldMission(f,u);assert.match(html,/잎자루 잘라 열기/);assert.doesNotMatch(html,/reason:air-space/);
  fieldMissionAction(f,u,'field-cut','');html=renderFieldMission(f,u);assert.match(html,/reason:air-space/);

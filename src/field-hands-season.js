@@ -4,17 +4,18 @@
 // viewer. After the lap, the time-lapse rests on early spring and a sprout pin marks where the
 // plant regrew. State changes go through field actions, fired after the pointer is released.
 import {assetImage} from './asset-catalog.js';
-import {seasonArt} from './art.js';
+import {seasonArt,icon} from './art.js';
 import {FIELD_ORDER} from './field-missions-state.js';
 
 // Stage-2 picture geometry, as fractions of one atlas cell.
 export const LINK_HANDLE={tree:[.49,.7],herb:[.49,.68]},LINK_CUT={tree:.42,herb:.58},DIG_TOP=.6,DIG_CELLS=24;
 const regrowZone=(kind,x,y)=>kind==='tree'?(y<.6?'branches':'rootbud'):(x>.3&&x<.7&&y>.15&&y<.8?'rootbud':'color');
 function seedlingArt(herb){return assetImage(herb?'sowthistle_bud_spring':'cherry_bud_spring','field-bud-picture',true);}
-export function frameArt(kind,phase){return phase==='bud'?seedlingArt(kind==='herb'):seasonArt(kind==='tree'?'cherry':'sowthistle',phase==='winter'?3:0,true).replace(/aria-label="[^"]*"/,`aria-label="${phase==='winter'?'잎이 없고 땅속 뿌리와 줄기가 남은 모습':'같은 식물에 잎과 꽃이 자란 모습'}"`);}
+export function frameArt(kind,phase){return phase==='bud'?seedlingArt(kind==='herb'):seasonArt(kind==='tree'?'cherry':'sowthistle',phase==='winter'?3:0,true).replace(/aria-label="[^"]*"/,`aria-label="${phase==='winter'?(kind==='tree'?'잎은 없지만 줄기와 가지, 땅속 뿌리가 살아 있는 모습':'땅 위 잎은 시들고 땅속 뿌리가 살아 있는 모습'):'같은 식물에 잎과 꽃이 자란 모습'}"`);}
 const shortName={winter:'겨울',bud:'초봄',spring:'다음 봄'};
 // A numbered season tab above each rim card names the time the hand is passing through.
-const seatIcon={winter:'❄',bud:'🌱',spring:'🌸'};
+// Season tags use the shared line icons, not emoji (emoji draw differently on each tablet).
+const seatIcon={winter:'❄',bud:icon('leaf',14),spring:icon('sun',14)};
 // Card k sits at HALF+k*SPAN on the rim; the hand shows it in full when pointing at it.
 const SPAN=120,HALF=60,FULL=360;
 const inOrder=a=>FIELD_ORDER.every((x,i)=>a[i]===x);
@@ -31,7 +32,7 @@ export function timeDial(e,u,kind,fallback){
  const card=(phase,slot)=>`<div class="dial-card" data-dial-card="${phase}" style="--a:${HALF+slot*SPAN}deg">${frameArt(kind,phase)}</div>`;
  const seat=(phase,slot)=>`<span class="dial-seat seat-${phase}" style="--a:${HALF+slot*SPAN}deg"><b>${slot+1}</b>${seatIcon[phase]} ${shortName[phase]}</span>`;
  const side=done&&!named?`<span class="regrow-pin" data-regrow-pin aria-hidden="true"></span><p>핀을 끌어 화면에 꽂거나, 화면을 눌러 꽂아 봐.</p>`
-  :done?`<p class="dial-status ok">✓ ${herb?'땅속 뿌리에서 새싹이 돋았어.':'같은 가지에서 새눈이 돋았어.'}</p>`
+  :done?`<p class="dial-status ok">✓ ${herb?'뿌리가 살아 있어서 땅 위로 새싹이 났어.':'가지의 겨울눈에서 새잎과 꽃이 나왔어.'}</p>`
   :'<p class="dial-status">바늘을 돌리는 만큼 오른쪽 화면에서 시간이 흘러가.</p>';
  return `<p class="lens-hint season-hint" data-dial-tip><span>${tip}</span></p><div class="time-bench kind-${kind} ${done?'is-done':''} ${done&&!named?'pin-mode':''}" data-time-dial="${kind}" data-arr="${arr.join(',')}" data-turn="${done?HALF+SPAN:0}">
 <div class="time-dial" aria-hidden="true"><span class="dial-sweep"></span><span class="dial-start">출발</span><div class="dial-face" data-dial-face>${[0,1,2].map(i=>`<i class="dial-tick" style="--a:${i*SPAN}deg"></i>`).join('')}<span class="dial-hand"><span class="dial-knob"></span></span><span class="dial-hub"></span></div>${arr.map(card).join('')}${FIELD_ORDER.map(seat).join('')}</div>
@@ -91,6 +92,9 @@ export function mountSeasonHands(root,ui,onAction){
   const rub=e=>{if(!rubbing||done)return;const r=cover.getBoundingClientRect(),reach=Math.max(r.width/6,26);cells.forEach(c=>{const b=c.getBoundingClientRect();if(Math.hypot(b.left+b.width/2-e.clientX,b.top+b.height/2-e.clientY)<reach)c.classList.add('gone');});
    if(cells.filter(c=>c.classList.contains('gone')).length>=cells.length*.3){done=true;cover.classList.add('cleared');later(()=>onAction('field-dig',kind),450);}};
   on(cover,'pointerdown',e=>{e.preventDefault();e.stopPropagation();rubbing=true;capture(cover,e.pointerId);rub(e);});
+  // 자동 진행: the soil is brushed away cell by cell, then the dig is recorded as it is by hand.
+  cover.autoRun=()=>{if(done)return false;const gap=Math.round(1400/cells.length);
+   cells.forEach((c,i)=>later(()=>{if(done)return;c.classList.add('gone');if(cells.filter(x=>x.classList.contains('gone')).length>=cells.length*.7){done=true;cover.classList.add('cleared');later(()=>onAction('field-dig',kind),450);}},120+i*gap));return true;};
   on(cover,'pointermove',e=>{e.preventDefault();rub(e);});on(cover,'pointerup',()=>{rubbing=false;});on(cover,'pointercancel',()=>{rubbing=false;});
  });
  root.querySelectorAll('[data-season-pair]').forEach(pair=>{

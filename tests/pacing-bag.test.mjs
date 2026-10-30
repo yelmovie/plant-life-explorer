@@ -12,26 +12,26 @@ import {pageReady} from '../src/model.js';
 function fullBag(){
  const s=freshState(),u={};s.page=8;
  const act=(action,id='')=>fieldMissionAction(s,u,action,id);
- act('field-bag-predict','surface');act('field-bag-test');act('field-bag-upgrade','surface');act('field-bag-test');act('field-bag-upgrade','cover');act('field-bag-test');act('field-bag-answer','cover');
+ act('field-bag-predict','surface');act('field-bag-test');act('field-bag-upgrade','surface');act('field-bag-test');act('field-bag-upgrade','cover');act('field-bag-test');act('field-bag-upgrade','surface');act('field-bag-test');act('field-bag-answer','both');
  return {s,u,act};
 }
 
-test('현장에서 두 부품을 하나씩 시험하면 본 탐구는 같은 비를 반복하지 않고 바로 기록이 준비된다',()=>{
+test('현장 가방 시험을 마쳐도 본 탐구는 미리 채워지지 않고 학생이 직접 시험해야 기록이 준비된다',()=>{
  const {s,act}=fullBag();
- assert.equal(fieldMissionReady(s,4),true);assert.equal(s.fieldEvidence.bag.tests.length,3);
- carryFieldEvidence(s,4);assert.equal(s.tests.length,3);assert.equal(s.testPrediction,'surface');
- assert.equal(testValid(s),true);assert.equal(pageReady(s,8),true);assert.equal(pageReady(s,9),true);
- act('field-bag-answer','cover');assert.equal(s.fieldEvidence.bag.tests.length,3,'다시 골라도 시험은 늘지 않는다');
+ assert.equal(fieldMissionReady(s,4),true);assert.equal(s.fieldEvidence.bag.tests.length,4);
+ carryFieldEvidence(s,4);assert.equal(s.tests.length,0,'현장 시험을 본 탐구 시험으로 옮기지 않는다');assert.equal(s.testPrediction,'surface','첫 예상만 이어 쓴다');
+ assert.equal(testValid(s),false);assert.equal(pageReady(s,8),false);assert.equal(pageReady(s,9),false);
+ act('field-bag-answer','both');assert.equal(s.fieldEvidence.bag.tests.length,4,'다시 골라도 시험은 늘지 않는다');
  act('field-bag-reset');assert.equal(fieldMissionReady(s,4),false,'처음 가방으로 돌리면 다시 시험해야 한다');
 });
 
 test('연구노트는 이어받은 시험과 역할을 한 번만 보이고 실제 추가 시험은 보존한다',()=>{
  const {s}=fullBag();carryFieldEvidence(s,4);
  let rows=observationRecord(s,4);
- assert.equal(rows.filter(row=>/시험 \d/.test(row)).length,3);assert.equal(rows.filter(row=>/비교한 역할/.test(row)).length,2);
+ assert.equal(rows.filter(row=>/시험 \d/.test(row)).length,4,'처음·연잎만·둘 다·덮개만 네 번');assert.equal(rows.filter(row=>/비교한 역할/.test(row)).length,2);
  assert.match(rows.join(' / '),/입구 열림.*공책 젖음/);
  s.tests.push(testDesign(s.design));rows=observationRecord(s,4);
- assert.equal(rows.filter(row=>/시험 \d/.test(row)).length,4,'학생이 실제로 다시 한 시험을 복사 기록으로 지우지 않는다');
+ assert.equal(rows.filter(row=>/시험 \d/.test(row)).length,5,'학생이 실제로 다시 한 시험을 복사 기록으로 지우지 않는다');
 });
 
 test('잎 관찰 문답을 반복하지 않은 기록도 실제 현장 관찰과 새 표본 분류를 노트에 표시한다',()=>{
@@ -40,7 +40,7 @@ test('잎 관찰 문답을 반복하지 않은 기록도 실제 현장 관찰과
  s.rule='edge';s.groups={cherry:'yes',ginkgo:'no',grass:'no'};s.groupsByRule.edge={...s.groups};s.completed[0]=s.completed[1]=true;
  const rows=observationRecord(s,0);
  assert.equal(rows.filter(row=>/관찰 기록/.test(row)).length,2);assert.equal(rows.filter(row=>/분류:/.test(row)).length,9);
- assert.match(notebookEntry(s,0).body,/관찰 2곳 · 분류 9개/);assert.match(rows.join('\n'),/벚나무 · 새 표본 분류/);
+ assert.doesNotMatch(notebookEntry(s,0).body,/선생님용/);assert.match(rows.join('\n'),/벚나무 · 새 표본 분류/);
  assert.doesNotMatch(rows.join('\n'),/은행나무 · 모양 관찰 기록/,'하지 않은 관찰을 만들어 내지 않는다');
 });
 

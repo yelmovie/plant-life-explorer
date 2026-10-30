@@ -107,7 +107,7 @@ export function mountFloatHands(root,ui,onAction){
   const along=([x,y])=>{const t=((x-ax)*vx+(y-ay)*vy)/len2;return {t,near:t>=-.05&&t<=1.05&&Math.hypot(x-(ax+t*vx),y-(ay+t*vy))<CUT_NEAR};};
   const cover=(t0,t1)=>{const [a,b]=[t0,t1].map(t=>Math.max(0,Math.min(CUT_BINS-1,Math.floor(t*CUT_BINS)))).sort((p,q)=>p-q);for(let i=a;i<=b;i++)seen.add(i);};
   const open=()=>{d=null;mark?.remove();mark=null;u.floatCut=true;pet.classList.remove('cutting');pet.classList.add('open','just-open');trail.setAttribute('points','');
-   count.textContent='공기 방이 가득해! 톡 누르면 뽀글';speak('짠! 잎자루 속 빈 방에서 공기가 뽀글뽀글 나와!');
+   count.textContent='공기 방이 가득해! 톡 누르면 뽀글';speak('짠! 잎자루 속 공기 방에서 공기가 뽀글뽀글 나와!');
    pet.querySelectorAll('[data-air-room]').forEach((r,i)=>later(()=>bubble(r),250+i*120));
    later(()=>{lab.dataset.phase='reason';pet.dataset.petiole='reason';hint(HINT.reason);tank.classList.add('choose');},1400);};
   on(pet,'pointerdown',e=>{if(e.button>0||pet.classList.contains('open'))return;e.preventDefault();const p=norm(e);d={id:e.pointerId,pts:[],last:along(p),start:p,moved:false};pet.setPointerCapture?.(e.pointerId);pet.classList.add('cutting');});
@@ -124,6 +124,9 @@ export function mountFloatHands(root,ui,onAction){
     return speak('여기부터! 잎자루 반대쪽 끝을 눌러 봐.');}
    if(seen.size)speak('잎자루를 따라 끝까지 쓱 그어 봐. 끝과 끝을 차례로 눌러도 돼.');};
   on(pet,'pointerup',up);on(pet,'pointercancel',up);
+  // 자동 진행: the cut is traced along the stalk from end to end, then the skin opens as it does by hand.
+  pet.autoCut=()=>{if(pet.classList.contains('open'))return false;pet.classList.add('cutting');const pts=[],N=24;
+   for(let i=0;i<=N;i++)later(()=>{if(pet.classList.contains('open'))return;const t=i/N;pts.push(`${(ax+vx*t).toFixed(3)},${(ay+vy*t).toFixed(3)}`);trail.setAttribute('points',pts.join(' '));cover(Math.max(0,t-1/N),t);if(i===N)open();},i*55);return true;};
  }
 
  // Once open, any air room can still be tapped for another stream of bubbles.

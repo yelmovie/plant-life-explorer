@@ -40,13 +40,18 @@ function mountRain(stage,{onAction,on,later,animate,calm,say}){
   });
  };
  const finish=()=>{phase='done';say(lotus?'물방울이 동글동글 맺혀 굴러가!':'겉면에 젖은 얼룩이 남았어.');later(()=>onAction('field-bag-test',''),900*k+200);};
+ // 자동 진행 rains the same way a tap on the cloud does.
+ stage.autoRain=()=>{if(stage.dataset.rain!=='go'||phase!=='rain'||n>=RAIN.length)return false;start();return true;};
  on(cloud,'pointerdown',e=>{
   if(e.button>0)return;e.preventDefault();e.stopPropagation();
   // Nothing new to test: the state feedback explains why (same design, or not assembled).
   if(stage.dataset.rain!=='go')return onAction('field-bag-test','');
+  start();
+ });
+ function start(){
   if(phase!=='rain'||n>=RAIN.length)return;
   phase='falling';stage.classList.add('locked');replay(cloud,'puff');
   say('같은 비 10방울이 내려! 물이 어디로 가는지 봐.');
   RAIN.forEach((_,i)=>later(()=>{drop(n++,false);count.innerHTML=`<b>${n}</b>/10`;replay(count,'pop');},i*120*k));
- });
+ }
 }
