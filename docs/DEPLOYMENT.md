@@ -19,7 +19,20 @@ wrangler pages deploy dist --project-name leafy-garden --branch main
 
 이 Mac에는 시스템 Node가 없다. 도구는 외장 SSD에만 둔다: Node `DevCaches/tools/node-v24.22.2-darwin-arm64`, wrangler `DevCaches/tools/wrangler-4.154.0`(exFAT라 `--no-bin-links`로 설치). wrangler 로그인 정보는 `HOME=DevCaches/tools/wrangler-home`으로 실행해 SSD에 저장한다. 빌드는 `ESBUILD_MODULE_PATH`를 그 wrangler의 `node_modules/esbuild`로 지정한다. exFAT가 만드는 `._*` 파일은 업로드 전에 `dist`에서 지운다.
 
-## 최근 배포 — 2026-10-29 (2) (연구노트 손글씨 페이지·보고서 간소화·엔딩 음악)
+## 최근 배포 — 2026-10-31 (본 탐구 직접 풀기·자동 진행 관찰·가방 두 부품 판정)
+
+- 기능 커밋: `8687094fead9f61b64673ce9fff75c1459321222` (`sort-board-drag`, GitHub push 안 함). 같은 배포에 `03da7ad`(오늘 기능 전체) 포함.
+- 배포 주소: https://be2222fc.leafy-garden.pages.dev
+- 운영 주소: https://leafy-garden.pages.dev
+- 되돌릴 대상: 직전 배포 https://0fbc1e7f.leafy-garden.pages.dev (커밋 `1490b68`)
+- 바뀐 것: 현장 결과로 본 탐구를 미리 채우거나 첫 기록 페이지를 건너뛰지 않음(10쪽 모두 직접 풀기), 자동 진행은 관찰 조작만 몸짓 애니메이션으로, 현장 임무 목표줄 제거·다음 도전 작업판 오른쪽 아래 고정·남은 단계 안내 화살표, 가방은 연잎 겉면+덮개를 함께 달아야 공책이 마름(연잎만·덮개만·둘 다 시험), 계절·정원 사진을 연구노트에 붙이기, 선생님용 자세한 기록 삭제, 과학 문구 정리(풀밭→들판 등), 현장 임무·리피의 부탁·보상 팝업 스크롤 없이 한 화면, 구름 그림 `rain_cloud_clay`.
+- 빌드 180파일·119에셋·45,658,498바이트, esbuild 번들, `dirty=false`.
+- 배포 전 Mac(Node v24.22.2)에서 JavaScript 47개 문법 검사, 142/142 테스트 통과. 브라우저 테스트(`*.browser.mjs`)는 Playwright(SSD의 다른 프로젝트 1.64.1)로 돌렸으나 옛 흐름을 기대하는 테스트가 있어 통과시키지 못했다(갱신 필요).
+- 운영 주소의 `build-info.json` 커밋이 배포 커밋과 같고 `/`·`src/app.bundle.js`·`src/bundle.css`·`sw.js`·각 모듈·구름 그림 SHA-256이 로컬 dist와 같음을 확인했다. 첫 화면 200, 외부 요청 0, 콘솔 오류 0.
+- 서비스워커: 이전에 연 기기는 배포 후 첫 접속 한 번은 옛 화면이 보이고 다음 새로고침부터 새 버전(캐시 `green-garden-0.5.0-e107bbb3`)으로 바뀐다. 이 Mac 브라우저에서 확인했다.
+- wrangler 로그인은 이번에 내장 드라이브 홈(`~/Library/Preferences/.wrangler`)을 썼다(SSD `wrangler-home` 로그인이 만료됨). 실물 태블릿 조작은 미검증이다.
+
+## 이전 배포 — 2026-10-29 (2) (연구노트 손글씨 페이지·보고서 간소화·엔딩 음악)
 
 - 기능 커밋: `1490b68d66c2cf4fd4f4e77e68db58a7b8cfb82d` (`sort-board-drag`, GitHub push 안 함). 직전 커밋 `eda0df4`(1장 새 잎 다시 나누기 제거, 2장 겨울/봄 덮개·칸 비율)도 이번에 처음 배포됐다.
 - 배포 주소: https://0fbc1e7f.leafy-garden.pages.dev
