@@ -499,12 +499,12 @@ body #dialog.brief-dialog .mission-loot > img { width: 52px; height: 58px; }
 #app .field-mission .mission-workspace { flex: 1 1 auto; }
 
 /* Where to tap next: the step left to do glows with a bouncing arrow, and so do the buttons that lead there. */
-@keyframes guide-pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.04); } }
 @keyframes guide-arrow-left { 0%,100% { transform: translate(0,-50%) scaleX(-1); } 50% { transform: translate(-7px,-50%) scaleX(-1); } }
 @keyframes guide-arrow-right { 0%,100% { transform: translate(0,-50%); } 50% { transform: translate(7px,-50%); } }
-#app .today-steps .mission-step.next-up { position: relative; border: 2px solid #e2b33c; background: #fff6d6; box-shadow: 0 0 0 4px #f2c94c66; animation: guide-pulse 1.4s ease-in-out infinite; }
+#app .today-steps .mission-step.next-up { position: relative; border: 2px solid #e2b33c; background: #fff6d6; box-shadow: 0 0 0 4px #f2c94c66; }
 #app .today-steps .mission-step.next-up::after { content: '▶'; position: absolute; right: 8px; top: 50%; color: #c9862b; font-size: 18px; animation: guide-arrow-left 1s ease-in-out infinite; }
-#app .field-layout > .objective-next, #app .learning-footer .btn.primary.go-now { animation: guide-pulse 1.4s ease-in-out infinite; }
+/* Targets never move (a moving button is hard to tap); a steady gold ring marks them and only the arrow beside them bounces. */
+#app .field-layout > .objective-next, #app .learning-footer .btn.primary.go-now { animation: none; box-shadow: 0 4px 0 #173824, 0 0 0 4px #f2c94caa; }
 #app .field-layout > .objective-next::before, #app .learning-footer .btn.primary.go-now::before { content: '▶'; position: absolute; right: calc(100% + 10px); top: 50%; color: #e2a53a; font-size: 22px; text-shadow: 0 2px 0 #fffbe8; animation: guide-arrow-right 1s ease-in-out infinite; pointer-events: none; }
 #app .learning-footer .btn.primary.go-now { position: relative; }
 @media (prefers-reduced-motion: reduce) {
