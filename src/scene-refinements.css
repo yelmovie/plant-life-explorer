@@ -373,6 +373,10 @@ body :is(.tool-dialog .expedition-tool > span,.note-quiz .note-quiz-feedback) {
   font-size: var(--font-size-xs);
 }
 #app :is(.lotus-micro p,.prediction-note) { font-size: var(--font-size-sm) !important; }
+/* First prediction, trial results and conclusion are separate lines of the invention record. */
+#app .prediction-step { display: block; }
+#app .prediction-step + .prediction-step { margin-top: 2px; }
+#app .prediction-step.step-change { font-weight: 700; color: #2f5a3a; }
 #app .garden-workbench .garden-frame .spatial-controls button {
   width: 100px; font-size: var(--font-size-sm); line-height: 1.25;
 }

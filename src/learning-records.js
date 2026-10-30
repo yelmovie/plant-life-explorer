@@ -1,3 +1,4 @@
+import {repairPlantLabel} from './josa.js';
 // Student choices are evidence. Completion counts and retries are not grades.
 export const emptyLearningRecords = (known = true) => Array.from({length: 5}, () => ({known, hints: 0, responses: {}}));
 const plain = v => v && typeof v === 'object' && !Array.isArray(v);
@@ -11,7 +12,7 @@ export function normalizeLearningRecords(value) {
     record.hints = count(v.hints);
     for (const [key, r] of Object.entries(plain(v.responses) ? v.responses : {}).slice(0, 160)) {
       if (!plain(r) || !text(r.first) || !text(r.last)) continue;
-      record.responses[text(key)] = {label:text(r.label), first:text(r.first), last:text(r.last), attempts:Math.max(1,count(r.attempts)), wrong:count(r.wrong), changes:count(r.changes), firstCorrect:r.firstCorrect === true, correct:r.correct === true, phase:['prediction','observation','application'].includes(r.phase)?r.phase:'observation', firstHelp:count(r.firstHelp)};
+      record.responses[text(key)] = {label:repairPlantLabel(text(r.label)), first:text(r.first), last:text(r.last), attempts:Math.max(1,count(r.attempts)), wrong:count(r.wrong), changes:count(r.changes), firstCorrect:r.firstCorrect === true, correct:r.correct === true, phase:['prediction','observation','application'].includes(r.phase)?r.phase:'observation', firstHelp:count(r.firstHelp)};
     }
     return record;
   });

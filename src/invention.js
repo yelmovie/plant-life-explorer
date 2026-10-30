@@ -15,9 +15,28 @@ export function renderDesign(s,u={}){
  return `<div class="learning-layout design-layout"><section class="learning-scene"><div class="invention-goal">자연에서 발견한 특징 → 가방의 부품 → 비로 확인</div><div class="compact-bag" data-spatial="bag">${bagArt(s.design)}</div>${inventionParts(s)}</section><aside class="learning-note lotus-note ${s.design.linked?'idea-linked':''}">${s.design.linked?prediction:`<h2>먼저, 자연을 관찰해요</h2>${observation}`}</aside></div>`;
 }
 
+const PREDICTIONS={surface:'연잎 겉면만 바꾸면 돼.',cover:'입구로 오는 비도 막아야 해.'};
+const trialLabel=t=>t.surface==='plain'&&t.cover==='open'?'처음 가방':[t.surface==='lotus'?'연잎 겉면':'',t.cover==='flap'?'덮개':''].filter(Boolean).join('+');
+// The cover's role counts as concluded only when a saved answer shows it: the field answer or the core comparison of the cover.
+export function coverConcluded(s){
+ const b=s.fieldEvidence?.bag;
+ if(b?.delivered&&b.compared?.part==='cover')return true;
+ return testValid(s)&&s.tests.some(t=>t.cover==='flap'&&t.dry)&&(inventionEvidence(s).cover||s.testExplanation?.part==='cover');
+}
+// First prediction, trial results and conclusion stay separate. Nothing the saved trials and answers do not show is written.
+export function predictionRecord(s){
+ if(!PREDICTIONS[s.testPrediction])return [];
+ const rows=[{kind:'prediction',label:s.fieldEvidence?.bag?.prediction?'현장에서 남긴 첫 예상':'처음 예상',text:PREDICTIONS[s.testPrediction]}];
+ const trials=[...new Map(s.tests.map(t=>[t.key,t])).values()];
+ if(trials.length)rows.push({kind:'result',label:'시험 결과',text:trials.map(t=>`${trialLabel(t)} 공책 ${t.dry?'뽀송':'젖음'}`).join(' → ')});
+ if(coverConcluded(s)){
+  rows.push({kind:'conclusion',label:'알아낸 것',text:'덮개가 입구로 오는 비를 막아 공책을 지켰어.'});
+  rows.push({kind:'change',label:'',text:s.testPrediction==='cover'?'예상을 시험으로 확인했어.':'시험으로 생각을 고쳤어.'});
+ }
+ return rows;
+}
 export function predictionLine(s){
- if(!s.testPrediction)return '';
- return `${s.fieldEvidence?.bag?.prediction?'현장에서 남긴 첫 예상':'처음 예상'}: ${s.testPrediction==='cover'?'입구로 오는 비도 막아야 해.':'연잎 겉면만 바꾸면 돼.'} 시험으로 확인했어.`;
+ return predictionRecord(s).map(r=>`<span class="prediction-step step-${r.kind}">${r.label?`<b>${r.label}</b> `:''}${r.text}</span>`).join('');
 }
 
 export function inventionHint(s){

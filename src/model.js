@@ -4,13 +4,13 @@ import {normalizeBuds} from './winter-buds.js';
 export const STORAGE_KEY = 'green-garden-mvp-v2';
 export const LEGACY_STORAGE_KEY = 'green-garden-mvp-v1';
 export const PLANTS = [
-  {id:'cherry',name:'벚나무',edge:true,narrow:false,shape:'넓고 끝이 뾰족한 잎',edgeText:'가장자리에 톱니가 있어',habitat:'grass',reason:'땅에 뿌리를 내려 물을 빨아들여'},
+  {id:'cherry',name:'벚나무',unit:'그루',edge:true,narrow:false,shape:'넓고 끝이 뾰족한 잎',edgeText:'가장자리에 톱니가 있어',habitat:'grass',reason:'땅에 뿌리를 내려 물을 빨아들여'},
   {id:'ginkgo',name:'은행나무',edge:false,narrow:false,shape:'부채처럼 넓게 펼쳐진 잎',edgeText:'가장자리에 톱니가 없어'},
   {id:'grass',name:'강아지풀',edge:false,narrow:true,shape:'가늘고 길쭉한 잎',edgeText:'가장자리에 톱니가 없어'},
 ];
 export const HABITAT_PLANTS = [
-  {id:'hyacinth',name:'부레옥잠',habitat:'water',reason:'잎자루 속 공기가 물에 뜨는 데 도움을 줘'},
-  {id:'aloe',name:'알로에',habitat:'dry',reason:'두꺼운 잎에 물을 저장해'},
+  {id:'hyacinth',name:'부레옥잠',unit:'포기',habitat:'water',reason:'잎자루 속 공기가 물에 뜨는 데 도움을 줘'},
+  {id:'aloe',name:'알로에',unit:'포기',habitat:'dry',reason:'두꺼운 잎에 물을 저장해'},
   PLANTS[0],
 ];
 export const HABITATS = {water:'물가',grass:'풀밭',dry:'건조 구역'};

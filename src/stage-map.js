@@ -1,5 +1,6 @@
 import {assetImage} from './asset-catalog.js';
 import {REWARDS} from './rewards.js';
+import {josa} from './josa.js';
 
 // One continuous walkable road, traced from the existing 1536 × 1024 artwork.
 // Movement and taps project onto this road, so the river and forest cannot be crossed.
@@ -58,7 +59,7 @@ export function mountStageMap(root,ui,onArrive){
     if(held.size||target!==null)frame=requestAnimationFrame(tick);else lastTime=0;
   }
   function start(){free=null;if(!frame)frame=requestAnimationFrame(tick);}
-  function goTo(i){if(!ENTRANCES[i]||blocked())return;stop();target={distance:ENTRANCES[i].distance,id:i};root.querySelector('.map-walk-status').textContent=`${REWARDS[i].name}로 이동 중이야.`;start();}
+  function goTo(i){if(!ENTRANCES[i]||blocked())return;stop();target={distance:ENTRANCES[i].distance,id:i};root.querySelector('.map-walk-status').textContent=`${josa(REWARDS[i].name,'으로/로')} 이동 중이야.`;start();}
   viewport.addEventListener('pointerdown',e=>{if(!hand||e.button>0||blocked())return;grab={id:e.pointerId,x:e.clientX,y:e.clientY,ox:offsetX,oy:offsetY};dragged=false;},{signal});
   viewport.addEventListener('pointermove',e=>{if(grab?.id!==e.pointerId)return;const dx=e.clientX-grab.x,dy=e.clientY-grab.y;if(!dragged&&Math.hypot(dx,dy)<6)return;if(!dragged){dragged=true;viewport.setPointerCapture(e.pointerId);viewport.classList.add('grabbing');}free={x:grab.ox+dx,y:grab.oy+dy};draw();},{signal});
   const letGo=e=>{if(grab?.id!==e.pointerId)return;grab=null;viewport.classList.remove('grabbing');};

@@ -2,6 +2,7 @@ import {assetImage} from './asset-catalog.js';
 import {missionDone,terrainCount,inventionEvidence,PLANTS,HABITAT_PLANTS} from './model.js';
 import {normalizeFieldEvidence,FIELD_BAG_ROLES,FIELD_LEAVES} from './field-missions-state.js';
 import {BUD_TOTAL,budsFoundCount} from './winter-buds.js';
+import {josa} from './josa.js';
 
 const ENTRIES = [
  {title:'잎 모양 탐정',subtitle:'작은 잎에서 찾은 다른 점',asset:'cherry_leaf',color:'leaf',saw:'벚나무·은행나무·강아지풀의 잎을 자세히 살펴봤다.',found:'잎은 모양과 가장자리가 서로 달랐다. 같은 기준으로 모으면 식물을 나눌 수 있었다.',try:'새로 만난 잎도 모양과 가장자리로 나눠 보고 싶다.'},
@@ -28,7 +29,8 @@ function leafRecordSummary(s){
 }
 const entryRecord=(s,i)=>[
  leafRecordSummary(s),
- `${s.seasonalRecords.length}장의 계절 기록 · 겨울눈 ${budsFoundCount(s)}/${BUD_TOTAL}`,
+ // Bud hunting is optional (not a completion condition), so it shows only when the student actually found some.
+ `${s.seasonalRecords.length}장의 계절 기록${budsFoundCount(s)?` · 겨울눈 찾기(선택) ${budsFoundCount(s)}/${BUD_TOTAL}`:''}`,
  s.experimentAnswer==='air'?'공기 방울의 까닭을 찾았어':'식물과 환경을 이어 봤어',
  `물가 ${terrainCount(s,'water')}칸 · 풀밭 ${terrainCount(s,'grass')}칸 · 건조 ${terrainCount(s,'dry')}칸`,
  `${s.tests.length}번의 가방 시험`,
@@ -100,7 +102,7 @@ function sawThings(s,i,rows){
   case 3:{
    const made=Object.keys(ZONES).filter(t=>terrainCount(s,t)).map(t=>`${ZONES[t]} ${terrainCount(s,t)}칸`);
    const planted=['hyacinth','cherry','aloe'].filter(id=>Number.isInteger(s.garden?.[id])&&ZONES[s.terrain[s.garden[id]]]).map(id=>`${plantName(id)} → ${ZONES[s.terrain[s.garden[id]]]}`);
-   return [...(made.length?[`${made.join(' · ')}을 만들었어`]:[]),...(planted.length?[planted.join(', ')]:[]),...(e.garden.testedKey?['정원에 비를 내려 시험해 봤어']:[])];
+   return [...(made.length?[`${josa(made.join(' · '),'을/를')} 만들었어`]:[]),...(planted.length?[planted.join(', ')]:[]),...(e.garden.testedKey?['정원에 비를 내려 시험해 봤어']:[])];
   }
   case 4:{
    const trials=[...e.bag.tests.map(t=>({surface:t.surface,cover:t.cover,rolls:t.rolls,dry:t.notebookDry})),...s.tests.map(t=>({surface:t.surface,cover:t.cover,rolls:t.clean,dry:t.dry}))];

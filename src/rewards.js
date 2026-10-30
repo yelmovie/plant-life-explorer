@@ -3,6 +3,7 @@ import {QUESTS} from './inquiry.js';
 import {normalizeFieldEvidence} from './field-missions-state.js';
 import {assetImage} from './asset-catalog.js';
 import {icon} from './art.js';
+import {josa} from './josa.js';
 import {TRAIL_LENGTH,ENTRANCES,trailPoint} from './stage-map.js';
 
 export const REWARDS = [
@@ -41,7 +42,7 @@ export function worldMap(state,current=-1,recent=-1,interactive=true){
       const body=`${assetImage(r.asset,'world-building')}<span class="world-label"><b>${done?icon('check',15):i+1}</b><span>${r.name}${interactive?`<small>${done?`${icon('spark',12)}복구 완료`:icon(available?'unlock':'lock',12)}</small>`:''}</span>${stamps.map(k=>`<i class="world-stamp ${k}" aria-hidden="true">${(['direct','fixed'].includes(k)?assetImage('stamp_'+k,'stamp-img'):icon(STAMPS[k].icon,24))}</i>`).join('')}</span>${done?`<span class="world-light" aria-hidden="true">${icon('spark',16)}</span>`:''}${interactive&&i===next?'<span class="world-next">여기부터!</span>':''}`;
       const position=interactive?`--stage-x:${r.x}%;--stage-y:${i===REWARDS.length-1?20:r.y}%`:`left:${r.x}%;top:${r.y}%`;
       const attrs=`class="world-node ${done?'restored':'sleeping'} ${available?'available':'locked'} ${i===next?'next-stop':''} ${current===i?'chosen':''} ${recent===i?'just-restored':''}" style="${position}"`;
-      return interactive?`<button ${attrs} data-action="map-select" data-id="${i}" ${i===next?'aria-current="step"':''} ${available?'':`aria-disabled="true" data-reason="${REWARDS[mapPrerequisite(state,i)]?.name}을 깨우면 열려."`} aria-label="${label}">${body}</button>`:`<div ${attrs} role="img" aria-label="${label}">${body}</div>`;
+      return interactive?`<button ${attrs} data-action="map-select" data-id="${i}" ${i===next?'aria-current="step"':''} ${available?'':`aria-disabled="true" data-reason="${josa(REWARDS[mapPrerequisite(state,i)]?.name??'','을/를')} 깨우면 열려."`} aria-label="${label}">${body}</button>`:`<div ${attrs} role="img" aria-label="${label}">${body}</div>`;
     }).join('')}
     <div class="world-core ${rewardCount(state)===5?'charged':''}">${icon('leaf',27)}<span>${state.finished?'깨어난 정원':`${rewardCount(state)} / ${MISSIONS.length}`}</span></div>
     ${flowers?flowerTrail(state,recent):''}

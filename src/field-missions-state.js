@@ -88,7 +88,7 @@ function applyFieldActionCore(state,ui,action,id=''){
   e.leaves[a][b]=c;u.selected='';const ok=c===(p[a]?'yes':'no');if(!ok)return feedback(u,`리피: ${p.clue[a]} 지금 기준은 ${a==='edge'?'톱니가 있는지':'가늘고 긴지'}야. 다시 넣어 봐.`);
   // Short reply per card; the last card names the next thing to do instead of repeating praise.
   const left=FIELD_LEAVES.filter(q=>e.leaves[a][q.id]!==(q[a]?'yes':'no')).length;
-  return feedback(u,left?`✓ ${p.name} · ${a==='edge'?(c==='yes'?'톱니 있음':'톱니 없음'):(c==='yes'?'가늘고 긴 잎':'가늘고 길지 않은 잎')}. 남은 카드 ${left}장.`:a==='edge'?'✓ 톱니 기준으로 다 나눴어! 위의 “다음 도전”에서 같은 잎을 모양 기준으로 다시 나눠 봐.':'✓ 모양 기준으로도 다 나눴어! 아래 버튼으로 가서 처음 보는 잎에 기준을 써 보자.',true);
+  return feedback(u,left?`✓ ${p.name} · ${a==='edge'?(c==='yes'?'톱니 있음':'톱니 없음'):(c==='yes'?'가늘고 긴 잎':'가늘고 길지 않은 잎')}. 남은 카드 ${left}장.`:a==='edge'?'✓ 톱니 기준으로 다 나눴어! 위의 “다음 도전”에서 같은 잎을 모양 기준으로 다시 나눠 봐.':'✓ 모양 기준으로도 다 나눴어! 아래 “발견을 연구 노트에 담기”를 눌러 두 기준으로 나눈 기록을 확인하자.',true);
  }
  if(action==='field-season-predict'){
   if(!['tree','herb'].includes(a)||!['roots','none'].includes(b)||e.seasons.predictions[a])return '';
@@ -165,7 +165,7 @@ function applyFieldActionCore(state,ui,action,id=''){
   const b=e.bag;if(!fieldSteps(e,4)[1])return feedback(u,'두 부품을 하나씩 달고 비를 내려 본 뒤에 골라 줘.');
   if(a!=='cover')return feedback(u,'연잎 겉면만 달았을 때 공책은 어땠는지 시험 카드를 다시 봐.');
   b.compared={...b.comparisons.cover};b.delivered=fieldBagKey(b.design);
-  return feedback(u,`맞아! 덮개가 입구로 오는 비를 막아 공책을 지켰어. 연잎 겉면은 물방울을 굴려 보냈어. ${b.prediction==='cover'?'처음 예상이 맞았어!':'처음엔 겉면만 바꾸면 된다고 생각했지? 시험으로 생각을 고쳤어.'}`,true);
+  return feedback(u,`맞아! 덮개가 입구로 오는 비를 막아 공책을 지켰어. 연잎 겉면은 물방울을 굴려 보냈어. ${b.prediction==='cover'?'처음 예상을 시험으로 확인했어!':'처음엔 겉면만 바꾸면 된다고 생각했지? 시험으로 생각을 고쳤어.'}`,true);
  }
  return false;
 }

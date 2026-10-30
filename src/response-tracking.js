@@ -1,4 +1,5 @@
 import {recordResponse} from './learning-records.js';
+import {josa} from './josa.js';
 const plantNames={cherry:'벚나무',ginkgo:'은행나무',grass:'강아지풀',hyacinth:'부레옥잠',aloe:'알로에',sowthistle:'씀바귀',maple:'단풍나무',pine:'소나무',camellia:'동백나무'};
 const labels={yes:'톱니 있음',no:'톱니 없음',roots:'뿌리가 남음',none:'아무것도 없음',bubbles:'공기 방울이 나옴',air:'공기',soil:'흙',water:'물가',grass:'풀밭',dry:'건조 구역',growth:'살아 있던 부분에서 다시 자람',gone:'모두 사라짐',roll:'겉면의 물방울이 굴러감',close:'입구도 저절로 막힘',surface:'겉면',cover:'입구 덮개',float:'뜸',sink:'가라앉음',trunk:'줄기와 뿌리',root:'뿌리',leaf:'새로 나온 잎',branches:'같은 가지에서 새눈이 돋음',rootbud:'땅속 뿌리에서 새싹이 돋음',color:'꽃 색깔만 같음',pond:'물이 고이는 자리',meadow:'물이 배어드는 자리',ridge:'물이 빠지는 자리'};
 const named=id=>plantNames[id]||labels[id]||id;
@@ -22,7 +23,7 @@ export function coreResponse(s,u,a,id) {
     case 'habitat':if(!plantNames[selected]||s.habitats[selected]===id)return;return spec('habitat:'+selected,id===({hyacinth:'water',aloe:'dry',cherry:'grass'})[selected],`${named(selected)}의 환경`,'application');
     case 'habitat-feature':return spec('feature:'+selected,id===selected,`${named(selected)}의 특징`,'application');
     case 'habitat-answer':if(!['hyacinth','aloe','cherry'].includes(selected)||!['hyacinth','aloe','cherry'].includes(id)||s.habitats[selected]!==({hyacinth:'water',aloe:'dry',cherry:'grass'})[selected])return;return spec('reason:'+selected,id===selected,`${named(selected)}의 특징과 생활 연결`,'application');
-    case 'garden-answer':if(!Number.isInteger(s.garden[selected]))return;return spec('garden:'+selected,id===selected&&s.terrain[s.garden[selected]]===({hyacinth:'water',aloe:'dry',cherry:'grass'})[selected],`${named(selected)}을 심은 까닭`,'application');
+    case 'garden-answer':if(!Number.isInteger(s.garden[selected]))return;return spec('garden:'+selected,id===selected&&s.terrain[s.garden[selected]]===({hyacinth:'water',aloe:'dry',cherry:'grass'})[selected],`${josa(named(selected),'을/를')} 심은 까닭`,'application');
     case 'design-answer':if(!s.design.observed&&!s.design.linked)return;return spec('design-answer',id==='roll','연잎의 특징을 쓰는 방법');
     case 'test-predict':if(s.testPrediction)return;return spec('bag-prediction',id==='cover','비 오는 가방 예상','prediction',id==='surface'?'겉면만 바꾸면 됨':'입구로 오는 비도 막아야 함');
     case 'test-explain':{const last=s.tests.at(-1),before=s.tests.slice(0,-1).reverse().find(t=>Number(t.surface!==s.design.surface)+Number(t.cover!==s.design.cover)===1);if(!last||!before||last.key!==`${s.design.surface}:${s.design.cover}`)return;const part=before.surface!==s.design.surface?'surface':'cover',record=spec('test:'+last.key,id===part,'비교한 가방의 바뀐 부품');return ()=>{record();if(id==='cover'&&part==='cover')revise(s,m,['field:bag-prediction','core:bag-prediction'],'입구로 오는 비도 막아야 함');};}
@@ -42,7 +43,7 @@ export function fieldResponse(s,a,id) {
     case 'field-test-model':{if(!e.float.predictions[x]||e.float.tested.includes(x))return;const seen=x==='air'?'float':'sink',record=spec('float-observed:'+x,true,`${x==='air'?'공기 방':'꽉 찬'} 모형 관찰`,'observation',seen);return ()=>{record();if(e.float.predictions[x]!==seen)revise(s,m,['field:float-predict:'+x],named(seen));};}
     case 'field-model-reason':if(e.float.tested.length<2)return;return spec('float-reason',x==='air','뜨는 결과와 공기 공간 연결','observation',x==='air'?'공기 방 모형':'꽉 찬 모형');
     case 'field-place-environment':return spec('environment:'+y,x===({pond:'water',meadow:'grass',ridge:'dry'})[y],`${named(y)}의 환경`,'application',x);
-    case 'field-place-plant':return spec('plant:'+x,y===({hyacinth:'pond',cherry:'meadow',aloe:'ridge'})[x],`${named(x)}을 심을 자리`,'application');
+    case 'field-place-plant':return spec('plant:'+x,y===({hyacinth:'pond',cherry:'meadow',aloe:'ridge'})[x],`${josa(named(x),'을/를')} 심을 자리`,'application');
     case 'field-bag-predict':if(e.bag.prediction)return;return spec('bag-prediction',x==='cover','비 오는 가방 예상','prediction',x==='surface'?'겉면만 바꾸면 됨':'입구로 오는 비도 막아야 함');
     // Finding that the cover keeps the notebook dry revises a first 'surface only' prediction.
     case 'field-bag-answer':{if(!['surface','cover'].includes(x))return;const record=spec('bag-answer',null,'공책을 지킨 부품','observation',x==='cover'?'덮개':'연잎 겉면');return ok=>{record(ok);if(ok)revise(s,m,['field:bag-prediction','core:bag-prediction'],'입구로 오는 비도 막아야 함');};}
