@@ -19,7 +19,20 @@ wrangler pages deploy dist --project-name leafy-garden --branch main
 
 이 Mac에는 시스템 Node가 없다. 도구는 외장 SSD에만 둔다: Node `DevCaches/tools/node-v24.22.2-darwin-arm64`, wrangler `DevCaches/tools/wrangler-4.154.0`(exFAT라 `--no-bin-links`로 설치). wrangler 로그인 정보는 `HOME=DevCaches/tools/wrangler-home`으로 실행해 SSD에 저장한다. 빌드는 `ESBUILD_MODULE_PATH`를 그 wrangler의 `node_modules/esbuild`로 지정한다. exFAT가 만드는 `._*` 파일은 업로드 전에 `dist`에서 지운다.
 
-## 최근 배포 — 2026-10-31 (본 탐구 직접 풀기·자동 진행 관찰·가방 두 부품 판정)
+## 최근 배포 — 2026-10-31 (2) (남은 활동 안내·손가락 포인터, 손가락은 답을 가리키지 않음)
+
+- 기능 커밋: `5efdd28`(남은 활동 안내·손가락 포인터 추가, 손가락은 답을 가리키지 않게) + `3e34dca`(.gitattributes) + `4747500`(글꼴 서브셋 재생성). 모두 `sort-board-drag`, GitHub push 안 함. 배포 빌드 커밋은 `4747500f0fb48618589d5fce220631e780717712`.
+- 배포 주소: https://68a75e81.leafy-garden.pages.dev
+- 운영 주소: https://leafy-garden.pages.dev
+- 되돌릴 대상: 직전 배포 https://be2222fc.leafy-garden.pages.dev (커밋 `8687094`)
+- 바뀐 것: 왼쪽 "오늘의 연구" 패널에 남은 활동 목록(✓/○)과 다음에 누를 조작을 짚는 손가락·말풍선. 손가락은 선택지 버튼을 가리키지 않고(잎 살피기는 관찰 그림 아래쪽, 분류 오답은 결과 문장, 질문 문장은 위에서 내려와 짚음) 틀린 잎 이름도 말하지 않는다.
+- 빌드 183파일·120에셋·45,732,809바이트, esbuild 번들(전역 wrangler 4.151.1에 포함된 esbuild 0.28.2를 `ESBUILD_MODULE_PATH`로 지정), `dirty=false`.
+- 배포 전 Windows(Node v24.11.0)에서 JavaScript 48개 문법 검사, 154/154 테스트 통과. 글꼴 서브셋은 이 PC의 Python 3.14.0·fontTools 4.64.0으로 재생성(`힣` U+D7A3 누락 경고는 글꼴 원본에 없는 문자라 화면 문구와 무관). 브라우저는 QA 포트 4351, 1280×800에서 1·2·5·6번 활동의 손가락 위치만 확인했고, 브라우저 테스트(`*.browser.mjs`)와 실물 태블릿 조작은 미실행.
+- 운영 주소의 `build-info.json` 커밋이 `4747500`·`dirty=false`이고 `/`(index.html)와 `src/app.bundle.js`의 SHA-256이 로컬 dist와 같음을 확인했다. 번들 안 한글은 `\uXXXX`로 저장되므로 문자열 검색으로는 보이지 않는다. 이전에 연 기기는 첫 접속 한 번은 옛 화면이 보이고 다음 새로고침부터 새 버전으로 바뀐다.
+- 배포 도구: 이 Windows PC(`C:\Users\bongb`)에 전역 설치된 wrangler 4.151.1로 배포했고, 로그인 정보는 `%APPDATA%\xdg.config\.wrangler\config`에 있다(Mac의 SSD `wrangler-home`과 별개).
+- 함께 정리: Mac이 `.git` 안에 남긴 `._*` 파일 6개를 지웠다(Windows에서 Git 명령마다 "non-monotonic index" 오류가 나던 원인). `.gitattributes`(`* text=auto eol=lf` + 바이너리 지정)를 추가했고 `git add --renormalize .` 결과 내용 변경은 없었다.
+
+## 이전 배포 — 2026-10-31 (본 탐구 직접 풀기·자동 진행 관찰·가방 두 부품 판정)
 
 - 기능 커밋: `8687094fead9f61b64673ce9fff75c1459321222` (`sort-board-drag`, GitHub push 안 함). 같은 배포에 `03da7ad`(오늘 기능 전체) 포함.
 - 배포 주소: https://be2222fc.leafy-garden.pages.dev

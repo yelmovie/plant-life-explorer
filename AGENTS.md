@@ -32,15 +32,15 @@
 ## B. 실행 환경
 
 - Node.js: 버전 조건 **미지정**(`package.json`에 `engines` 없음, `.nvmrc`·`.node-version`·`.tool-versions` 없음). 임의로 버전을 고정하지 않는다.
-  - 참고로 확인된 버전: Windows `v24.14.0`(npm 11.9.0, 2026-10-30 확인), Mac은 SSD의 `DevCaches/tools/node-v24.22.2-darwin-arm64`(`docs/DEPLOYMENT.md` 기록).
+  - 참고로 확인된 버전: Windows `v24.14.0`(npm 11.9.0, 2026-10-30, `C:\Users\user`)·`v24.11.0`(2026-10-31, `C:\Users\bongb`), Mac은 SSD의 `DevCaches/tools/node-v24.22.2-darwin-arm64`(`docs/DEPLOYMENT.md` 기록).
   - `npm test`는 `node --test tests/*.test.mjs`이다. Windows의 npm은 cmd.exe로 스크립트를 실행하며 cmd는 `*`를 펼치지 않으므로, Node 자체의 테스트 파일 glob 지원(Node 21 이상)에 의존한다. 그보다 낮은 Node에서는 Windows에서 테스트가 실패할 수 있다.
 - 패키지 관리자: npm(스크립트 실행용). 설치할 의존성이 없으므로 `npm install`/`npm ci`가 필요 없다. lockfile을 새로 만들거나 패키지 관리자를 바꾸지 않는다.
 - 선택 도구(앱 실행·테스트·빌드에는 필수 아님):
   - esbuild: `npm run build`가 찾으면 JS·CSS를 하나로 묶고 압축한다. 없으면 경고만 내고 묶지 않은 모듈로 빌드한다. wrangler에 포함된 esbuild를 `ESBUILD_MODULE_PATH`로 지정해 쓴다.
-  - wrangler 4.154.0: 배포용. Mac은 SSD의 `DevCaches/tools/wrangler-4.154.0`(exFAT라 `--no-bin-links`로 설치), 로그인 정보는 `HOME=DevCaches/tools/wrangler-home`. 이 Windows PC에서는 PATH에 wrangler가 없음을 확인했다.
+  - wrangler 4.154.0: 배포용. Mac은 SSD의 `DevCaches/tools/wrangler-4.154.0`(exFAT라 `--no-bin-links`로 설치), 로그인 정보는 `HOME=DevCaches/tools/wrangler-home`. `C:\Users\user` 계정의 Windows PC에서는 PATH에 wrangler가 없었다. `C:\Users\bongb` 계정의 Windows PC(2026-10-31 확인)에는 전역 wrangler 4.151.1이 설치·로그인되어 있어(`%APPDATA%\xdg.config\.wrangler`) 여기서도 배포할 수 있고, 그 안의 esbuild 0.28.2(win32-x64)를 `ESBUILD_MODULE_PATH=C:/Users/bongb/AppData/Roaming/npm/node_modules/wrangler/node_modules/esbuild`로 빌드에 쓸 수 있다.
   - sharp: `npm run assets:optimize`, `scripts/check-new-alpha.mjs`에서만 사용(`SHARP_MODULE_PATH`).
   - Playwright + Chrome: `tests/*.browser.mjs`에서만 사용(`PLAYWRIGHT_MODULE_PATH`, `BROWSER_EXECUTABLE`).
-  - Python + fontTools: `scripts/subset-fonts.py`에서만 사용. 이 Windows PC에는 Python이 설치되어 있지 않다(Microsoft Store 실행 스텁만 있음).
+  - Python + fontTools: `scripts/subset-fonts.py`에서만 사용. `C:\Users\user` 계정의 Windows PC에는 Python이 없었다(Microsoft Store 실행 스텁만 있음). `C:\Users\bongb` 계정의 Windows PC에는 Python 3.14.0과 fontTools 4.64.0·brotli가 있어 서브셋을 만들 수 있다(2026-10-31 확인).
   - Blender: `scripts/blender-*.py`(3D 모형 제작용, 앱 실행과 무관).
 - Python·Flutter 앱 코드는 없다. Python은 위 보조 스크립트에만 쓰인다.
 
@@ -154,11 +154,11 @@ Git에서 제외되어 있어 **SSD가 유일한 사본일 수 있는** 것들�
 
 - SSD는 exFAT이다. 심볼릭 링크를 만들지 않는다(`core.symlinks=false`, build는 심볼릭 링크를 만나면 중단한다). 파일 권한(`chmod`)은 의미가 없다(`core.filemode=false`).
 - exFAT는 소유자를 기록하지 않아 Git이 `dubious ownership` 오류를 낸다. 전역 설정을 바꾸지 말고 명령마다 지정한다: `git -c "safe.directory=F:/iscreammedia_sc34/3 leave" status`(Mac에서는 그 OS의 실제 경로). `scripts/build.mjs`도 같은 방식이다.
-- Mac은 exFAT에 `._*` 파일을 만든다. 배포 전 `dist/`에서 제거한다(`docs/DEPLOYMENT.md`). 원본 폴더에서는 내용을 확인하지 않고 일괄 삭제하지 않는다.
+- Mac은 exFAT에 `._*` 파일을 만든다. 배포 전 `dist/`에서 제거한다(`docs/DEPLOYMENT.md`). `.git/` 안에 생긴 `._*`는 Windows에서 Git 명령마다 "non-monotonic index" 오류를 내므로 지운다(2026-10-31에 6개 삭제). 원본 폴더에서는 내용을 확인하지 않고 일괄 삭제하지 않는다.
 
 ### 줄바꿈
 
-- 저장소에 `.gitattributes`·`.editorconfig`가 없다. 이 Windows의 전역 Git 설정은 `core.autocrlf=true`이고 Mac 설정은 확인하지 않았다. 그래서 OS를 바꾸면 내용이 같아도 줄바꿈 차이로 파일이 수정됨으로 보일 수 있다(`docs/DEPLOYMENT.md`에 `build-info.json`의 `dirty=true`가 CRLF/LF 차이 때문이라는 기록이 있다).
+- 2026-10-31에 루트에 `.gitattributes`(`* text=auto eol=lf` + 바이너리 확장자)를 추가했다. `.editorconfig`는 없다. 이 Windows의 전역 Git 설정은 `core.autocrlf=true`이고 Mac 설정은 확인하지 않았다. 그래서 OS를 바꾸면 내용이 같아도 줄바꿈 차이로 파일이 수정됨으로 보일 수 있다(`docs/DEPLOYMENT.md`에 `build-info.json`의 `dirty=true`가 CRLF/LF 차이 때문이라는 기록이 있다).
 - 전체 파일 줄바꿈 변환, 전역 Git 설정 변경을 임의로 하지 않는다.
 - 제안(사용자 승인 후에만 적용): 루트에 `* text=auto eol=lf`와 바이너리 확장자(`*.webp *.png *.glb *.mp3 *.mp4 *.woff2 *.zip binary`)를 지정한 `.gitattributes`를 추가하고, 적용 시 `git add --renormalize .` 결과를 별도 커밋으로 검토한다.
 
