@@ -33,6 +33,12 @@ function comparisonRecords(b){
 export const fieldBagTrial=d=>({...copy(d),key:fieldBagKey(d),rolls:d.surface==='lotus',notebookDry:d.surface==='lotus'&&d.cover==='flap'});
 // The three bags the student must rain on in step 2: lotus only, cover only, both.
 export const FIELD_BAG_VARIANTS=['lotus:open','plain:flap','lotus:flap'];
+export const BAG_NAMES={'plain:open':'처음','lotus:open':'연잎 겉면만','plain:flap':'덮개만','lotus:flap':'연잎 겉면 + 덮개'};
+const bagPairFor=(tests,part)=>{
+ const other=BAG_PARTS.find(k=>k!==part);
+ for(let i=tests.length-1;i>0;i--)for(let j=i-1;j>=0;j--){const x=tests[j],y=tests[i];if(x[part]!==y[part]&&x[other]===y[other])return {before:x.key,after:y.key,part};}
+ return null;
+};
 export function normalizeFieldEvidence(value){
  const v=obj(value),l=obj(v.leaves),s=obj(v.seasons),f=obj(v.float),g=obj(v.garden),b=obj(v.bag),c=obj(b.compared);
  return {version:1,
@@ -153,24 +159,36 @@ function applyFieldActionCore(state,ui,action,id=''){
   if(!b.tests.length||b.tests.at(-1).key!==fieldBagKey(b.design))return feedback(u,'지금 가방에 먼저 비를 내려 봐. 하나씩 바꿔야 무엇 때문인지 알 수 있어.');
   b.design[a]=on?(a==='surface'?'plain':'open'):value;b.delivered='';return feedback(u,`${a==='surface'?'연잎 겉면을':'덮개를'} ${on?'떼었어':'달았어'}! 구름을 눌러 비를 내려 봐.`,true);
  }
+ // A bag card puts that ready-made bag on the stand; its rain starts by itself (no attaching or removing parts).
+ if(action==='field-bag-try'){
+  const bag=e.bag,[surface,cover]=String(id).split(':'),key=`${surface}:${cover}`;if(!FIELD_BAG_VARIANTS.includes(key))return '';
+  if(!bag.prediction)return feedback(u,'비를 내리기 전에 무엇을 바꾸면 될지 먼저 예상해 줘.');
+  if(!bag.tests.length)return feedback(u,'먼저 처음 가방에 비를 내려 봐. 그래야 무엇이 달라지는지 견줄 수 있어.');
+  bag.design={surface,cover};bag.delivered='';
+  if(bag.tests.at(-1)?.key===key)return feedback(u,`${BAG_NAMES[key]} 가방은 방금 비를 맞았어. 다른 가방 카드를 눌러 봐.`);
+  u.bagAutoRain=true;return feedback(u,`${BAG_NAMES[key]} 가방을 올렸어. 같은 비가 내려!`,true);
+ }
  if(action==='field-bag-test'){
   const b=e.bag;if(!b.prediction)return feedback(u,'비를 내리기 전에 무엇을 바꾸면 될지 먼저 예상해 줘.');const t=fieldBagTrial(b.design),before=b.tests.at(-1);
-  if(before?.key===t.key)return feedback(u,'이 가방은 벌써 시험했어. 부품 하나를 달거나 떼고 다시 비를 내려 봐.');
+  if(before?.key===t.key)return feedback(u,'이 가방은 벌써 시험했어. 다른 가방 카드를 눌러 봐.');
   b.tests.push(t);if(b.tests.length>16)b.tests.shift();b.delivered='';
-  const part=before&&BAG_PARTS.filter(k=>before[k]!==t[k]).length===1?BAG_PARTS.find(k=>before[k]!==t[k]):'';
-  if(part)b.comparisons[part]={before:before.key,after:t.key,part};
+  // Each part's comparison is any two rained bags that differ only in that part, newest first, whatever order they were tried in.
+  for(const part of BAG_PARTS){const pair=bagPairFor(b.tests,part);if(pair)b.comparisons[part]=pair;}
   return feedback(u,t.notebookDry?'연잎 겉면은 물방울을 굴려 보내고 덮개는 입구를 막았어. 공책이 뽀송해!':t.rolls?'물방울은 또르르 굴러가는데, 열린 입구로 비가 들어가 공책이 젖었어.':t.cover==='flap'?'덮개로 입구는 막았는데, 보통 천에 빗물이 스며들어 공책이 젖었어.':'겉면에 물기가 남고, 입구로 비가 들어가 공책이 젖었어.',true);
  }
  if(action==='field-bag-reset'){
   const b=e.bag;b.design={surface:'plain',cover:'open'};b.tests=[];b.comparisons={};b.compared={before:'',after:'',part:''};b.delivered='';u.stage=0;return feedback(u,'처음 가방으로 돌아왔어. 다시 비를 내려 보자.',true);
  }
- if(action==='field-bag-answer'){
-  const b=e.bag;if(!fieldSteps(e,4)[1])return feedback(u,'연잎만, 덮개만, 둘 다 단 가방에 비를 내려 본 뒤에 골라 줘.');
-  if(a==='surface')return feedback(u,'연잎 겉면만 단 가방 카드를 다시 봐. 열린 입구로 비가 들어가 공책이 젖었어.');
-  if(a==='cover')return feedback(u,'덮개만 단 가방 카드를 다시 봐. 보통 천에 빗물이 스며들어 공책이 젖었어.');
-  if(a!=='both')return '';
-  b.compared={...b.comparisons.cover};b.delivered=fieldBagKey(b.design);
-  return feedback(u,`맞아! 연잎 겉면은 빗물이 천에 스며들지 않게 굴려 보내고, 덮개는 입구로 오는 비를 막아. 둘이 함께 공책을 지켰어. ${b.prediction==='cover'?'처음 예상을 시험으로 확인했어!':'처음엔 겉면만 바꾸면 된다고 생각했지? 시험으로 생각을 고쳤어.'}`,true);
+ // Last step: the finished bag (lotus surface + cover) turns on a stand. One full turn, then 마무리 delivers it.
+ if(action==='field-bag-turned'){
+  if(!fieldSteps(e,4)[1]||u.bagTurned)return '';u.bagTurned=true;return feedback(u,'한 바퀴 다 돌려 봤어! 연잎 겉면과 덮개가 다 붙어 있지? 마무리를 눌러 줘.',true);
+ }
+ if(action==='field-bag-finish'){
+  const b=e.bag;if(!fieldSteps(e,4)[1])return feedback(u,'연잎만, 덮개만, 둘 다 단 가방에 비를 내려 본 뒤에 마무리하자.');
+  if(b.delivered)return '';
+  if(!u.bagTurned)return feedback(u,'완성 가방을 한 바퀴 돌려 본 뒤에 마무리하자. 가방을 끌거나 화살표를 눌러 봐.');
+  b.design={surface:'lotus',cover:'flap'};b.compared={...b.comparisons.cover};b.delivered=fieldBagKey(b.design);
+  return feedback(u,`완성! 연잎 겉면은 빗물을 굴려 보내고, 덮개는 입구를 막아. 둘이 함께 공책을 지켰어. ${b.prediction==='cover'?'처음 예상을 시험으로 확인했어!':'처음엔 겉면만 바꾸면 된다고 생각했지? 시험으로 생각을 고쳤어.'}`,true);
  }
  return false;
 }

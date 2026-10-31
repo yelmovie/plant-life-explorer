@@ -27,7 +27,7 @@ const hands=[
  [['.garden-cloud-btn',44,true],['.field-garden-zone',44,false]],
  [['[data-bag-cloud]',44,true],['.bag-canvas > .bag-art',100,true]],
  [['.bag-upgrade',44,true],['[data-bag-cloud]',44,true]],
- [['[data-action="field-bag-answer"]',44,true]],
+ [['[data-bag-spinner]',100,true],['[data-bag-spin]',44,true],['[data-action="field-bag-finish"]',44,true]],
 ];
 for(let m=0;m<5;m++)for(let stage=0;stage<3;stage++)scenarios.push([`field-${m+1}-${stage+1}`,m*2,{stage,hands:hands[m*3+stage]}]);
 const inProgress={...completed.fieldEvidence,

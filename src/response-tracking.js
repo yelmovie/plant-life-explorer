@@ -45,7 +45,7 @@ export function fieldResponse(s,a,id) {
     case 'field-place-environment':return spec('environment:'+y,x===({pond:'water',meadow:'grass',ridge:'dry'})[y],`${named(y)}의 환경`,'application',x);
     case 'field-place-plant':return spec('plant:'+x,y===({hyacinth:'pond',cherry:'meadow',aloe:'ridge'})[x],`${josa(named(x),'을/를')} 심을 자리`,'application');
     case 'field-bag-predict':if(e.bag.prediction)return;return spec('bag-prediction',x==='cover','비 오는 가방 예상','prediction',x==='surface'?'겉면만 바꾸면 됨':'입구로 오는 비도 막아야 함');
-    // Finding that the cover keeps the notebook dry revises a first 'surface only' prediction.
-    case 'field-bag-answer':{if(!['surface','cover','both'].includes(x))return;const record=spec('bag-answer',null,'공책을 지킨 부품','observation',{surface:'연잎 겉면',cover:'덮개',both:'둘 다 함께'}[x]);return ok=>{record(ok);if(ok)revise(s,m,['field:bag-prediction','core:bag-prediction'],'입구로 오는 비도 막아야 함');};}
+    // Delivering the finished bag (lotus surface + cover) revises a first 'surface only' prediction.
+    case 'field-bag-finish':{const record=spec('bag-finish',true,'완성 가방','observation','연잎 겉면 + 덮개');return ok=>{if(!ok)return;record(true);revise(s,m,['field:bag-prediction','core:bag-prediction'],'입구로 오는 비도 막아야 함');};}
   }
 }

@@ -59,7 +59,7 @@ test('정원은 비로 땅을 만들고 맞는 땅에 심어 시험하며 같은
  drop('environment:grass','environment:meadow');assert.equal(fieldMissionReady(s,3),true);act('field-garden-ground');assert.equal(fieldMissionReady(s,3),true);
  act('field-place-environment','water:meadow');assert.equal(fieldMissionReady(s,3),false,'실제로 환경을 바꾸면 이전 시험은 더 이상 유효하지 않다');
 });
-test('가방 의뢰는 첫 비·연잎만·덮개만·둘 다 비 시험·공책을 지킨 것 고르기를 요구한다',()=>{
+test('가방 의뢰는 첫 비·연잎만·덮개만·둘 다 비 시험·완성 가방 한 바퀴 돌려 보기·마무리를 요구한다',()=>{
  const {s,act}=setup(8),bag=()=>s.fieldEvidence.bag;act('field-bag-test');assert.equal(bag().tests.length,0,'예상 전에는 비를 내리지 않는다');
  act('field-bag-predict','surface');act('field-bag-test');act('field-bag-test');assert.equal(bag().tests.length,1);assert.deepEqual(fieldSteps(s.fieldEvidence,4),[true,false,false]);
  act('field-bag-upgrade','surface');act('field-bag-test');assert.equal(bag().comparisons.surface.part,'surface');
@@ -67,13 +67,30 @@ test('가방 의뢰는 첫 비·연잎만·덮개만·둘 다 비 시험·공책
  assert.equal(bag().tests.at(-1).notebookDry,true,'둘 다 달면 공책이 뽀송');assert.deepEqual(fieldSteps(s.fieldEvidence,4),[true,false,false],'덮개만 단 가방은 아직');
  act('field-bag-upgrade','surface');assert.deepEqual(bag().design,{surface:'plain',cover:'flap'},'연잎 겉면을 뗄 수 있다');act('field-bag-test');
  assert.equal(bag().tests.at(-1).notebookDry,false,'덮개만 달면 천에 빗물이 스며든다');assert.deepEqual(fieldSteps(s.fieldEvidence,4),[true,true,false]);
- assert.match(act('field-bag-answer','surface'),/연잎 겉면만 단 가방/);assert.match(act('field-bag-answer','cover'),/덮개만 단 가방/);assert.equal(fieldMissionReady(s,4),false);
- assert.match(act('field-bag-answer','both'),/둘이 함께.*처음엔 겉면만/);assert.equal(fieldMissionReady(s,4),true);
+ assert.match(act('field-bag-finish'),/한 바퀴 돌려 본 뒤에/,'돌려 보기 전에는 마무리하지 않는다');assert.equal(fieldMissionReady(s,4),false);
+ assert.match(act('field-bag-turned'),/한 바퀴 다 돌려 봤어/);assert.equal(act('field-bag-turned'),'','두 번째 바퀴는 알리지 않는다');assert.equal(fieldMissionReady(s,4),false,'돌려 보기만으로는 끝나지 않는다');
+ assert.match(act('field-bag-finish'),/둘이 함께.*처음엔 겉면만/);assert.equal(fieldMissionReady(s,4),true);
+ assert.deepEqual(bag().design,{surface:'lotus',cover:'flap'},'마무리한 가방은 연잎 겉면 + 덮개');assert.equal(bag().delivered,'lotus:flap');assert.equal(bag().compared.part,'cover');
+ assert.equal(act('field-bag-finish'),'','이미 마무리한 가방은 다시 넘기지 않는다');
+});
+test('가방 카드: 한 번 누르면 그 가방이 올라가고, 어떤 순서로 비를 내려도 세 가방을 마치면 비교가 채워진다',()=>{
+ const {s,u:ui,act}=setup(8),bag=()=>s.fieldEvidence.bag;
+ assert.match(act('field-bag-try','lotus:flap'),/먼저 무엇을 바꾸면|예상/,'예상 전에는 가방을 올리지 않는다');
+ act('field-bag-predict','surface');assert.match(act('field-bag-try','lotus:flap'),/처음 가방에 비를/,'처음 가방 비가 먼저다');
+ act('field-bag-test');
+ assert.match(act('field-bag-try','lotus:flap'),/덮개 가방을 올렸어/);assert.deepEqual(bag().design,{surface:'lotus',cover:'flap'});assert.equal(ui.fieldMission.bagAutoRain,true,'카드를 누르면 비가 저절로 시작된다');
+ act('field-bag-test');assert.equal(act('field-bag-try','plain:open'),'','처음 가방 카드는 없다');
+ act('field-bag-try','plain:flap');act('field-bag-test');act('field-bag-try','lotus:open');act('field-bag-test');
+ assert.deepEqual(fieldSteps(s.fieldEvidence,4),[true,true,false],'두 부품을 함께 바꾼 순서여도 비교가 채워진다');
+ for(const part of ['surface','cover']){const c=bag().comparisons[part],k=c.before.split(':'),m=c.after.split(':');assert.equal(['surface','cover'].filter((p,i)=>k[i]!==m[i]).join(),part);}
+ assert.match(act('field-bag-try','lotus:open'),/방금 비를 맞았어/,'방금 시험한 가방은 다시 비를 내리지 않는다');
+ act('field-bag-turned');assert.match(act('field-bag-finish'),/둘이 함께/);assert.equal(fieldMissionReady(s,4),true);
 });
 test('가방은 한 번에 한 부품만 달 수 있어 두 부품을 함께 바꾼 시험이 생기지 않는다',()=>{
  const {s,act}=setup(8);act('field-bag-predict','cover');act('field-bag-test');act('field-bag-upgrade','surface');
  assert.match(act('field-bag-upgrade','cover'),/먼저 비를 내려/);assert.equal(s.fieldEvidence.bag.design.cover,'open');
  act('field-bag-test');assert.equal(fieldBagPair(s.fieldEvidence.bag).part,'surface');assert.equal(fieldSteps(s.fieldEvidence,4)[1],false);
+ assert.equal(act('field-bag-turned'),'','세 가방을 다 시험하기 전에는 완성 가방을 돌려 보지 않는다');assert.match(act('field-bag-finish'),/비를 내려 본 뒤에 마무리/);
 });
 test('선택 후 놓기와 드래그는 같은 결과를 만들고 무관한 조합은 상태를 바꾸지 않는다',()=>{
  const a=setup(0),b=setup(0);a.act('field-select','lens');a.act('field-drop','scan:maple:edge');b.drop('lens','scan:maple:edge');assert.deepEqual(a.s.fieldEvidence,b.s.fieldEvidence);

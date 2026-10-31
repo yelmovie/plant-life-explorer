@@ -135,16 +135,17 @@ try{
  await completePage();await missionDone(3);
 
  await enter(4);await a('field-bag-predict','surface');
- // Hand: one cloud tap rains on the bag; each upgrade card goes on before its own rain.
+ // Hand: one cloud tap rains on the first bag.
  const rain=async n=>{const [cx,cy]=await center(page.locator('[data-bag-cloud]'));await page.mouse.click(cx,cy);await evidence(`JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.bag.tests.length===${n}`);};
  await rain(1);await snap('bag-plain-test');
- await stage(1);await a('field-bag-upgrade','surface');
- // A second part cannot go on before the rain: one change per trial.
- await page.locator('[data-action="field-bag-upgrade"][data-id="cover"]').tap({force:true});assert.equal((await saved()).fieldEvidence.bag.design.cover,'open');
- await rain(2);await a('field-bag-upgrade','cover');await rain(3);
- const trials=(await saved()).fieldEvidence.bag.tests;assert.deepEqual(trials.map(t=>t.notebookDry),[false,false,true]);assert.deepEqual(trials.map(t=>t.rolls),[false,true,true]);
- await stage(2);await a('field-bag-answer','surface');await hint();await a('field-bag-answer','cover');
- report.checks.push('One upgrade per rain: plain → lotus surface → cover; only the cover keeps the notebook dry');
+ await stage(1);
+ // One tap on a bag card puts that bag on the stand and rains on it by itself.
+ for(const [k,n] of [['lotus:open',2],['plain:flap',3],['lotus:flap',4]]){await a('field-bag-try',k);await evidence(`JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.bag.tests.length===${n}`);}
+ const trials=(await saved()).fieldEvidence.bag.tests;assert.deepEqual(trials.map(t=>t.notebookDry),[false,false,false,true]);assert.deepEqual(trials.map(t=>t.rolls),[false,true,false,true]);
+ await stage(2);await a('field-bag-finish');await hint();
+ for(let i=0;i<4;i++){await page.locator('[data-bag-spin="1"]').tap();await page.waitForTimeout(520);}
+ await page.locator('.finish-bench.turned').waitFor();await a('field-bag-finish');await evidence(`JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.bag.delivered==='lotus:flap'`);
+ report.checks.push('One tap per bag card: plain → lotus only → cover only → both; only both keep the notebook dry; the finished bag turns once on the stand, then 마무리');
  // The field already built and tested the bag, so the record page opens ready with a summary.
  await explore();assert.equal((await saved()).page,9);assert.equal((await saved()).testPrediction,'surface');assert.equal(await page.locator('.invention-summary').count(),1);
  await snap('invention-compared');await completePage();await missionDone(4);

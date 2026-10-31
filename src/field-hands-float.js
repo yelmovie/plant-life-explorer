@@ -49,16 +49,22 @@ export function mountFloatHands(root,ui,onAction){
  // Step 2: push a model under and hold. Air fights back; the filled one is already on the bottom.
  const gauge=root.querySelector('[data-press-gauge]');
  const pushable=(m,id)=>{let full=false;
-  press(m,{
+  const h={
    can:()=>!m.classList.contains('settling'),
    start:()=>{full=false;m.classList.remove('pop');m.classList.add('pushing');gauge?.classList.add('on');if(id==='solid')speak('이미 바닥이라 더 내려가지 않아. 누르지 않아도 가라앉아 있네.');},
    tick:p=>{gauge?.style.setProperty('--p',id==='air'?p:p*.12);if(id!=='air')return;
     m.style.transform=`translateY(${p*tank.clientHeight*.36}px)`;m.style.setProperty('--shake',p);
     if(p>=1&&!full){full=true;gauge?.classList.add('full');speak('물이 위로 밀어 올려! 손이 떨려!');}},
    end:p=>{m.classList.remove('pushing');gauge?.classList.remove('on','full');gauge?.style.setProperty('--p',0);if(id!=='air')return;
-    m.style.removeProperty('--shake');m.classList.add('settling','pop');m.style.transform='';later(()=>m.classList.remove('settling'),950);later(()=>ripple(xOf(m)),300);
+    m.style.removeProperty('--shake');m.classList.add('settling','pop');m.style.transform='';later(()=>m.classList.remove('settling'),950);later(()=>ripple(xOf(m)),300);u.floatPushed=true;
     speak(p>=1?'놓자마자 퐁! 다시 떠올랐어.':'꾹 눌러도 손을 떼면 다시 떠오르네.');}
-  });
+  };
+  press(m,h);
+  // 자동 진행: the same hold runs by itself (push down, the hand shakes, let go and it bobs up) once the model has settled.
+  if(id==='air')m.autoPush=()=>{if(u.floatPushed)return false;
+   const go=()=>{if(m.classList.contains('settling'))return later(go,200);h.start();const t0=performance.now();
+    const step=()=>{const p=Math.min(1,(performance.now()-t0)/HOLD_MS);h.tick(p);if(p<1)later(step,16);else later(()=>h.end(1),450);};step();};
+   go();return true;};
  };
  if(!stage3){
   const dropped=u.floatDrop;delete u.floatDrop;

@@ -40,11 +40,11 @@ test('입구 덮개만 바꾼 두 시험은 덮개 그림·설명·공책 젖음
  assert.equal(before.rolls,after.rolls);assert.equal(before.notebookDry,false);assert.equal(after.notebookDry,true);
  assert.match(bagArt(before),/입구 덮개: 열림/);assert.match(bagArt(after),/입구 덮개: 닫힘/);
 });
-test('겉면만 달아 본 가방은 공책을 지킨 부품을 고를 수 없고 본 탐구로 넘기지 않는다',()=>{
+test('겉면만 달아 본 가방은 마무리할 수 없고 본 탐구로 넘기지 않는다',()=>{
  const s=freshState(),u={};s.page=8;
  const act=(a,id='')=>fieldMissionAction(s,u,a,id);
  act('field-bag-predict','surface');act('field-bag-test');act('field-bag-upgrade','surface');act('field-bag-test');
- assert.match(act('field-bag-answer','both'),/둘 다 단 가방에 비를/);carryFieldEvidence(s,4);assert.equal(s.tests.length,0);assert.equal(testValid(s),false);
+ assert.equal(act('field-bag-turned'),'');assert.match(act('field-bag-finish'),/둘 다 단 가방에 비를 내려 본 뒤에 마무리/);carryFieldEvidence(s,4);assert.equal(s.tests.length,0);assert.equal(testValid(s),false);
  u.fieldMission.mission=4;u.fieldMission.stage=2;
  assert.doesNotMatch(renderFieldMission(s,u),/조립|동그라미/);assert.match(renderFieldSteps(s,u),/data-action="field-stage" data-id="0"/);
 });

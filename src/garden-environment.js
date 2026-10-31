@@ -1,5 +1,5 @@
 import * as THREE from './vendor/three/three.module.min.js';
-import {groundMaterial} from './season-environment.js';
+import {groundMaterial,canvasMips} from './season-environment.js';
 
 const maps=new Map();
 const seeded=seed=>()=>{seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return ((t^t>>>14)>>>0)/4294967296;};
@@ -28,8 +28,8 @@ function terrainMap(kind){
    ctx.strokeStyle=i%3?'#bdebd325':'#e4ffff66';ctx.lineWidth=.6+rand();ctx.stroke();
   }
  }
- const map=new THREE.CanvasTexture(canvas);map.colorSpace=THREE.SRGBColorSpace;map.wrapS=map.wrapT=THREE.RepeatWrapping;map.anisotropy=4;
- const bump=new THREE.CanvasTexture(canvas);bump.wrapS=bump.wrapT=THREE.RepeatWrapping;
+ const map=canvasMips(new THREE.CanvasTexture(canvas));map.colorSpace=THREE.SRGBColorSpace;map.wrapS=map.wrapT=THREE.RepeatWrapping;map.anisotropy=4;
+ const bump=canvasMips(new THREE.CanvasTexture(canvas));bump.wrapS=bump.wrapT=THREE.RepeatWrapping;
  const result={map,bump};
  if(kind==='water'){
   const normal=new Uint8Array(256*256*4);

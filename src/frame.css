@@ -229,6 +229,45 @@ dialog::backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; backgro
 #app .activity-4 .lab-scene .spatial-controls { bottom: 8px; }
 #app .activity-4 .lab-scene .spatial-controls > span { display: none; }
 #app .activity-4 .lab-scene.spatial-flat::after { display: none; }
+/* Picture view: the whole petiole (cut piece too) sits under water, so its bubbles have room to rise. The 3D view keeps its own water. */
+#app .activity-4 .lab-scene.submerged:is(.spatial-flat, :not(.spatial-ready)) > .water-level { height: 66%; }
+/* Pressed petiole (picture view): a frame laid exactly over the drawn picture, so the bubbles start at the cut air rooms. */
+#app .activity-4 .lab-scene .specimen-focus { container-type: size; }
+#app .activity-4 .lab-scene .petiole-bubbles {
+  --fw: min(100cqw, 133.86cqh);
+  position: absolute; left: 50%; top: calc(50cqh - var(--fw) * .3735); width: var(--fw); aspect-ratio: 1451 / 1084;
+  transform: translateX(-50%); pointer-events: none; z-index: 4;
+}
+/* The inner box is the size container, so the frame itself is still measured against the button. */
+#app .activity-4 .lab-scene .petiole-bubbles > span { position: absolute; inset: 0; container-type: size; }
+#app .activity-4 .lab-scene .petiole-bubbles i {
+  position: absolute; left: calc(var(--x) * 100%); top: calc(var(--y) * 100%);
+  width: clamp(9px, calc(var(--s) * .3cqw), 42px); aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, #fff 0 11%, #ffffffb8 12% 19%, #e8fbffa8 34%, #a8e2ee5c 68%, #5fb9d08a 100%);
+  border: 1.5px solid #fff; box-shadow: inset -2px -3px 5px #3d9fb866, 0 0 0 1px #3f9db470, 0 0 8px #e9fdffa8;
+  transform: translate(-50%, -50%); opacity: .95;
+  --rise: calc((var(--surface, .4) - var(--y)) * 100cqh);
+  animation: petiole-bubble 1.8s cubic-bezier(.3, 0, .6, 1) both;
+}
+/* A small ring spreads on the surface where the bubbles burst. */
+#app .activity-4 .lab-scene .petiole-bubbles b {
+  position: absolute; left: calc(var(--x) * 100%); top: calc(var(--surface, .4) * 100%);
+  width: 9cqw; height: 2.4cqw; border: 2px solid #ffffffd0; border-radius: 50%;
+  transform: translate(-50%, -50%) scale(.2); opacity: 0;
+  animation: petiole-pop .7s ease-out both;
+}
+@keyframes petiole-bubble {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(.2); }
+  10% { opacity: .95; transform: translate(-50%, -50%) scale(1); }
+  38% { transform: translate(calc(-50% + var(--dx) * .6), calc(-50% + var(--rise) * .32)) scale(1); }
+  68% { transform: translate(calc(-50% - var(--dx) * .4), calc(-50% + var(--rise) * .7)) scale(1.06); }
+  92% { opacity: .95; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--rise))) scale(1.12); }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--rise))) scale(1.7); }
+}
+@keyframes petiole-pop {
+  0% { opacity: .9; transform: translate(-50%, -50%) scale(.2); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.4); }
+}
 @media (min-width: 901px) and (orientation: landscape) {
   /* Lab page only: the field mission on the same page keeps the full-width workspace. */
   body #app .exploration-activity.activity-4:not(.field-mission-view) .learning-scene {
@@ -553,3 +592,5 @@ body dialog.reward-dialog .theme-picker small { display: none; }
   body dialog.reward-dialog > .dialog-body > * { margin-block: 0; }
   body dialog.reward-dialog .reward-why, body dialog.reward-dialog .reward-proof, body dialog.reward-dialog .reward-next { line-height: 1.3; }
 }
+/* A plant on ground that does not suit it: the hint says where it is and where it belongs. */
+#app .garden-feedback .direct-hint.garden-misfit { background: #fff4d6; border: 1.5px solid #e2b04a; border-radius: 14px; padding: 8px 12px; color: #5a3d12; font-weight: 700; }

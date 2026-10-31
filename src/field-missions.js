@@ -16,8 +16,8 @@ const plantNames={hyacinth:'부레옥잠',cherry:'벚나무',aloe:'알로에'};
 // Both models copy a water hyacinth leaf stalk: same outside, only the inside differs.
 const modelName=id=>id==='air'?'공기 방 모형':'꽉 찬 모형';
 const modelInside=id=>id==='air'?'속에 공기 방이 여러 개':'속을 흙으로 꽉 채웠어';
-const stages=[['돋보기로 관찰 연습','톱니 기준으로 나누기','모양 기준으로 다시 나누기'],['살아 있는 부분 잇기','나무 시간 잇기','풀 시간 잇기'],['결과 예상하기','같은 수조에서 시험','관찰 결과 연결하기'],['비 내려 땅 살펴보기','알맞은 땅에 심기','정원에 비 내리기'],['예상하고 첫 비','하나씩 달고 비 시험','공책 지킨 부품 찾기']];
-const objectives=[['관찰 연습 · 단풍나무의 가운데와 가장자리를 돋보기로 살펴봐.','기준 1 · 표본 카드를 톱니가 있는 잎과 없는 잎으로 나눠 봐. 바구니를 눌러도 돼.','기준 2 · 같은 잎을 이번에는 가늘고 긴 모양인지로 다시 나눠 봐.'],['겨울에 살아 있는 부분을 다음 봄의 같은 부분에 이어 줘.','시간 다이얼을 돌려 같은 벚나무가 겨울을 지나 다시 자라는 모습을 지켜봐.','땅속 카메라로 씀바귀 뿌리를 보고, 봄에 새싹이 땅 위로 올라온 곳을 찾아 줘.'],['두 모형을 물에 넣으면 어떻게 될지 스위치로 예상해 줘.','두 모형을 같은 수조에 넣어 뜨는 모습을 비교해 봐.','잎자루를 잘라 공기 방을 보고, 떠 있던 모형과 이어 줘.'],['구름을 눌러 비를 내리고, 빗물이 고이는 곳·스며드는 곳·흘러가는 곳을 살펴봐.','세 식물을 각각 잘 살 수 있는 땅으로 옮겨 심어 줘.','정원에 비를 내려 세 식물이 잘 자라는지 확인해 봐.'],['구름을 눌러 보통 가방에 비를 내려 봐.','연잎만, 덮개만, 둘 다 단 가방에 하나씩 비를 내려 봐.','네 가방을 견줘 보고 공책을 지킨 것을 골라 줘.']];
+const stages=[['돋보기로 관찰 연습','톱니 기준으로 나누기','모양 기준으로 다시 나누기'],['살아 있는 부분 잇기','나무 시간 잇기','풀 시간 잇기'],['결과 예상하기','같은 수조에서 시험','관찰 결과 연결하기'],['비 내려 땅 살펴보기','알맞은 땅에 심기','정원에 비 내리기'],['예상하고 첫 비','세 가방에 비 내리기','완성 가방 돌려 보기']];
+const objectives=[['관찰 연습 · 단풍나무의 가운데와 가장자리를 돋보기로 살펴봐.','기준 1 · 표본 카드를 톱니가 있는 잎과 없는 잎으로 나눠 봐. 바구니를 눌러도 돼.','기준 2 · 같은 잎을 이번에는 가늘고 긴 모양인지로 다시 나눠 봐.'],['겨울에 살아 있는 부분을 다음 봄의 같은 부분에 이어 줘.','시간 다이얼을 돌려 같은 벚나무가 겨울을 지나 다시 자라는 모습을 지켜봐.','땅속 카메라로 씀바귀 뿌리를 보고, 봄에 새싹이 땅 위로 올라온 곳을 찾아 줘.'],['두 모형을 물에 넣으면 어떻게 될지 스위치로 예상해 줘.','두 모형을 같은 수조에 넣어 뜨는 모습을 비교해 봐.','잎자루를 잘라 공기 방을 보고, 떠 있던 모형과 이어 줘.'],['구름을 눌러 비를 내리고, 빗물이 고이는 곳·스며드는 곳·흘러가는 곳을 살펴봐.','세 식물을 각각 잘 살 수 있는 땅으로 옮겨 심어 줘.','정원에 비를 내려 세 식물이 잘 자라는지 확인해 봐.'],['구름을 눌러 보통 가방에 비를 내려 봐.','가방 카드를 톡 눌러 세 가방에 비를 내려 봐.','완성 가방을 손가락으로 끌어 한 바퀴 돌려 본 뒤 마무리를 눌러 줘.']];
 
 function leafPicture(id){
  return assetImage('field_leaf_'+id,'field-leaf-picture leaf-'+id,true);
@@ -98,13 +98,8 @@ function trialCard(t,label,changed='',attrs=''){
  const rows=[['surface',`① ${t.surface==='lotus'?'연잎 겉면':'보통 천'}`,t.rolls?'물방울 굴러감':'물방울 남음',t.rolls],['cover',`② 입구 ${t.cover==='flap'?'닫힘':'열림'}`,t.notebookDry?'공책 마름':'공책 젖음',t.notebookDry]];
  return `<article class="field-trial-card" ${attrs}><h4>${label}</h4><p class="trial-rain" aria-label="같은 비 10방울">${'<i></i>'.repeat(10)}<span aria-hidden="true">같은 비 10방울</span></p><ul class="trial-body">${rows.map(([p,a,r,ok])=>`<li class="${changed===p?'changed':''} ${ok?'dry':'wet'}"><span>${a}</span><b>${r}</b></li>`).join('')}</ul></article>`;
 }
-// Comparing the three rains: big bag pictures side by side, what changed, and the notebook result in one glance.
-function compareCard(t,label){
- return `<article class="bag-compare-card ${t.notebookDry?'dry':'wet'}"><h4>${label}</h4><div class="compare-pic">${bagArt(t)}</div><p class="compare-result">${t.notebookDry?'공책 뽀송!':'공책 젖음'}</p><small>${t.notebookDry?'빗물이 굴러가고 덮개가 입구를 막았어':t.rolls?'열린 입구로 비가 들어갔어':t.cover==='flap'?'천에 빗물이 스며들었어':'천도 젖고 입구로도 들어갔어'}</small></article>`;
-}
 const bagHint=html=>`<p class="lens-hint bag-hint"><span>${html}</span></p>`;
 // Mission 5: rain on the plain bag, then on lotus only, cover only and both (one change per rain), then say what kept the notebook dry.
-const UPGRADES=[['surface','lotus','연잎 겉면','bag_lotus_open','물방울이 또르르'],['cover','flap','덮개','research_bag_closed','입구를 위에서 덮어']];
 const trialName=t=>({'plain:open':'처음 가방','lotus:open':'연잎 겉면만','plain:flap':'덮개만','lotus:flap':'연잎 겉면 + 덮개'})[`${t.surface}:${t.cover}`];
 function trials(b,fresh,n=3){
  if(!b.tests.length)return '<p class="trial-empty">아직 비를 내리지 않았어.</p>';
@@ -115,17 +110,23 @@ function invention(e,u,stage){
  const b=e.bag,last=b.tests.at(-1),untested=last?.key!==fieldBagKey(b.design),fresh=!!u.bagLast&&u.bagLast!==(last?.key||'')+b.tests.length;u.bagLast=(last?.key||'')+b.tests.length;
  if(stage===0&&!b.prediction)return `<div class="field-bag-predict"><div class="field-predict-picture">${bagArt({surface:'plain',cover:'open'})}</div><div><p class="field-request">비가 오면 리피의 공책이 젖어! 무엇을 바꾸면 될까?</p><div class="field-predict-choices">${btn('연잎 겉면만 바꾸면 돼','field-bag-predict','surface')}${btn('입구로 오는 비도 막아야 해','field-bag-predict','cover')}</div></div></div>`;
  const rainBtn=`<div class="lens-fallback">${btn(icon('drop')+' 비 내리기','field-bag-test','','primary')}</div>`;
- if(stage===0)return `<div class="bag-bench rain-bench">${bagHint(last?'보통 가방은 공책이 젖었어. 이제 하나씩 바꿔 보자!':'구름을 <b>톡</b> 눌러 보통 가방에 비를 내려 봐.')}${rainStage(b,!last,last?'공책이 젖었어…':'구름을 눌러 봐.')}<div class="bag-results">${trials(b,fresh)}</div>${rainBtn}</div>`;
+ if(stage===0)return `<div class="bag-bench rain-bench">${bagHint(last?'처음 가방은 공책이 젖었어. 이제 다른 가방 세 개에 비를 내려 보자!':'구름을 <b>톡</b> 눌러 보통 가방에 비를 내려 봐.')}${rainStage(b,!last,last?'공책이 젖었어…':'구름을 눌러 봐.')}<div class="bag-results">${trials(b,fresh)}</div>${rainBtn}</div>`;
+ // Step 2: three ready-made bags. One tap puts a bag on the stand and rains on it; its card keeps the result.
  if(stage===1){
-  const both=fieldSteps(e,4)[1],left=FIELD_BAG_VARIANTS.filter(k=>!b.tests.some(t=>t.key===k)).map(k=>trialName({surface:k.split(':')[0],cover:k.split(':')[1]}));
-  const hint=both?'세 가방을 다 시험했어! 다음 도전에서 무엇이 공책을 지켰는지 찾아보자.':untested?'구름을 <b>톡</b> 눌러 비를 내려 봐. 무엇이 달라질까?':`부품을 <b>하나만</b> 달거나 떼고 비를 내려 봐. 남은 가방: <b>${left.join(' · ')}</b>`;
-  const cards=UPGRADES.map(([part,value,name,asset,tip])=>{const on=b.design[part]===value;return `<button type="button" class="bag-upgrade ${on?'on':''}" data-action="field-bag-upgrade" data-id="${part}" aria-pressed="${on}" ${untested?'aria-disabled="true" data-reason="먼저 비를 내려서 지금 가방을 확인해 봐."':''}>${assetImage(asset,'bag-upgrade-pic',true)}<strong>${on?icon('check',16)+' '+name+' 떼기':name+' 달기'}</strong><small>${tip}</small></button>`;}).join('');
-  return `<div class="bag-bench rain-bench">${bagHint(hint)}${rainStage(b,untested,untested?'구름을 눌러 비를 내려 봐!':both?'공책이 뽀송해!':'부품 하나를 골라 달아 봐.')}<div class="bag-results"><div class="bag-upgrades">${cards}</div>${trials(b,fresh,2)}${b.tests.length>1&&!both?btn('처음 가방으로','field-bag-reset','','bag-reset'):''}</div>${rainBtn}</div>`;
+  const both=fieldSteps(e,4)[1],auto=!!u.bagAutoRain&&untested,left=FIELD_BAG_VARIANTS.filter(k=>!b.tests.some(t=>t.key===k)).length;
+  const hint=both?'세 가방을 다 시험했어! 다음 도전에서 완성 가방을 돌려 보자.':auto?'같은 비 10방울이 내려. 공책이 어떻게 될까?':untested?'구름을 <b>톡</b> 눌러 이 가방에 비를 내려 봐.':`가방 카드를 <b>톡</b> 누르면 그 가방에 비가 내려. 남은 가방 <b>${left}개</b>`;
+  const cards=FIELD_BAG_VARIANTS.map(k=>{const [surface,cover]=k.split(':'),t=b.tests.findLast(x=>x.key===k),on=fieldBagKey(b.design)===k;
+   return `<button type="button" class="bag-pick ${on?'on':''} ${t?(t.notebookDry?'dry':'wet'):'todo'}" data-action="field-bag-try" data-id="${k}" aria-pressed="${on}">${bagArt({surface,cover})}<strong>${trialName({surface,cover})}</strong><small>${t?(t.notebookDry?icon('check',14)+' 공책 뽀송':'공책 젖음'):'톡! 비 내리기'}</small></button>`;}).join('');
+  return `<div class="bag-bench rain-bench pick-bench">${bagHint(hint)}${rainStage(b,untested,auto?'비가 내려!':untested?'구름을 눌러 비를 내려 봐!':both?'세 가방을 다 시험했어!':'아래에서 가방을 골라 봐.')}<div class="bag-results"><div class="bag-picks" role="group" aria-label="시험할 가방">${cards}</div></div>${untested&&!auto?rainBtn:''}</div>`;
  }
- const solved=!!b.delivered;
- const cards=['plain:open',...FIELD_BAG_VARIANTS].map(k=>b.tests.findLast(t=>t.key===k)).filter(Boolean).map(t=>compareCard(t,trialName(t))).join('');
- return `<div class="bag-bench explain-bench">${bagHint(solved?'공방 복구 완료! 아래 버튼으로 가서 기록을 받아 가자.':'네 가방을 견줘 봐. <b>공책</b>이 뽀송한 가방은 어느 것일까?')}<div class="bag-compare">${cards}</div><div class="bag-question">${solved?`<p class="bag-say">✓ 연잎 겉면은 빗물이 스며들지 않게, 덮개는 입구로 비가 들어오지 않게 막아. 둘이 함께 공책을 지켰어.</p>`:`<p class="bag-ask">공책을 젖지 않게 지킨 부품은?</p><div class="field-predict-choices bag-answer">${btn(assetImage('bag_lotus_open','bag-answer-pic',true)+'<span>연잎 겉면</span>','field-bag-answer','surface')}${btn(assetImage('research_bag_closed','bag-answer-pic',true)+'<span>덮개</span>','field-bag-answer','cover')}${btn(assetImage('bag_lotus_closed','bag-answer-pic',true)+'<span>둘 다 함께</span>','field-bag-answer','both')}</div>`}</div></div>`;
+ // Step 3: no re-telling of the three rains. The finished bag (lotus surface + cover) alone on a turntable:
+ // drag sideways or tap the arrows to turn it; after one full turn the 마무리 button hands it to 리피.
+ const solved=!!b.delivered,turned=!!u.bagTurned,angle=Number.isFinite(u.bagAngle)?u.bagAngle:0,turnAmount=Math.min(360,Number(u.bagTurnTotal)||0);
+ const hint=solved?'공방 복구 완료! 아래 버튼으로 가서 기록을 받아 가자.':turned?'연잎 겉면과 덮개를 단 완성 가방이야. <b>마무리</b>를 눌러 리피에게 주자.':'완성 가방을 손가락으로 <b>끌어</b> 빙글 한 바퀴 돌려 봐.';
+ const face=bagArt({surface:'lotus',cover:'flap'});
+ return `<div class="bag-bench finish-bench ${solved?'is-done':''} ${turned?'turned':''}">${bagHint(hint)}<div class="bag-stage bag-turntable" data-bag-turn style="--angle:${angle}deg;--turn:${turnAmount}deg"><button type="button" class="turn-arrow left" data-bag-spin="-1" aria-label="왼쪽으로 돌리기">${icon('back',28)}</button><div class="bag-spinner" data-bag-spinner><div class="bag-face front">${face}</div><div class="bag-face back" aria-hidden="true">${face}</div></div><i class="turn-shadow" aria-hidden="true"></i><button type="button" class="turn-arrow right" data-bag-spin="1" aria-label="오른쪽으로 돌리기">${icon('arrow',28)}</button><span class="turn-ring ${turned?'full':''}" data-turn-ring aria-hidden="true"><b>${icon('rotate',18)}</b></span><p class="bag-say" data-bag-say aria-live="polite">${solved?'✓ 리피의 공책을 지킬 가방 완성!':turned?'한 바퀴 다 봤어! 연잎 겉면 + 덮개.':'빙글 돌려 봐!'}</p></div><div class="bag-finish">${solved?'':btn(icon('check')+' 마무리','field-bag-finish','',turned?'primary finish-ready':'')}</div></div>`;
 }
+export const fieldStageLabels=m=>stages[m]||[];
 const DEFAULT_FEEDBACK='손으로 직접 해 봐. 어려우면 위의 “버튼으로 하기”를 눌러도 돼.';
 // A first-guess screen comes before the step's main task; the objective names only what is on screen.
 const objective=(e,m,stage)=>stage===0&&m===1&&!['tree','herb'].every(k=>e.seasons.predictions[k])?'먼저 예상 · 겨울에 잎이 보이지 않을 때 땅속은 어떨지 두 식물마다 골라 줘.'
@@ -177,6 +178,8 @@ export function fieldMissionAction(state,ui,action,id=''){
  if(action==='field-cancel'){if(ui.fieldMission)ui.fieldMission.selected='';return '';}
  if(action==='field-keys'){const u=ui.fieldMission??={};u.keys=!u.keys;return '';}
  if(action==='field-cut'){(ui.fieldMission??={}).floatCut=true;return '';}
+ // Pushing the floating model under is optional play; it is remembered only so 자동 진행 shows it once.
+ if(action==='field-push'){(ui.fieldMission??={}).floatPushed=true;return '';}
  if(action==='field-dig'){(ui.fieldMission??={}).dug={...ui.fieldMission.dug,[id]:true};return '';}
  if(action==='field-drop'||action==='field-place'){
   const [picked,targetId]=action==='field-place'?String(id).split('|'):[ui.fieldMission?.selected||'',id];

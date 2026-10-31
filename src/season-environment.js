@@ -3,6 +3,13 @@ import * as THREE from './vendor/three/three.module.min.js';
 // Small local textures are generated once. No downloads or changes to the Meshy assets.
 const surfaces=new Map();
 const random=seed=>()=>{seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return ((t^t>>>14)>>>0)/4294967296;};
+// Smaller copies of a square canvas texture, drawn here instead of by the GPU. GPU-made copies came out with
+// black specks on a Windows PC, and those copies are what a small (zoomed-out) board shows.
+export function canvasMips(texture){
+ const levels=[texture.image];
+ for(let size=texture.image.width>>1;size>=1;size>>=1){const c=document.createElement('canvas');c.width=c.height=size;const g=c.getContext('2d');g.imageSmoothingQuality='high';g.drawImage(levels.at(-1),0,0,size,size);levels.push(c);}
+ texture.mipmaps=levels;texture.generateMipmaps=false;return texture;
+}
 function surface(kind,season){
  const key=`${kind}:${season}`;
  if(surfaces.has(key))return surfaces.get(key);
@@ -36,8 +43,8 @@ function surface(kind,season){
    ctx.lineWidth=.5+rand();ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+rand()*4-2,y-2-rand()*5);ctx.stroke();
   }
  }
- const map=new THREE.CanvasTexture(canvas);map.colorSpace=THREE.SRGBColorSpace;map.anisotropy=4;
- const bump=new THREE.CanvasTexture(canvas);
+ const map=canvasMips(new THREE.CanvasTexture(canvas));map.colorSpace=THREE.SRGBColorSpace;map.anisotropy=4;
+ const bump=canvasMips(new THREE.CanvasTexture(canvas));
  const result={map,bump};surfaces.set(key,result);return result;
 }
 

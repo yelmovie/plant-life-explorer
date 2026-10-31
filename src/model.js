@@ -1,6 +1,7 @@
 import {emptyLearningRecords,normalizeLearningRecords,learningStamp,normalizeNotebook} from './learning-records.js';
 import {normalizeFieldEvidence,fieldMissionReady} from './field-missions-state.js';
 import {normalizeBuds} from './winter-buds.js';
+import {josa} from './josa.js';
 export const STORAGE_KEY = 'green-garden-mvp-v2';
 export const LEGACY_STORAGE_KEY = 'green-garden-mvp-v1';
 export const PLANTS = [
@@ -101,6 +102,11 @@ export function plantAt(s,cell){const id=HABITAT_PLANTS.find(p=>s.garden[p.id]==
 export function gardenPlants(s){return [...HABITAT_PLANTS.filter(p=>Number.isInteger(s.garden[p.id])).map(p=>({id:p.id,cell:s.garden[p.id]})),...s.gardenExtras];}
 export function gardenSnapshot(s){return {cells:s.terrain.map((t,i)=>[t,plantAt(s,i)?.id||''])};}
 export function gardenPlaced(s){return HABITAT_PLANTS.every(p=>Number.isInteger(s.garden[p.id])&&s.terrain[s.garden[p.id]]===p.habitat)&&new Set(Object.values(s.garden)).size===3;}
+// First plants standing on ground that does not suit them, and what to tell the student about one:
+// where it is now, why it needs other ground, and that it can be dragged there.
+const PLANT_NEEDS={hyacinth:'잎자루 속 공기로 물에 떠서 사니까',aloe:'두꺼운 잎에 물을 저장하니까',cherry:'땅에 뿌리를 내려 흙의 물을 빨아들이니까'};
+export function misplacedPlants(s){return HABITAT_PLANTS.filter(p=>Number.isInteger(s.garden[p.id])&&s.terrain[s.garden[p.id]]!==p.habitat);}
+export function misfitNote(s,p){return `${josa(p.name,'은/는')} 지금 ${HABITATS[s.terrain[s.garden[p.id]]]||'빈 땅'}에 있어. ${PLANT_NEEDS[p.id]} ${josa(HABITATS[p.habitat],'이/가')} 어울려. 끌어서 옮겨 줘.`;}
 export function gardenValid(s){return gardenPlaced(s)&&HABITAT_PLANTS.every(p=>s.gardenReasons.includes(p.id));}
 export function currentTrial(s){const key=designKey(s.design);return s.activeTestKey===key?s.tests.findLast(t=>t.key===key):s.tests.at(-1)?.key===key?s.tests.at(-1):null;}
 export function comparisonPair(s){

@@ -19,7 +19,7 @@ function bagRun(prediction,steps=['test','surface','test','cover','test','surfac
  const act=(action,id='')=>fieldMissionAction(s,u,action,id);
  act('field-bag-predict',prediction);
  const said=[];
- for(const step of steps)said.push(step==='test'?act('field-bag-test'):step==='answer'?act('field-bag-answer','both'):act('field-bag-upgrade',step));
+ for(const step of steps)said.push(step==='test'?act('field-bag-test'):step==='answer'?(act('field-bag-turned'),act('field-bag-finish')):act('field-bag-upgrade',step));
  return {s,u,act,said};
 }
 const text=html=>html.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ');
@@ -67,11 +67,11 @@ test('C. 시험 도중 새로고침하면 첫 예상과 한 시험만 남고, �
  const rows=predictionRecord(peek);
  assert.deepEqual(rows.map(r=>r.kind),['prediction','result'],'결론과 생각 수정은 아직 없다');
  assert.equal(rows[1].text,'처음 가방 공책 젖음 → 연잎 겉면 공책 젖음');
- const u={};for(const [a,id] of [['field-bag-upgrade','cover'],['field-bag-test',''],['field-bag-upgrade','surface'],['field-bag-test',''],['field-bag-answer','both']])fieldMissionAction(back,u,a,id);
+ const u={};for(const [a,id] of [['field-bag-upgrade','cover'],['field-bag-test',''],['field-bag-upgrade','surface'],['field-bag-test',''],['field-bag-turned',''],['field-bag-finish','']])fieldMissionAction(back,u,a,id);
  carryFieldEvidence(back,4);
  assert.match(predictionLine(back),/시험으로 생각을 고쳤어/);
- // Pressing the answer again (연타) does not add trials or a second revision.
- fieldMissionAction(back,u,'field-bag-answer','both');
+ // Pressing 마무리 again (연타) does not add trials or a second revision.
+ fieldMissionAction(back,u,'field-bag-finish','');
  assert.equal(back.fieldEvidence.bag.tests.length,4);assert.equal(back.learningRecords[4].responses['field:bag-prediction'].changes,1);
 });
 

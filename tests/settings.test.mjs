@@ -40,7 +40,8 @@ test('aria-disabled 클릭은 data-action보다 먼저 막고 이유를 토스�
  const app=read('src/app.js'),handler=app.slice(app.indexOf("document.addEventListener('click'"));
  const guard=handler.indexOf('[aria-disabled="true"]'),dispatch=handler.indexOf("closest('[data-action]')");
  assert.ok(guard>0&&guard<dispatch);
- assert.match(handler,/if\(locked\.dataset\.reason\)toast\(locked\.dataset\.reason\);return;/);
+ // The locked reason is toasted, then (on an activity) the pointing hand jumps to the control still left, then the click stops.
+ assert.match(handler,/if\(locked\.dataset\.reason\)toast\(locked\.dataset\.reason\);if\(state\.screen==='activity'\)nudgeGuide\([^;]*\);return;/);
  assert.match(handler,/if\(!b\|\|b\.disabled\)return;/);
 });
 test('썸네일은 작은 칸에서만 쓰고 미사용 그림은 카탈로그에 없다',()=>{

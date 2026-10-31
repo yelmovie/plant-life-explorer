@@ -112,19 +112,18 @@ try{
  check((await saved()).gardenPick==='aloe','4장: pick recorded (double tap safe)');
  const gardenBefore=(await saved()).garden;await complete(3);
 
- // 5장: guess → rain on the plain bag → one upgrade per rain → which part kept the notebook dry.
+ // 5장: guess → rain on the plain bag → one tap per bag card → turn the finished bag once → 마무리.
  await enter(4);const first=await page.locator('.field-objective').innerText();
  check(/먼저 예상/.test(first)&&!/구름/.test(first),'5장: first objective names only the prediction on screen');
  await act('field-bag-predict','surface');check(/구름/.test(await page.locator('.field-objective').innerText()),'5장: after the guess the objective moves to the first rain');
  await tapCenter('[data-bag-cloud]');await field(`e.bag.tests.length===1`);
- await stage(1);check(/하나만/.test(await page.locator('.bag-hint').innerText()),'5장: upgrade step asks for one part at a time');
- await tap('[data-action="field-bag-upgrade"][data-id="surface"]');await field(`e.bag.design.surface==='lotus'`);
- await page.locator('[data-action="field-bag-upgrade"][data-id="cover"]').tap({force:true});await page.waitForTimeout(300);
- check((await saved()).fieldEvidence.bag.design.cover==='open','5장: the second part waits until the first change has been rained on');
- await tapCenter('[data-bag-cloud]');await field(`e.bag.tests.length===2`);
- await tap('[data-action="field-bag-upgrade"][data-id="cover"]');await field(`e.bag.design.cover==='flap'`);await tapCenter('[data-bag-cloud]');await field(`e.bag.tests.length===3`);
- await stage(2);await tap('[data-action="field-bag-answer"][data-id="surface"]');check(/연잎 겉면만/.test(await page.locator('.guide-bubble').innerText()),'5장: a wrong answer points back to the trial cards');
- await tap('[data-action="field-bag-answer"][data-id="cover"]');await field(`!!e.bag.delivered`);
+ await stage(1);check(/가방 카드/.test(await page.locator('.bag-hint').innerText()),'5장: the bag step asks for a tap on a bag card');
+ for(const [k,n] of [['lotus:open',2],['plain:flap',3],['lotus:flap',4]]){await tap(`[data-action="field-bag-try"][data-id="${k}"]`);await field(`e.bag.tests.length===${n}`);}
+ check((await saved()).fieldEvidence.bag.tests.map(t=>t.notebookDry).join()==='false,false,false,true','5장: one tap per bag card rains on that bag by itself');
+ await stage(2);await tap('[data-action="field-bag-finish"]');check(/한 바퀴/.test(await page.locator('.guide-bubble').innerText()),'5장: 마무리 before a full turn asks for the turn first');
+ for(let i=0;i<4;i++){await tap('[data-bag-spin="1"]');await page.waitForTimeout(520);}
+ await page.locator('.finish-bench.turned').waitFor({timeout:4000});check(/마무리/.test(await page.locator('.bag-hint').innerText()),'5장: four arrow taps make one full turn and unlock 마무리');
+ await tap('[data-action="field-bag-finish"]');await field(`e.bag.delivered==='lotus:flap'`);
  await explore();check(await page.locator('.invention-summary').count()===1,'5장: the record page sums up the field trials without a second experiment');
  await complete(4);
 

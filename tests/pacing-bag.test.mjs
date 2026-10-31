@@ -12,7 +12,7 @@ import {pageReady} from '../src/model.js';
 function fullBag(){
  const s=freshState(),u={};s.page=8;
  const act=(action,id='')=>fieldMissionAction(s,u,action,id);
- act('field-bag-predict','surface');act('field-bag-test');act('field-bag-upgrade','surface');act('field-bag-test');act('field-bag-upgrade','cover');act('field-bag-test');act('field-bag-upgrade','surface');act('field-bag-test');act('field-bag-answer','both');
+ act('field-bag-predict','surface');act('field-bag-test');act('field-bag-upgrade','surface');act('field-bag-test');act('field-bag-upgrade','cover');act('field-bag-test');act('field-bag-upgrade','surface');act('field-bag-test');act('field-bag-turned');act('field-bag-finish');
  return {s,u,act};
 }
 
@@ -21,7 +21,7 @@ test('현장 가방 시험을 마쳐도 본 탐구는 미리 채워지지 않고
  assert.equal(fieldMissionReady(s,4),true);assert.equal(s.fieldEvidence.bag.tests.length,4);
  carryFieldEvidence(s,4);assert.equal(s.tests.length,0,'현장 시험을 본 탐구 시험으로 옮기지 않는다');assert.equal(s.testPrediction,'surface','첫 예상만 이어 쓴다');
  assert.equal(testValid(s),false);assert.equal(pageReady(s,8),false);assert.equal(pageReady(s,9),false);
- act('field-bag-answer','both');assert.equal(s.fieldEvidence.bag.tests.length,4,'다시 골라도 시험은 늘지 않는다');
+ act('field-bag-finish');assert.equal(s.fieldEvidence.bag.tests.length,4,'마무리를 다시 눌러도 시험은 늘지 않는다');
  act('field-bag-reset');assert.equal(fieldMissionReady(s,4),false,'처음 가방으로 돌리면 다시 시험해야 한다');
 });
 

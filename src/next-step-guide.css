@@ -1,0 +1,61 @@
+/* 남은 활동 안내 (2026-10-31). The left "오늘의 연구" panel lists everything this page still needs (✓ / ○),
+   and a pointing hand rests on the control to tap next. Targets never move; only the hand taps. */
+#app .remaining-list { display: flex; flex-direction: column; gap: 4px; margin: 0; padding: 8px 10px 10px; border-radius: 14px; background: #fff6d6; border: 2px solid #e2b33c; }
+#app .remaining-list.all-done { background: #eef7dc; border-color: #6d9a50; }
+#app .remaining-list > h3 { display: flex; align-items: center; gap: 6px; margin: 0 0 2px; font: 18px/1.3 var(--font-display); color: #5a3d12; }
+#app .remaining-list.all-done > h3 { color: #2e5d3d; }
+#app .remaining-list > h3 b { display: grid; place-items: center; min-width: 26px; height: 26px; padding: 0 6px; border-radius: 999px; background: #e2a53a; color: #fff; font-size: 16px; }
+#app .remaining-list ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 3px; }
+#app .remaining-list li button {
+  display: flex; align-items: flex-start; gap: 8px; width: 100%; min-height: 40px; padding: 5px 8px;
+  border: 2px solid transparent; border-radius: 12px; background: #fffcef; color: #4c5c42;
+  font: 17px/1.3 var(--font-display); text-align: left; cursor: pointer; word-break: keep-all;
+}
+#app .remaining-list li.done button { color: #2e5d3d; background: #e6f0d2; }
+#app .remaining-list li.next button { border-color: #e2a53a; background: #fff; box-shadow: 0 0 0 3px #f2c94c66; color: #2f4a26; }
+#app .remaining-list li.jump button { animation: guide-row-jump .5s ease-out; }
+#app .remaining-mark { flex-shrink: 0; display: grid; place-items: center; width: 24px; height: 24px; margin-top: 1px; border-radius: 50%; background: #fffcef; border: 2px solid #c8d5a6; font-size: 15px; line-height: 1; color: #8a9a7c; }
+#app .remaining-list li.done .remaining-mark { background: #5d8f4b; border-color: #5d8f4b; color: #fff; }
+#app .remaining-list li.next .remaining-mark { background: #fff6d6; border-color: #e2a53a; }
+#app .remaining-label { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+#app .remaining-subs { display: flex; flex-wrap: wrap; gap: 2px 8px; font-size: 14px; color: #7a7254; }
+#app .remaining-subs i { font-style: normal; }
+#app .remaining-subs i.done { color: #2e7d45; }
+#app .guide-hand { display: inline-grid; place-items: center; }
+#app .guide-hand svg { width: 18px; height: 21px; }
+#app .remaining-list li.next .guide-hand svg { animation: guide-hand-tap .9s ease-in-out infinite; }
+
+/* The hand on the stage: an absolutely placed anchor at the target's lower middle; the hand hangs from it. */
+#app .exploration-activity .guide-finger { position: absolute; z-index: 9; width: 0; height: 0; pointer-events: none; }
+#app .guide-finger.off { display: none; }
+#app .guide-finger > svg {
+  position: absolute; left: 0; top: 0; width: 58px; height: 68px; transform-origin: 50% 4px;
+  transform: translate(-50%, -2px) rotate(-16deg); filter: drop-shadow(0 4px 4px #2a3a2a66);
+  animation: guide-finger-tap .9s ease-in-out infinite;
+}
+#app .guide-finger.above > svg { transform: translate(-50%, -4px) rotate(164deg); animation-name: guide-finger-tap-above; }
+#app .guide-finger.jump > svg { animation: guide-finger-jump .6s ease-out; }
+#app .guide-finger-tip {
+  position: absolute; left: 34px; top: 36px; width: max-content; max-width: 210px; padding: 5px 11px;
+  border-radius: 12px 12px 12px 4px; background: #fff6d6; border: 2px solid #e2a53a; color: #5a3d12;
+  font: 17px/1.3 var(--font-display); box-shadow: 0 3px 0 #c9862b55; word-break: keep-all;
+}
+#app .guide-finger.flip .guide-finger-tip { left: auto; right: 30px; border-radius: 12px 12px 4px 12px; }
+#app .guide-finger.above .guide-finger-tip { top: auto; bottom: 40px; border-radius: 12px 12px 12px 4px; }
+#app .guide-finger.above.flip .guide-finger-tip { border-radius: 12px 12px 4px 12px; }
+@keyframes guide-finger-tap { 0%, 100% { transform: translate(-50%, -2px) rotate(-16deg); } 50% { transform: translate(-50%, 6px) rotate(-16deg) scale(.95); } }
+@keyframes guide-finger-tap-above { 0%, 100% { transform: translate(-50%, -4px) rotate(164deg); } 50% { transform: translate(-50%, -12px) rotate(164deg) scale(.95); } }
+@keyframes guide-finger-jump { 0% { transform: translate(-50%, -2px) rotate(-16deg); } 40% { transform: translate(-50%, -16px) rotate(-16deg) scale(1.25); } 100% { transform: translate(-50%, -2px) rotate(-16deg); } }
+@keyframes guide-hand-tap { 0%, 100% { transform: none; } 50% { transform: translateY(3px); } }
+@keyframes guide-row-jump { 30% { transform: translateX(6px); } 60% { transform: translateX(-4px); } }
+@media (prefers-reduced-motion: reduce) {
+  #app .guide-finger > svg, #app .remaining-list li.next .guide-hand svg, #app .remaining-list li.jump button { animation: none; }
+}
+/* Narrow or portrait screens lay the left panel out as a row, so the list becomes wrapped chips. */
+@media (max-width: 900px), (orientation: portrait) {
+  #app .remaining-list ol { flex-direction: row; flex-wrap: wrap; }
+  #app .remaining-list li { flex: 1 1 150px; min-width: 0; }
+}
+/* 큰 글씨 */
+body.large-text #app .remaining-list li button { font-size: 19px; }
+body.large-text #app .guide-finger-tip { font-size: 19px; }
