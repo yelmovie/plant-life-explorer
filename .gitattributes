@@ -1,0 +1,24 @@
+# 줄바꿈: 두 OS(Mac·Windows)에서 같은 내용이 수정됨으로 보이지 않도록 텍스트는 저장소·작업 트리 모두 LF로 둔다.
+* text=auto eol=lf
+
+# 바이너리
+*.webp binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.glb binary
+*.gltf binary
+*.mp3 binary
+*.mp4 binary
+*.ogg binary
+*.wav binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary
+*.zip binary
+*.hwp binary
+*.hwpx binary
+*.pdf binary
