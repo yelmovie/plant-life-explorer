@@ -19,7 +19,18 @@ wrangler pages deploy dist --project-name leafy-garden --branch main
 
 이 Mac에는 시스템 Node가 없다. 도구는 외장 SSD에만 둔다: Node `DevCaches/tools/node-v24.22.2-darwin-arm64`, wrangler `DevCaches/tools/wrangler-4.154.0`(exFAT라 `--no-bin-links`로 설치). wrangler 로그인 정보는 `HOME=DevCaches/tools/wrangler-home`으로 실행해 SSD에 저장한다. 빌드는 `ESBUILD_MODULE_PATH`를 그 wrangler의 `node_modules/esbuild`로 지정한다. exFAT가 만드는 `._*` 파일은 업로드 전에 `dist`에서 지운다.
 
-## 최근 배포 — 2026-10-31 (2) (남은 활동 안내·손가락 포인터, 손가락은 답을 가리키지 않음)
+## 최근 배포 — 2026-11-01 (리피 힌트 버튼이 탐구 화면에서 사라지던 문제 수정)
+
+- 기능 커밋: `3323a9e`(`sort-board-drag`, GitHub push 안 함). 배포 빌드 커밋 `3323a9e9d3870afdfd6e9147eb9a9f728fc29d26`, `dirty=false`.
+- 배포 주소: https://cc5a6132.leafy-garden.pages.dev
+- 운영 주소: https://leafy-garden.pages.dev
+- 되돌릴 대상: 직전 배포 https://68a75e81.leafy-garden.pages.dev (커밋 `4747500`)
+- 바뀐 것: 남은 활동 목록이 왼쪽 칸을 다 차지해 태블릿 가로에서 리피(힌트 버튼)가 0~10px로 눌리고 말풍선이 "이번 탐구는?" 위로 겹치던 문제. 리피는 84px 아래로 줄지 않고, 자리가 모자라면 "오늘의 연구" 패널만 안에서 스크롤한다(활동 6·7도 같은 방식). 패널이 스크롤되면 다음에 할 줄을 보이는 곳까지 내려 준다. 화면 문구는 바꾸지 않아 글꼴 서브셋은 다시 만들지 않았다.
+- 빌드 183파일·120에셋·45,733,041바이트, esbuild 번들(전역 wrangler 4.151.1의 esbuild 0.28.2). 업로드는 바뀐 6파일.
+- 배포 전 Windows(Node v24.11.0)에서 JavaScript 48개 문법 검사, 154/154 테스트 통과. QA 포트 4351에서 Playwright 1.56.1 에뮬레이션으로 확인: 6개 화면 크기(iPad 7세대·Mini·Pro 11 가로 WebKit, Galaxy Tab S4 가로 Chromium, 1280×800, 1920×1080) × 15개 활동에서 리피 84px 이상·말풍선 보임·겹침 없음·누를 수 있음, 8개 기기 × 20개 화면 재점검에서 리피 지적 42건 → 0건, 새 지적 없음. 실물 태블릿 손가락 터치는 미실행.
+- 운영 주소와 배포 주소의 `build-info.json` 커밋이 `3323a9e`·`dirty=false`이고, `/`·`src/app.bundle.js`·`src/frame.css`·`src/next-step-guide.js`·`sw.js`의 SHA-256이 로컬 dist와 같음을 확인했다(`/index.html`은 `/`로 308 이동하므로 `/`로 비교).
+
+## 이전 배포 — 2026-10-31 (2) (남은 활동 안내·손가락 포인터, 손가락은 답을 가리키지 않음)
 
 - 기능 커밋: `5efdd28`(남은 활동 안내·손가락 포인터 추가, 손가락은 답을 가리키지 않게) + `3e34dca`(.gitattributes) + `4747500`(글꼴 서브셋 재생성). 모두 `sort-board-drag`, GitHub push 안 함. 배포 빌드 커밋은 `4747500f0fb48618589d5fce220631e780717712`.
 - 배포 주소: https://68a75e81.leafy-garden.pages.dev
