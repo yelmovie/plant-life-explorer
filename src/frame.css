@@ -330,9 +330,7 @@ dialog::backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; backgro
 }
 @media (min-width: 901px) and (orientation: landscape) {
   body.large-text #app .exploration-activity:is(.activity-6,.activity-7) { height: 100dvh; min-height: 100dvh; grid-template-rows: 56px minmax(0,1fr) auto; overflow: hidden; }
-  body #app .exploration-activity:is(.activity-6,.activity-7) .field-guide { overflow-y: auto; }
-  /* One scroll area on the left: the steps card does not scroll inside the guide, and a smaller Lipi leaves room for it. */
-  body #app .exploration-activity:is(.activity-6,.activity-7) .today-panel { overflow: visible; flex-shrink: 0; }
+  /* A smaller Lipi leaves 오늘의 연구 more room (it scrolls inside itself like every activity; the bubble stays on screen). */
   body #app .exploration-activity:is(.activity-6,.activity-7) .guide-avatar .guide-mascot { height: clamp(84px, 13vh, 140px); }
   /* Room for Lipi's float animation, so the bob alone never makes the guide scrollable. */
   body #app .exploration-activity:is(.activity-6,.activity-7) .guide-avatar { padding-bottom: 8px; }
@@ -511,11 +509,12 @@ body #dialog > .dialog-body > p { font-size: var(--font-size-sm); color: var(--m
 #app .today-panel .field-step-tools { display: flex; gap: 6px; }
 #app .today-panel .field-step-tools .btn { flex: 1 1 0; min-width: 0; min-height: 48px; padding: 4px 8px; font-size: 16px; justify-content: center; white-space: nowrap; }
 
-/* Every activity: the left panel and the workspace fit one screen without scrollbars; Leafy shrinks first. */
-#app .exploration-activity .field-guide, #app .exploration-activity .today-panel { overflow: hidden; }
-#app .exploration-activity .today-panel { flex-shrink: 0; }
-#app .exploration-activity .guide-talk { flex: 1 1 auto; min-height: 0; }
-#app .exploration-activity .guide-avatar { flex: 1 1 0; min-height: 0; }
+/* Every activity: the left panel and the workspace fit one screen; Leafy shrinks first, but never below a tappable
+   84px. Past that, 오늘의 연구 scrolls inside itself so Leafy's reply bubble always stays on screen. */
+#app .exploration-activity .field-guide { overflow: hidden; }
+#app .exploration-activity .today-panel { overflow-x: hidden; overflow-y: auto; flex-shrink: 1; }
+#app .exploration-activity .guide-talk { flex: 1 0 auto; min-height: 0; }
+#app .exploration-activity .guide-avatar { flex: 1 1 0; min-height: 84px; }
 #app .exploration-activity .guide-avatar .guide-mascot { height: 100%; max-height: clamp(100px, 19vh, 176px); min-height: 0; }
 
 /* 리피의 부탁: a wider letter that fits one screen without scrolling; the ruled lines follow the line height. */

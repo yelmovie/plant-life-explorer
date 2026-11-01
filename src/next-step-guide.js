@@ -156,6 +156,9 @@ export function renderRemaining(guide){
 // The hand on the stage: its fingertip rests on the control to tap next; the tip chip says what to do there.
 // Nothing moves except the hand (targets never move: a moving button is hard to tap).
 export function mountGuideFinger(main,guide){
+ // A long list scrolls inside 오늘의 연구 (Leafy and the bubble stay put): keep the row to do next in view.
+ const row=main?.querySelector('.remaining-list li.next'),panel=row?.closest('.today-panel');
+ if(panel){const gap=row.getBoundingClientRect().bottom-panel.getBoundingClientRect().bottom;if(gap>0)panel.scrollTop+=gap+8;}
  if(!main||!guide?.target)return ()=>{};
  const target=main.querySelector(guide.target);if(!target)return ()=>{};
  const el=document.createElement('div');el.className='guide-finger';el.setAttribute('aria-hidden','true');
