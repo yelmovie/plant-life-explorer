@@ -161,3 +161,5 @@ body .map-locked-message .mascot-wrap{width:90px;height:120px;flex-shrink:0}
 #app .trail-flower.fresh{transform-box:fill-box;transform-origin:center;animation:trail-bloom .7s cubic-bezier(.3,1.6,.5,1) both;animation-delay:calc(var(--i) * 70ms + 300ms)}
 @keyframes trail-bloom{from{transform:scale(0) rotate(-90deg);opacity:0}}
 @media(prefers-reduced-motion:reduce){#app .trail-flower.fresh{animation:none}}
+
+#app .map-navigation-copy [data-action="map-pan"],#app .map-navigation-copy [data-action="map-overview"]{display:inline-flex;width:48px;min-width:48px;height:48px;min-height:48px;padding:10px;align-items:center;justify-content:center;border-radius:12px} .map-navigation-copy [data-action="map-overview"] svg{width:26px;height:26px} .map-navigation-copy button:focus-visible{outline:3px solid #426e39;outline-offset:2px}

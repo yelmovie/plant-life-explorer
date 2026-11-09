@@ -36,13 +36,13 @@ export function mountStageMap(root,ui,onArrive){
   let previousEntrance=near(); // Returning to a door does not immediately re-enter it.
   function draw(){
     const p=trailPoint(distance),width=viewport.clientWidth,height=viewport.clientHeight;
-    scale=(overview?Math.min:Math.max)(width/1536,height/1024);
+    scale=overview?Math.min(width/1536,Math.max(1,height-220)/1024):Math.max(width/1536,height/1024);
     offsetX=overview?(width-1536*scale)/2:Math.max(width-1536*scale,Math.min(0,free?free.x:width*.5-p.x*scale));
-    offsetY=overview?(height-1024*scale)/2:Math.max(height-1024*scale,Math.min(0,free?free.y:height*.6-p.y*scale));
+    offsetY=overview?80+(Math.max(1,height-220)-1024*scale)/2:Math.max(height-1024*scale,Math.min(0,free?free.y:height*.6-p.y*scale));
     world.style.transform=`translate(${offsetX}px,${offsetY}px) scale(${scale})`;world.style.setProperty('--map-scale',scale);
     actor.style.left=`${p.x/1536*100}%`;actor.style.top=`${p.y/1024*100}%`;
     ui.mapDistance=distance;ui.mapOverview=overview;
-    const button=root.querySelector('[data-action="map-overview"]');button.setAttribute('aria-pressed',String(overview));button.textContent=overview?'리피 따라 보기':'지도 한눈에 보기';
+    const button=root.querySelector('[data-action="map-overview"]');button.setAttribute('aria-pressed',String(overview));button.setAttribute('aria-label',overview?'리피 따라 보기':'지도 한눈에 보기');button.title=button.getAttribute('aria-label');
     root.querySelector('[data-action="map-pan"]')?.setAttribute('aria-pressed',String(hand));viewport.classList.toggle('hand-on',hand);
   }
   function stop(){target=null;held.clear();root.querySelectorAll('.map-direction').forEach(b=>b.classList.remove('pressed'));actor.classList.remove('walking');cancelAnimationFrame(frame);frame=0;lastTime=0;}
