@@ -1,4 +1,7 @@
 import {createSaveStore} from './safe-storage.js';
+import {installNpcNarration} from './npc-narration.js';
+import {suspendMusic,stopFeedback} from './audio.js';
+installNpcNarration({selector:'.guide-talk',src:new URL('../assets/audio/npc-welcome.mp3',import.meta.url).href,text:'안녕! 나는 리피야. 우리 주변 식물의 잎과 줄기를 자세히 살펴보자. 서로 닮은 점과 다른 점을 찾으며 초록정원의 비밀을 알아보자!',enabled:isEffectsOn,volume:()=>getMusicVolume()/100,hold:()=>{stopFeedback();return suspendMusic();}});
 import {recordHint,recordResponse} from './learning-records.js';
 import {carryFieldEvidence} from './field-bridge.js';
 import {QUESTS} from './inquiry.js';

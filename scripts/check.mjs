@@ -7,7 +7,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const files = ['server.mjs','src/vendor/three/three.module.min.js','src/vendor/three/three.core.min.js'];
 for (const directory of ['src', 'scripts']) {
   for (const entry of await readdir(path.join(root, directory), {withFileTypes: true})) {
-    if (entry.isFile() && /\.(m?js)$/.test(entry.name)) files.push(`${directory}/${entry.name}`);
+    if (entry.isFile() && !entry.name.startsWith('._') && /\.(m?js)$/.test(entry.name)) files.push(`${directory}/${entry.name}`);
   }
 }
 for (const file of files) execFileSync(process.execPath, ['--check', path.join(root, file)], {stdio: 'inherit'});

@@ -61,7 +61,8 @@ export function setEffects(on){
 }
 // The header speaker controls both channels; the settings switches control one.
 export function setSound(on){setMusic(on);setEffects(on);}
-export function playClick(){chirp(620,440,.075,.035,'sine');}
+// A soft rising seed-pop suits the garden without a sharp electronic click.
+export function playClick(){chirp(480,720,.075,.03,'sine');}
 // Card handling: a rising lift, a soft wooden drop into a box, a falling slide back to the tray.
 const DRAG_SOUNDS={lift:[420,680,.09,.03,'sine'],drop:[560,240,.14,.05,'triangle'],back:[380,250,.11,.025,'sine']};
 export function playDragSound(kind){const s=DRAG_SOUNDS[kind];if(s)chirp(...s);}
