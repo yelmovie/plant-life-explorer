@@ -1,3 +1,4 @@
+import {plantEmphasis} from './plant-concepts.js';
 import {STORIES, captionAt} from './story-data.js';
 import {isSoundOn, setSound, stopFeedback, playMusic} from './audio.js';
 
@@ -77,7 +78,8 @@ export function playStory(kind, {onFinish = () => {}, replay = false} = {}) {
   function update() {
     const time = video.currentTime;
     const text = captionAt(kind, time);
-    caption.querySelector('p').textContent = text;
+    const emphasized=plantEmphasis(text,['식물의 특징','모양','가장자리','관찰','시험','연잎']);
+    if(caption.querySelector('p').innerHTML!==emphasized)caption.querySelector('p').innerHTML=emphasized;
     caption.hidden = !captionsOn || !text;
     range.max = String(Number.isFinite(video.duration) ? video.duration : story.duration);
     range.value = String(time);
@@ -137,7 +139,7 @@ export function playStory(kind, {onFinish = () => {}, replay = false} = {}) {
   listen(document, 'visibilitychange', () => { if (document.hidden) video.pause(); });
   activeCleanup = cleanup;
   update();
-  void play();
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){notice('재생 버튼을 누르면 이야기가 시작돼.',true);}else void play();
   return cleanup;
 }
 

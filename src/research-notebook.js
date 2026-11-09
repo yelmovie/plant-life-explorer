@@ -1,3 +1,4 @@
+import {plantConceptMarkup} from './plant-concepts.js';
 import {assetImage} from './asset-catalog.js';
 import {missionDone,terrainCount,inventionEvidence,PLANTS,HABITAT_PLANTS} from './model.js';
 import {normalizeFieldEvidence,FIELD_BAG_ROLES,FIELD_LEAVES} from './field-missions-state.js';
@@ -136,6 +137,6 @@ export function notebookEntry(s,i){
  const hand=handBlock('first',icon('book',20),'처음 생각',thoughts,known?'아직 남긴 기록이 없어.':'처음 생각은 기록되지 않았어.')
   +handBlock('saw',icon('zoom',20),'내가 본 것',saw,'아직 남긴 기록이 없어.')+(i===1?seasonSnaps(s):i===3?gardenSnap(s):'')
   +handBlock('changed',icon('spark',20),'바뀐 생각',revised.length>3?[...revised.slice(0,3),`<small>그리고 ${revised.length-3}개 더 고쳤어</small>`]:revised,kept);
- const summary=`<details class="note-content-summary"><summary>${icon('flag',18)} 리피의 정리 · 탐구 내용 정리</summary><p>${e.found}</p><p><b>생활 속에서는 어디에 쓸까?</b> ${['처음 만난 잎을 같은 기준으로 나누어 보자.','학교 화단의 같은 자리를 겨울과 봄에 살펴보자.','식물마다 몸속에 무엇을 저장하는지 살펴보자.','식물을 기를 때 물과 땅의 조건을 살펴보자.','우산이나 신발에도 이 특징을 쓸 수 있을까?'][i]}</p><small>활동을 설명하기 위해 미리 준비한 정리야. 학생이 직접 남긴 기록은 손글씨 칸에서 확인해.</small></details>`;
+ const summary=`<details class="note-content-summary"><summary>${icon('flag',18)} 리피의 정리 · 탐구 내용 정리</summary>${done?plantConceptMarkup(i):''}<p>${e.found}</p><p><b>생활 속에서는 어디에 쓸까?</b> ${['처음 만난 잎을 같은 기준으로 나누어 보자.','학교 화단의 같은 자리를 겨울과 봄에 살펴보자.','식물마다 몸속에 무엇을 저장하는지 살펴보자.','식물을 기를 때 물과 땅의 조건을 살펴보자.','우산이나 신발에도 이 특징을 쓸 수 있을까?'][i]}</p><small>활동을 설명하기 위해 미리 준비한 정리야. 학생이 직접 남긴 기록은 손글씨 칸에서 확인해.</small></details>`;
  return {title:`탐험 기록 ${String(i+1).padStart(2,'0')} · ${e.title}`,body:`<article class="notebook-spread note-${e.color}">${memory}<div class="note-diary">${hand}<div class="note-folds">${summary}</div></div></article>`};
 }
