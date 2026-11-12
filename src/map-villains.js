@@ -25,7 +25,7 @@ const reveals=[
  ['정원 이름표 정리','겨울과 봄을 연결하는 표찰이 돌아왔어! 다음은 식물이 사는 환경을 찾아볼까?'],
  ['관찰길 표찰 복구','식물의 특징과 사는 곳을 연결한 표찰이 돌아왔어! 다음은 네 정원을 만들 차례야.'],
  ['서식지 표찰 복구','네 정원의 이름표를 되찾았어! 마지막 공방에서는 식물을 본뜬 가방을 발명해 보자.'],
- ['연구기지 표찰 완성','모든 관찰길의 표찰이 제자리야! 연구노트에 담은 발견을 다시 살펴봐.']
+ ['연구기지 표찰 완성','모든 관찰길의 표찰이 제자리야! 연구 노트에 담은 발견을 다시 살펴봐.']
 ];
 export function mountMapVillains(host,{progress,points=[],getPlayer,pathPoint,project,onHit=()=>{},onHurt=()=>{},stop=()=>{},blocked=()=>false,sound=()=>{},reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches}={}){
  const doc=host.ownerDocument,abort=new AbortController(),{signal}=abort;

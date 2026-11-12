@@ -481,7 +481,20 @@ dialog::backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; backgro
 /* Touch users can open the select-then-place buttons from the objective row (same panel as keyboard focus). */
 #app .objective-keys { min-height: 48px; padding: 6px 14px; font-size: 16px; background: #fffdf3; color: #2f4a26; border: 2px solid #b9d39a; box-shadow: 0 3px 0 #b9d39a; }
 #app .objective-keys[aria-pressed="true"] { background: #e3f0cf; }
-#app .field-mission .keys-panel { bottom: 92px; max-height: 40vh; }
+#app .field-mission .keys-panel {
+  position: static;
+  transform: none;
+  width: 100%;
+  max-height: none;
+  overflow: visible;
+  margin-top: 12px;
+  box-shadow: none;
+}
+#app .field-mission.keys-on .swipe-tip { display: none; }
+#app .mission-0.keys-on .swipe-sort.axis-x .swipe-deck { min-height: 240px; }
+#app .mission-0.keys-on .keys-panel { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+#app .mission-0.keys-on .keys-panel .field-token { grid-column: span 2; }
+#app .mission-0.keys-on .keys-panel .field-target { grid-column: span 3; }
 #app .swipe-done > span { font-size: 16px; color: #4b6440; }
 /* Tap path for the petiole cut: the first tap leaves a marker at one end. */
 #app .petiole-cut .cut-mark { position: absolute; z-index: 3; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%; background: #f2c94c; box-shadow: 0 0 0 4px #fffbe6, 0 0 14px #f2c94ccc; pointer-events: none; animation: link-glow 1s ease-in-out infinite alternate; }

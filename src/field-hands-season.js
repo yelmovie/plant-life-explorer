@@ -25,7 +25,7 @@ export function timeDial(e,u,kind,fallback){
  const arr=FIELD_ORDER,done=inOrder(e.seasons[kind]),named=clueOK(e,kind),herb=kind==='herb';
  const descend=herb&&!u.camDown;if(herb)u.camDown=true;
  const pin=u.pin?.[kind],mark=done&&pin&&e.seasons.clues[kind]?`<span class="regrow-mark ${named?'ok':''}" style="left:${pin[0]*100}%;top:${pin[1]*100}%"></span>`:'';
- const tip=done&&!named?'타임랩스가 <b>초봄</b>에서 멈췄어. 새로 돋은 곳에 <b>새싹 핀</b>을 꽂아 봐.'
+ const tip=u.keys&&!done?'아래의 <b>바늘 한 바퀴 돌리기</b> 버튼을 눌러 겨울 뒤에 어떻게 자라는지 지켜봐.':u.keys&&done&&!named?'아래의 <b>관찰 결과 버튼</b>에서 다시 자란 부분을 골라 줘.':done&&!named?'타임랩스가 <b>초봄</b>에서 멈췄어. 새로 돋은 곳에 <b>새싹 핀</b>을 꽂아 봐.'
   :done?'다시 자란 모습과 근거를 모두 찾았어. 바늘을 다시 돌려 타임랩스를 봐도 돼.'
   :herb?'이번엔 카메라가 <b>땅속</b>으로 내려갔어. 바늘을 <b>한 바퀴</b> 돌려 겨울 땅속에서 무슨 일이 생기는지 봐.'
   :'바늘을 잡아 <b>시계 방향으로 한 바퀴</b> 돌려 봐. 겨울 → 초봄 → 다음 봄으로 시간이 흘러가.';

@@ -3,8 +3,25 @@ import assert from 'node:assert/strict';
 import {renderActivity} from '../src/learning.js';
 import {freshState} from '../src/model.js';
 import {normalizeFieldEvidence,fieldMissionReady,fieldBagPair,fieldSteps} from '../src/field-missions-state.js';
-import {fieldMissionAction,renderFieldMission} from '../src/field-missions.js';
+import {fieldMissionAction,renderFieldMission,fieldFeedback} from '../src/field-missions.js';
 const setup=page=>{const s={page,fieldEvidence:normalizeFieldEvidence(null)},u={};return {s,u,act:(a,id)=>fieldMissionAction(s,u,a,id),drop:(item,target)=>fieldMissionAction(s,u,'field-place',`${item}|${target}`)};};
+test('버튼 모드 안내를 바꾸고 분류가 끝난 표본 버튼을 제외한다',()=>{
+ const {s,u,act,drop}=setup(0);
+ renderFieldMission(s,u);
+ for(const region of ['shape','edge'])drop('lens',`scan:maple:${region}`);
+ act('field-stage','1');
+ act('field-keys');
+ assert.match(fieldFeedback(u).text,/버튼으로 해 보자/);
+ assert.match(renderFieldMission(s,u),/분류 버튼/);
+ drop('leaf:maple','sort:edge:yes');
+ assert.doesNotMatch(renderFieldMission(s,u),/data-field-item="leaf:maple"/);
+ assert.match(renderFieldMission(s,u),/data-field-item="leaf:pine"/);
+ drop('leaf:pine','sort:edge:no');
+ drop('leaf:camellia','sort:edge:yes');
+ assert.doesNotMatch(renderFieldMission(s,u),/data-field-drop="sort:edge:/);
+ act('field-keys');
+ assert.match(fieldFeedback(u).text,/손으로 직접/);
+});
 test('현장 기록은 손상값과 무관한 완료 플래그를 버리고 빈 연구를 통과시키지 않는다',()=>{
  const e=normalizeFieldEvidence({leaves:{scans:{maple:['shape','edge','x']}},bag:{tests:[{surface:'lotus',cover:'flap',pocket:'flap',rolls:false}]},ready:true});
  assert.deepEqual(e.leaves.scans.maple,['shape','edge']);assert.equal(e.bag.tests[0].rolls,true);

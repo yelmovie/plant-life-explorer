@@ -16,7 +16,7 @@ const ENTRIES = [
 
 export const NOTE_QUIZZES = [
  {question:'잎을 나눌 때 필요한 것은?',choices:['같은 기준','내가 좋아하는 색만'],answer:0,feedback:'맞아! 같은 기준으로 나누면 서로 비교하기 쉬워.',hint:'모양이나 가장자리처럼 모두에게 똑같이 적용할 기준을 떠올려 봐.'},
- {question:'겨울에 잎이 없으면 식물은 모두 죽은 걸까?',choices:['그렇다','줄기나 뿌리가 살아 있을 수 있다'],answer:1,feedback:'맞아! 살아 남은 부분에서 봄에 다시 자라기도 해.',hint:'겨울과 다음 봄 사진에서 같은 줄기와 땅속 뿌리를 찾아봐.'},
+ {question:'겨울에 잎이 없으면 식물은 모두 죽은 걸까?',choices:['그렇다','줄기나 뿌리가 살아 있을 수 있다'],answer:1,feedback:'맞아! 살아남은 부분에서 봄에 다시 자라기도 해.',hint:'겨울과 다음 봄 사진에서 같은 줄기와 땅속 뿌리를 찾아봐.'},
  {question:'잎자루에서 관찰한 공기 방울은 무엇의 단서일까?',choices:['잎자루 속 공기의 단서','잎자루 속 흙의 단서'],answer:0,feedback:'맞아! 직접 본 현상이 공기 공간을 설명하는 증거가 돼.',hint:'잎자루 안의 공기 공간과 위로 올라오는 방울을 떠올려 봐.'},
  {question:'알로에가 건조 구역에서 도움이 되는 특징은?',choices:['잎에 물을 저장한다','잎자루 속 공기로 물에 뜬다'],answer:0,feedback:'맞아! 물이 적은 곳에서는 저장한 물이 도움이 돼.',hint:'알로에의 두꺼운 잎 속에는 무엇이 있었지?'},
  {question:'연잎 겉면만 바꾸면 열린 입구도 막아 줄까?',choices:['입구도 저절로 막힌다','입구를 막는 덮개는 따로 필요하다'],answer:1,feedback:'맞아! 자연의 아이디어와 필요한 부품을 함께 써서 생활 문제를 해결했어.',hint:'겉면을 굴러가는 물과 입구로 떨어지는 비는 길이 달라.'},
@@ -41,7 +41,7 @@ const entryRecord=(s,i)=>[
 const COVER_NOTES=['같은 기준으로 잎을 나누었다.','겨울을 지나 다시 자랐다.','잎자루 속 공기를 찾았다.','사는 곳에 맞게 식물을 심었다.','연잎의 비밀을 가방에 담았다.'];
 
 export function renderResearchNotebook(s){
- return `<main class="report-page tablet-report notebook-overview"><div class="notebook-heading"><span class="notebook-kicker">리피와 함께 쓴 다섯 장의 기록</span><h1>나의 초록정원 연구노트</h1><p>표지를 눌러 그날의 발견을 다시 펼쳐 봐.</p></div><div class="notebook-shelf">${ENTRIES.map((e,i)=>`<button class="notebook-cover note-${e.color}" data-action="note-open" data-id="${i}" aria-label="${i+1}번째 연구노트 · ${e.title}"><span class="note-number">탐험 기록 ${String(i+1).padStart(2,'0')}</span><span class="note-cover-art">${assetImage(e.asset)}</span><strong>${e.title}</strong><span class="note-subtitle">${e.subtitle}</span><p class="note-excerpt">${missionDone(s,i)?'남긴 선택과 관찰 근거를 다시 보자.':'발견을 찾아 탐험하는 중이야.'}</p><span class="note-record">${missionDone(s,i)?entryRecord(s,i):'아직 탐구 중이야'}</span><span class="note-open-label">노트 펼치기 ↗</span></button>`).join('')}</div><div class="notebook-next"><span>작은 발견 다섯 개가 하나의 정원을 만들었어.</span><button class="btn primary" data-action="start-final">새 식물에도 써 보기 →</button></div></main>`;
+ return `<main class="report-page tablet-report notebook-overview"><div class="notebook-heading"><span class="notebook-kicker">리피와 함께 쓴 다섯 장의 기록</span><h1>나의 초록정원 연구 노트</h1><p>표지를 눌러 그날의 발견을 다시 펼쳐 봐.</p></div><div class="notebook-shelf">${ENTRIES.map((e,i)=>`<button class="notebook-cover note-${e.color}" data-action="note-open" data-id="${i}" aria-label="${i+1}번째 연구 노트 · ${e.title}"><span class="note-number">탐험 기록 ${String(i+1).padStart(2,'0')}</span><span class="note-cover-art">${assetImage(e.asset)}</span><strong>${e.title}</strong><span class="note-subtitle">${e.subtitle}</span><p class="note-excerpt">${missionDone(s,i)?'남긴 선택과 관찰 근거를 다시 보자.':'발견을 찾아 탐험하는 중이야.'}</p><span class="note-record">${missionDone(s,i)?entryRecord(s,i):'아직 탐구 중이야'}</span><span class="note-open-label">노트 펼치기 ↗</span></button>`).join('')}</div><div class="notebook-next"><span>작은 발견 다섯 개가 하나의 정원을 만들었어.</span><button class="btn primary" data-action="start-final">새 식물에도 써 보기 →</button></div></main>`;
 }
 
 const esc=v=>String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');

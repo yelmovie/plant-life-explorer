@@ -50,5 +50,5 @@ test('모든 활동·보고·엔딩 화면이 오류 없이 그려지고 엔딩�
  s.page=5;s.habitats.hyacinth='grass';const board=renderActivity(s,u,()=>'');// A wrong home stays marked on the card with a clue instead of a drawn line.
  assert.match(board,/habitat-option picked" data-action="habitat" data-id="grass"/);assert.match(board,/들판 흙 위에서는 부레옥잠이/);
  assert.ok(renderReport(s).length&&renderFinal(s,()=>'').length);
- const end=renderEnding(s,()=>'');assert.match(end,/이해한 내용은 연구노트의 선택과 관찰 근거/);assert.doesNotMatch(end,/📷|○/);
+ const end=renderEnding(s,()=>'');assert.match(end,/이해한 내용은 연구 노트의 선택과 관찰 근거/);assert.doesNotMatch(end,/📷|○/);
 });
