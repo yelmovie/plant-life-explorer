@@ -12,8 +12,8 @@ from fontTools.ttLib import TTFont
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SRC, OUT = ROOT / 'assets/fonts/source', ROOT / 'assets/fonts'
-texts = [p.read_text(encoding='utf-8') for p in [*ROOT.glob('src/*.js'), *ROOT.glob('src/*.css'), ROOT / 'index.html']]
-chars = {c for t in texts for c in t if ord(c) > 0x7F} | {chr(c) for c in range(0x20, 0x7F)} | set('·…“”‘’–—→←↑↓•※○●')
+texts = [p.read_text(encoding='utf-8') for p in [*ROOT.glob('src/*.js'), *ROOT.glob('src/*.css'), ROOT / 'index.html'] if not p.name.startswith('._')]
+chars = {c for t in texts for c in t.replace('가-힣', '') if ord(c) > 0x7F} | {chr(c) for c in range(0x20, 0x7F)} | set('·…“”‘’–—→←↑↓•※○●')
 hangul = {c for c in chars if 0xAC00 <= ord(c) <= 0xD7A3}
 # ponytail: text is collected from source files, so runtime-built strings outside src/ are not covered; add them here if one ever appears.
 

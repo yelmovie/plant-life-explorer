@@ -163,3 +163,36 @@ body .map-locked-message .mascot-wrap{width:90px;height:120px;flex-shrink:0}
 @media(prefers-reduced-motion:reduce){#app .trail-flower.fresh{animation:none}}
 
 #app .map-navigation-copy [data-action="map-pan"],#app .map-navigation-copy [data-action="map-overview"]{display:inline-flex;width:48px;min-width:48px;height:48px;min-height:48px;padding:10px;align-items:center;justify-content:center;border-radius:12px} .map-navigation-copy [data-action="map-overview"] svg{width:26px;height:26px} .map-navigation-copy button:focus-visible{outline:3px solid #426e39;outline-offset:2px}
+
+/* Friendly post-learning map villains, independent of mission rewards. */
+
+.garden-combat{position:absolute;inset:0;pointer-events:none;z-index:12}
+.garden-sprite{display:block;position:absolute;width:100px;height:100px;background-image:url('/assets/combat/leafy-taggle.webp');background-size:400% 400%;background-repeat:no-repeat;transform:translate(-50%,-94%) scaleX(var(--sprite-face,1));filter:drop-shadow(0 3px 2px #173b3850)}
+.garden-hero{z-index:4}
+.garden-enemy{position:absolute;width:0;height:0}
+.garden-enemy-hp{position:absolute;top:8px;left:0;transform:translateX(-50%);white-space:nowrap;border-radius:12px;background:#382943ee;color:#fff;font:700 13px/1.4 sans-serif;padding:3px 9px}
+.garden-warning{display:none;position:absolute;bottom:102px;left:-14px;font:bold 27px/1 sans-serif;background:#ffdb65;color:#6b2910;border-radius:50%;width:28px;text-align:center}
+.garden-enemy.is-winding .garden-warning{display:block}
+.garden-enemy.is-winding .garden-sprite{filter:drop-shadow(0 0 7px #ffc547)}
+.garden-enemy.is-hit .garden-sprite,.garden-hero.is-hurt{filter:brightness(1.45) drop-shadow(0 0 6px #ffca68)}
+.garden-hero.is-striking:after{content:'';position:absolute;inset:25px -15px 5px 35px;border-right:7px solid #fff49c;border-radius:50%;filter:drop-shadow(0 0 4px #f6a629)}
+.garden-enemy.is-restored .garden-sprite{opacity:0}
+.garden-enemy.is-restored .garden-enemy-hp{background:#f9f5cc;color:#285936;border:2px solid #85a96a}
+.garden-combat-hud{position:absolute;right:20px;bottom:16px;z-index:24;display:flex;gap:10px;align-items:center;background:#fff9e7ed;border:2px solid #fff;border-radius:24px;padding:9px 12px;box-shadow:0 4px 14px #173b3830}
+.garden-health{color:#a63852;font-size:18px;font-weight:800;white-space:nowrap}
+#app .garden-attack,#app .garden-retry{min-width:92px;min-height:64px;border:2px solid #51693c;border-radius:18px;background:#315f40;color:#fff;font:700 20px/1.2 sans-serif;padding:8px 15px;touch-action:manipulation}
+#app .garden-attack small{display:block;font:12px/1.4 sans-serif}
+#app .garden-attack:disabled{opacity:.6}
+.garden-combat-notice{position:absolute;bottom:104px;left:50%;transform:translateX(-50%);z-index:25;max-width:min(540px,85%);width:max-content;padding:10px 16px;border-radius:16px;background:#fffbeaee;color:#294b36;border:2px solid #c3d7a5;font-size:15px;line-height:1.45;box-shadow:0 3px 10px #173b3825;pointer-events:none}
+.garden-combat [hidden],.garden-combat-hud[hidden],.garden-combat-hud [hidden],.garden-combat-notice[hidden]{display:none!important}
+@media(max-width:900px){.garden-combat-hud{right:10px;bottom:10px;gap:7px;padding:6px 8px}.garden-health{font-size:15px}.garden-combat-notice{bottom:95px;font-size:14px}}
+
+.garden-combat-hud{top:82px;bottom:auto}.garden-combat-notice{bottom:155px}
+@media(max-width:900px){.garden-combat-hud{top:80px;bottom:auto}.garden-combat-notice{bottom:155px}}
+
+/* Map controls: clear local feedback without moving the layout. */
+[data-map-pad] { min-width:44px; min-height:44px; touch-action:none; user-select:none; -webkit-user-select:none; }
+[data-map-pad] > * { pointer-events:none; }
+[data-map-pad][data-map-held] { filter:brightness(1.15); outline:3px solid #f4bc45; outline-offset:1px; box-shadow:inset 0 0 0 2px #fff8da; }
+[data-map-pad]:focus-visible { outline:3px solid #165fba; outline-offset:3px; }
+[data-map-pad]:disabled { opacity:.5; }
