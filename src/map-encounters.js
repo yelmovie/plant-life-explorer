@@ -9,7 +9,7 @@ function layoutSpeech(host, entries){
  const sx=bounds.width/w,sy=bounds.height/h;
  const rect=r=>({l:(r.left-bounds.left)/sx,t:(r.top-bounds.top)/sy,r:(r.right-bounds.left)/sx,b:(r.bottom-bounds.top)/sy});
  const occupied=[];
- const selectors='button,a[href],.map-encounter-body,.map-encounter-prop,.map-encounter-meter,.villain-line,.village-sprite,.map-walker,.expedition-player,.expedition-companion,[data-map-resident],[data-hub-resident],.npc-bubble,.companion-bubble,[role="status"],.map-resident,.world-pin,.map-label,.map-node,.building-label,.map-encounter-reaction';
+ const selectors='button,a[href],.map-encounter-body,.map-encounter-prop,.map-encounter-meter,.villain-line,.village-sprite,.map-walker,.expedition-player,.expedition-companion,[data-map-resident],[data-hub-resident],.npc-bubble,.companion-bubble,[role="status"],.map-resident,.world-pin,.map-label,.map-node,.building-label,.map-encounter-reaction,.map-next-card,.map-navigation,.map-repair';
  for(const part of host.ownerDocument.querySelectorAll(selectors)){
   if(visible.some(({el})=>el===part||part.contains(el))||part.closest('[hidden],[aria-hidden="true"][inert]'))continue;
   const box=part.getBoundingClientRect();
@@ -19,11 +19,11 @@ function layoutSpeech(host, entries){
   occupied.push({l:b.l-7,r:b.r+7,t:b.t-7,b:b.b+7});
  }
  const clamp=(x,min,max)=>Math.max(min,Math.min(x,max));
- for(const {el,anchor} of visible){
+ for(const {el,anchor,point} of visible){
   const ew=el.offsetWidth,eh=el.offsetHeight;if(!ew||!eh)continue;
   const a=anchor?rect(anchor.getBoundingClientRect()):null,ea=rect(el.offsetParent?.getBoundingClientRect()??bounds);
   const x=a?(a.l+a.r)/2:w/2,top=a?a.t-18:12,bottom=a?a.b+18:20,gap=14;
-  const preferred=a?[[x-ew/2,top-eh],[a.r+gap,top-eh/3],[a.l-gap-ew,top-eh/3],[x-ew/2,bottom]]:[[x-ew/2,12],[x-ew/2,h-95-eh],[12,85],[w-ew-12,85]];
+  const preferred=point?[[point.x-ew/2,point.y+42-eh/2],[point.x-ew/2,point.y-94],[point.x+24,point.y+30],[point.x-ew-24,point.y+30]]:a?[[x-ew/2,top-eh],[a.r+gap,top-eh/3],[a.l-gap-ew,top-eh/3],[x-ew/2,bottom]]:[[x-ew/2,12],[x-ew/2,h-95-eh],[12,85],[w-ew-12,85]];
   const pts=preferred.slice();
   for(let y=12;y<h-eh-6;y+=22)for(let i=0;i<=8;i++)pts.push([12+(w-ew-24)*i/8,y]);
   const fit=pts.map(([l,t])=>({l:clamp(l,8,w-ew-8),t:clamp(t,8,h-eh-8)})).map(p=>({...p,r:p.l+ew,b:p.t+eh}));
@@ -235,6 +235,7 @@ export function mountMapEncounters({
       callback.hidden=now>=clearUntil;
     }
     if(finaleAt&&now>=finaleAt&&!stop){finaleAt=0;openMapFinale(host,"/assets/videos/outro.mp4");}
+    const changed=nearest!==current;
     current=nearest;
     if(current&&current!==lastNear&&current.saidUntil<=now&&now-lastHit>REPEAT&&now>=clearUntil){
       const message=current.say[current.sayIndex++%current.say.length]??'다가왔구나!';
@@ -249,15 +250,11 @@ export function mountMapEncounters({
       if(attack.textContent!==label)attack.textContent=label;
       const description=`${current.s.name}의 악당 공격, ${remaining}번 남음`;
       if(attack.getAttribute('aria-label')!==description)attack.setAttribute('aria-label',description);
-      if(controls===host){
-        const p=project(current.s);
-        attack.style.left=`${Math.max(76,Math.min(width-76,p.x))}px`;
-        attack.style.top=`${Math.max(30,Math.min(height-30,p.y+42))}px`;
-      }
     }else if(hasFocus){host.querySelector('canvas,[tabindex="0"]')?.focus({preventScroll:true});}
-    if(now-lastSpeechLayout>=110){
+    if(changed||now-lastSpeechLayout>=110){
       lastSpeechLayout=now;
-      layoutSpeech(host,[{el:callback},...foes.map(foe=>({el:foe.bubble,anchor:foe.actor}))]);
+      const control=current&&controls===host?[{el:attack,point:project(current.s)}]:[];
+      layoutSpeech(host,[...control,{el:callback},...foes.map(foe=>({el:foe.bubble,anchor:foe.actor}))]);
     }
     return {hero:output('hero',now),ally:output('ally',now)};
   }
