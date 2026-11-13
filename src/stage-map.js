@@ -2,6 +2,7 @@ import {bindDirectionPad,mapKeyDirection} from './map-controls.js';
 import {assetImage} from './asset-catalog.js';
 import {REWARDS} from './rewards.js';
 import {josa} from './josa.js';
+import {mountVillageEncounters} from './village-encounters.js';
 
 // One continuous walkable road, traced from the existing 1536 × 1024 artwork.
 // Movement and taps project onto this road, so the river and forest cannot be crossed.
@@ -23,7 +24,7 @@ export const ENTRANCES=[[250,820],[405,533],[771,322],[1295,536],[1390,195]].map
 const vectors={up:[0,-1],left:[-1,0],down:[0,1],right:[1,0]};
 const keys={ArrowUp:'up',ArrowLeft:'left',ArrowDown:'down',ArrowRight:'right',w:'up',a:'left',s:'down',d:'right'};
 
-export function mountStageMap(root,ui,onArrive){
+export function mountStageMap(root,ui,onArrive,encounterOptions={}){
   const viewport=root.querySelector('.stage-map-viewport'),world=viewport.querySelector('.island-map');
 
   const controller=new AbortController(),{signal}=controller,held=new Set();
@@ -35,6 +36,22 @@ export function mountStageMap(root,ui,onArrive){
   const touches=new Map();let pinch=null;
   const reduce=matchMedia('(prefers-reduced-motion: reduce)');
   const blocked=()=>document.querySelector('#dialog')?.open||root.querySelector('.map-load-error');
+  const flower=document.createElement('div');flower.className='map-walker map-flower';flower.setAttribute('aria-hidden','true');
+  flower.innerHTML=assetImage('mascot_flower');flower.style.width='54px';
+  const encounters=mountVillageEncounters({host:viewport,stages:ENTRANCES.map((entry,i)=>{
+    if(!encounterOptions.completed?.[i])return null;
+    const p=trailPoint(entry.distance+(i===4?-42:42));return {x:p.x,y:p.y,name:REWARDS[i].name};
+  }),progress:encounterOptions.progress,onSave:encounterOptions.onSave,tone:encounterOptions.tone,
+    blocked:()=>!!blocked()||overview,reduced:()=>reduce.matches,actors:[actor,flower]});
+  if(encounters)world.append(flower);
+  let encounterFrame=0;
+  function drawEncounters(now){
+    if(disposed||!encounters)return;
+    const hero=trailPoint(distance),friend=trailPoint(distance-45),ally={x:friend.x-14,y:friend.y+10};
+    flower.style.left=`${ally.x/1536*100}%`;flower.style.top=`${ally.y/1024*100}%`;
+    encounters.update({hero,ally,now,scale,project:({x,y})=>({x:offsetX+x*scale,y:offsetY+y*scale})});
+    encounterFrame=requestAnimationFrame(drawEncounters);
+  }
   const near=()=>ENTRANCES.findIndex(e=>Math.abs(e.distance-distance)<24);
   const base=()=>Math.max(viewport.clientWidth/1536,viewport.clientHeight/1024);
   const clamp=(value,view,size)=>size<view?(view-size)/2:Math.max(view-size,Math.min(0,value));
@@ -113,6 +130,6 @@ export function mountStageMap(root,ui,onArrive){
   document.addEventListener('keyup',e=>{const direction=mapKeyDirection(e);held.delete(direction);if(!held.size&&target===null)stop();},{signal});
   let previousWidth=viewport.clientWidth,previousHeight=viewport.clientHeight;
   const observer=new ResizeObserver(()=>{if(free&&!overview){const x=(previousWidth/2-offsetX)/scale,y=(previousHeight/2-offsetY)/scale,k=base()*zoom;free={x:viewport.clientWidth/2-x*k,y:viewport.clientHeight/2-y*k};}previousWidth=viewport.clientWidth;previousHeight=viewport.clientHeight;draw(true);});observer.observe(viewport);
-  addEventListener('orientationchange',stop,{signal});draw(true);
-  return {goTo,stop,toggleOverview(){stop();if(overview){overview=false;restore(saved);saved=null;}else{saved=snapshot();overview=true;}draw(true);},toggleHand(){stop();if(overview){overview=false;restore(saved);saved=null;draw(true);}hand=!hand;free=hand?{x:offsetX,y:offsetY}:null;if(!hand)zoom=1;draw(true);},destroy(){disposed=true;stop();cancelAnimationFrame(settle);observer.disconnect();controller.abort();}};
+  addEventListener('orientationchange',stop,{signal});draw(true);if(encounters)drawEncounters(performance.now());
+  return {goTo,stop,toggleOverview(){stop();if(overview){overview=false;restore(saved);saved=null;}else{saved=snapshot();overview=true;}draw(true);},toggleHand(){stop();if(overview){overview=false;restore(saved);saved=null;draw(true);}hand=!hand;free=hand?{x:offsetX,y:offsetY}:null;if(!hand)zoom=1;draw(true);},destroy(){disposed=true;stop();cancelAnimationFrame(encounterFrame);encounters?.destroy();cancelAnimationFrame(settle);observer.disconnect();controller.abort();}};
 }
