@@ -77,6 +77,15 @@ export const GARDEN_THEMES=['pink','yellow','blue'];
 export function rewardCount(s){return MISSIONS.reduce((n,_,i)=>n+Number(missionDone(s,i)),0);}
 export function canChooseGardenTheme(s){return missionDone(s,1);}
 export function openMission(s,i){return Number.isInteger(i)&&i>=0&&i<MISSIONS.length&&(s.adminUnlocked===true||i===0||missionDone(s,i-1));}
+// The last activity page survives returning home. Fieldwork writes evidence before page completion.
+export function gardenResumePage(s){
+  const page=s.page;
+  if(!Number.isInteger(page)||page<0||page>=PAGES.length||!openMission({...s,adminUnlocked:false},Math.floor(page/2)))return null;
+  const e=s.fieldEvidence;
+  const present=v=>Array.isArray(v)?v.some(present):v&&typeof v==='object'?Object.values(v).some(present):Boolean(v);
+  const fields=[e.leaves,e.seasons,e.float,e.garden,{prediction:e.bag.prediction,tests:e.bag.tests,assembled:e.bag.assembled,delivered:e.bag.delivered}];
+  return present(s.completed)||present(s.observation)||s.legacyCompleted.length>0||s.legacyFinished||present(fields)?page:null;
+}
 export const PAGE_ROUTES=[{screen:'home',label:'메인'},{screen:'map',label:'스테이지 선택'},...PAGES.map(([label],page)=>({screen:'activity',page,label})),{screen:'report',label:'최종 연구 보고'},{screen:'final',label:'최종 시운전'},{screen:'ending',label:'엔딩 · 인증서'}];
 export function routeIndex(s){return PAGE_ROUTES.findIndex(r=>r.screen===s.screen&&(r.screen!=='activity'||r.page===s.page));}
 export function previousRoute(s){return PAGE_ROUTES[Math.max(0,routeIndex(s)-1)];}

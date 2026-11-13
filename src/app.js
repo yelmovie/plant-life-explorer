@@ -8,7 +8,7 @@ import {carryFieldEvidence} from './field-bridge.js';
 import {QUESTS} from './inquiry.js';
 import {mountSpatialSafely,SPATIAL_FAIL} from './runtime-support.js';
 import {ASSETS,THUMBS,assetImage,warmMission} from './asset-catalog.js';
-import {STORAGE_KEY,HABITAT_PLANTS,HABITATS,MISSIONS,SEASONS,freshState,restoreState,plantAt,terrainReady,evidenceCount,missionDone,openMission,pageReady,designKey,testDesign,testValid,canFinish,PAGE_ROUTES,routeIndex,previousRoute,misfitNote} from './model.js';
+import {STORAGE_KEY,HABITAT_PLANTS,HABITATS,MISSIONS,SEASONS,freshState,restoreState,plantAt,terrainReady,evidenceCount,missionDone,openMission,pageReady,designKey,testDesign,testValid,canFinish,PAGE_ROUTES,routeIndex,previousRoute,gardenResumePage,misfitNote} from './model.js';
 import {icon,plantArt,seasonArt,heroArt} from './art.js';
 import {REWARDS,seedProgress,themePicker,worldMap,evidenceSummary,THEMES,stampBadges,stampBoard,nextMapMission,mapPrerequisite} from './rewards.js';
 import {mountStageMap,ENTRANCES} from './stage-map.js';
@@ -83,7 +83,7 @@ function header(){return `<header class="topbar"><nav class="page-navigation" ar
 function openRoute(route){if(!route)return;if(route.screen==='activity')startPage(route.page);else nav(route.screen);}
 function progress(){return `<div class="progress-track">${MISSIONS.map((m,i)=>`<button data-action="select-mission" data-id="${i}" ${openMission(state,i)?'':'disabled'} class="progress-stop ${missionDone(state,i)?'done':''} ${Math.floor(state.page/2)===i&&state.screen==='activity'?'current':''}"><span>${missionDone(state,i)?icon('check',16):String(i+1).padStart(2,'0')}</span>${m.short}</button>`).join('')}</div>`;}
 // After every stage is done, home also offers a fresh start (it asks before erasing anything).
-function home(){const hasProgress=state.completed.some(Boolean)||Object.values(state.observation).some(a=>a.length),allDone=state.finished||state.completed.every(Boolean);return `<main class="home"><section class="home-scene">${heroArt()}<div class="home-copy"><span class="home-kicker">리피와 함께 떠나는 식물 탐험</span>${logo('hero-logo')}<p class="home-story">작은 잎에 숨은 비밀을 찾아<br><strong>잠든 초록정원을 깨워 줘!</strong></p><div class="home-actions"><div class="home-buttons">${btn((hasProgress?'탐험 이어 하기':'리피와 탐험 시작')+icon('arrow'),'begin','primary jumbo')}${allDone?btn(icon('reset')+'처음부터 다시 하기','reset-prompt','soft jumbo home-restart'):''}</div><span>네가 찾은 발견이 정원의 빛씨앗이 돼.</span>${btn('리피와 이야기','npc-lipi','soft npc-home-entry')}</div></div><div class="hero-friends"><span class="home-invite">나와 함께 찾아볼래?</span>${mascot('leaf',true)}</div>${saveFailed?'<span class="home-save-note">기록을 저장할 수 없어</span>':''}</section></main>`;}
+function home(){const hasProgress=gardenResumePage(state)!==null,allDone=state.finished||state.completed.every(Boolean);return `<main class="home"><section class="home-scene">${heroArt()}<div class="home-copy"><span class="home-kicker">리피와 함께 떠나는 식물 탐험</span>${logo('hero-logo')}<p class="home-story">작은 잎에 숨은 비밀을 찾아<br><strong>잠든 초록정원을 깨워 줘!</strong></p><div class="home-actions"><div class="home-buttons">${btn((hasProgress?'탐험 이어 하기':'리피와 탐험 시작')+icon('arrow'),'begin','primary jumbo')}${allDone?btn(icon('reset')+'처음부터 다시 하기','reset-prompt','soft jumbo home-restart'):''}</div><span>네가 찾은 발견이 정원의 빛씨앗이 돼.</span>${btn('리피와 이야기','npc-lipi','soft npc-home-entry')}</div></div><div class="hero-friends"><span class="home-invite">나와 함께 찾아볼래?</span>${mascot('leaf',true)}</div>${saveFailed?'<span class="home-save-note">기록을 저장할 수 없어</span>':''}</section></main>`;}
 
 let clearIndex;
 function mapPage(){
@@ -262,7 +262,7 @@ async function action(a,id,el){
  case 'offline-prep':prepareOffline();return;
  case 'admin-next':if(state.adminUnlocked)openRoute(PAGE_ROUTES[routeIndex(state)+1]);return;
  case 'map':ui.map=Math.min(4,Math.floor(state.page/2));nav('map');return;
- case 'begin':if(state.completed.some(Boolean)||Object.values(state.observation).some(a=>a.length)){nav('map');return;}intro();return;
+ case 'begin':{const page=gardenResumePage(state);if(page!==null){startPage(page);return;}intro();return;}
  case 'intro-start':dialog.close();nav('map');return;
  case 'journal':journal();return;
  case 'settings':settings();return;
