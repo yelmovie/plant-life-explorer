@@ -38,7 +38,7 @@ export function mountStageMap(root,ui,onArrive,encounterOptions={}){
   const blocked=()=>document.querySelector('#dialog')?.open||root.querySelector('.map-load-error');
   const flower=document.createElement('div');flower.className='map-walker map-flower';flower.setAttribute('aria-hidden','true');
   flower.innerHTML=assetImage('mascot_flower');flower.style.width='54px';
-  const encounters=mountVillageEncounters({host:viewport,stages:ENTRANCES.map((entry,i)=>{
+  const encounters=mountVillageEncounters({host:viewport,clearIndex:encounterOptions.clearIndex,stages:ENTRANCES.map((entry,i)=>{
     if(!encounterOptions.completed?.[i])return null;
     const p=trailPoint(entry.distance+(i===4?-42:42));return {x:p.x,y:p.y,name:REWARDS[i].name};
   }),progress:encounterOptions.progress,onSave:encounterOptions.onSave,tone:encounterOptions.tone,
