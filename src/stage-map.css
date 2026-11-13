@@ -40,11 +40,10 @@
 #app .stage-map .world-light::after{left:58%;top:4%;font-size:calc(13px / var(--map-scale));animation-delay:1.6s}
 @keyframes sparkle{0%,100%{opacity:.35;transform:scale(.7)}50%{opacity:1;transform:scale(1.15)}}
 @media(prefers-reduced-motion:reduce){#app .stage-map .restored::before,#app .stage-map .just-restored .world-building,#app .stage-map .world-light svg,#app .stage-map .world-light::before,#app .stage-map .world-light::after{animation:none}}
-#app .stage-map .world-core{display:none}
 #app .map-road{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
 #app .map-road polyline{fill:none;stroke:#fff4d2;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1 25;opacity:.65}
-#app .map-walker{position:absolute;width:calc(66px / var(--map-scale));height:calc(92px / var(--map-scale));transform:translate(-50%,-95%);pointer-events:none;z-index:4;filter:drop-shadow(0 5px 3px #253d3940)}
-#app .map-walker img{width:100%;height:100%;object-fit:contain}
+#app .map-walker{position:absolute;width:calc(66px / var(--map-scale));height:calc(92px / var(--map-scale));transform:translate(-50%,-95%);pointer-events:none;z-index:4;filter:drop-shadow(0 3px 2px #253d394d)}
+#app .stage-map .map-walker img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(calc(1px / var(--map-scale)) 0 0 #fff4d2) drop-shadow(calc(-1px / var(--map-scale)) 0 0 #fff4d2) drop-shadow(0 calc(1px / var(--map-scale)) 0 #fff4d2) drop-shadow(0 calc(-1px / var(--map-scale)) 0 #fff4d2)}
 #app .map-walker.walking img{animation:map-walk .28s ease-in-out infinite alternate}
 @keyframes map-walk{to{transform:translateY(-5px) rotate(3deg)}}
 #app .map-hud{position:absolute;inset:18px 24px auto;display:flex;justify-content:space-between;align-items:flex-start;gap:20px;pointer-events:none;z-index:5}
@@ -164,35 +163,128 @@ body .map-locked-message .mascot-wrap{width:90px;height:120px;flex-shrink:0}
 
 #app .map-navigation-copy [data-action="map-pan"],#app .map-navigation-copy [data-action="map-overview"]{display:inline-flex;width:48px;min-width:48px;height:48px;min-height:48px;padding:10px;align-items:center;justify-content:center;border-radius:12px} .map-navigation-copy [data-action="map-overview"] svg{width:26px;height:26px} .map-navigation-copy button:focus-visible{outline:3px solid #426e39;outline-offset:2px}
 
-/* Friendly post-learning map villains, independent of mission rewards. */
-
-.garden-combat{position:absolute;inset:0;pointer-events:none;z-index:12}
-.garden-sprite{display:block;position:absolute;width:100px;height:100px;background-image:url('/assets/combat/leafy-taggle.webp');background-size:400% 400%;background-repeat:no-repeat;transform:translate(-50%,-94%) scaleX(var(--sprite-face,1));filter:drop-shadow(0 3px 2px #173b3850)}
-.garden-hero{z-index:4}
-.garden-enemy{position:absolute;width:0;height:0}
-.garden-enemy-hp{position:absolute;top:8px;left:0;transform:translateX(-50%);white-space:nowrap;border-radius:12px;background:#382943ee;color:#fff;font:700 13px/1.4 sans-serif;padding:3px 9px}
-.garden-warning{display:none;position:absolute;bottom:102px;left:-14px;font:bold 27px/1 sans-serif;background:#ffdb65;color:#6b2910;border-radius:50%;width:28px;text-align:center}
-.garden-enemy.is-winding .garden-warning{display:block}
-.garden-enemy.is-winding .garden-sprite{filter:drop-shadow(0 0 7px #ffc547)}
-.garden-enemy.is-hit .garden-sprite,.garden-hero.is-hurt{filter:brightness(1.45) drop-shadow(0 0 6px #ffca68)}
-.garden-hero.is-striking:after{content:'';position:absolute;inset:25px -15px 5px 35px;border-right:7px solid #fff49c;border-radius:50%;filter:drop-shadow(0 0 4px #f6a629)}
-.garden-enemy.is-restored .garden-sprite{opacity:0}
-.garden-enemy.is-restored .garden-enemy-hp{background:#f9f5cc;color:#285936;border:2px solid #85a96a}
-.garden-combat-hud{position:absolute;right:20px;bottom:16px;z-index:24;display:flex;gap:10px;align-items:center;background:#fff9e7ed;border:2px solid #fff;border-radius:24px;padding:9px 12px;box-shadow:0 4px 14px #173b3830}
-.garden-health{color:#a63852;font-size:18px;font-weight:800;white-space:nowrap}
-#app .garden-attack,#app .garden-retry{min-width:92px;min-height:64px;border:2px solid #51693c;border-radius:18px;background:#315f40;color:#fff;font:700 20px/1.2 sans-serif;padding:8px 15px;touch-action:manipulation}
-#app .garden-attack small{display:block;font:12px/1.4 sans-serif}
-#app .garden-attack:disabled{opacity:.6}
-.garden-combat-notice{position:absolute;bottom:104px;left:50%;transform:translateX(-50%);z-index:25;max-width:min(540px,85%);width:max-content;padding:10px 16px;border-radius:16px;background:#fffbeaee;color:#294b36;border:2px solid #c3d7a5;font-size:15px;line-height:1.45;box-shadow:0 3px 10px #173b3825;pointer-events:none}
-.garden-combat [hidden],.garden-combat-hud[hidden],.garden-combat-hud [hidden],.garden-combat-notice[hidden]{display:none!important}
-@media(max-width:900px){.garden-combat-hud{right:10px;bottom:10px;gap:7px;padding:6px 8px}.garden-health{font-size:15px}.garden-combat-notice{bottom:95px;font-size:14px}}
-
-.garden-combat-hud{top:82px;bottom:auto}.garden-combat-notice{bottom:155px}
-@media(max-width:900px){.garden-combat-hud{top:80px;bottom:auto}.garden-combat-notice{bottom:155px}}
-
 /* Map controls: clear local feedback without moving the layout. */
 [data-map-pad] { min-width:44px; min-height:44px; touch-action:none; user-select:none; -webkit-user-select:none; }
 [data-map-pad] > * { pointer-events:none; }
 [data-map-pad][data-map-held] { filter:brightness(1.15); outline:3px solid #f4bc45; outline-offset:1px; box-shadow:inset 0 0 0 2px #fff8da; }
 [data-map-pad]:focus-visible { outline:3px solid #165fba; outline-offset:3px; }
 [data-map-pad]:disabled { opacity:.5; }
+
+/* Pulse only the next-destination arrow. The label and tap target stay still. */
+@media (prefers-reduced-motion: no-preference) {
+  .map-next-cue:not(:disabled):not([aria-disabled="true"]) > :is(svg:last-child, .map-direction-cue) {
+    animation: map-direction-pulse 1.45s ease-in-out 4;
+  }
+}
+@keyframes map-direction-pulse {
+  0%, 100% { opacity: 1; translate: 0; }
+  50% { opacity: .55; translate: 4px 0; }
+}
+.map-lock-icon { flex: none; vertical-align: middle; }
+.stage-map .map-extras:empty { display: none; }
+
+#app .stage-map-viewport { touch-action: none; }
+#app .stage-map .map-navigation-copy { display: flex; flex-wrap: wrap; gap: 8px; }
+#app .stage-map .map-next-card { position: relative; }
+#app .stage-map .map-next-card .map-more { grid-column: 1 / -1; }
+#app .stage-map .map-more summary { padding: 9px 12px; min-height: 44px; cursor: pointer; text-align: right; }
+#app .stage-map .map-more .map-extras { position: absolute; right: 0; bottom: 100%; min-width: min(210px, 70vw); padding: 8px; background: #fffdf3; border: 1px solid #e0d8b9; border-radius: 12px; z-index: 6; }
+
+/* Map controls float directly over the scene. */
+#app .stage-map {
+  --map-edge: 16px; --map-key: 52px; --map-gap: 7px;
+  --map-cta-height: 60px; --map-cta-size: 19px; --map-arrow-size: 26px;
+}
+#app .stage-map .map-dpad {
+  display: grid; grid-template: repeat(2, var(--map-key)) / repeat(3, var(--map-key));
+  gap: var(--map-gap); width: max-content; padding: 0; background: none;
+  border: 0; box-shadow: none; pointer-events: none;
+}
+#app .stage-map .map-dpad .map-direction {
+  display: grid; place-items: center; box-sizing: border-box; pointer-events: auto;
+  width: var(--map-key); height: var(--map-key); min-width: var(--map-key); min-height: var(--map-key);
+  padding: 0; color: #233e33; background: #fff6dc; border: 2px solid #475b42;
+  border-radius: 12px; box-shadow: 0 3px 0 #263e30;
+  font: 800 var(--map-arrow-size)/1 system-ui, sans-serif; transition: transform .12s ease;
+}
+#app .stage-map .map-dpad .map-direction:is(.pressed, [data-map-held], :active) {
+  color: #fff; background: #245b46; border-color: #15382a;
+  box-shadow: inset 0 2px 4px #15382a; transform: translateY(2px); filter: none; outline: 0;
+}
+#app .stage-map .map-bottom .map-next-card > .primary {
+  box-sizing: border-box; display: inline-flex; justify-content: center; align-items: center;
+  gap: 8px; min-height: var(--map-cta-height); padding: 9px 16px;
+  border: 2px solid #a8802f; border-radius: 16px; color: #463813;
+  background: linear-gradient(#ffe391, #f4c95f); box-shadow: 0 4px 0 #8c6a24;
+  font-size: var(--map-cta-size); font-weight: 800; line-height: 1.22;
+  text-align: center; word-break: keep-all; overflow-wrap: anywhere; white-space: normal;
+}
+#app .stage-map .map-bottom .map-next-card > .primary:hover:not(:disabled) { background: linear-gradient(#ffeba9, #f9d473); transform: none; }
+#app .stage-map .map-bottom .map-next-card > .primary:active:not(:disabled) { transform: translateY(2px); box-shadow: 0 2px 0 #8c6a24; }
+#app .stage-map .map-bottom .map-next-card > .primary:disabled { color: #463813; background: #fff3c8; opacity: 1; }
+#app .stage-map .map-bottom .map-next-card > .primary > svg { width: 22px; height: 22px; margin: 0; flex: none; }
+#app .stage-map .map-dpad .map-direction:focus-visible, #app .stage-map .map-bottom .map-next-card > .primary:focus-visible { outline: 3px solid #1358a4; outline-offset: 2px; }
+#app main.stage-map .map-bottom {
+  left: calc(var(--map-edge) + env(safe-area-inset-left, 0px));
+  right: calc(var(--map-edge) + env(safe-area-inset-right, 0px));
+  bottom: calc(var(--map-edge) + env(safe-area-inset-bottom, 0px));
+  flex-direction: row; align-items: flex-end; justify-content: space-between; gap: 12px;
+  padding: 0; border: 0; background: none; box-shadow: none; pointer-events: none;
+}
+#app .stage-map .map-bottom .map-navigation {
+  position: relative; flex: 0 0 auto; display: block; width: max-content;
+  padding: 0; border: 0; background: none; box-shadow: none; pointer-events: none;
+}
+#app .stage-map .map-dpad .map-direction.up { grid-area: 1 / 2; }
+#app .stage-map .map-dpad .map-direction.left { grid-area: 2 / 1; }
+#app .stage-map .map-dpad .map-direction.down { grid-area: 2 / 2; }
+#app .stage-map .map-dpad .map-direction.right { grid-area: 2 / 3; }
+#app .stage-map .map-next-card .map-navigation-copy {
+  position: static; display: flex; justify-self: end;
+  width: max-content; max-width: none; flex-direction: row; gap: var(--map-gap);
+}
+#app .stage-map .map-bottom .map-navigation-copy > .btn {
+  pointer-events: auto; display: grid; place-items: center; width: 48px; height: 48px;
+  min-width: 48px; min-height: 48px; padding: 8px; color: #233e33; background: #fff6dc;
+  border: 2px solid #475b42; border-radius: 12px; box-shadow: 0 3px 0 #263e30;
+}
+#app .stage-map .map-bottom .map-navigation-copy > .btn[aria-pressed="true"] {
+  padding: 8px; color: #fff; background: #245b46; border-color: #15382a;
+}
+#app .stage-map .map-bottom .map-navigation-copy svg { width: 24px; height: 24px; }
+#app .stage-map .map-bottom .map-next-card {
+  display: grid; grid-template-columns: minmax(0, 1fr); flex: 0 1 auto; width: fit-content; max-width: 32rem; min-width: 0; gap: 12px;
+  padding: 0; border: 0; background: none; box-shadow: none; pointer-events: none;
+}
+#app .stage-map .map-bottom .map-next-card > .primary { width: auto; max-width: 100%; pointer-events: auto; }
+#app .stage-map .map-next-card .map-more {
+  position: absolute; bottom: calc(100% + var(--map-gap)); right: 0; width: max-content; max-width: 100%; pointer-events: auto;
+}
+#app .stage-map .map-more summary {
+  color: #233e33; background: #fff6dc; border: 1px solid #475b42; border-radius: 12px;
+}
+@media (min-width: 1500px) and (min-height: 850px) {
+  #app .stage-map { --map-key: 64px; --map-gap: 10px; --map-arrow-size: 32px; --map-cta-size: 22px; }
+
+}
+@media (max-width: 820px), (max-height: 620px) {
+  #app .stage-map { --map-key: 44px; --map-gap: 4px; --map-cta-height: 52px; --map-arrow-size: 23px; --map-cta-size: 16px; }
+  #app .stage-map .map-bottom .map-next-card > .primary { gap: 6px; padding-inline: 10px; }
+  #app .stage-map .map-bottom .map-next-card > .primary > svg { width: 19px; height: 19px; }
+
+  #app .stage-map .map-bottom { gap: 8px; }
+  #app .stage-map .map-bottom .map-navigation-copy > .btn { width: 44px; height: 44px; min-width: 44px; min-height: 44px; }
+
+}
+
+/* Saved discoveries lift the background shade; new mechanisms sit on the building art. */
+#app .stage-map .island-ground{filter:saturate(calc(.74 + var(--garden-awake,0)*.26)) brightness(calc(.84 + var(--garden-awake,0)*.16))}
+#app .stage-map .garden-work-detail{position:absolute;z-index:4;left:60%;top:61%;width:24%;height:auto;pointer-events:none}
+#app .stage-map .just-restored .garden-work-detail{animation:garden-detail-grow .65s .16s ease-out both}
+#app .stage-map .garden-core-bloom{position:absolute;left:61%;top:59%;width:4.4%;z-index:2;pointer-events:none;filter:drop-shadow(0 0 12px #ffd477)}
+#app .stage-map .garden-core-bloom svg{width:100%;display:block}
+#app .stage-map .restored:not(.just-restored)::before{animation:none}
+#app .stage-map .just-restored::before{animation:restore-burst .9s ease-out}
+#app .stage-map .just-restored .world-building{animation-duration:.9s}
+@keyframes garden-detail-grow{from{opacity:0;transform:translateY(7px) scale(.94)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){#app .stage-map .just-restored .garden-work-detail,#app .stage-map .just-restored::before{animation:none}}
