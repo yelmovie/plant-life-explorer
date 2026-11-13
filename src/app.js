@@ -1,7 +1,8 @@
 import {createSaveStore} from './safe-storage.js';
 import {installNpcNarration} from './npc-narration.js';
+import {characterDialogueMarkup,mountCharacterDialogue} from './character-dialogue.js';
 import {suspendMusic,stopFeedback} from './audio.js';
-installNpcNarration({selector:'.guide-talk',src:new URL('../assets/audio/npc-welcome.mp3',import.meta.url).href,text:'안녕! 나는 리피야. 우리 주변 식물의 잎과 줄기를 자세히 살펴보자. 서로 닮은 점과 다른 점을 찾으며 초록정원의 비밀을 알아보자!',enabled:isEffectsOn,volume:()=>getMusicVolume()/100,hold:()=>{stopFeedback();return suspendMusic();}});
+installNpcNarration({selector:'.guide-talk',src:new URL('../assets/audio/lipi-welcome.mp3',import.meta.url).href,text:'안녕! 나는 리피야. 우리 주변 식물의 잎과 줄기를 자세히 살펴보자. 서로 닮은 점과 다른 점을 찾으며 초록정원의 비밀을 알아보자!',enabled:isEffectsOn,volume:()=>getMusicVolume()/100,hold:()=>{stopFeedback();return suspendMusic();}});
 import {recordHint,recordResponse} from './learning-records.js';
 import {carryFieldEvidence} from './field-bridge.js';
 import {QUESTS} from './inquiry.js';
@@ -26,6 +27,7 @@ import {installCardDrag,celebrateCard} from './card-drag.js';
 import {notebookEntry,NOTE_QUIZZES} from './research-notebook.js';
 
 const app=document.querySelector('#app'),dialog=document.querySelector('#dialog');
+let dialogueCleanup=()=>{},dialogueFocus=null;
 let state=freshState(),saveFailed=false,studentState=null,studentMapDistance,mapController,fieldCleanup,guideCleanup;
 const saveStore=createSaveStore({getItem:key=>localStorage.getItem(key),setItem:(key,value)=>localStorage.setItem(key,value)},navigator.locks,updateSaveStatus);
 state=saveStore.load();
@@ -54,7 +56,26 @@ function save(){if(state.finished&&!state.legacyFinished&&!canFinish(state))stat
 function downloadRecord(raw,name){const url=URL.createObjectURL(new Blob([raw],{type:'application/json;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 function saveHelp(){modal('기록 보관과 복구',`<p>이 브라우저·주소의 기록이야. 원본 보관 파일은 읽지 못한 내용도 그대로 담으며, 파일 보관만으로 복구가 된 것은 아니야.</p><p>현재 활동 파일은 보관용이야. 앱에서 파일 가져오기는 제공하지 않아. 다른 탭의 최신 기록을 열면 이 탭에서 저장하지 못한 선택은 사라져. 먼저 파일로 보관해 줘.</p>`,btn('현재 활동 파일 보관','save-export','soft')+(saveStore.original!==null?btn('저장 원본 파일 보관','save-original','soft'):'')+(saveStore.status==='failed'?btn('다시 저장하기','save-retry','primary'):'')+(['invalid','failed'].includes(saveStore.status)&&saveStore.backup()?btn('마지막 정상 기록으로 복구','save-recover','soft'):'')+btn('저장된 최신 기록 열기','save-reload','soft')+btn('계속 살펴보기','close','soft'));}
 function toast(message){if(state.screen==='activity'){const target=app.querySelector('.activity-feedback')||app.querySelector('.guide-bubble');if(target){target.textContent=message;target.classList.remove('nudge');void target.offsetWidth;target.classList.add('nudge');}$('#announcer').textContent=message;return;}clearTimeout(toastTimer);$('.toast')?.remove();const el=document.createElement('div');el.className='toast';el.setAttribute('aria-hidden','true');el.textContent=message;document.body.append(el);$('#announcer').textContent=message;toastTimer=setTimeout(()=>el.remove(),2400);}
-function modal(title,body,buttons='',cls=''){mapController?.stop();if(!body.includes('reward-scene'))dialog.classList.remove('reward-dialog');dialog.classList.toggle('settings-dialog',cls==='settings');dialog.classList.toggle('tool-dialog',cls==='tools');dialog.classList.toggle('notebook-dialog',cls==='notebook');dialog.classList.toggle('brief-dialog',cls==='brief');dialog.innerHTML=`<div class="dialog-top"><span class="eyebrow">초록정원 연구기지</span>${btn(icon('close'),'close','icon-btn','aria-label="닫기"')}</div><h2 id="dialog-title">${title}</h2>${cls==='settings'?body:`<div class="dialog-body">${body}</div>`}<div class="dialog-actions">${buttons||btn('알겠어','close','primary')}</div>`;dialog.setAttribute('aria-labelledby','dialog-title');if(!dialog.open)dialog.showModal();}
+function modal(title,body,buttons='',cls=''){dialogueCleanup();dialogueCleanup=()=>{};dialog.classList.toggle('npc-dialogue-stage',cls==='npc');mapController?.stop();if(!body.includes('reward-scene'))dialog.classList.remove('reward-dialog');dialog.classList.toggle('settings-dialog',cls==='settings');dialog.classList.toggle('tool-dialog',cls==='tools');dialog.classList.toggle('notebook-dialog',cls==='notebook');dialog.classList.toggle('brief-dialog',cls==='brief');dialog.innerHTML=`<div class="dialog-top"><span class="eyebrow">초록정원 연구기지</span>${btn(icon('close'),'close','icon-btn','aria-label="닫기"')}</div><h2 id="dialog-title">${title}</h2>${cls==='settings'?body:`<div class="dialog-body">${body}</div>`}<div class="dialog-actions">${buttons||btn('알겠어','close','primary')}</div>`;dialog.setAttribute('aria-labelledby','dialog-title');if(!dialog.open)dialog.showModal();}
+const lipiArt='/assets/npc-dialogue/lipi.webp';
+const lipiTrack=id=>`/assets/audio/${id}.mp3`;
+const lipiWelcome={label:'인사',text:'안녕! 나는 리피야. 우리 주변 식물의 잎과 줄기를 자세히 살펴보자. 서로 닮은 점과 다른 점을 찾으며 초록정원의 비밀을 알아보자!',src:lipiTrack('lipi-welcome')};
+function lipiDialogue(index){
+ const plan=Number.isInteger(index)?EXPEDITIONS[index]:null;
+ const lines=plan?[
+  {label:'탐구 목표',text:plan.goal,src:lipiTrack(`lipi-${index}-goal`)},
+  ...plan.hints.map((text,i)=>({label:`단서 ${i+1}`,text,src:lipiTrack(`lipi-${index}-hint-${i}`)}))
+ ]:[lipiWelcome];
+ dialogueFocus=document.activeElement;
+ modal('리피와 이야기',characterDialogueMarkup,btn('돌아가기','close','primary'),'npc');
+ dialogueCleanup=mountCharacterDialogue(dialog,{characters:[{id:'lipi',name:'리피',image:lipiArt,lines}],enabled:isEffectsOn,hold:()=>{stopFeedback();return suspendMusic();}});
+}
+dialog.addEventListener('close',()=>{
+ if(dialog.open||!dialog.classList.contains('npc-dialogue-stage'))return;
+ dialogueCleanup();dialogueCleanup=()=>{};
+ if(dialogueFocus?.isConnected)dialogueFocus.focus({preventScroll:true});
+ dialogueFocus=null;
+});
 function cancelTest(){testRun++;ui.testing=false;ui.paused=false;ui.bubbling=false;ui.replaying=false;}
 function nav(screen){cancelTest();state.screen=screen;save();render();window.scrollTo(0,0);if(screen==='ending')showStory('outro');}
 function startPage(p){cancelTest();const mission=Math.floor(p/2);if(!missionDone(state,mission))state.journeyRequired[mission]=true;if(Math.floor(state.page/2)!==mission)ui.fieldMission=undefined;ui.activityFeedback='';ui.activityMode=!missionDone(state,mission)&&state.journeyRequired[mission]&&!fieldMissionReady(state,mission)?'field':'explore';if(ui.activityMode==='explore'&&fieldMissionReady(state,mission))carryFieldEvidence(state,mission);state.page=p;state.screen='activity';ui.selected=p===5||p===7?'hyacinth':'cherry';ui.plant='cherry';ui.region='shape';ui.zoom=1;ui.rotation=0;ui.undo=[];ui.gardenMode=p===7||state.gardenReviewed?'plant':'terrain';save();render();window.scrollTo(0,0);}
@@ -62,7 +83,7 @@ function header(){return `<header class="topbar"><nav class="page-navigation" ar
 function openRoute(route){if(!route)return;if(route.screen==='activity')startPage(route.page);else nav(route.screen);}
 function progress(){return `<div class="progress-track">${MISSIONS.map((m,i)=>`<button data-action="select-mission" data-id="${i}" ${openMission(state,i)?'':'disabled'} class="progress-stop ${missionDone(state,i)?'done':''} ${Math.floor(state.page/2)===i&&state.screen==='activity'?'current':''}"><span>${missionDone(state,i)?icon('check',16):String(i+1).padStart(2,'0')}</span>${m.short}</button>`).join('')}</div>`;}
 // After every stage is done, home also offers a fresh start (it asks before erasing anything).
-function home(){const hasProgress=state.completed.some(Boolean)||Object.values(state.observation).some(a=>a.length),allDone=state.finished||state.completed.every(Boolean);return `<main class="home"><section class="home-scene">${heroArt()}<div class="home-copy"><span class="home-kicker">리피와 함께 떠나는 식물 탐험</span>${logo('hero-logo')}<p class="home-story">작은 잎에 숨은 비밀을 찾아<br><strong>잠든 초록정원을 깨워 줘!</strong></p><div class="home-actions"><div class="home-buttons">${btn((hasProgress?'탐험 이어 하기':'리피와 탐험 시작')+icon('arrow'),'begin','primary jumbo')}${allDone?btn(icon('reset')+'처음부터 다시 하기','reset-prompt','soft jumbo home-restart'):''}</div><span>네가 찾은 발견이 정원의 빛씨앗이 돼.</span></div></div><div class="hero-friends"><span class="home-invite">나와 함께 찾아볼래?</span>${mascot('leaf',true)}</div>${saveFailed?'<span class="home-save-note">기록을 저장할 수 없어</span>':''}</section></main>`;}
+function home(){const hasProgress=state.completed.some(Boolean)||Object.values(state.observation).some(a=>a.length),allDone=state.finished||state.completed.every(Boolean);return `<main class="home"><section class="home-scene">${heroArt()}<div class="home-copy"><span class="home-kicker">리피와 함께 떠나는 식물 탐험</span>${logo('hero-logo')}<p class="home-story">작은 잎에 숨은 비밀을 찾아<br><strong>잠든 초록정원을 깨워 줘!</strong></p><div class="home-actions"><div class="home-buttons">${btn((hasProgress?'탐험 이어 하기':'리피와 탐험 시작')+icon('arrow'),'begin','primary jumbo')}${allDone?btn(icon('reset')+'처음부터 다시 하기','reset-prompt','soft jumbo home-restart'):''}</div><span>네가 찾은 발견이 정원의 빛씨앗이 돼.</span>${btn('리피와 이야기','npc-lipi','soft npc-home-entry')}</div></div><div class="hero-friends"><span class="home-invite">나와 함께 찾아볼래?</span>${mascot('leaf',true)}</div>${saveFailed?'<span class="home-save-note">기록을 저장할 수 없어</span>':''}</section></main>`;}
 
 function mapPage(){
  const next=nextMapMission(state),current=next<0?Math.min(ui.map,MISSIONS.length-1):next;
@@ -93,7 +114,35 @@ function showSpatialFallback(host){
  // One notice per cause per session: later screens fall back quietly and never wait on 3D.
  if(!spatialFailureShown.has(reason)){spatialFailureShown.add(reason);toast(SPATIAL_FAIL[reason]||SPATIAL_FAIL.network);}
 }
-function render(){playMusic(state.screen==='ending'?'ending':'main');const previousGarden=app.querySelector('[data-spatial="garden"].spatial-ready');fieldCleanup?.();fieldCleanup=null;guideCleanup?.();guideCleanup=null;mapController?.destroy();mapController=null;if(!previousGarden)spatialModule?.unmountSpatial();const epoch=++spatialEpoch;document.body.dataset.screen=state.screen;document.body.classList.toggle('activity-open',state.screen==='activity');const focus=document.activeElement;const focusId=focus?.id;const focusAction=focus?.dataset?.action,focusData=focus?.dataset?.id;document.body.classList.toggle('large-text',state.largeText);app.innerHTML=header()+({home,map:mapPage,activity,report,final:finalPage,ending}[state.screen]||home)();if(state.screen!==lastScreen){lastScreen=state.screen;const main=app.querySelector('main');if(main){main.classList.add('screen-enter');main.addEventListener('animationend',e=>{if(e.target===main)main.classList.remove('screen-enter');});}}bindPinch();const fieldHost=app.querySelector('.field-mission');if(fieldHost)fieldCleanup=mountFieldInteractions(fieldHost,state,ui,action);if(state.screen==='activity')guideCleanup=mountGuideFinger(app.querySelector('main.activity'),activityGuide(state,ui));if(state.screen==='map'){mapController=mountStageMap(app.querySelector('.stage-map'),ui,i=>action('map-arrive',String(i)),{progress:state.mapVillains,completed:[0,1,2,3,4].filter(i=>missionDone(state,i)),onHit:()=>save()});warmMission(Math.max(0,nextMapMission(state)));}if(state.screen==='home')warmImage('/assets/videos/intro-poster.webp');const host=app.querySelector('[data-spatial]');const reused=previousGarden&&host?.dataset.spatial==='garden'&&spatialModule?.reuseGarden(host,state,ui);if(previousGarden&&!reused)spatialModule?.unmountSpatial();if(host&&!reused)mountSpatialSafely(()=>import('./spatial.js'),()=>epoch===spatialEpoch&&host.isConnected,module=>{spatialModule=module;module.mountSpatial(host,state,ui,action,cells=>{remember();for(const i of cells)paintCell(i,false);render();});if(host.dataset.spatialUnavailable==='true'&&!host.classList.contains('spatial-ready'))throw new Error('Spatial renderer unavailable');},()=>showSpatialFallback(host));const target=focusId?document.getElementById(focusId):focusAction?app.querySelector(`[data-action="${CSS.escape(focusAction)}"]${focusData!==undefined?`[data-id="${CSS.escape(focusData)}"]`:''}`):null;target?.focus({preventScroll:true});}
+// Preserve a loaded portrait through activity rerenders; only a new emotion gets a new reaction.
+function syncGuidePortrait(previous, epoch) {
+  const next = app.querySelector('.guide-portrait');
+  if (!next) return;
+  const sameScene = previous?.dataset.guideScene === next.dataset.guideScene;
+  if (sameScene && previous.dataset.mood === next.dataset.mood) {
+    delete previous.dataset.motion;
+    next.replaceWith(previous);
+    return;
+  }
+  const image = next.querySelector('img');
+  if (previous) next.replaceWith(previous);
+  const ready = image.complete && image.naturalWidth > 0 ? Promise.resolve() : image.decode();
+  ready.then(() => {
+    if (epoch !== spatialEpoch) return;
+    if (previous?.isConnected) previous.replaceWith(next);
+    if (!document.hidden) next.dataset.motion = sameScene && next.dataset.mood === 'happy' ? 'nod' : 'enter';
+  }).catch(() => {
+    // A failed replacement keeps the last readable, loaded character on screen.
+  });
+}
+function stopGuideMotion() {
+  const portrait = app.querySelector('.guide-portrait');
+  if (portrait) delete portrait.dataset.motion;
+}
+document.addEventListener('visibilitychange', () => { if (document.hidden) stopGuideMotion(); });
+window.addEventListener('pagehide', stopGuideMotion);
+
+function render(){playMusic(state.screen==='ending'?'ending':'main');const previousPortrait=app.querySelector('.guide-portrait');const previousGarden=app.querySelector('[data-spatial="garden"].spatial-ready');fieldCleanup?.();fieldCleanup=null;guideCleanup?.();guideCleanup=null;mapController?.destroy();mapController=null;if(!previousGarden)spatialModule?.unmountSpatial();const epoch=++spatialEpoch;document.body.dataset.screen=state.screen;document.body.classList.toggle('activity-open',state.screen==='activity');const focus=document.activeElement;const focusId=focus?.id;const focusAction=focus?.dataset?.action,focusData=focus?.dataset?.id;document.body.classList.toggle('large-text',state.largeText);app.innerHTML=header()+({home,map:mapPage,activity,report,final:finalPage,ending}[state.screen]||home)();syncGuidePortrait(previousPortrait,epoch);if(state.screen!==lastScreen){lastScreen=state.screen;const main=app.querySelector('main');if(main){main.classList.add('screen-enter');main.addEventListener('animationend',e=>{if(e.target===main)main.classList.remove('screen-enter');});}}bindPinch();const fieldHost=app.querySelector('.field-mission');if(fieldHost)fieldCleanup=mountFieldInteractions(fieldHost,state,ui,action);if(state.screen==='activity')guideCleanup=mountGuideFinger(app.querySelector('main.activity'),activityGuide(state,ui));if(state.screen==='map'){mapController=mountStageMap(app.querySelector('.stage-map'),ui,i=>action('map-arrive',String(i)),{progress:state.mapVillains,completed:[0,1,2,3,4].filter(i=>missionDone(state,i)),onHit:()=>save()});warmMission(Math.max(0,nextMapMission(state)));}if(state.screen==='home')warmImage('/assets/videos/intro-poster.webp');const host=app.querySelector('[data-spatial]');const reused=previousGarden&&host?.dataset.spatial==='garden'&&spatialModule?.reuseGarden(host,state,ui);if(previousGarden&&!reused)spatialModule?.unmountSpatial();if(host&&!reused)mountSpatialSafely(()=>import('./spatial.js'),()=>epoch===spatialEpoch&&host.isConnected,module=>{spatialModule=module;module.mountSpatial(host,state,ui,action,cells=>{remember();for(const i of cells)paintCell(i,false);render();});if(host.dataset.spatialUnavailable==='true'&&!host.classList.contains('spatial-ready'))throw new Error('Spatial renderer unavailable');},()=>showSpatialFallback(host));const target=focusId?document.getElementById(focusId):focusAction?app.querySelector(`[data-action="${CSS.escape(focusAction)}"]${focusData!==undefined?`[data-id="${CSS.escape(focusData)}"]`:''}`):null;target?.focus({preventScroll:true});}
 
 function journal(){modal('나의 연구 노트',`${seedProgress(state)}${stampBoard(state)}<p>완료 수는 활동의 진행 기록이야. 이해한 내용은 처음 선택과 관찰 근거를 함께 보며 확인해.</p><div class="journal-list">${MISSIONS.map((m,i)=>`<section><h3>${m.evidence}</h3>${btn('선택·관찰 기록 펼치기','note-open','soft',`data-id="${i}"`)}</section>`).join('')}</div>`);}
 
@@ -176,7 +225,8 @@ async function action(a,id,el){
  case 'replay-test':ui.replaying=!ui.replaying;render();return;
  case 'close':dialog.close();return;
  case 'journey-mode':{const m=Math.floor(state.page/2);if(id==='explore'&&!missionDone(state,m)&&state.journeyRequired[m]&&!fieldMissionReady(state,m)){{const t=fieldTodo(state,ui);toast(t?`${t.i+1}번 ${josa(t.label,'이/가')} 남았어. 왼쪽 현장 임무에서 반짝이는 단계를 눌러 줘.`:'현장 임무의 세 단서를 마치면 다음으로 갈 수 있어.');}return;}ui.activityMode=id==='field'?'field':'explore';ui.activityFeedback='';if(id==='explore'){startPage(state.page);return;}save();render();return;}
- case 'journey-help':{recordHint(state,Math.floor(state.page/2));save();const plan=EXPEDITIONS[Math.floor(state.page/2)];modal('리피의 탐구 힌트',`<p>${plan.goal}</p><ul>${plan.hints.map(h=>`<li>${h}</li>`).join('')}</ul>`);return;}
+ case 'npc-lipi':lipiDialogue();return;
+ case 'journey-help':{const index=Math.floor(state.page/2);recordHint(state,index);save();lipiDialogue(index);return;}
  // 자동 진행: observation steps one at a time with a pause to watch each; stops before the student's own choices, when the screen changes, or on a second tap.
  case 'auto-play':{if(ui.autoPlaying){ui.autoPlaying=false;render();return;}ui.autoPlaying=true;const where=()=>[state.screen,state.page,ui.activityMode].join(':'),start=where();let last='',repeat=0;for(let n=0;n<40&&ui.autoPlaying&&where()===start;n++){const step=nextAutoStep(state,ui);if(!step)break;const key=step.join('|');repeat=key===last?repeat+1:0;last=key;if(repeat>1)break;const hand=AUTO_HANDS[step[0]]?.(step[1]);if(hand){const t0=Date.now();while(ui.autoPlaying&&where()===start&&nextAutoStep(state,ui)?.join('|')===key&&Date.now()-t0<8000)await new Promise(resolve=>setTimeout(resolve,150));}else await action(...step);await new Promise(resolve=>setTimeout(resolve,1400));}if(ui.autoPlaying){ui.autoPlaying=false;if(state.screen==='activity')render();}return;}
  case 'tool-pack':modal('우리의 탐험 도구',renderToolPack(state),'','tools');return;

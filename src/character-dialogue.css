@@ -1,0 +1,132 @@
+/* Only the speech panel is opaque. The portrait is painted from one atlas cell. */
+body dialog.npc-dialogue-stage[open] {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  overflow: hidden;
+}
+body dialog.npc-dialogue-stage::backdrop { background: #102a248f; }
+body dialog.npc-dialogue-stage > :is(.dialog-top,.close,.dialog-actions,.modal-portrait) { display: none; }
+body dialog.npc-dialogue-stage > #dialog-title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+}
+body dialog.npc-dialogue-stage > :is(.dialog-body,.modal-body) {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  max-height: none;
+  overflow: hidden;
+}
+.npc-dialogue-view {
+  position: absolute;
+  inset: auto 0 max(12px, env(safe-area-inset-bottom));
+  width: min(92%, 920px);
+  margin: auto;
+}
+.npc-dialogue-portrait {
+  width: min(47dvh, 66vw, 440px);
+  aspect-ratio: 1;
+  margin: 0 0 -8px 4%;
+  pointer-events: none;
+  background: var(--npc-dialogue-art) left center / 200% 100% no-repeat;
+  filter: drop-shadow(0 6px 5px #0b2a205c);
+}
+.npc-dialogue-view[data-speaking="true"] .npc-dialogue-portrait { animation: npc-dialogue-speech 840ms step-end infinite; }
+@keyframes npc-dialogue-speech {
+  0%, 49%, 100% { background-position-x: 0%; }
+  16%, 69% { background-position-x: 100%; }
+}
+.npc-dialogue-card {
+  position: relative;
+  display: grid;
+  gap: 6px;
+  padding: 20px 19px 9px;
+  background: linear-gradient(140deg, #fffbed, #eef3dd);
+  border: 2px solid #aab88d;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px #102c245c;
+  color: #234f3a;
+  text-align: left;
+}
+.npc-dialogue-card h3 {
+  position: absolute;
+  top: -27px;
+  left: 15px;
+  margin: 0;
+  padding: 5px 12px;
+  border-radius: 7px;
+  background: #2c5540;
+  color: #fff9e9;
+  font-size: clamp(17px, 2.15vw, 23px);
+  line-height: 1.22;
+}
+.npc-dialogue-card [data-npc-speech] {
+  margin: 0 38px 0 0;
+  max-height: 25dvh;
+  overflow: auto;
+  font-size: clamp(17px, 2vw, 23px);
+  line-height: 1.42;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+.npc-dialogue-card [data-npc-status] { margin: 0; font-size: 14px; }
+.npc-dialogue-card [data-npc-status]:empty { display: none; }
+.npc-dialogue-controls, .npc-dialogue-tabs, .npc-dialogue-topics { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 7px; }
+.npc-dialogue-tabs[hidden], .npc-dialogue-topics[hidden] { display: none; }
+.npc-dialogue-card :is(.npc-dialogue-tabs button, .npc-dialogue-topics button, [data-npc-replay], .npc-dialogue-close) {
+  min-height: 44px;
+  padding: 4px 10px;
+  color: #244e39;
+  background: #fffdf1;
+  border: 1px solid #97ae8e;
+  border-radius: 8px;
+  box-shadow: none;
+  font: inherit;
+  font-size: clamp(14px, 1.6vw, 17px);
+  cursor: pointer;
+}
+.npc-dialogue-card button[aria-pressed="true"] { color: #fff9e8; background: #325f45; border-color: #325f45; }
+.npc-dialogue-card [data-npc-replay] { margin-left: auto; }
+.npc-dialogue-card .npc-dialogue-close {
+  position: absolute;
+  inset: 2px 4px auto auto;
+  width: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-size: 28px;
+  line-height: 1;
+}
+.npc-dialogue-card button:focus-visible { outline: 3px solid #ab6c2c; outline-offset: 2px; }
+@media (max-height: 520px) {
+  .npc-dialogue-portrait { width: min(45dvh, 58vw); }
+  .npc-dialogue-card { padding: 14px 12px 6px; gap: 4px; }
+  .npc-dialogue-card [data-npc-speech] { font-size: 17px; }
+}
+@media (max-width: 490px) {
+  .npc-dialogue-portrait { width: min(60vw, 36dvh); margin-left: 0; }
+  .npc-dialogue-card [data-npc-replay] { margin-left: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .npc-dialogue-view[data-speaking="true"] .npc-dialogue-portrait { animation: none; }
+}
+.npc-home-entry { min-height: 44px; }
+body:has(.npc-dialogue-stage[open]) :is(.hero-friends,.guide-avatar .guide-portrait) { visibility: hidden; }

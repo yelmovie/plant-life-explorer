@@ -92,7 +92,7 @@ for (const file of files) hash.update(file).update(await readFile(path.join(root
 const shell = ['/', '/src/bundle.css', ...(scriptBundle ? ['/'+scriptBundle] : []), ...files.filter(file => file !== 'sw.js' && !styles.includes(file) && !file.startsWith('src/vendor/') && !file.startsWith('assets/icons/') && !file.startsWith('assets/og/') && !file.startsWith('assets/models/') && !/\.(mp4|mp3)$/.test(file) && !/\.(?:md|txt)$/i.test(file)
   && (!file.startsWith('assets/generated/') || /\/(?:expedition_hero_20261020|mascot_[a-z]+|map_trail_v2|reward_[a-z]+_thumb)\.webp$/.test(file))).map(file => `/${file}`)];
 const swPath = path.join(output, 'sw.js');
-shell.push('/assets/audio/npc-welcome.mp3');
+shell.push('/assets/audio/npc-welcome.mp3', ...assets.filter(file => /^assets\/audio\/lipi-[\w-]+\.mp3$/.test(file)).map(file => '/'+file));
 let sw = await readFile(swPath, 'utf8');
 const versioned = sw.replace(/const CACHE_VERSION='[^']*';/, `const CACHE_VERSION='${version}-${hash.digest('hex').slice(0, 8)}';`).replace(/const APP_SHELL=\[[^\]]*\];/, `const APP_SHELL=${JSON.stringify(shell)};`);
 if (versioned === sw || !versioned.includes(`'${version}-`)) throw new Error('sw.js CACHE_VERSION/APP_SHELL markers not found.');
