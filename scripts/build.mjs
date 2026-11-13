@@ -27,7 +27,7 @@ async function walk(directory) {
 }
 
 const source = (await walk('src')).filter(file => /\.(m?js|css)$/.test(file));
-const assets = (await walk('assets')).filter(file => !file.startsWith('assets/combat/') || /^assets\/combat\/map-(?:villain-(?:left|right)|hero-reaction|ally-reaction)\.webp$/.test(file)).filter(file => /\.webp$/i.test(file) || /(?:credits|licenses?|provenance)[^/]*\.(?:md|json|txt|csv)$/i.test(path.basename(file))
+const assets = (await walk('assets')).filter(file => !file.startsWith('assets/combat/') || /^assets\/combat\/map-(?:villain-(?:left|right)|hero-reaction|ally-reaction)(?:-v2)?\.webp$/.test(file)).filter(file => /\.webp$/i.test(file) || /(?:credits|licenses?|provenance)[^/]*\.(?:md|json|txt|csv)$/i.test(path.basename(file))
   || /^assets\/(?:icons|og)\/[^/]+\.png$/i.test(file) || /^assets\/models\/[^/]+\.glb$/i.test(file) || /^assets\/audio\/[^/]+\.mp3$/i.test(file) || /^assets\/videos\/[^/]+\.mp4$/i.test(file) || /^assets\/fonts\/[^/]+(?:\.woff2|-OFL\.txt)$/i.test(file));
 const pwa = ['sw.js', 'manifest.webmanifest'];
 const files = ['index.html', ...pwa, ...source, ...assets];
