@@ -100,19 +100,41 @@ export function assetImage(key, className = '', eager = false, thumb = false) {
 // Scene paintings per page (index = state.page), mirrored by --bg-activity-N in polish.css.
 export const STAGE_BACKGROUNDS = Object.freeze(['bg_m1_1_scan','bg_m1_2_sort','bg_m2_1_seasons','bg_m2_2_evidence','bg_m3_1_chamber','bg_m3_2_habitat','bg_m4_1_terrain','bg_m4_2_garden','bg_m5_1_idea','bg_m5_2_test']);
 const warmed = new Set();
-// Fetch ahead into the HTTP cache so the next screen never opens on a blank tint. Failures are ignored.
-export function warmImage(src) {
-  if (warmed.has(src)) return;
-  warmed.add(src);
-  // Idle time only, so warming never competes with the screen the student is looking at.
-  const start = () => { const image = new Image(); image.decoding = 'async'; image.src = src; };
-  if (typeof requestIdleCallback === 'function') requestIdleCallback(start, {timeout: 3000}); else setTimeout(start, 600);
+const pending = new Set();
+const budget = 384 * 1024;
+let warmedBytes = 0;
+
+function allowsWarming() {
+  const connection = navigator.connection;
+  return !document.hidden && !connection?.saveData &&
+    !['slow-2g', '2g', '3g'].includes(connection?.effectiveType) &&
+    !(connection?.downlink > 0 && connection.downlink < 2);
 }
-// Same idle-time warming for non-image files (the season GLBs) so stage 2 opens without waiting.
-export function warmFile(src) {
-  if (warmed.has(src)) return;
-  warmed.add(src);
-  const start = () => { fetch(src).catch(() => {}); };
-  if (typeof requestIdleCallback === 'function') requestIdleCallback(start, {timeout: 3000}); else setTimeout(start, 600);
+
+// At most one image at a time. A speculative failure never blocks the real image request.
+export function warmImage(src, bytes, stillNext = () => true) {
+  if (!allowsWarming() || warmed.has(src) || pending.size || warmedBytes + bytes > budget) return;
+  pending.add(src);
+  const start = () => {
+    if (!allowsWarming() || !stillNext()) { pending.delete(src); return; }
+    const image = new Image();
+    image.decoding = 'async';
+    image.fetchPriority = 'low';
+    warmedBytes += bytes;
+    const finish = success => {
+      pending.delete(src);
+      if (success) warmed.add(src);
+      else warmedBytes -= bytes;
+    };
+    image.onload = () => finish(true);
+    image.onerror = () => finish(false);
+    image.src = src;
+  };
+  if (typeof requestIdleCallback === 'function') requestIdleCallback(start);
+  else setTimeout(start, 600);
 }
-export const warmMission = i => STAGE_BACKGROUNDS.slice(i * 2, i * 2 + 2).forEach(key => warmImage(`/assets/generated/${key}.webp`));
+const stageBytes = [96092, 105466, 218668, 115520, 184036, 153860, 122742, 178938, 174850, 140012];
+export function warmMission(page, stillNext) {
+  const key = STAGE_BACKGROUNDS[page];
+  if (key) warmImage(`/assets/generated/${key}.webp`, stageBytes[page], stillNext);
+}
