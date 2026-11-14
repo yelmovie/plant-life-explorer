@@ -27,5 +27,5 @@ test('정원 만들기는 지형뿐 아니라 세 식물의 실제 배치도 필
 test('연구노트와 엔딩은 없는 학생 기록을 완료한 것으로 꾸미지 않는다',()=>{
  const s=freshState();assert.match(renderReport(s),/나의 초록정원 연구 노트/);assert.doesNotMatch(renderReport(s),/소개할 기록/);
  assert.match(notebookEntry(s,0).body,/아직 남긴 기록이 없어/);assert.match(notebookEntry(s,0).body,/탐구 내용 정리/);assert.doesNotMatch(notebookEntry(s,0).body,/오늘 나는/);
- const ending=renderEnding(s,()=> '');assert.match(ending,/ending_diary_20261023/);assert.doesNotMatch(ending,/내가 심은 정원|내가 만든 가방/);
+ const ending=renderEnding(s,()=> '');assert.match(ending,/<h2 id="ending-diary-title">오늘의 탐험 일기<\/h2>/);assert.match(ending,/나는 초록정원의 식물 연구원!/);assert.doesNotMatch(ending,/내가 심은 정원|내가 만든 가방/);
 });
