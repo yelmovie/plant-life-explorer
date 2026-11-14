@@ -14,10 +14,7 @@
 | 항목 | 라이선스 | 판정 |
 |---|---|---|
 | Three.js r181 (`src/vendor/three/`) | MIT | 사용 가능, 원문 `assets/three-license.txt` 동봉 |
-| Jua 글꼴 | SIL Open Font License 1.1 | 사용 가능, 원문 `assets/fonts/Jua-OFL.txt` 동봉 |
-| Gaegu 글꼴 (리피 편지 손글씨, `gg-hand.woff2` 서브셋) | SIL Open Font License 1.1, 예약 이름 없음 | 사용 가능, 원문 `assets/fonts/Gaegu-OFL.txt` 동봉, 원본 `assets/fonts/source/gaegu-400.woff2` |
-| Pretendard 글꼴 | SIL Open Font License 1.1 | 사용 가능, 원문 `assets/fonts/Pretendard-OFL.txt` 동봉 |
-| 화면 글꼴 `gg-display-*`(Jua 기반)·`gg-text-*`(Pretendard 기반) | SIL OFL 1.1 수정본 | 앱 글자만 남긴 서브셋. 두 글꼴 모두 예약 이름(RFN)이 있어 수정본 이름을 'GG Display'·'GG Text'로 바꿈. 원본 `assets/fonts/source/`, 다시 만들기 `python scripts/subset-fonts.py` |
+| 화면 글꼴 나눔스퀘어네오 (`NanumSquareNeoTTF-*.woff2`) | SIL Open Font License 1.1 | 라이선스 원문 `assets/fonts/NanumSquareNeo-OFL.txt` 동봉 |
 | GLTFLoader·BufferGeometryUtils (`src/vendor/three/addons/`) | MIT (Three.js r181) | 원문 `assets/three-license.txt` |
 | OpenAI 생성 이미지 (`generated/`), 이를 가공한 설치 아이콘 (`icons/`) | 제작 기록이 있는 AI 생성물·가공본 | 화면 AI 고지 있음. 생성 당시 계정의 회사 이용 권한은 배포 전 문서 확인 대상 |
 | 기획자 제공 제목·캐릭터·활동 배경·표정 시트 | 기획자 제공 AI 제작 자료 | 제공 사실·제작 기록 보존. 원본 권리와 제공 범위는 제공자 확인 대상 |
@@ -47,7 +44,7 @@
 
 ## 2026-10-19 설정·오프라인 정리
 
-- 글꼴: **Jua** (Google Fonts, SIL Open Font License 1.1), **Pretendard**, **Gaegu** (SIL Open Font License 1.1). 원문은 `assets/fonts/Jua-OFL.txt`, `assets/fonts/Pretendard-OFL.txt`, `assets/fonts/Gaegu-OFL.txt`.
+- 이전 화면의 **Jua**·**Pretendard**·**Gaegu** 글꼴 및 라이선스는 저장소에 보존하며 현재 앱에는 배포하지 않는다.
 - `icons/icon-192.png`, `icons/icon-512.png`: 설치형 앱(PWA) 아이콘. 생성 캐릭터 `mascot_leaf`를 축소해 바탕색 위에 배치했다.
 - `generated/reward_*_thumb.webp`: 보상 그림 5종을 폭 240px로 줄인 썸네일. 원본과 같은 그림이다.
 - 쓰지 않는 그림 `map_island`, `research_bag_flap`, `aloe_leaf_whole`은 저장소 `_unused/`로 옮겨 배포에서 뺐다.

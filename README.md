@@ -85,7 +85,7 @@ Git에는 코드·테스트·문서·실행용 WebP를 보관한다. `dist/`는 
 | 폴더 | 내용 | Git |
 |---|---|---|
 | `assets/models/` | 3D 모형 GLB와 원본 대조표(`README.md`) | 포함 |
-| `assets/fonts/` | 화면 글꼴 서브셋, `source/`에 공식 원본 | 포함 |
+| `assets/fonts/` | 화면용 나눔스퀘어네오와 라이선스, 이전 글꼴 보관본 | 나눔스퀘어네오만 포함 |
 | `docs/planning/` | PRD·TRD·QA(0.1)·심화 통합설계 v2 | 포함 |
 | `_source/` | Meshy 원본 GLB, Meshy 입력 그림, 설계 대화 원본 그림 | 제외 |
 | `_reference/` | 참고 교재(`files/`)·샘플 화면(`samplepages/`) | 제외 |
@@ -124,7 +124,7 @@ Git에는 코드·테스트·문서·실행용 WebP를 보관한다. `dist/`는 
 - [23항목 성적표](docs/reviews/FINAL-CHECK-20261024.md) · [11점 개선 계획](docs/FINAL-UPGRADE-PLAN-20261024.md).
 - 3D 로딩 실패의 그림 대체·재시도는 `src/runtime-support.js`와 `src/app.js`에서 처리한다. 지연 응답은 현재 화면에만 적용한다.
 - 화면 크기 검증은 별도 포트의 `tests/final-review.html`에서 진행한다. 이 페이지는 검증용 기록을 준비하므로 학생이 사용하는 origin에서 열지 않는다. 준비 기록의 렌더 검증은 실제 학생 완주나 수업 효과 검증과 다르다.
-- 새 화면 문구를 바꾼 뒤에는 `python scripts/subset-fonts.py`로 글꼴을 갱신하고 `npm run check`, `npm test`, `npm run build`를 실행한다.
+- 나눔스퀘어네오에는 현대 한글 11,172자가 모두 들어 있다. 화면 문구를 고친 뒤 `npm run check`, `npm test`, `npm run build`를 실행한다.
 
 
 ## 납품 전 디자인·교실 준비 고도화 (2026-10-25)

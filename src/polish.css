@@ -47,7 +47,6 @@
 
 /* ── 3. Type base: body text floor 18px (unsized text used to inherit 16px from :root) ── */
 body{font-size:var(--font-size-sm)}
-/* Jua has one weight; font-synthesis:none (style.css :root) keeps it from fake-bolding. */
 :is(#app,body) :is(h1,h2,h3,h4,legend,summary,.btn,.spatial-controls button,.eyebrow,.pill,.scene-badge,.world-label,.page-number,.reward-seed,.guide-progress,.map-tag,.preview-tag,.step-dot){font-family:var(--font-display)}
 /* Long sentence choices read better in the body face. */
 :is(#app,body) :is(.reason-cards .btn,.sharing-card .btn,.admin-page-list .btn,.idea-answers .btn,select,input,textarea){font-family:var(--font-body)}

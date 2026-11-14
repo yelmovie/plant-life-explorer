@@ -26,7 +26,7 @@
 ### 사용자 작성 원본과 자동 생성 파일
 
 - 사용자 작성·제공 원본(직접 편집 대상): `src/`, `tests/`, `scripts/`, `docs/`, `index.html`, `sw.js`(빌드 전 원본), `manifest.webmanifest`, `server.mjs`, `package.json`, `wrangler.jsonc`, `README.md`, `_source/`(제공 영상·편집용 PNG·Meshy GLB·설계 원본), `_reference/`(참고 교재·샘플 화면), `assets/fonts/source/`(공식 글꼴 원본).
-- 원본에서 생성하지만 Git에 보관하는 파일(재생성 시 원본과 도구가 필요): `assets/generated/*.webp`, `assets/title.webp`(`npm run assets:optimize`, sharp 필요), `assets/fonts/gg-*.woff2`(`python scripts/subset-fonts.py`, fontTools 필요). 원본 없이 지우면 복구할 수 없으므로 삭제하지 않는다.
+- 원본에서 생성하지만 Git에 보관하는 파일(재생성 시 원본과 도구가 필요): `assets/generated/*.webp`, `assets/title.webp`(`npm run assets:optimize`, sharp 필요), `assets/fonts/gg-*.woff2`(이전 화면 보관용 `python scripts/subset-fonts.py`, fontTools 필요). 현재 앱은 나눔스퀘어네오만 사용하고 제목은 화면 글자로 표시한다. 원본 없이 지우면 복구할 수 없으므로 삭제하지 않는다.
 - 완전 자동 생성(Git 제외, 다시 만들 수 있음): `dist/`(`npm run build`), `graphify-out/`(`graphify update .`).
 
 ## B. 실행 환경
@@ -56,7 +56,7 @@
 | 단위 테스트 | `npm test` | `node --test tests/*.test.mjs` |
 | 빌드 | `npm run build` | `dist/` 생성. 버전 일치·참조 파일 존재 검사 포함 |
 | 에셋 압축 | `npm run assets:optimize` | `_source/`의 PNG → WebP. sharp 경로 지정 필요 |
-| 글꼴 서브셋 | `python scripts/subset-fonts.py` | 화면 문구를 바꾼 뒤 실행. fontTools 필요 |
+| 이전 글꼴 서브셋 | `python scripts/subset-fonts.py` | 보관본 재생성 전용. 앱 빌드에는 나눔스퀘어네오만 포함 |
 | 지식 그래프 갱신 | `graphify update .` | 코드 수정 후(상위 폴더 CLAUDE.md 규칙) |
 | 린트·타입 검사 | 없음 | 스크립트가 없으므로 실행했다고 기록하지 않는다 |
 
@@ -182,7 +182,7 @@ Git에서 제외되어 있어 **SSD가 유일한 사본일 수 있는** 것들�
 1. `npm run check`
 2. `npm test`
 3. 배포물에 영향이 있으면 `npm run build`(출력의 `esbuild not found` 여부 확인), 필요하면 `npm run preview`로 `dist/` 확인
-4. 화면 문구를 바꿨으면 `python scripts/subset-fonts.py` 후 다시 1~3
+4. 화면 문구를 바꿨으면 나눔스퀘어네오 적용 상태와 줄바꿈을 브라우저에서 함께 확인한다.
 5. 버전을 올릴 때는 `package.json`의 `version`과 `src/settings-content.js`의 `APP_VERSION`을 함께 바꾼다(테스트·빌드가 일치를 검사한다)
 6. 화면·조작 변경은 브라우저 테스트(`tests/*.browser.mjs`)나 직접 조작으로 확인한다. 실행하지 못했으면 그렇다고 기록한다
 

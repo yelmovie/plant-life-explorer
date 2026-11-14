@@ -5,7 +5,14 @@
 #app .home-scene::after { background: linear-gradient(90deg,#fffbedde 0%,#fffbedb8 28%,#fffbed38 53%,transparent 72%); }
 #app .home-copy { width: 48%; max-width: 700px; padding: max(86px,12vh) 0 0 4.5%; }
 #app .home-kicker { display: block; width: fit-content; padding: 6px 14px; margin-bottom: 12px; border-radius: 20px; background: #fffceeeb; font-size: clamp(15px,1.2vw,19px); font-weight: 700; color: #345d3c; }
-#app .home .hero-logo { width: 100%; max-width: 650px; margin: 0 0 16px; }
+#app .home-title {
+  display: flex; flex-wrap: wrap; align-items: baseline; column-gap: .22em;
+  margin: 0 0 16px; color: #234d31;
+  font: 900 clamp(32px, 5.2vw, 82px)/1.12 var(--font-display);
+  letter-spacing: -.045em; text-shadow: 0 2px 0 #fbf4d2;
+}
+#app .home-title span { display: block; }
+#app .home-title span:last-child { color: #3b6538; }
 #app .home-copy .home-story { font-size: clamp(21px,2vw,30px); line-height: 1.65; }
 #app .home-copy .home-story strong { font-size: 1.08em; }
 #app .home .home-actions { margin-top: 24px; gap: 14px; }
@@ -239,7 +246,7 @@ body .notebook-dialog .dialog-actions { display: flex; gap: 10px; margin-top: 14
 
 @media(min-width:761px) and (max-height:820px) {
   #app .home-copy { padding-top: 84px; }
-  #app .home .hero-logo { margin-bottom: 8px; }
+  #app .home-title { margin-bottom: 8px; }
   #app .home .home-actions { margin-top: 16px; }
   #app .home-discoveries { margin-top: 14px; }
   #app .garden-workbench { gap: 5px; }
@@ -290,7 +297,6 @@ body .notebook-dialog .dialog-actions { display: flex; gap: 10px; margin-top: 14
 }
 @media(max-width:760px) {
   #app .home-copy { width: 85%; padding: 88px 5% 0; }
-  #app .home .hero-logo { max-width: 520px; }
   #app .home .hero-friends { left: 50%; bottom: 6%; width: 45vw; height: 38vh; min-width: 200px; min-height: 200px; }
   #app .home-invite { top: -18px; font-size: 16px; padding: 7px 11px; }
   #app .home .home-actions > span { max-width: 16em; }

@@ -55,7 +55,6 @@ body .toast { pointer-events: none; }
   width: 53%; max-width: 760px;
   padding: max(var(--hud-top), 10vh) 0 0 6%;
 }
-#app .hero-logo { max-width: 650px; width: 100%; height: auto; aspect-ratio: 2.8; margin: 0 0 12px; }
 #app .home-copy > p { font-size: clamp(24px, 2.1vw, 34px); line-height: 1.55; margin-top: 0; }
 #app .home-copy > p, #app .home-actions > span { color: #264b36; text-shadow: 0 1px 0 #fffdf5; }
 #app .home-copy > p strong { font-size: 1.13em; }
@@ -703,7 +702,7 @@ body.large-text #app .exploration-activity .learning-scene { overflow: visible; 
   #app .ending-top { max-width: 100%; }
 }
 
-/* Home: story lines in Jua. */
+/* Keep the invitation in the same typeface as the title. */
 #app .home-story, #app .home-story strong, #app .home-actions > span { font-family: var(--font-display); font-weight: 400; }
 
 /* Field mission 1: a real magnifier the student drags over the leaves. */

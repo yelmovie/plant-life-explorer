@@ -42,7 +42,6 @@ const btn=(label,action,cls='',attrs='')=>`<button class="btn ${cls}" data-actio
 const pill=(text)=>`<span class="pill">${text}</span>`;
 const npcName={leaf:'리피',water:'방울',flower:'꽃이'};
 const mascot=(who='leaf',large=false)=>`<div class="mascot-wrap ${large?'large':''}">${assetImage('mascot_'+who,'mascot-image',large)}</div>`;
-const logo=(cls='')=>`<div class="brand-image ${cls}"><img src="/assets/title.webp" alt="초록정원 연구기지"></div>`;
 function updateSaveStatus(status){
  saveFailed=status!=='ready';
  let banner=document.getElementById('save-status');
@@ -83,7 +82,7 @@ function header(){return `<header class="topbar"><nav class="page-navigation" ar
 function openRoute(route){if(!route)return;if(route.screen==='activity')startPage(route.page);else nav(route.screen);}
 function progress(){return `<div class="progress-track">${MISSIONS.map((m,i)=>`<button data-action="select-mission" data-id="${i}" ${openMission(state,i)?'':'disabled'} class="progress-stop ${missionDone(state,i)?'done':''} ${Math.floor(state.page/2)===i&&state.screen==='activity'?'current':''}"><span>${missionDone(state,i)?icon('check',16):String(i+1).padStart(2,'0')}</span>${m.short}</button>`).join('')}</div>`;}
 // After every stage is done, home also offers a fresh start (it asks before erasing anything).
-function home(){const hasProgress=gardenResumePage(state)!==null,allDone=state.finished||state.completed.every(Boolean);return `<main class="home"><section class="home-scene">${heroArt()}<div class="home-copy"><span class="home-kicker">리피와 함께 떠나는 식물 탐험</span>${logo('hero-logo')}<p class="home-story">작은 잎에 숨은 비밀을 찾아<br><strong>잠든 초록정원을 깨워 줘!</strong></p><div class="home-actions"><div class="home-buttons">${btn((hasProgress?'탐험 이어 하기':'리피와 탐험 시작')+icon('arrow'),'begin','primary jumbo')}${allDone?btn(icon('reset')+'처음부터 다시 하기','reset-prompt','soft jumbo home-restart'):''}</div><span>네가 찾은 발견이 정원의 빛씨앗이 돼.</span>${btn('리피와 이야기','npc-lipi','soft npc-home-entry')}</div></div><div class="hero-friends"><span class="home-invite">나와 함께 찾아볼래?</span>${mascot('leaf',true)}</div>${saveFailed?'<span class="home-save-note">기록을 저장할 수 없어</span>':''}</section></main>`;}
+function home(){const hasProgress=gardenResumePage(state)!==null,allDone=state.finished||state.completed.every(Boolean);return `<main class="home"><section class="home-scene">${heroArt()}<div class="home-copy"><span class="home-kicker">리피와 함께 떠나는 식물 탐험</span><h1 class="home-title"><span>초록정원</span> <span>연구기지</span></h1><p class="home-story">작은 잎에 숨은 비밀을 찾아<br><strong>잠든 초록정원을 깨워 줘!</strong></p><div class="home-actions"><div class="home-buttons">${btn((hasProgress?'탐험 이어 하기':'리피와 탐험 시작')+icon('arrow'),'begin','primary jumbo')}${allDone?btn(icon('reset')+'처음부터 다시 하기','reset-prompt','soft jumbo home-restart'):''}</div><span>네가 찾은 발견이 정원의 빛씨앗이 돼.</span>${btn('리피와 이야기','npc-lipi','soft npc-home-entry')}</div></div><div class="hero-friends"><span class="home-invite">나와 함께 찾아볼래?</span>${mascot('leaf',true)}</div>${saveFailed?'<span class="home-save-note">기록을 저장할 수 없어</span>':''}</section></main>`;}
 
 let clearIndex;
 function mapPage(){
@@ -154,7 +153,7 @@ function teacherTools(){
 }
 // Teacher-run, one file at a time so a class sharing Wi-Fi is not flooded. Videos stay network-only (range requests).
 const offlinePrep={running:false,done:false,status:''};
-const OFFLINE_FILES=()=>[...Object.keys(ASSETS).map(k=>`/assets/generated/${k}.webp`),...THUMBS.map(k=>`/assets/generated/${k}_thumb.webp`),'/assets/title.webp','/assets/videos/intro-poster.webp','/assets/videos/outro-poster.webp',...['petiole_cut','petiole_whole','plant_aloe',...SEASON_MODELS].map(k=>`/assets/models/${k}.glb`),'/src/vendor/three/three.module.min.js','/src/vendor/three/three.core.min.js','/src/vendor/three/addons/loaders/GLTFLoader.js','/src/vendor/three/addons/utils/BufferGeometryUtils.js'];
+const OFFLINE_FILES=()=>[...Object.keys(ASSETS).map(k=>`/assets/generated/${k}.webp`),...THUMBS.map(k=>`/assets/generated/${k}_thumb.webp`),'/assets/videos/intro-poster.webp','/assets/videos/outro-poster.webp',...['petiole_cut','petiole_whole','plant_aloe',...SEASON_MODELS].map(k=>`/assets/models/${k}.glb`),'/src/vendor/three/three.module.min.js','/src/vendor/three/three.core.min.js','/src/vendor/three/addons/loaders/GLTFLoader.js','/src/vendor/three/addons/utils/BufferGeometryUtils.js'];
 async function prepareOffline(){
  if(offlinePrep.running)return;
  const show=text=>{offlinePrep.status=text;const el=document.getElementById('offline-prep-status');if(el)el.textContent=text;};
