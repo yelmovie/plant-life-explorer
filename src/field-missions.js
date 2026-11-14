@@ -32,7 +32,7 @@ function clueDrawer(e,u){
  return `<span class="clue-drawer ${all?'open':''} ${opening?'opening':''}" data-clue-gauge="${n}" role="status" aria-label="단풍나무 단서 ${n}/2"><span class="drawer-pop" aria-hidden="true">${FIELD_LEAVES.map(p=>leafPicture(p.id)).join('')}</span><span class="drawer-box" aria-hidden="true"><i></i></span><span class="drawer-meter" aria-hidden="true"><b>${all?'서랍이 열렸어!':`단서 ${n}/2`}</b><span class="clue-bar"><i style="width:${n/2*100}%"></i></span></span></span>`;
 }
 function leaves(e,u,stage){
- if(stage===0){const all=e.leaves.scans.maple.length===2;return `<div class="lens-bench" data-lens-bench><p class="lens-hint"><span>${all?'단서를 다 모았어! 서랍에서 나온 잎을 <b>나누러</b> 가 보자.':u.keys?'아래의 <b>잎 가운데 살펴보기</b>와 <b>가장자리 살펴보기</b> 버튼을 눌러 단서를 모아 봐.':'돋보기를 단풍나무의 <b>가운데</b>와 <b>가장자리</b>에 대고 잠깐 멈춰 봐. 살펴볼 곳을 <b>톡</b> 눌러도 돋보기가 가.'}</span>${clueDrawer(e,u)}</p><div class="field-leaf-tray">${FIELD_LEAVES.map(p=>{const s=e.leaves.scans[p.id];return `<article class="field-specimen"><h3>${p.name}</h3><div class="lens-leaf" data-lens-leaf="${p.id}">${leafPicture(p.id)}${s.map(k=>`<span class="leaf-spark ${u.lastFound===p.id+':'+k?'fresh':''}" data-spark="${p.id}:${k}" aria-hidden="true"></span>`).join('')}</div><div class="lens-clues">${['shape','edge'].map(k=>lensClue(p,k,s.includes(k),u.lastFound===p.id+':'+k)).join('')}</div><div class="lens-fallback">${target('잎 가운데 살펴보기','scan:'+p.id+':shape','field-hotspot')}${target('가장자리 살펴보기','scan:'+p.id+':edge','field-hotspot')}</div></article>`;}).join('')}</div><div class="field-lens" data-lens aria-hidden="true"><div class="field-lens-glass"><img alt=""></div><span class="field-lens-ring"></span></div></div>`;}
+ if(stage===0){const all=e.leaves.scans.maple.length===2;return `<div class="lens-bench" data-lens-bench><p class="lens-hint"><span>${all?'단서를 다 모았어! 서랍에서 나온 잎을 <b>나누러</b> 가 보자.':'단풍나무의 <b>잎 가운데</b> 또는 <b>가장자리 살펴보기</b>를 눌러. 돋보기를 끌어도 돼.'}</span>${clueDrawer(e,u)}</p><div class="field-leaf-tray">${FIELD_LEAVES.map(p=>{const s=e.leaves.scans[p.id];return `<article class="field-specimen"><h3>${p.name}</h3><div class="lens-leaf" data-lens-leaf="${p.id}">${leafPicture(p.id)}${s.map(k=>`<span class="leaf-spark ${u.lastFound===p.id+':'+k?'fresh':''}" data-spark="${p.id}:${k}" aria-hidden="true"></span>`).join('')}</div><div class="lens-clues">${['shape','edge'].map(k=>lensClue(p,k,s.includes(k),u.lastFound===p.id+':'+k)).join('')}</div><div class="leaf-tap-controls" role="group" aria-label="${p.name} 관찰">${['shape','edge'].map(k=>target((s.includes(k)?'✓ ':'')+(k==='shape'?'잎 가운데 살펴보기':'가장자리 살펴보기'),'scan:'+p.id+':'+k,`field-hotspot ${p.id==='maple'&&!s.includes(k)?'leaf-tap-next':''}`)).join('')}</div></article>`;}).join('')}</div><div class="field-lens" data-lens aria-hidden="true"><div class="field-lens-glass"><img alt=""></div><span class="field-lens-ring"></span></div></div>`;}
  // Stage 2 throws left/right; stage 3 reshuffles the same leaves and throws up/down.
  const rule=stage===1?'edge':'narrow',vertical=stage===2,thrown=u.leafThrown;u.leafThrown='';
  const placed=p=>e.leaves[rule][p.id]===(p[rule]?'yes':'no'),deck=FIELD_LEAVES.filter(p=>!placed(p)),shuffle=vertical&&!u.leafShuffled&&deck.length===3;if(vertical)u.leafShuffled=true;
@@ -68,7 +68,7 @@ function petiole(phase){
 }
 // The cut opens the air rooms and lets their bubbles out by itself, then the floating model is linked.
 const floatPhase=(f,u)=>f.reason?'done':u.floatCut?'reason':'cut';
-const FLOAT_HINT={cut:'손가락으로 잎자루를 따라 <b>쓱 그어</b> 잘라 열어 봐. 긋기 어려우면 잎자루 <b>한쪽 끝</b>과 <b>반대쪽 끝</b>을 차례로 눌러도 돼.',reason:'공기 방을 봤지? 같은 원리로 떠 있던 모형을 수조에서 <b>톡</b> 눌러 봐.',done:'잎자루의 공기 방과 떠 있던 모형을 연결했어!'};
+const FLOAT_HINT={cut:'손가락으로 잎자루를 따라 <b>쓱 그어</b> 잘라 열어 봐. 긋기 어려우면 잎자루 <b>한쪽 끝</b>과 <b>반대쪽 끝</b>을 차례로 눌러도 돼.',reason:'수조에서 두 모형의 모습을 다시 봐. 잎자루 속에 보인 특징과 견주어 붙일 곳을 골라 봐.',done:'잎자루의 공기 방과 떠 있던 모형을 연결했어!'};
 function floatLab(e,u,stage){
  const f=e.float;
  const hint=html=>`<p class="lens-hint season-hint float-hint"><span>${html}</span></p>`;
@@ -77,7 +77,7 @@ function floatLab(e,u,stage){
  if(stage===1)return `${hint(u.keys?'아래에서 <b>모형 버튼</b>을 고르고 <b>수조에 넣기</b>를 눌러 비교해 봐.':'두 모형을 <b>톡</b> 눌러 수조에 넣고 비교해 봐. 꾹 눌러 보기는 더 해 봐도 좋아.')}<div class="float-lab test"><div class="float-bench">${['air','solid'].filter(id=>!f.tested.includes(id)).map(id=>`<div class="float-model on-bench" data-float-item="${id}" data-ready="${!!f.predictions[id]}">${modelArt(id)}<span>${modelName(id)}</span></div>`).join('')||'<p class="float-empty">두 모형을 모두 시험했어. 다시 꾹 눌러 봐도 돼.</p>'}</div>${floatTank(f,u,stage,'<span class="float-press" data-press-gauge aria-hidden="true"><i></i><b>손가락 힘</b></span>')}</div>${keys(...['air','solid'].filter(id=>!f.tested.includes(id)).map(id=>source(modelName(id),'model:'+id,u)),target('수조에 넣기','tank'))}<p class="microcopy">두 모형 모두 시험해야 공기 공간의 역할을 견줄 수 있어.</p>`;
  const phase=floatPhase(f,u);
  // The button path also opens the stalk first, so the air rooms are seen before a model is linked.
- return `${hint(u.keys&&phase==='cut'?'아래의 <b>잎자루 잘라 열기</b> 버튼을 눌러 공기 방을 살펴봐.':u.keys&&phase==='reason'?'아래에서 <b>안에 공기가 차지하는 공간</b>을 고르고, 떠 있던 모형에 <b>붙이기</b>를 눌러 줘.':FLOAT_HINT[phase])}<div class="float-lab record" data-phase="${phase}">${floatTank(f,u,stage)}${petiole(phase)}</div>${phase==='cut'?keys(btn('잎자루 잘라 열기','field-cut')):keys(source('안에 공기가 차지하는 공간','reason:air-space',u),...['air','solid'].map(m=>target(`${f.reason===m?'✓ ':''}공기 공간 카드를 ${modelName(m)}에 붙이기`,`reason:${m}`)))}`;
+ return `${hint(u.keys&&phase==='cut'?'아래의 <b>잎자루 잘라 열기</b> 버튼을 눌러 공기 방을 살펴봐.':u.keys&&phase==='reason'?'두 모형이 물에서 보인 모습을 다시 봐. 아래의 까닭 카드와 비교해 붙일 곳을 골라 줘.':FLOAT_HINT[phase])}<div class="float-lab record" data-phase="${phase}">${floatTank(f,u,stage)}${petiole(phase)}</div>${phase==='cut'?keys(btn('잎자루 잘라 열기','field-cut')):keys(source('안에 공기가 차지하는 공간','reason:air-space',u),...['air','solid'].map(m=>target(`${f.reason===m?'✓ ':''}공기 공간 카드를 ${modelName(m)}에 붙이기`,`reason:${m}`)))}`;
 }
 // Mission 4: one cloud tap shows how rain behaves on three beds and makes their ground; plant cards go onto
 // the matching ground (a wrong bed shakes the card back); one more cloud tap rains on the finished garden.
@@ -127,7 +127,7 @@ function invention(e,u,stage){
  return `<div class="bag-bench finish-bench ${solved?'is-done':''} ${turned?'turned':''}">${bagHint(hint)}<div class="bag-stage bag-turntable" data-bag-turn style="--angle:${angle}deg;--turn:${turnAmount}deg"><button type="button" class="turn-arrow left" data-bag-spin="-1" aria-label="왼쪽으로 돌리기">${icon('back',28)}</button><div class="bag-spinner" data-bag-spinner><div class="bag-face front">${face}</div><div class="bag-face back" aria-hidden="true">${face}</div></div><i class="turn-shadow" aria-hidden="true"></i><button type="button" class="turn-arrow right" data-bag-spin="1" aria-label="오른쪽으로 돌리기">${icon('arrow',28)}</button><span class="turn-ring ${turned?'full':''}" data-turn-ring aria-hidden="true"><b>${icon('rotate',18)}</b></span><p class="bag-say" data-bag-say aria-live="polite">${solved?'✓ 리피의 공책을 지킬 가방 완성!':turned?'한 바퀴 다 봤어! 연잎 겉면 + 덮개.':'빙글 돌려 봐!'}</p></div><div class="bag-finish">${solved?'':btn(icon('check')+' 마무리','field-bag-finish','',turned?'primary finish-ready':'')}</div></div>`;
 }
 export const fieldStageLabels=m=>stages[m]||[];
-const DEFAULT_FEEDBACK='손으로 직접 해 봐. 어려우면 위의 “버튼으로 하기”를 눌러도 돼.';
+const DEFAULT_FEEDBACK='표본을 눌러 살펴봐. 필요하면 위의 “버튼 보이기”를 눌러도 돼.';
 const BUTTON_FEEDBACK='버튼으로 해 보자. 아래에서 표본이나 도구를 고른 다음, 원하는 곳의 버튼을 눌러 줘.';
 // A first-guess screen comes before the step's main task; the objective names only what is on screen.
 const objective=(e,m,stage)=>stage===0&&m===1&&!['tree','herb'].every(k=>e.seasons.predictions[k])?'먼저 예상 · 겨울에 잎이 보이지 않을 때 땅속은 어떨지 두 식물마다 골라 줘.'
@@ -149,6 +149,7 @@ export function renderFieldMission(state,ui,page=state.page){
  const e=normalizeFieldEvidence(state.fieldEvidence),u=ui.fieldMission??={},done=fieldSteps(e,mission);
  if(u.mission!==mission){u.mission=mission;u.stage=Math.max(0,done.findIndex(v=>!v));u.selected='';u.feedback='';}
  const stage=stageOf(u);
+ if(mission===0&&u.keys===undefined)u.keys=true;
  const views=[leaves,seasons,floatLab,garden,invention];
  return `<section class="field-mission mission-${mission} ${u.keys?'keys-on':''}" aria-label="리피와 현장 탐구"><div class="mission-workspace">${views[mission](e,u,stage)}</div>${mission===2?'<p class="microcopy">두 모형은 진짜 식물이 아니라, 부레옥잠 잎자루를 흉내 낸 실험 모형이야.</p>':''}</section>`;
 }
@@ -157,8 +158,8 @@ export function renderFieldSteps(state,ui,page=state.page){
  const mission=Math.floor(page/2);if(mission<0||mission>4)return '';
  const e=normalizeFieldEvidence(state.fieldEvidence),done=fieldSteps(e,mission),u=ui.fieldMission??{},stage=stageOf(u);
  // The select-then-place (.lens-fallback) buttons for touch users are switched on here.
- const keysBtn=`<button type="button" class="btn mission-tool objective-keys" data-action="field-keys" aria-pressed="${!!u.keys}">${u.keys?'손으로 하기':'버튼으로 하기'}</button>`;
- return `<div class="mission-journey today-steps">${stages[mission].map((label,i)=>`<button class="mission-step ${i===stage?'active':''} ${done[i]?'done':''} ${done[stage]&&i===done.findIndex(v=>!v)?'next-up':''}" data-action="field-stage" data-id="${i}" ${i===stage?'aria-current="step"':''}><b>${done[i]?icon('check',16):i+1}</b><span>${label}</span></button>`).join('')}</div><p class="field-objective sr-only">${objective(e,mission,stage)}</p><div class="field-step-tools">${keysBtn}</div>`;
+ const keysBtn=`<button type="button" class="btn mission-tool objective-keys" data-action="field-keys" aria-pressed="${!!u.keys}">${u.keys?'버튼 접기':'버튼 보이기'}</button>`;
+ return `<div class="mission-journey today-steps">${stages[mission].map((label,i)=>`<button class="mission-step ${i===stage?'active':''} ${done[i]?'done':''} ${done[stage]&&i===done.findIndex(v=>!v)?'next-up':''}" data-action="field-stage" data-id="${i}" ${i===stage?'aria-current="step"':''}><b>${done[i]?icon('check',16):i+1}</b><span>${label}</span></button>`).join('')}</div><p class="field-objective sr-only">${objective(e,mission,stage)}</p><div class="field-step-tools">${mission===0&&stage===0?'':keysBtn}</div>`;
 }
 export const fieldFeedback=ui=>({text:ui.fieldMission?.feedback||(ui.fieldMission?.keys?BUTTON_FEEDBACK:DEFAULT_FEEDBACK),success:!!ui.fieldMission?.success});
 

@@ -481,6 +481,9 @@ dialog::backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; backgro
 /* Touch users can open the select-then-place buttons from the objective row (same panel as keyboard focus). */
 #app .objective-keys { min-height: 48px; padding: 6px 14px; font-size: 16px; background: #fffdf3; color: #2f4a26; border: 2px solid #b9d39a; box-shadow: 0 3px 0 #b9d39a; }
 #app .objective-keys[aria-pressed="true"] { background: #e3f0cf; }
+#app .leaf-tap-controls { display:grid; gap:6px; margin-top:6px; }
+#app .leaf-tap-controls .field-hotspot { position:static; min-width:0; min-height:44px; width:100%; padding:4px 6px; font-size:clamp(13px,1.4vw,17px); line-height:1.2; }
+#app .leaf-tap-controls .leaf-tap-next { outline:2px solid #507a36; outline-offset:-2px; }
 #app .field-mission .keys-panel {
   position: static;
   transform: none;

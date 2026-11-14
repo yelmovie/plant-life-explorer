@@ -94,7 +94,7 @@ function applyFieldActionCore(state,ui,action,id=''){
  if(action==='field-sort'){
   const p=FIELD_LEAVES.find(p=>p.id===b);if(!p||!['edge','narrow'].includes(a)||!['yes','no'].includes(c))return '';
   if(!['shape','edge'].every(k=>e.leaves.scans.maple.includes(k)))return feedback(u,'먼저 단풍나무의 모양과 가장자리를 돋보기로 살펴봐.');
-  e.leaves[a][b]=c;u.selected='';const ok=c===(p[a]?'yes':'no');if(!ok)return feedback(u,`리피: ${p.clue[a]} 지금 기준은 ${a==='edge'?'톱니가 있는지':'가늘고 긴지'}야. 다시 넣어 봐.`);
+  e.leaves[a][b]=c;u.selected='';const ok=c===(p[a]?'yes':'no');if(!ok)return feedback(u,`리피: 잎을 다시 골라 그림의 ${a==='edge'?'가장자리':'전체 모양'}와 내가 고른 바구니의 설명을 비교해 봐.`);
   // Short reply per card; the last card names the next thing to do instead of repeating praise.
   const left=FIELD_LEAVES.filter(q=>e.leaves[a][q.id]!==(q[a]?'yes':'no')).length;
   return feedback(u,left?`✓ ${p.name} · ${a==='edge'?(c==='yes'?'톱니 있음':'톱니 없음'):(c==='yes'?'가늘고 긴 잎':'가늘고 길지 않은 잎')}. 남은 카드 ${left}장.`:a==='edge'?'✓ 톱니 기준으로 다 나눴어! 위의 “다음 도전”에서 같은 잎을 모양 기준으로 다시 나눠 봐.':'✓ 모양 기준으로도 다 나눴어! 아래 “발견을 연구 노트에 담기”를 눌러 두 기준으로 나눈 기록을 확인하자.',true);

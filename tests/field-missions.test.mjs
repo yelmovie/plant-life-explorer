@@ -11,6 +11,8 @@ test('버튼 모드 안내를 바꾸고 분류가 끝난 표본 버튼을 제외
  for(const region of ['shape','edge'])drop('lens',`scan:maple:${region}`);
  act('field-stage','1');
  act('field-keys');
+ assert.match(fieldFeedback(u).text,/버튼 보이기/);
+ act('field-keys');
  assert.match(fieldFeedback(u).text,/버튼으로 해 보자/);
  assert.match(renderFieldMission(s,u),/분류 버튼/);
  drop('leaf:maple','sort:edge:yes');
@@ -20,7 +22,7 @@ test('버튼 모드 안내를 바꾸고 분류가 끝난 표본 버튼을 제외
  drop('leaf:camellia','sort:edge:yes');
  assert.doesNotMatch(renderFieldMission(s,u),/data-field-drop="sort:edge:/);
  act('field-keys');
- assert.match(fieldFeedback(u).text,/손으로 직접/);
+ assert.match(fieldFeedback(u).text,/표본을 눌러 살펴봐/);
 });
 test('현장 기록은 손상값과 무관한 완료 플래그를 버리고 빈 연구를 통과시키지 않는다',()=>{
  const e=normalizeFieldEvidence({leaves:{scans:{maple:['shape','edge','x']}},bag:{tests:[{surface:'lotus',cover:'flap',pocket:'flap',rolls:false}]},ready:true});

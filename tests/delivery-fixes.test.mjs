@@ -11,9 +11,9 @@ test('톱니 기준은 크기와 상관없이 있음/없음 하나로 판정하�
  const u={stage:1,mission:0},html=renderFieldMission(s,u);
  assert.doesNotMatch(html,/큰 톱니/);assert.match(html,/톱니가 있어/);assert.match(html,/톱니가 없어/);
  const wrong=fieldMissionAction(s,u,'field-place','leaf:camellia|sort:edge:no');
- assert.match(wrong,/작은 톱니/);assert.doesNotMatch(wrong,/타원/);
+ assert.match(wrong,/가장자리.*고른 바구니.*비교/);assert.doesNotMatch(wrong,/작은 톱니|타원/);
  assert.match(fieldMissionAction(s,u,'field-place','leaf:camellia|sort:edge:yes'),/톱니 있음/);
- assert.match(fieldMissionAction(s,u,'field-place','leaf:pine|sort:narrow:no'),/폭보다 길이/);
+ assert.match(fieldMissionAction(s,u,'field-place','leaf:pine|sort:narrow:no'),/전체 모양.*고른 바구니.*비교/);
 });
 
 test('현장에서 넘어온 기본 정원은 자리 하나를 골라야 기록되고, 이미 완료한 기록은 그대로 둔다',()=>{
