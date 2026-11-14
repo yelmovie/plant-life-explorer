@@ -781,3 +781,13 @@ main.screen-enter{animation:dk-enter var(--screen-enter-duration) var(--ease-out
 dialog.reward-dialog{overflow-x:hidden}
 /* On the map the toast would cover the seed HUD at the top — drop it below the HUD there only (activities keep the original spot, clear of the answer buttons). */
 html body[data-screen="map"] .toast{top:calc(88px + 76px)}
+
+
+/* Settings has one header row: title on the left and close on the right. */
+html body dialog.settings-dialog[data-science-settings]>.dialog-top {
+ position:absolute;top:16px;right:20px;width:auto;margin:0;z-index:1;
+}
+html body dialog.settings-dialog[data-science-settings]>h2 {
+ display:flex;align-items:center;min-height:48px;margin:0;padding-right:60px;text-align:left;
+}
+html body dialog[data-science-settings] .science-settings-audio>.science-settings-volume {grid-column:1}
