@@ -195,7 +195,44 @@ export function renderActivity(s,u,grid){
  return `<main class="activity tablet-activity exploration-activity activity-${p} ${field?'field-mission-view':single||p===5?'field-record-view':''}"><nav class="mission-journey-root" aria-label="이번 탐구의 여정"><button class="mission-step ${field?'active':''} ${fieldReady?'done':''}" data-action="journey-mode" data-id="field" aria-pressed="${field}"><b>${fieldReady?icon('check',16):'1'}</b><span>현장 임무</span></button><button class="mission-step ${!field?'active':''} ${missionDone(s,i)?'done':''}" data-action="journey-mode" data-id="explore" aria-pressed="${!field}"><b>2</b><span>탐구하며 기록</span></button>${missionDone(s,i)?`<button class="mission-step done" data-action="journey-reward"><b>${icon('check',16)}</b><span>받은 도구 보기</span></button>`:`<span class="mission-step"><b>3</b><span>${plan.tool} 받기</span></span>`}</nav><aside class="field-guide"><h1>${field?plan.title:title}</h1>${today}<div class="guide-talk"><p class="guide-bubble ${field?'mission-feedback':''} ${reply.success?'success':''}" role="status">${reply.text}</p><button type="button" class="guide-avatar" data-action="journey-help" aria-label="리피를 눌러 힌트 보기"><span class="guide-portrait" data-mood="${mood}" data-guide-scene="${p}:${field?'field':'explore'}"><span class="guide-motion">${assetImage('mood_leaf_'+mood,'guide-mascot',true)}</span></span><span class="guide-partner">리피 · 정원 구조대</span></button></div></aside>${scene}<footer class="learning-footer"><p class="next-condition sr-only">${field?(fieldReady?'현장 단서를 연구 기록에 이어 쓸 준비가 됐어.':'현장 임무를 마치면 다음으로 갈 수 있어.'):help}</p><div>${!field&&!single&&p%2?button(icon('back')+' 앞 활동','previous'):''}<span class="activity-route">${field?'현장 임무':single?'현장 기록 확인':p%2?'연구 기록 2 / 2':'연구 기록 1 / 2'} · 도구 ${earnedTools(s).length} / 5</span>${field?`<button class="btn primary ${fieldReady?'go-now':''}" data-action="journey-mode" data-id="explore" ${fieldReady?'':lock(todo?`${todo.i+1}번 ${josa(todo.label,'이/가')} 남았어. 왼쪽 현장 임무에서 눌러 줘.`:'현장 임무를 먼저 마쳐 줘.')}>${fieldReady&&i!==0&&i!==2?'현장 결과 확인하기':'발견을 연구 노트에 담기'} ${icon('arrow',18)}</button>`:`<button class="btn primary ${ready?'go-now':''}" data-action="complete" ${ready?'':lock(nextHint(s,p))}>${p%2?'장소 복구하고 보상 받기':p===8?'가방 시험하러 가기':'다음 기록'} ${icon('arrow',18)}</button>`}</div></footer></main>`;
 }
 
-export function renderFinal(s,grid,u={}){return `<main class="final-page tablet-final"><div class="page-heading"><div><h1>새 식물에도 써 볼까요?</h1><p>물 저장과 사는 곳을 연결해 봐.</p></div></div>${u.finalFeedback?`<p class="final-feedback" role="status">${esc(u.finalFeedback)}</p>`:""}${layout(`<div class="cactus-picture">${assetImage('cactus_plant','',true)}</div><h2>선인장은 두꺼운 줄기에 물을 저장해.</h2><p>어느 곳에서 생활하는 데 도움이 될까?</p><div class="learning-tabs final-habitat-choices">${Object.entries(HABITATS).map(([id,n])=>button(`${assetImage('habitat_'+id,'habitat-picture',true)}${n}`,'final-habitat',id,s.finalChecks.habitat&&id==='dry')).join('')}</div>`,panel('내 결과물도 확인했어',`${row(pageReady(s,7),'식물과 환경이 맞는 정원')}${!pageReady(s,7)?button('정원 살펴보기','repair-garden'):''}${row(pageReady(s,9),'현재 가방의 시험과 설명')}${!pageReady(s,9)?button('가방 살펴보기','repair-test'):''}${row(s.finalChecks.habitat,'새 식물의 특징과 환경 연결')}`))}<div class="center"><button class="btn primary" data-action="power-core" ${canFinish(s)?'':lock('정원·가방·새 식물 확인을 모두 마쳐 줘.')}>초록정원 깨우기</button></div></main>`;}
+export function renderFinal(s,u={}){
+ const connected=s.finalChecks.habitat, ready=canFinish(s);
+ const checks=[
+  [pageReady(s,7),'식물과 환경이 맞는 정원','정원 살펴보기','repair-garden'],
+  [pageReady(s,9),'현재 가방의 시험과 설명','가방 살펴보기','repair-test'],
+  [connected,'새 식물의 특징과 환경 연결']
+ ];
+ return `<main class="final-page tablet-final">
+  <header class="page-heading"><div><h1>새 식물에도 써 볼까요?</h1><p>물 저장과 사는 곳을 연결해 봐.</p></div></header>
+  <div class="final-workspace">
+   <section class="final-quiz" aria-labelledby="final-question">
+    <div class="final-specimen">
+     ${assetImage('cactus_plant','final-cactus',true)}
+     <div><p>선인장은 두꺼운 줄기에 물을 저장해.</p><h2 id="final-question">어느 곳에서 생활하는 데 도움이 될까?</h2></div>
+    </div>
+    <div class="final-habitat-choices" role="group" aria-labelledby="final-question">
+     ${Object.entries(HABITATS).map(([id,label])=>{
+      const selected=connected&&id==='dry';
+      const picture=assetImage('habitat_'+id,'habitat-picture',true).replace(/ alt="[^"]*"/,' alt=""');
+      return button(`${picture}<span>${label}</span>${selected?`<span class="final-choice-check">${icon('check',18)}</span>`:''}`,'final-habitat',id,selected);
+     }).join('')}
+    </div>
+    <div class="final-feedback ${connected?'is-correct':''}" role="status">${u.finalFeedback?`${connected?icon('check',22):''}<span>${esc(u.finalFeedback)}</span>`:''}</div>
+   </section>
+   <aside class="final-review" aria-labelledby="final-review-title">
+    <h2 id="final-review-title">내 결과물도 확인했어</h2>
+    <ul>
+     ${checks.map(([ok,label,repair,action])=>`<li class="${ok?'is-done':''}">
+      <span class="final-review-mark">${ok?icon('check',18)+'<span class="sr-only">완료: </span>':'아직'}</span>
+      <span>${label}</span>
+      ${!ok&&action?`<button class="btn soft" data-action="${action}">${repair}</button>`:''}
+     </li>`).join('')}
+    </ul>
+    <button class="btn primary final-power" data-action="power-core" ${ready?'':lock('정원·가방·새 식물 확인을 모두 마쳐 줘.')}>초록정원 깨우기 ${icon(ready?'arrow':'lock',22)}</button>
+   </aside>
+  </div>
+ </main>`;
+}
 export function renderEnding(s,grid){return `<main class="ending ending-celebration">${assetImage('expedition_restored_garden_20261020','ending-background',true)}<div class="ending-celebration-title"><span>다섯 번의 발견, 하나의 초록정원</span><h1>우리가 정원을 깨웠어!</h1></div><article class="ending-note" aria-labelledby="ending-diary-title" tabindex="0"><h2 id="ending-diary-title">오늘의 탐험 일기</h2><p>잎을 살피고 식물을 나눴다.</p><p>겨울을 지나 다시 자란 식물도 만났다.</p><p>식물에게 맞는 정원도 꾸몄다.</p><p>연잎의 비밀로 가방까지 만들었다!</p><p>작은 발견이 멋진 발명이 되었다.</p><p><strong>나는 초록정원의 식물 연구원!</strong></p></article><div class="ending-sparkles" aria-hidden="true">${Array.from({length:10},(_,i)=>`<i style="--i:${i}">✦</i>`).join('')}</div><div class="certificate sr-only"><p>탐험 완료 기록이야. 이해한 내용은 연구 노트의 선택과 관찰 근거를 보며 함께 이야기해 봐.</p></div><div class="ending-actions">${button('내 연구 노트 펼치기','report')}${button('엔딩 영상 다시 보기','outro-replay')}${button('정원으로 돌아가기','map')}</div></main>`;}
 
 // Each answer records the student's choice, not an automatic completion click.

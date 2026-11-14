@@ -143,10 +143,6 @@ dialog::backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; backgro
 #app .field-env-token { flex-direction: column; gap: 2px; padding: 6px 16px 8px; }
 #app .field-habitat-picture, #app .habitat-picture { width: 84px; height: 74px; object-fit: contain; filter: drop-shadow(0 4px 3px #2f3b2a2e); }
 #app .terrain-tools .habitat-picture { width: 44px; height: 38px; }
-#app .final-habitat-choices .btn { flex-direction: column; gap: 2px; min-width: 120px; padding: 8px 16px 10px; }
-#app .final-habitat-choices .habitat-picture { width: 92px; height: 80px; }
-#app .tablet-final .cactus-picture { display: grid; place-items: center; }
-#app .tablet-final .cactus-picture > img { height: 100%; max-height: inherit; width: auto; object-fit: contain; filter: drop-shadow(0 10px 8px #2f3b2a33); }
 #app .cloth-sample { background: #f1f1dc; }
 #app .cloth-sample > span:nth-child(2) { position: absolute; top: 6px; left: 8px; z-index: 2; font-size: var(--font-size-xs); font-weight: 700; }
 

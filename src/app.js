@@ -99,7 +99,7 @@ function choice(label,action,id,selected=false,extra=''){return btn(label,action
 function gardenGrid(readonly=false){return `<div class="garden-grid ${readonly?'readonly':''}" aria-label="6열 4행 정원">${state.terrain.map((t,i)=>{const plant=HABITAT_PLANTS.find(p=>p.id===plantAt(state,i)?.id);const label=`${Math.floor(i/6)+1}행 ${i%6+1}열 ${HABITATS[t]||'빈 땅'}${plant?' '+plant.name:''}`;return readonly?`<div class="garden-cell ${t} ${plant?'planted':''}" role="img" aria-label="${label}">${plant?plantArt(plant.id):'<span></span>'}</div>`:`<button class="garden-cell ${t} ${plant?'planted':''}" data-action="garden-cell" data-id="${i}" data-drop="garden" aria-label="${label}" title="${label}">${plant?plantArt(plant.id):'<span></span>'}</button>`;}).join('')}</div>`;}
 function activity(){return renderActivity(state,ui,gardenGrid);}
 function report(){return renderReport(state,ui);}
-function finalPage(){return renderFinal(state,gardenGrid,ui);}
+function finalPage(){return renderFinal(state,ui);}
 function ending(){return renderEnding(state,gardenGrid);}
 function showSpatialFallback(host){
  spatialModule?.unmountSpatial();
