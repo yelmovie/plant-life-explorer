@@ -56,10 +56,14 @@ test('한 번의 식물 비교에서 실제 선택과 수정만 기록한다',()
  const s=freshState(),u={};s.page=5;s.experiment.step=4;s.experimentAnswer='air';
  learningAction(s,u,'habitat-compare-answer','unknown');
  assert.deepEqual(s.learningRecords[2].responses,{});
- learningAction(s,u,'habitat-compare-answer','hyacinth');
+ const hyacinthHint=learningAction(s,u,'habitat-compare-answer','hyacinth');
+ const cherryHint=learningAction(s,u,'habitat-compare-answer','cherry');
+ assert.match(hyacinthHint,/잎자루를 눌렀을 때/);
+ assert.match(cherryHint,/땅속으로 뻗은 뿌리/);
+ assert.equal(s.habitatCompareAnswer,'');
  learningAction(s,u,'habitat-compare-answer','aloe');
  learningAction(s,u,'habitat-compare-answer','cherry');
  const r=s.learningRecords[2].responses['core:habitat-compare'];
  assert.equal(r.first,'부레옥잠');assert.equal(r.last,'알로에');
- assert.equal(r.attempts,2);assert.equal(r.wrong,1);assert.equal(r.correct,true);
+ assert.equal(r.attempts,3);assert.equal(r.wrong,2);assert.equal(r.correct,true);
 });

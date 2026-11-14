@@ -298,7 +298,12 @@ function learningActionCore(s,u,a,id){
     case 'experiment-answer':if(s.experiment.step<4)return '먼저 물속 잎자루를 눌러 봐.';if(id!=='air'){addMiss(s,2);return fieldMissionReady(s,2)?'현장에서 두 모형을 물에 넣었을 때, 공기 방이 있던 모형은 어디에 있었지?':'흙은 물속에서 가라앉아. 위로 떠오른 방울은 무엇일까?';}s.experimentAnswer='air';s.experiment.step=5;return fieldMissionReady(s,2)?'잎자루 속 공기는 부레옥잠이 물에 뜨는 데 도움을 줘.':'속에 있던 공기가 방울이 되어 나왔어.';
     case 'habitat-compare-answer':
       if(s.page!==5||!pageReady(s,4)||pageReady(s,5)||!HABITAT_PLANTS.some(p=>p.id===id))return '';
-      if(id!==HABITAT_COMPARE_PLANT){addMiss(s,2);return '세 식물 중 어느 식물이 잎에 물을 모아 두는지 다시 찾아봐.';}
+      if(id!==HABITAT_COMPARE_PLANT){
+        addMiss(s,2);
+        return id==='hyacinth'
+          ? '부레옥잠의 잎자루를 눌렀을 때 무엇이 나왔지? 두꺼운 잎에 물을 모아 두는 특징과 견줘 봐.'
+          : '벚나무는 땅속으로 뻗은 뿌리로 물을 빨아들여. 물을 두꺼운 잎에 모아 두는 식물을 찾아봐.';
+      }
       s.habitatCompareAnswer=id;u.activityFeedback='';return '';
     case 'garden-pick':{const q=HABITAT_PLANTS.find(x=>x.id===id);if(!q)return '';const eun=(q.name.charCodeAt(q.name.length-1)-0xAC00)%28?'은':'는';if(s.terrain[s.garden[q.id]]!==q.habitat)return `${q.name}${eun} 아직 어울리는 땅에 없어. 먼저 옮겨 심어 줘.`;s.gardenPick=id;return `내 정원 소개: ${q.name}${eun} ${HABITATS[q.habitat]}에 심었어. ${q.reason}.`;}
     case 'garden-answer':{if(!p)return '';if(!Number.isInteger(s.garden[p.id]))return '먼저 식물을 땅에 심어 줘.';const t=s.terrain[s.garden[p.id]];if(t!==p.habitat){addMiss(s,3);return `지금 심은 곳은 ${josa(HABITATS[t]||'빈 땅','이야/야')}. 앞에서 이은 사는 곳과 같은지 봐.`;}if(id!==p.id){const o=HABITAT_PLANTS.find(x=>x.id===id);addMiss(s,3);return `그건 ${josa(o?o.name:'다른 식물','을/를')} 심는 까닭이야. ${p.name}의 특징을 떠올려 봐.`;}if(!s.gardenReasons.includes(p.id))s.gardenReasons.push(p.id);return '이곳에 심은 까닭을 기록했어.';}
