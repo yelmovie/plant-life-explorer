@@ -1,7 +1,7 @@
 // All settings-page wording lives here (iscream-settings order). Screen text uses 해요체.
 // APP_VERSION must equal package.json version — tests/settings.test.mjs and scripts/build.mjs check it.
 export const APP_NAME='초록정원 연구기지';
-export const APP_VERSION='0.5.2';
+export const APP_VERSION='0.5.3';
 export const CREDIT_LINE=`${APP_NAME} v${APP_VERSION} · 기획·제작: 옐샘 & 아이스크림미디어`;
 // Classroom demo gate only. Visible in client source, so it never protects data.
 

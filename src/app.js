@@ -15,11 +15,10 @@ import {mountStageMap,ENTRANCES} from './stage-map.js';
 import {playMapEncounter} from './audio.js';
 import {fieldMissionAction,mountFieldInteractions,fieldTodo} from './field-missions.js';
 import {fieldMissionReady} from './field-missions-state.js';
-import {nextAutoStep} from './auto-play.js';
 import {activityGuide,mountGuideFinger,nudgeGuide} from './next-step-guide.js';
 import {josa} from './josa.js';
 import {EXPEDITIONS,TOOL_ASSISTS,renderToolPack,renderMissionBrief,renderLoot,toolPicture} from './expedition.js';
-import {renderActivity,renderReport,renderFinal,renderEnding,learningAction,nextHint,autoPlayButton} from './learning.js';
+import {renderActivity,renderReport,renderFinal,renderEnding,learningAction,nextHint,activityAutoStep,autoPlayButton} from './learning.js';
 import {playClick,playReward,isSoundOn,setSound,soundStored,hasMusic,isMusicOn,setMusic,isEffectsOn,setEffects,getMusicVolume,setMusicVolume,playMusic,unlockMusic} from './audio.js';
 import {TEXT,appInfoSection,studentSection,teacherSection,noticeSection} from './settings-content.js';
 import {playStory} from './story.js';
@@ -230,7 +229,7 @@ async function action(a,id,el){
  case 'npc-lipi':lipiDialogue();return;
  case 'journey-help':{const index=Math.floor(state.page/2);recordHint(state,index);save();lipiDialogue(index);return;}
  // 자동 진행: observation steps one at a time with a pause to watch each; stops before the student's own choices, when the screen changes, or on a second tap.
- case 'auto-play':{if(ui.autoPlaying){ui.autoPlaying=false;render();return;}ui.autoPlaying=true;const where=()=>[state.screen,state.page,ui.activityMode].join(':'),start=where();let last='',repeat=0;for(let n=0;n<40&&ui.autoPlaying&&where()===start;n++){const step=nextAutoStep(state,ui);if(!step)break;const key=step.join('|');repeat=key===last?repeat+1:0;last=key;if(repeat>1)break;const hand=AUTO_HANDS[step[0]]?.(step[1]);if(hand){const t0=Date.now();while(ui.autoPlaying&&where()===start&&nextAutoStep(state,ui)?.join('|')===key&&Date.now()-t0<8000)await new Promise(resolve=>setTimeout(resolve,150));}else await action(...step);await new Promise(resolve=>setTimeout(resolve,1400));}if(ui.autoPlaying){ui.autoPlaying=false;if(state.screen==='activity')render();}return;}
+ case 'auto-play':{if(ui.autoPlaying){ui.autoPlaying=false;render();return;}ui.autoPlaying=true;const where=()=>[state.screen,state.page,ui.activityMode].join(':'),start=where();let last='',repeat=0;for(let n=0;n<40&&ui.autoPlaying&&where()===start;n++){const step=activityAutoStep(state,ui);if(!step)break;const key=step.join('|');repeat=key===last?repeat+1:0;last=key;if(repeat>1)break;const hand=AUTO_HANDS[step[0]]?.(step[1]);if(hand){const t0=Date.now();while(ui.autoPlaying&&where()===start&&activityAutoStep(state,ui)?.join('|')===key&&Date.now()-t0<8000)await new Promise(resolve=>setTimeout(resolve,150));}else await action(...step);await new Promise(resolve=>setTimeout(resolve,1400));}if(ui.autoPlaying){ui.autoPlaying=false;if(state.screen==='activity')render();}return;}
  case 'tool-pack':modal('우리의 탐험 도구',renderToolPack(state),'','tools');return;
  case 'expedition-use':{const i=Number(id);recordHint(state,Math.floor(state.page/2));save();if(!Number.isInteger(i)||!missionDone(state,i))return;const plan=EXPEDITIONS[i];modal(plan.tool+'의 단서',`<div class="expedition-loot"><div class="loot-tool">${toolPicture(plan)}</div><div><p>${TOOL_ASSISTS[i]}</p></div></div>`,btn('이 단서로 탐구할게','close','primary'));return;}
  case 'journey-reward':if(missionDone(state,Math.floor(state.page/2)))showReward(Math.floor(state.page/2));return;

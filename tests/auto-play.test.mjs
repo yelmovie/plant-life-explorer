@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {freshState} from '../src/model.js';
 import {fieldSteps} from '../src/field-missions-state.js';
 import {fieldMissionAction} from '../src/field-missions.js';
+import {activityAutoStep} from '../src/learning.js';
 import {nextAutoStep} from '../src/auto-play.js';
 
 // Choices that belong to the student; auto-play must never make them.
@@ -28,7 +29,7 @@ test('현장 0: 단풍나무·소나무·동백나무 잎을 돋보기로 살피
  assert.deepEqual(drive(s,u),['maple','pine','camellia'].flatMap(id=>[['field-scan',id+':shape'],['field-scan',id+':edge']]));
  assert.equal(u.fieldMission.stage,0,'나누기 단계로 넘어가지 않는다');
  const sort=fieldSetup(0,1);assert.equal(nextAutoStep(sort.s,sort.u),null,'톱니 나누기는 학생 몫이다');
- assert.deepEqual(nextAutoStep(s,{activityMode:'explore'}),['leaf-zoom','large']);
+ assert.equal(nextAutoStep(s,{activityMode:'explore'}),null,'세 잎 확대는 학생이 직접 한다');
  s.page=1;assert.equal(nextAutoStep(s,{activityMode:'explore'}),null,'은행잎의 짝은 학생이 고른다');
 });
 
@@ -87,7 +88,9 @@ test('본 탐구 4쪽: 자르고 물에 넣은 뒤 예상이 있어야 잎자루
  assert.deepEqual(nextAutoStep(s,explore),['lab-next','cut']);
  s.experiment.step=1;assert.deepEqual(nextAutoStep(s,explore),['lab-next','water']);
  s.experiment.step=2;assert.deepEqual(nextAutoStep(s,explore),['lab-next','water']);
- s.experiment.step=3;assert.equal(nextAutoStep(s,explore),null,'예상 전에는 멈춘다');
+ s.experiment.step=3;
+ s.fieldEvidence.float={predictions:{air:'float',solid:'sink'},tested:['air','solid'],reason:'air'};
+ assert.equal(nextAutoStep(s,explore),null,'현장 임무를 마쳐도 직접 예상하지 않았으면 자동으로 누르지 않는다');
  s.experiment.prediction='bubbles';assert.deepEqual(nextAutoStep(s,explore),['press-petiole','']);
  s.experiment.step=4;assert.equal(nextAutoStep(s,explore),null,'방울의 정체는 학생이 답한다');
 });
@@ -114,4 +117,16 @@ test('본 탐구 9쪽: 연잎 특징을 잇기 전에는 가방 시험을 하지
 test('본 탐구 6쪽: 땅 칠하기는 학생이 직접 한다',()=>{
  const s=core(6,{terrain:Array(24).fill('empty')});
  assert.equal(nextAutoStep(s,explore),null);
+});
+
+test('예전 가방 시험은 자동 진행을 지원하고, 현장 결과 화면은 답과 시험을 건드리지 않는다',()=>{
+ const s=core(9,{design:{surface:'lotus',cover:'flap',linked:true}});
+ assert.deepEqual(activityAutoStep(s,explore),['run-test','']);
+ s.fieldEvidence.bag.prediction='cover';
+ s.fieldEvidence.bag.tests=[
+  {surface:'plain',cover:'open'},{surface:'lotus',cover:'open'},
+  {surface:'plain',cover:'flap'},{surface:'lotus',cover:'flap'},
+ ];
+ assert.deepEqual(nextAutoStep(s,explore),['run-test',''],'기존 자동 진행 규칙은 그대로다');
+ assert.equal(activityAutoStep(s,explore),null,'비 시험 버튼이 없는 결과 화면에서는 멈춘다');
 });

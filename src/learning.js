@@ -167,7 +167,11 @@ let moodMemo={p:-1,m:0};
 function guideMood(s,u,p,ready){const m=s.misses[Math.floor(p/2)]||0,same=moodMemo.p===p,mood=ready?'happy':u?.bubbling?'surprise':same&&m>moodMemo.m?'think':'idle';moodMemo={p,m};return mood;}
 const missNote=(s,i)=>missionDone(s,i)||!s.misses[i]?'':'<p class="microcopy miss-note">단서를 보고 고쳐 가는 중이야.</p>';
 // 자동 진행 sits in the top bar under the sound/settings icons (app.js header).
-export const autoPlayButton=(s,u)=>`${button(icon(u.autoPlaying?'close':'spark')+(u.autoPlaying?' 자동 진행 멈추기':' 자동 진행'),'auto-play','',!!u.autoPlaying,u.autoPlaying||nextAutoStep(s,u)?'title="관찰하는 조작만 차례로 보여 줘. 나누기·예상·답은 직접 해 줘."':lock('이 단계는 학생이 직접 푸는 곳이야. 관찰하는 조작이 나오면 다시 눌러 줘.'))}`;
+// The field-results page has no bag test to run. Keep the original auto-play for every hands-on view.
+export function activityAutoStep(s,u){
+ return u.activityMode!=='field'&&s.page===9&&fieldBagReview(s)?null:nextAutoStep(s,u);
+}
+export const autoPlayButton=(s,u)=>`${button(icon(u.autoPlaying?'close':'spark')+(u.autoPlaying?' 자동 진행 멈추기':' 자동 진행'),'auto-play','',!!u.autoPlaying,u.autoPlaying||activityAutoStep(s,u)?'title="관찰하는 조작만 차례로 보여 줘. 나누기·예상·답은 직접 해 줘."':lock('이 단계는 학생이 직접 푸는 곳이야. 관찰하는 조작이 나오면 다시 눌러 줘.'))}`;
 export function renderActivity(s,u,grid){
  const p=s.page,i=Math.floor(p/2),plan=EXPEDITIONS[i],fieldReady=fieldMissionReady(s,i),ready=pageReady(s,p),single=singleFieldRecord(s,p);
  // Remember the mode once chosen (also after a reload) so finishing the field mission does not silently switch screens.
