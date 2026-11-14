@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {freshState,restoreState,awardStamp,missionStamps,testValid} from '../src/model.js';
+import {freshState,restoreState,awardStamp,missionStamps,testValid,pageReady} from '../src/model.js';
 import {recordHint,recordResponse} from '../src/learning-records.js';
 import {fieldMissionAction,renderFieldMission,renderFieldSteps} from '../src/field-missions.js';
 import {fieldBagPair,fieldBagTrial} from '../src/field-missions-state.js';
@@ -17,7 +17,8 @@ test('현장 오답과 본 탐구의 첫 응답이 함께 칭찬·노트에 남�
  fieldMissionAction(s,u,'field-scan','maple:edge');
  fieldMissionAction(s,u,'field-sort','edge:maple:no');
  fieldMissionAction(s,u,'field-sort','edge:maple:yes');
- learningAction(s,u,'feature-answer','cherry');
+ learningAction(s,u,'leaf-zoom','large');s.page=1;learningAction(s,u,'leaf-partner','cherry');
+ assert.equal(s.learningRecords[0].responses['core:leaf-partner'].last,'벚나무');
  const record=s.learningRecords[0].responses['field:sort:edge:maple'];
  assert.equal(record.first,'톱니 없음');assert.equal(record.last,'톱니 있음');assert.equal(record.wrong,1);assert.equal(record.attempts,2);
  assert.equal(awardStamp(s,0),'fixed');
@@ -44,7 +45,7 @@ test('겉면만 달아 본 가방은 마무리할 수 없고 본 탐구로 넘�
  const s=freshState(),u={};s.page=8;
  const act=(a,id='')=>fieldMissionAction(s,u,a,id);
  act('field-bag-predict','surface');act('field-bag-test');act('field-bag-upgrade','surface');act('field-bag-test');
- assert.equal(act('field-bag-turned'),'');assert.match(act('field-bag-finish'),/둘 다 단 가방에 비를 내려 본 뒤에 마무리/);carryFieldEvidence(s,4);assert.equal(s.tests.length,0);assert.equal(testValid(s),false);
+ carryFieldEvidence(s,4);assert.equal(s.tests.length,0);assert.equal(testValid(s),false);
  u.fieldMission.mission=4;u.fieldMission.stage=2;
  assert.doesNotMatch(renderFieldMission(s,u),/조립|동그라미/);assert.match(renderFieldSteps(s,u),/data-action="field-stage" data-id="0"/);
 });
@@ -113,9 +114,19 @@ test('계절 현장 연결이 완성돼도 본 탐구에는 첫 예상만 이어
  const unfinished=freshState();carryFieldEvidence(unfinished,1);assert.deepEqual(unfinished.seasonPrediction,freshState().seasonPrediction);
 });
 
-test('현장 정원을 복구해도 본 탐구의 정원 꾸미기는 빈 땅에서 학생이 직접 시작한다',()=>{
- function complete(s){s.page=6;const u={};for(const [env,z] of [['water','pond'],['grass','meadow'],['dry','ridge']])fieldMissionAction(s,u,'field-place-environment',`${env}:${z}`);for(const [plant,z] of [['hyacinth','pond'],['cherry','meadow'],['aloe','ridge']])fieldMissionAction(s,u,'field-place-plant',`${plant}:${z}`);fieldMissionAction(s,u,'field-garden-rain','');}
- const s=freshState();complete(s);carryFieldEvidence(s,3);
- assert.deepEqual(s.garden,{});assert.equal(s.gardenReviewed,false);assert.ok(s.terrain.every(t=>t==='empty'));assert.equal(s.completed[6],false);
+test('현장 정원에서 한 자리만 옮기고 까닭을 고른 뒤 새로고침해도 남는다',()=>{
+ function complete(s){s.page=6;const u={};fieldMissionAction(s,u,'field-garden-ground','');for(const [plant,z] of [['hyacinth','pond'],['cherry','meadow'],['aloe','ridge']])fieldMissionAction(s,u,'field-place-plant',`${plant}:${z}`);fieldMissionAction(s,u,'field-garden-rain','');}
+ const s=freshState();complete(s);carryFieldEvidence(s,3);s.page=7;const u={};
+ const original={...s.garden};assert.deepEqual(original,{hyacinth:6,cherry:8,aloe:10});assert.equal(s.completed[6],false);
+ learningAction(s,u,'garden-review-pick','hyacinth');learningAction(s,u,'garden-review-move','');
+ learningAction(s,u,'garden-review-pick','aloe');assert.deepEqual(s.garden,original,'다른 식물을 고르면 미리 옮긴 자리를 복원한다');
+ learningAction(s,u,'garden-review-move','');assert.deepEqual(s.garden,{...original,aloe:11});
+ carryFieldEvidence(s,3);assert.equal(s.garden.aloe,11);
+ assert.equal(pageReady(s,7),false);assert.deepEqual(s.gardenReasons,[]);
+ learningAction(s,u,'garden-review-reason','cherry');assert.equal(pageReady(s,7),false);
+ learningAction(s,u,'garden-review-reason','aloe');assert.equal(pageReady(s,7),true);assert.deepEqual(s.gardenPhoto.cells[11],['dry','aloe']);
+ const back=restoreState(JSON.stringify(s));assert.equal(pageReady(back,7),true);assert.equal(back.garden.aloe,11);
+ learningAction(back,u,'garden-review-pick','cherry');assert.equal(back.gardenReview.plant,'aloe');
  const own=freshState();complete(own);own.terrain[0]='dry';carryFieldEvidence(own,3);assert.equal(own.terrain[0],'dry','학생이 만든 땅은 그대로 둔다');assert.deepEqual(own.garden,{});
+
 });

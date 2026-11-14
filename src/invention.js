@@ -1,6 +1,7 @@
 import {assetImage} from './asset-catalog.js';
-import {bagArt} from './art.js';
-import {designKey,testValid,comparisonPair,inventionEvidence,currentTrial} from './model.js';
+import {bagArt,icon} from './art.js';
+import {designKey,testValid,comparisonPair,inventionEvidence,currentTrial,fieldBagReview,BAG_REVIEW_ANSWERS} from './model.js';
+const esc=v=>String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 const WAIT='aria-disabled="true" data-reason="비가 그친 뒤에 바꿀 수 있어."';
 const button=(label,action,id='',selected=false,disabled=false)=>`<button class="btn ${selected?'selected':'soft'}" data-action="${action}" data-id="${id}" aria-pressed="${selected}" ${disabled?WAIT:''}>${label}</button>`;
 
@@ -19,6 +20,7 @@ const PREDICTIONS={surface:'연잎 겉면만 바꾸면 돼.',cover:'입구로 �
 const trialLabel=t=>t.surface==='plain'&&t.cover==='open'?'처음 가방':[t.surface==='lotus'?'연잎 겉면':'',t.cover==='flap'?'덮개':''].filter(Boolean).join('+');
 // The cover's role counts as concluded only when a saved answer shows it: the field answer or the core comparison of the cover.
 export function coverConcluded(s){
+ if(fieldBagReview(s))return s.bagReviewAnswer==='both';
  const b=s.fieldEvidence?.bag;
  if(b?.delivered&&b.compared?.part==='cover')return true;
  return testValid(s)&&s.tests.some(t=>t.cover==='flap'&&t.dry)&&(inventionEvidence(s).cover||s.testExplanation?.part==='cover');
@@ -27,7 +29,8 @@ export function coverConcluded(s){
 export function predictionRecord(s){
  if(!PREDICTIONS[s.testPrediction])return [];
  const rows=[{kind:'prediction',label:s.fieldEvidence?.bag?.prediction?'현장에서 남긴 첫 예상':'처음 예상',text:PREDICTIONS[s.testPrediction]}];
- const trials=[...new Map(s.tests.map(t=>[t.key,t])).values()];
+ const field=fieldBagReview(s);
+ const trials=field?field.trials.map(t=>({...t,dry:t.notebookDry})):[...new Map(s.tests.map(t=>[t.key,t])).values()];
  if(trials.length)rows.push({kind:'result',label:'시험 결과',text:trials.map(t=>`${trialLabel(t)} 공책 ${t.dry?'뽀송':'젖음'}`).join(' → ')});
  if(coverConcluded(s)){
   rows.push({kind:'conclusion',label:'알아낸 것',text:'연잎 겉면과 덮개가 함께 공책을 지켰어. 하나만 달면 젖었어.'});
@@ -57,7 +60,25 @@ function testSummary(s,u){
  const name=t=>t.surface==='plain'&&t.cover==='open'?'처음 가방':[t.surface==='lotus'?'+ 연잎 겉면':'',t.cover==='flap'?'+ 덮개':''].filter(Boolean).join(' ');
  return `<div class="learning-layout test-layout invention-summary"><section class="learning-scene"><div class="summary-bag"><div class="compact-bag" data-spatial="bag">${bagArt(s.design)}</div><div class="notebook-result">${assetImage('notebook_dry')}<span>공책 뽀송!</span></div></div><div class="summary-records">${s.tests.slice(-3).map(t=>`<article class="summary-trial"><strong>${name(t)}</strong><span class="result-chip ${t.clean?'good':''}">물방울 ${t.clean?'굴러감':'남음'}</span><span class="result-chip ${t.dry?'good':''}">공책 ${t.dry?'뽀송':'젖음'}</span></article>`).join('')}</div></section><aside class="learning-note"><h2>발명 완성!</h2><div class="invention-proof summary-proof"><span class="done">✓ 연잎 겉면 · 물방울을 굴려 보내</span><span class="done">✓ 덮개 · 입구로 오는 비를 막아</span></div><p class="prediction-note">${predictionLine(s)}</p><div class="idea-application"><p>이 아이디어를 또 어디에 쓸까?</p>${button('비옷','idea-apply','coat',u.application==='coat')}${button('탐험 신발','idea-apply','shoes',u.application==='shoes')}<span>${u.application==='coat'?'겉은 물방울을 보내고, 후드로 틈을 가리면 어떨까?':u.application==='shoes'?'신발 겉면과 물이 들어오는 입구를 따로 살펴보자.':'골라 보면 리피가 아이디어를 말해 줘.'}</span></div></aside></div>`;
 }
+function renderFieldBagReview(s,u,review){
+ const done=s.bagReviewAnswer==='both';
+ const names=['보통 가방','연잎 겉면만','덮개만','두 부품 모두'];
+ const cards=review.trials.map((trial,i)=>`<article class="field-review-trial ${trial.notebookDry?'dry':''}">
+  <h2>${names[i]}</h2>${bagArt(trial)}
+  <span>물방울 ${trial.rolls?'굴러감':'남음'}</span>
+  <b>공책 ${trial.notebookDry?'뽀송':'젖음'}</b>
+ </article>`).join('');
+ return `<div class="learning-layout"><section class="learning-scene"><div class="work-board field-review-board bag-review-board">
+  <p class="field-review-kicker">현장 기록 · 같은 비로 시험한 네 가방</p>
+  <div class="field-review-trials">${cards}</div>
+  ${done?`<p class="field-review-result" role="status" tabindex="-1">${icon('check',20)} ${BAG_REVIEW_ANSWERS.both} <b>그래서 둘 다 필요해!</b></p>`: `
+   <p class="bag-review-question">공책을 지키려면 두 부품이 왜 다 필요할까?</p>
+   <div class="field-review-choices">${['surface','both','cover'].map(id=>[id,BAG_REVIEW_ANSWERS[id]]).map(([id,label])=>button(label,'bag-review-answer',id)).join('')}</div>
+   ${u.activityFeedback?`<p class="field-review-feedback" role="status">${esc(u.activityFeedback)}</p>`:''}`}
+ </div></section></div>`;
+}
 export function renderTests(s,u){
+ const review=fieldBagReview(s);if(review)return renderFieldBagReview(s,u,review);
  if(testValid(s)&&s.fieldBridges?.[4]&&!u.testing&&!u.replaying)return testSummary(s,u);
  const last=currentTrial(s),pair=comparisonPair(s),hint=inventionHint(s),moving=u.testing||u.replaying,proof=inventionEvidence(s);
  const routes=moving||last?`<svg class="water-paths" viewBox="0 0 500 300" role="img" aria-label="${s.design.cover==='open'?'입구로 물이 들어가요':'덮개를 따라 물이 바깥으로 흘러요'}"><path class="water-route" d="${s.design.cover==='open'?'M250 10V125L245 175':'M250 10L250 70L345 140L370 210'}"/><path class="water-route surface-route" d="${s.design.surface==='lotus'?'M160 125Q115 210 85 260':'M170 125L175 180'}"/></svg><div class="notebook-result">${assetImage((last?last.dry:s.design.cover==='flap')?'notebook_dry':'notebook_wet')}<span>가방 안 수첩</span></div>`:'';

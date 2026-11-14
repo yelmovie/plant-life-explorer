@@ -27,7 +27,7 @@ async function walk(directory) {
 }
 
 const source = (await walk('src')).filter(file => /\.(m?js|css)$/.test(file));
-const assets = (await walk('assets')).filter(file => /\.webp$/i.test(file) || /(?:credits|licenses?|provenance)[^/]*\.(?:md|json|txt|csv)$/i.test(path.basename(file))
+const assets = (await walk('assets')).filter(file => !file.startsWith('assets/combat/') || /^assets\/combat\/map-(?:villain-(?:left|right)|hero-reaction|ally-reaction)(?:-v2)?\.webp$/.test(file)).filter(file => /\.webp$/i.test(file) || /(?:credits|licenses?|provenance)[^/]*\.(?:md|json|txt|csv)$/i.test(path.basename(file))
   || /^assets\/(?:icons|og)\/[^/]+\.png$/i.test(file) || /^assets\/models\/[^/]+\.glb$/i.test(file) || /^assets\/audio\/[^/]+\.mp3$/i.test(file) || /^assets\/videos\/[^/]+\.mp4$/i.test(file) || /^assets\/fonts\/[^/]+(?:\.woff2|-OFL\.txt)$/i.test(file));
 const pwa = ['sw.js', 'manifest.webmanifest'];
 const files = ['index.html', ...pwa, ...source, ...assets];
@@ -92,7 +92,7 @@ for (const file of files) hash.update(file).update(await readFile(path.join(root
 const shell = ['/', '/src/bundle.css', ...(scriptBundle ? ['/'+scriptBundle] : []), ...files.filter(file => file !== 'sw.js' && !styles.includes(file) && !file.startsWith('src/vendor/') && !file.startsWith('assets/icons/') && !file.startsWith('assets/og/') && !file.startsWith('assets/models/') && !/\.(mp4|mp3)$/.test(file) && !/\.(?:md|txt)$/i.test(file)
   && (!file.startsWith('assets/generated/') || /\/(?:expedition_hero_20261020|mascot_[a-z]+|map_trail_v2|reward_[a-z]+_thumb)\.webp$/.test(file))).map(file => `/${file}`)];
 const swPath = path.join(output, 'sw.js');
-shell.push('/assets/audio/npc-welcome.mp3');
+shell.push('/assets/audio/npc-welcome.mp3', ...assets.filter(file => /^assets\/audio\/lipi-[\w-]+\.mp3$/.test(file)).map(file => '/'+file));
 let sw = await readFile(swPath, 'utf8');
 const versioned = sw.replace(/const CACHE_VERSION='[^']*';/, `const CACHE_VERSION='${version}-${hash.digest('hex').slice(0, 8)}';`).replace(/const APP_SHELL=\[[^\]]*\];/, `const APP_SHELL=${JSON.stringify(shell)};`);
 if (versioned === sw || !versioned.includes(`'${version}-`)) throw new Error('sw.js CACHE_VERSION/APP_SHELL markers not found.');

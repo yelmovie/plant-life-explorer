@@ -1,8 +1,8 @@
-import {normalizeMapVillains} from './map-villains.js';
 import {emptyLearningRecords,normalizeLearningRecords,learningStamp,normalizeNotebook} from './learning-records.js';
-import {normalizeFieldEvidence,fieldMissionReady} from './field-missions-state.js';
+import {normalizeFieldEvidence,fieldMissionReady,fieldSteps,FIELD_BAG_VARIANTS} from './field-missions-state.js';
 import {normalizeBuds} from './winter-buds.js';
 import {josa} from './josa.js';
+import {normalizeVillageEncounters} from './village-encounters.js';
 export const STORAGE_KEY = 'green-garden-mvp-v2';
 export const LEGACY_STORAGE_KEY = 'green-garden-mvp-v1';
 export const PLANTS = [
@@ -26,11 +26,11 @@ export const MISSIONS = [
 export const PAGES = [
   [
     "잎을 살펴봐요",
-    "잎의 모양과 가장자리를 보고, 보이는 특징을 골라 줘."
+    "세 잎을 한꺼번에 크게 보고, 생김새를 비교해 봐."
   ],
   [
-    "잎을 나누어 봐요",
-    "기준 하나를 골라 새로운 잎을 나누어 봐. 다른 기준은 더 해 봐도 좋아."
+    "은행잎의 새 짝 찾기",
+    "잎 모양으로 나누면 은행잎은 누구와 한 팀이 될까?"
   ],
   [
     "계절을 바꿔 봐요",
@@ -68,7 +68,7 @@ export const PAGES = [
 // Index 4 (초봄) is a view-only stop between winter and the next spring; records keep keys 0-3.
 export const SEASONS=['봄','여름','가을','겨울','초봄'];
 export function freshState() {
-  return {version:2,mapVillains:normalizeMapVillains(null),learningRecords:emptyLearningRecords(),fieldBridges:Array(5).fill(false),notebook:normalizeNotebook(),fieldEvidence:normalizeFieldEvidence(null),journeyRequired:Array(5).fill(false),legacyCompleted:[],legacyFinished:false,leafEvidence:{},groupsByRule:{edge:{},narrow:{}},classificationEvidence:{},seasonPhotos:{},seasonExplanation:'',seasonExplained:[],habitatFeatures:{},experimentAnswer:'',gardenReviewed:false,testExplanation:null,inventionRevision:2,inventionExplanations:{},testPrediction:'',activeTestKey:'',seasonPrediction:{},undergroundSeen:[],budsFound:normalizeBuds(),misses:Array(5).fill(0),stamps:{direct:[],fixed:[],helped:[],unknown:[]},sharing:{status:'pending',question:'',response:''},highlight:0,screen:'home',page:0,completed:Array(10).fill(false),observation:{cherry:[],ginkgo:[],grass:[]},rule:'edge',groups:{},seasonPlant:'cherry',season:1,underground:false,seasonalRecords:[],linkedEvidence:[],experiment:{step:0,compared:false,prediction:''},habitats:{},reasons:{},terrain:Array(24).fill('empty'),garden:{},gardenExtras:[],gardenReasons:[],gardenPick:'',gardenPhoto:null,design:{surface:'plain',cover:'open',linked:false},tests:[],reportSubmitted:[],finalChecks:{classification:false,habitat:false,garden:false,invention:false},finished:false,gardenTheme:'pink',largeText:false,soundEnabled:true,adminUnlocked:false};
+  return {version:2,mapEncounters:{},learningRecords:emptyLearningRecords(),fieldBridges:Array(5).fill(false),notebook:normalizeNotebook(),fieldEvidence:normalizeFieldEvidence(null),journeyRequired:Array(5).fill(false),legacyCompleted:[],legacyFinished:false,leafComparisonSeen:false,leafPartner:'',leafEvidence:{},groupsByRule:{edge:{},narrow:{}},classificationEvidence:{},seasonPhotos:{},seasonExplanation:'',seasonExplained:[],habitatFeatures:{},experimentAnswer:'',gardenReviewed:false,testExplanation:null,inventionRevision:2,inventionExplanations:{},testPrediction:'',bagReviewAnswer:'',activeTestKey:'',seasonPrediction:{},seasonCompareAnswer:'',undergroundSeen:[],budsFound:normalizeBuds(),misses:Array(5).fill(0),stamps:{direct:[],fixed:[],helped:[],unknown:[]},sharing:{status:'pending',question:'',response:''},highlight:0,screen:'home',page:0,completed:Array(10).fill(false),observation:{cherry:[],ginkgo:[],grass:[]},rule:'edge',groups:{},seasonPlant:'cherry',season:1,underground:false,seasonalRecords:[],linkedEvidence:[],experiment:{step:0,compared:false,prediction:''},habitats:{},reasons:{},terrain:Array(24).fill('empty'),garden:{},gardenExtras:[],gardenReasons:[],gardenPick:'',gardenFromField:false,gardenReview:null,gardenPhoto:null,design:{surface:'plain',cover:'open',linked:false},tests:[],reportSubmitted:[],finalChecks:{classification:false,habitat:false,garden:false,invention:false},finished:false,gardenTheme:'pink',largeText:false,soundEnabled:true,adminUnlocked:false};
 }
 export function presetTerrain(){return Array.from({length:24},(_,i)=>['water','grass','dry'][Math.floor((i%6)/2)]);}
 export function evidenceCount(s){return MISSIONS.filter((_,i)=>s.completed[i*2]&&s.completed[i*2+1]).length;}
@@ -86,9 +86,13 @@ export function testDesign(d){return {key:designKey(d),surface:d.surface,cover:d
 export const TERRAIN_MIN=3;
 export function terrainCount(s,t){return s.terrain.filter(x=>x===t).length;}
 export function terrainReady(s){return ['water','grass','dry'].every(t=>terrainCount(s,t)>=TERRAIN_MIN);}
-// Proof for a classification must be an observation of the same kind as the rule.
-export const RULE_FEATURE={edge:'edge',narrow:'shape'};
-export function proofFits(rule,feature){return RULE_FEATURE[rule]===feature;}
+export const SEASON_REVIEW_ANSWERS={
+ parts:'벚나무는 가지의 겨울눈에서, 씀바귀는 살아 있던 뿌리에서 다시 자랐어.',
+ leaves:'두 식물 모두 겨울에도 잎이 남아 있다가 봄에 다시 자랐어.',
+ new:'두 식물 모두 겨울에 사라지고, 봄에 다른 식물이 자랐어.'
+};
+export const fieldSeasonReview=s=>(!s.completed[3]||s.seasonCompareAnswer==='parts')&&fieldMissionReady(s,1);
+export const LEAF_PARTNER='cherry';
 // Stamps (equal praise, not grades): 'direct' = found without a wrong pick, 'fixed' = fixed after wrong picks.
 // Given once, on the mission's first completion. Completed results and rewards are never cleared.
 export const STAMP_KINDS=['direct','fixed','helped','unknown'];
@@ -109,6 +113,30 @@ const PLANT_NEEDS={hyacinth:'잎자루 속 공기로 물에 떠서 사니까',al
 export function misplacedPlants(s){return HABITAT_PLANTS.filter(p=>Number.isInteger(s.garden[p.id])&&s.terrain[s.garden[p.id]]!==p.habitat);}
 export function misfitNote(s,p){return `${josa(p.name,'은/는')} 지금 ${HABITATS[s.terrain[s.garden[p.id]]]||'빈 땅'}에 있어. ${PLANT_NEEDS[p.id]} ${josa(HABITATS[p.habitat],'이/가')} 어울려. 끌어서 옮겨 줘.`;}
 export function gardenValid(s){return gardenPlaced(s)&&HABITAT_PLANTS.every(p=>s.gardenReasons.includes(p.id));}
+// The field garden stays separate from older gardens the student made from scratch.
+export function gardenReviewReady(s){
+ const review=s.gardenReview,p=HABITAT_PLANTS.find(p=>p.id===review?.plant);
+ return !!p&&review.explained===true&&review.cell===s.garden[p.id]&&gardenPlaced(s);
+}
+export const BAG_REVIEW_ANSWERS={
+ surface:'겉면만 있으면 입구로도 비가 안 들어와.',
+ cover:'덮개만 있으면 천에도 비가 안 스며들어.',
+ both:'겉면은 빗물을 굴려 보내고, 덮개는 입구로 들어오는 비를 막아.'
+};
+export function fieldBagReview(s){
+ if(s.completed[9]&&s.bagReviewAnswer!=='both')return null; // Older completed designs keep their original record.
+ const e=normalizeFieldEvidence(s.fieldEvidence),b=e.bag;
+ if(!fieldSteps(e,4).every(Boolean))return null;
+ const trials=['plain:open',...FIELD_BAG_VARIANTS].map(key=>b.tests.findLast(t=>t.key===key));
+ return trials.every(Boolean)?{prediction:b.prediction,trials}:null;
+}
+export function fieldRecordPage(s,p){
+ if((p===2||p===3)&&fieldSeasonReview(s))return 3;
+ if((p===6||p===7)&&s.gardenFromField)return 7;
+ if((p===8||p===9)&&fieldBagReview(s))return 9;
+ return p;
+}
+export const singleFieldRecord=(s,p)=>p===3&&fieldSeasonReview(s)||p===7&&s.gardenFromField||p===9&&!!fieldBagReview(s);
 export function currentTrial(s){const key=designKey(s.design);return s.activeTestKey===key?s.tests.findLast(t=>t.key===key):s.tests.at(-1)?.key===key?s.tests.at(-1):null;}
 export function comparisonPair(s){
   const last=currentTrial(s);if(!last)return null;
@@ -120,6 +148,7 @@ export function inventionEvidence(s){
  return {surface:valid('surface'),cover:valid('cover')};
 }
 export function testValid(s){
+ if(fieldBagReview(s))return s.bagReviewAnswer==='both';
  const pair=comparisonPair(s),current=!!pair&&s.design.linked&&s.design.surface==='lotus'&&s.testExplanation?.key===pair.last.key&&s.testExplanation?.before===pair.before.key&&s.testExplanation?.part===pair.part;
  if(s.inventionRevision===1)return current;
  const evidence=inventionEvidence(s);return !!currentTrial(s)&&s.design.linked&&s.design.surface==='lotus'&&s.design.cover==='flap'&&evidence.surface&&evidence.cover;
@@ -130,23 +159,21 @@ export function recordFeature(s,plant,region,answer){
   s.leafEvidence[plant]??={};s.leafEvidence[plant][region]={answer,asset:plant,region};
   if(!s.observation[plant].includes(region))s.observation[plant].push(region);return true;
 }
-export function classificationComplete(s,rule){const groups=rule===s.rule?s.groups:s.groupsByRule[rule];return PLANTS.every(p=>groups[p.id]===(p[rule]?'yes':'no'))&&PLANTS.some(p=>p.id===s.classificationEvidence[rule]&&(s.observation[p.id].includes(rule==='edge'?'edge':'shape')||fieldMissionReady(s,0)));}
 export function pageReady(s,p){
   const mission=Math.floor(p/2);if(p%2&&!s.completed[p]&&s.journeyRequired?.[mission]&&!fieldMissionReady(s,mission))return false;
   switch(p){
-    case 0:return (s.completed[0]&&fieldMissionReady(s,0))||PLANTS.every(x=>['shape','edge'].every(f=>s.leafEvidence[x.id]?.[f]?.answer===(f==='shape'?x.id:x.edge?'yes':'no')));
-    // Every record page is solved by the student; only pages saved as done under the old field shortcut keep it.
-    case 1:return pageReady(s,0)&&((s.completed[1]&&fieldMissionReady(s,0))||['edge','narrow'].some(rule=>classificationComplete(s,rule)));
+    case 0:return s.completed[0]||s.leafComparisonSeen||PLANTS.every(x=>s.leafEvidence[x.id]?.shape&&s.leafEvidence[x.id]?.edge);
+    case 1:return s.completed[1]||(pageReady(s,0)&&s.leafPartner===LEAF_PARTNER);
     case 2:return ['cherry','sowthistle'].every(plant=>[0,3].every(n=>s.seasonalRecords.includes(`${plant}:${n}`)&&s.seasonPhotos[`${plant}:${n}`]));
-    case 3:return pageReady(s,2)&&['cherry','sowthistle'].every(plant=>s.seasonExplained.includes(plant)&&[0,3].every(n=>s.seasonalRecords.includes(`${plant}:${n}`)));
+    case 3:return fieldSeasonReview(s)?s.seasonCompareAnswer==='parts':pageReady(s,2)&&['cherry','sowthistle'].every(plant=>s.seasonExplained.includes(plant)&&[0,3].every(n=>s.seasonalRecords.includes(`${plant}:${n}`)));
     case 4:return s.experiment.step>=4&&s.experimentAnswer==='air';
     case 5:return pageReady(s,4)&&HABITAT_PLANTS.every(p=>s.habitats[p.id]===p.habitat&&s.habitatFeatures[p.id]===p.id&&s.reasons[p.id]===p.id);
     // New rules (3-cell area, prediction) apply only to pages not yet completed; saved completions keep the old rule.
     case 6:return s.gardenReviewed&&(s.completed[6]?['water','grass','dry'].every(t=>s.terrain.includes(t)):terrainReady(s)&&gardenPlaced(s));
     // A garden carried over from the field still needs the student's own keep-or-change pick; saved completions keep the old rule.
-    case 7:return pageReady(s,6)&&gardenValid(s)&&(s.completed[7]||!!s.gardenPick);
+    case 7:return s.gardenFromField?gardenReviewReady(s):pageReady(s,6)&&gardenValid(s)&&(s.completed[7]||!!s.gardenPick);
     case 8:return s.design.linked&&(s.completed[8]||!!s.testPrediction);
-    case 9:return s.design.linked&&testValid(s);
+    case 9:return testValid(s);
     default:return false;
   }
 }
@@ -155,7 +182,7 @@ export function restoreState(raw){
   const s=freshState();
   try {
     const v=JSON.parse(raw); if(!v||![1,2].includes(v.version))return s;
-    s.mapVillains=normalizeMapVillains(v.mapVillains);
+    s.mapEncounters=normalizeVillageEncounters(v.mapEncounters);
     s.learningRecords=normalizeLearningRecords(v.learningRecords);
     s.notebook=normalizeNotebook(v.notebook);
     s.fieldBridges=s.fieldBridges.map((_,i)=>v.fieldBridges?.[i]===true);
@@ -186,6 +213,13 @@ export function restoreState(raw){
     }
     if(Array.isArray(v.terrain)&&v.terrain.length===24)s.terrain=v.terrain.map(t=>member(t,['water','grass','dry','empty'])?t:'empty');
     if(HABITAT_PLANTS.some(p=>p.id===v.gardenPick))s.gardenPick=v.gardenPick;
+    s.gardenFromField=v.gardenFromField===true&&gardenPlaced(s);
+    if(s.gardenFromField&&HABITAT_PLANTS.some(p=>p.id===v.gardenReview?.plant)){
+      const {plant,from,cell,explained}=v.gardenReview;
+      if(Number.isInteger(from)&&s.terrain[from]===s.terrain[s.garden[plant]]&&cell===s.garden[plant])s.gardenReview={plant,from,cell,explained:explained===true};
+    }
+    if(v.seasonCompareAnswer==='parts')s.seasonCompareAnswer='parts';
+    if(v.bagReviewAnswer==='both')s.bagReviewAnswer='both';
     // 내 정원 사진: 24 cells of [land, plant]; a malformed photo is dropped, never repaired into a different garden.
     const shot=v.gardenPhoto?.cells;if(Array.isArray(shot)&&shot.length===24&&shot.every(c=>Array.isArray(c)&&member(c[0],['water','grass','dry','empty'])&&(c[1]===''||HABITAT_PLANTS.some(p=>p.id===c[1]))))s.gardenPhoto={cells:shot.map(([t,id])=>[t,id])};
     if(Array.isArray(v.gardenReasons))s.gardenReasons=[...new Set(v.gardenReasons.filter(id=>HABITAT_PLANTS.some(p=>p.id===id)))];
@@ -213,6 +247,8 @@ export function restoreState(raw){
     s.legacyCompleted=v.version===1?s.completed.map((done,i)=>done?i:-1).filter(i=>i>=0):Array.isArray(v.legacyCompleted)?v.legacyCompleted.filter(i=>Number.isInteger(i)&&i>=0&&i<10&&s.completed[i]):[];
     s.legacyFinished=(v.version===1?v.finished===true:v.legacyFinished===true)&&evidenceCount(s)===5;
     if(v.version===2){
+      s.leafComparisonSeen=v.leafComparisonSeen===true;
+      if(v.leafPartner===LEAF_PARTNER)s.leafPartner=v.leafPartner;
       for(const p of PLANTS)for(const region of ['shape','edge']){const e=v.leafEvidence?.[p.id]?.[region];if(e)recordFeature(s,p.id,region,e.answer);}
       for(const rule of ['edge','narrow']){
         for(const p of PLANTS)if(member(v.groupsByRule?.[rule]?.[p.id],['yes','no']))s.groupsByRule[rule][p.id]=v.groupsByRule[rule][p.id];

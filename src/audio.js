@@ -65,6 +65,7 @@ export function setSound(on){setMusic(on);setEffects(on);}
 export function playClick(){chirp(480,720,.075,.03,'sine');}
 // Card handling: a rising lift, a soft wooden drop into a box, a falling slide back to the tray.
 const DRAG_SOUNDS={lift:[420,680,.09,.03,'sine'],drop:[560,240,.14,.05,'triangle'],back:[380,250,.11,.025,'sine']};
+export function playMapEncounter(kind,hits){const notes=kind==='finish'?[670,310,.28,.05,'sine']:kind==='contact'?[210,133,.12,.05,'triangle']:hits===2?[470,205,.16,.07,'triangle']:[390,235,.09,.05,'sine'];chirp(...notes);}
 export function playDragSound(kind){const s=DRAG_SOUNDS[kind];if(s)chirp(...s);}
 function chirp(from,to,length,gain,type){
   if(!effectsEnabled||globalThis.document?.hidden)return;

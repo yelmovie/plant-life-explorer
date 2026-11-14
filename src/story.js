@@ -1,6 +1,6 @@
 import {plantEmphasis} from './plant-concepts.js';
 import {STORIES, captionAt} from './story-data.js';
-import {isSoundOn, setSound, stopFeedback, playMusic} from './audio.js';
+import {isSoundOn, setSound, stopFeedback, playMusic, suspendMusic} from './audio.js';
 
 let activeCleanup;
 
@@ -8,9 +8,9 @@ let activeCleanup;
 export function playStory(kind, {onFinish = () => {}, replay = false} = {}) {
   const story = STORIES[kind];
   if (!story) return;
-  // Neither film has a soundtrack of its own: the intro plays over the main theme, the outro over the ending theme.
-  if (kind === 'outro') playMusic('ending', true);
+  // The film includes its own mixed dialogue and score on the video clock.
   activeCleanup?.();
+  const resumeMusic = suspendMusic();
   stopFeedback();
   const previousFocus = document.activeElement;
   const app = document.querySelector('#app');
@@ -61,6 +61,8 @@ export function playStory(kind, {onFinish = () => {}, replay = false} = {}) {
   function cleanup() {
     events.abort();
     video.pause();
+    if (kind === 'outro') playMusic('ending', true);
+    resumeMusic();
     screen.remove();
     video.querySelector('source').removeAttribute('src');
     video.load();

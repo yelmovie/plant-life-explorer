@@ -4,8 +4,8 @@
 // pointing hand; jump = [action,id] that brings that control on screen (tab, plant card, season stop).
 // The hand never tells the answer. It never points at a choice, never names the leaf that is wrong, and never lies over the
 // choices: a question line is marked from above (anchor 'ask'), a picture or a row by its bottom edge (anchor 'edge').
-import {PLANTS,HABITAT_PLANTS,HABITATS,TERRAIN_MIN,terrainCount,gardenValid,pageReady,designKey,currentTrial,comparisonPair,inventionEvidence,classificationComplete} from './model.js';
-import {checkClassification,classificationKey,seasonEvidenceReady} from './inquiry.js';
+import {fieldSeasonReview,fieldBagReview,gardenReviewReady,HABITAT_PLANTS,HABITATS,TERRAIN_MIN,terrainCount,gardenValid,pageReady,designKey,currentTrial,comparisonPair,inventionEvidence} from './model.js';
+import {seasonEvidenceReady} from './inquiry.js';
 import {fieldSteps,normalizeFieldEvidence,fieldMissionReady} from './field-missions-state.js';
 import {fieldTodo,fieldStageLabels} from './field-missions.js';
 import {icon} from './art.js';
@@ -18,26 +18,11 @@ const item=(key,label,done,rest={})=>({key,label,done:!!done,...rest});
 // A question line: the hand comes from above, so its body never rests on the answers below.
 const ask=(target,tip)=>({target,tip,anchor:'ask'});
 
-function leavesItems(s,u){
- return PLANTS.map(p=>{
-  const e=s.leafEvidence[p.id]||{},sub=[{id:'shape',label:'모양',done:!!e.shape},{id:'edge',label:'가장자리',done:!!e.edge}],left=sub.find(x=>!x.done)?.id;
-  const region=u.region||'shape',here=u.plant===p.id;
-  const recheck=here&&u.recheck===`${p.id}:${left}`;
-  const target=!here?sel('specimen',p.id):region!==left?sel('region',left):recheck?'.feature-choices [data-action="region"]':'.specimen-stage',anchor=target==='.specimen-stage'?'edge':undefined;
-  const tip=!here?`${p.name} 잎을 눌러 봐`:region!==left?(left==='shape'?'잎 전체 보기를 눌러 봐':'가장자리 보기를 눌러 봐'):recheck?'잎을 다시 살펴보기를 눌러 봐':(left==='shape'?'잎 모양을 보고 아래에서 골라 봐':'가장자리를 보고 톱니가 있는지 골라 봐');
-  return item('leaf:'+p.id,p.name,!left,{sub,target,tip,anchor,jump:!here?['specimen',p.id]:region!==left?['region',left]:null});
- });
+function leavesItems(s){
+ return [item('compare-leaves','세 잎 크게 비교하기',pageReady(s,0),{target:sel('leaf-zoom','large'),tip:'크게 보기를 눌러 봐'})];
 }
-function classifyItems(s,u){
- const rule=s.rule,right=p=>s.groups[p.id]===(p[rule]?'yes':'no'),placed=PLANTS.filter(p=>s.groups[p.id]),allPlaced=placed.length===PLANTS.length;
- const checked=u.ruleCheck?.key===classificationKey(s)?u.ruleCheck:classificationComplete(s,rule)?checkClassification(s):null;
- const unplaced=PLANTS.find(p=>!s.groups[p.id]),wrong=!!checked?.conflicts;
- const sortTarget=unplaced?(u.selected===unplaced.id?'.sort-bins':`.sort-tray .plant-card[data-id="${unplaced.id}"]`):wrong?'.rule-result':sel('check-rule');
- const sortTip=unplaced?(u.selected===unplaced.id?'상자를 눌러 넣어 봐':`${unplaced.name} 잎을 눌러 봐`):wrong?'기준과 다른 잎이 있어. 상자에서 꺼내 다시 넣어 봐':'내 분류 확인하기를 눌러 봐';
- const items=[item('sort',`잎 상자에 넣기 ${placed.length}/3`,allPlaced&&PLANTS.every(right),{target:sortTarget,tip:sortTip,anchor:sortTarget==='.sort-bins'?'edge':undefined}),
-  item('check','내 분류 확인하기',!!checked?.valid,{target:sel('check-rule'),tip:'내 분류 확인하기를 눌러 봐'})];
- if(!fieldMissionReady(s,0))items.push(item('proof','어떤 관찰로 나눴는지 고르기',classificationComplete(s,rule),ask('.reason-cards > p','관찰한 특징을 골라 봐')));
- return items;
+function classifyItems(s){
+ return [item('leaf-partner','은행잎의 새 짝 고르기',pageReady(s,1),ask('.leaf-partner-question','잎 모양을 보고 새 짝을 골라 봐'))];
 }
 function seasonsItems(s){
  return ['cherry','sowthistle'].map(plant=>{
@@ -53,6 +38,7 @@ function seasonsItems(s){
  });
 }
 function compareItems(s){
+ if(fieldSeasonReview(s))return [item('seasons-why','두 식물이 다시 자란 부분 비교하기',pageReady(s,3),ask('.season-review-question','겨울과 봄의 두 그림을 비교해 봐'))];
  return ['cherry','sowthistle'].map(plant=>{
   const here=s.seasonPlant===plant,photos=here?seasonEvidenceReady(s):[3,0].every(n=>s.seasonPhotos[`${plant}:${n}`]&&s.seasonalRecords.includes(`${plant}:${n}`));
   const target=!here?sel('season-plant',plant):!photos?sel('previous'):'.season-question > p';
@@ -64,7 +50,7 @@ function experimentItems(s){
  const n=s.experiment.step;
  return [item('cut','잎자루 잘라 보기',n>=1,{target:sel('lab-next','cut'),tip:'잎자루 잘라 보기를 눌러 봐'}),
   item('water','물속에 넣기',n>=3,{target:sel('lab-next','water'),tip:'물속에 넣기를 눌러 봐'}),
-  item('press','물속에서 눌러 보기',n>=4,{target:sel('press-petiole'),tip:s.experiment.prediction?'잎자루를 눌러 봐':'예상을 고르고 잎자루를 눌러 봐'}),
+  item('press','물속에서 눌러 보기',n>=4,{target:sel('press-petiole'),tip:s.experiment.prediction||fieldMissionReady(s,2)?'잎자루를 눌러 봐':'예상을 고르고 잎자루를 눌러 봐'}),
   item('answer','공기 방울의 까닭 고르기',s.experimentAnswer==='air',ask('.reason-cards > p','무엇을 알 수 있는지 골라 봐'))];
 }
 function habitatItems(s,u){
@@ -93,6 +79,7 @@ function terrainItems(s,u){
  return [...lands,...HABITAT_PLANTS.map(p=>{const it=plantItem(s,u,p,false);return land&&!it.done?{...it,target:land.target,tip:land.tip,jump:land.jump}:it;})];
 }
 function gardenItems(s,u){
+ if(s.gardenFromField)return [item('site','정원에서 한 자리 고르기',!!s.gardenReview,ask('.garden-review-question','살펴볼 식물 한 자리를 골라 봐')),item('why','고른 자리의 까닭 확인하기',gardenReviewReady(s),ask('.garden-review-question','고른 식물과 그 땅을 보고 까닭을 골라 봐'))];
  const plants=HABITAT_PLANTS.map(p=>plantItem(s,u,p,true));
  if(gardenValid(s)||s.gardenPick)plants.push(item('pick','내 정원 확인',s.completed[7]||!!s.gardenPick,ask('.garden-confirm > p','소개할 자리 하나를 골라 봐')));
  return plants;
@@ -104,6 +91,7 @@ function designItems(s){
   item('predict','어느 가방이 덜 젖을지 예상하기',s.completed[8]||!!s.testPrediction,ask('.invention-brief > p','먼저 예상해 봐'))];
 }
 function testItems(s,u){
+ if(fieldBagReview(s))return [item('bag-why','두 부품이 필요한 까닭 고르기',pageReady(s,9),ask('.bag-review-question','네 가방의 비 시험 결과를 비교해 봐'))];
  const last=currentTrial(s),pair=comparisonPair(s),proof=inventionEvidence(s),finished=s.design.surface==='lotus'&&s.design.cover==='flap';
  let target=null,tip='',anchor;
  if(u.testing){tip='비가 내리는 중…';}

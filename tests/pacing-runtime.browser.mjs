@@ -22,17 +22,19 @@ try{
  {
   const state=freshState();state.screen='activity';state.page=1;state.completed[0]=true;state.fieldEvidence.leaves=completed.fieldEvidence.leaves;state.groups={cherry:'yes',ginkgo:'no',grass:'no'};
   const {context,page}=await fixture(state);
-  assert.equal(await page.locator('[data-action="check-rule"]').count(),0);assert.equal(await page.locator('.sort-summary').count(),1);
+  assert.equal(await page.locator('.leaf-grouping').count(),1);
+  assert.equal(await page.locator('[data-action="complete"]').getAttribute('aria-disabled'),'true');
+  await action(page,'leaf-partner','cherry');
+  assert.equal(await page.locator('.leaf-grouping').count(),2);
   assert.notEqual(await page.locator('[data-action="complete"]').getAttribute('aria-disabled'),'true');
-  assert.equal(await page.locator('[data-action="classification-proof"]').count(),0);
-  await page.reload();assert.notEqual(await page.locator('[data-action="complete"]').getAttribute('aria-disabled'),'true');
-  report.checks.push('Field-sorted save: chapter 1 record shows the field sort without a second sort; reload stays ready');await context.close();
+  await page.reload();assert.equal(await page.locator('.leaf-grouping').count(),2);
+  report.checks.push('Field-sorted save: one leaf partner choice reveals both groupings and survives reload');await context.close();
  }
  {
   const state=freshState();state.screen='activity';state.page=2;state.completed[0]=state.completed[1]=true;state.fieldEvidence.seasons=completed.fieldEvidence.seasons;
   const {context,page}=await fixture(state);assert.equal((await read(page)).page,3);assert.equal(await page.locator('[data-action="season-explain"]').count(),0);
-  assert.notEqual(await page.locator('[data-action="complete"]').getAttribute('aria-disabled'),'true');
-  await page.reload();assert.equal((await read(page)).seasonExplained.length,2);
+  await action(page,'season-review-answer','parts');assert.notEqual(await page.locator('[data-action="complete"]').getAttribute('aria-disabled'),'true');
+  await page.reload();assert.equal((await read(page)).seasonCompareAnswer,'parts');
   report.checks.push('Reload after season field game: carries observations and explanations without repeated questions');await context.close();
  }
  {

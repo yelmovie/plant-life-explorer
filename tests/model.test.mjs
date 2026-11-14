@@ -2,7 +2,7 @@ import {recordResponse} from '../src/learning-records.js';
 import {completeInvention} from './invention-fixture.mjs';
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {PLANTS,recordFeature,comparisonPair,freshState,restoreState,pageReady,evidenceCount,openMission,testDesign,testValid,gardenValid,canFinish,PAGE_ROUTES,previousRoute,plantAt} from '../src/model.js';
+import {comparisonPair,freshState,restoreState,pageReady,evidenceCount,openMission,testDesign,testValid,gardenValid,canFinish,PAGE_ROUTES,previousRoute,plantAt} from '../src/model.js';
 test('새 연구는 첫 미션만 열리고 빈 활동은 통과하지 못한다',()=>{
  const s=freshState(); assert.equal(evidenceCount(s),0);assert.equal(openMission(s,0),true);assert.equal(openMission(s,1),false);
  for(let i=0;i<10;i++)assert.equal(pageReady(s,i),false);
@@ -18,13 +18,15 @@ test('이전 페이지는 전체 화면 순서를 따르고 메인에서는 범�
  for(let i=0;i<PAGE_ROUTES.length;i++)assert.deepEqual(previousRoute(PAGE_ROUTES[i]),PAGE_ROUTES[Math.max(0,i-1)]);
  const old=restoreState(JSON.stringify({version:1}));assert.equal(old.soundEnabled,true);assert.equal(old.adminUnlocked,false);
 });
-test('관찰 데이터 없이 분류 정답만으로 통과하지 못한다',()=>{
- const s=freshState();s.groups={cherry:'yes',ginkgo:'no',grass:'no'};assert.equal(pageReady(s,1),false);
- for(const p of PLANTS){recordFeature(s,p.id,'shape',p.id);recordFeature(s,p.id,'edge',p.edge?'yes':'no');}assert.equal(pageReady(s,1),false,'근거 카드 없이는 통과하지 못한다');s.classificationEvidence.edge='cherry';
- // The field mission already sorted by both rules; one rule with its proof is enough for the new leaves.
- assert.equal(pageReady(s,1),true);
- const t=freshState();for(const p of PLANTS){recordFeature(t,p.id,'shape',p.id);recordFeature(t,p.id,'edge',p.edge?'yes':'no');}
- t.rule='narrow';t.groups={cherry:'no',ginkgo:'no',grass:'yes'};assert.equal(pageReady(t,1),false);t.classificationEvidence.narrow='grass';assert.equal(pageReady(t,1),true);
+test('세 잎을 확대하기 전에는 새 짝을 기록할 수 없고 알맞게 고르면 새로고침 뒤에도 완료할 수 있다',()=>{
+ const s=freshState(),u={};s.page=1;
+ learningAction(s,u,'leaf-partner','cherry');assert.equal(pageReady(s,1),false);assert.equal(s.leafPartner,'');
+ s.page=0;learningAction(s,u,'leaf-zoom','large');learningAction(s,u,'leaf-zoom','normal');
+ assert.equal(pageReady(s,0),true);assert.deepEqual(s.leafEvidence,{});
+ s.page=1;assert.equal(pageReady(s,1),false);
+ assert.match(learningAction(s,u,'leaf-partner','grass'),/은행잎의 폭/);assert.equal(pageReady(s,1),false);
+ learningAction(s,u,'leaf-partner','cherry');assert.equal(pageReady(s,1),true);
+ const restored=restoreState(JSON.stringify(s));assert.equal(pageReady(restored,1),true);assert.equal(restored.leafPartner,'cherry');
 });
 test('계절 관찰과 증거 연결은 실제 기록을 요구한다',()=>{
  const s=freshState();s.linkedEvidence=['cherry:0','cherry:3'];assert.equal(pageReady(s,3),false);
@@ -83,17 +85,6 @@ test('복원된 최종 확인은 현재 정원과 발명 시험이 유효할 때
 import {awardStamp,addMiss,missionStamps,terrainReady} from '../src/model.js';
 import {learningAction} from '../src/learning.js';
 const ui2=()=>({plant:'cherry',region:'shape',selected:'cherry',undo:[]});
-test('틀린 관찰은 헛다리로 남고 다시 살펴본 뒤에만 고를 수 있다',()=>{
- const s=freshState(),u=ui2();
- assert.match(learningAction(s,u,'feature-answer','ginkgo'),/은행나무/);assert.equal(s.misses[0],1);
- learningAction(s,u,'feature-answer','cherry');assert.equal(s.leafEvidence.cherry,undefined);assert.equal(s.misses[0],1);
- learningAction(s,u,'region','shape');learningAction(s,u,'feature-answer','cherry');assert.equal(s.leafEvidence.cherry.shape.answer,'cherry');
-});
-test('분류 근거는 기준과 같은 종류의 관찰이어야 한다',()=>{
- const s=freshState(),u=ui2();s.groups={cherry:'yes',ginkgo:'no',grass:'no'};learningAction(s,u,'check-rule');
- learningAction(s,u,'classification-proof','ginkgo:shape');assert.equal(s.classificationEvidence.edge,undefined);assert.equal(s.misses[0],1);
- learningAction(s,u,'classification-proof','ginkgo:edge');assert.equal(s.classificationEvidence.edge,'ginkgo');
-});
 test('예상은 틀려도 헛다리가 아니고 겨울 땅속은 예상 뒤에 열린다',()=>{
  const s=freshState(),u=ui2();s.season=3;
  learningAction(s,u,'underground');assert.equal(s.underground,false);

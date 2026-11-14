@@ -1,4 +1,4 @@
-import {MISSIONS,missionDone,openMission,rewardCount,canChooseGardenTheme,missionStamps} from './model.js';
+import {MISSIONS,missionDone,openMission,rewardCount,canChooseGardenTheme,missionStamps,fieldBagReview} from './model.js';
 import {QUESTS} from './inquiry.js';
 import {normalizeFieldEvidence} from './field-missions-state.js';
 import {assetImage} from './asset-catalog.js';
@@ -35,21 +35,35 @@ export function themePicker(state){
 
 export function worldMap(state,current=-1,recent=-1,interactive=true){
   const flowers=canChooseGardenTheme(state),theme=THEMES[state.gardenTheme]||THEMES.pink;
-  const next=nextMapMission(state);
-  return `<div class="island-map ${flowers?'has-flowers':''} ${state.finished?'world-awake':''}" style="--flower-color:${theme.color};--flower-heart:${theme.heart}" aria-label="${rewardCount(state)}개 장소가 깨어난 초록정원">${assetImage('map_trail_v2','island-ground',true)}
+  const next=nextMapMission(state),restoredCount=rewardCount(state);
+  return `<div class="island-map ${flowers?'has-flowers':''} ${state.finished?'world-awake':''}" style="--flower-color:${theme.color};--flower-heart:${theme.heart};--garden-awake:${restoredCount/MISSIONS.length}" aria-label="${rewardCount(state)}개 장소가 깨어난 초록정원">${assetImage('map_trail_v2','island-ground',true)}
     ${REWARDS.map((r,i)=>{
       const done=missionDone(state,i),available=openMission(state,i),stamps=missionStamps(state,i),label=`${i+1}. ${r.name} ${done?'복구 완료':available?'탐구 가능':'아직 잠김'}${stamps.map(k=>' · '+STAMPS[k].name+' 스탬프').join('')}`;
-      const body=`${assetImage(r.asset,'world-building')}<span class="world-label"><b>${done?icon('check',15):i+1}</b><span>${r.name}${interactive?`<small>${done?`${icon('spark',12)}복구 완료`:icon(available?'unlock':'lock',12)}</small>`:''}</span>${stamps.map(k=>`<i class="world-stamp ${k}" aria-hidden="true">${(['direct','fixed'].includes(k)?assetImage('stamp_'+k,'stamp-img'):icon(STAMPS[k].icon,24))}</i>`).join('')}</span>${done?`<span class="world-light" aria-hidden="true">${icon('spark',16)}</span>`:''}${interactive&&i===next?'<span class="world-next">여기부터!</span>':''}`;
+      const body=`${assetImage(r.asset,'world-building')}${done&&interactive?gardenDetail(i):''}<span class="world-label"><b>${interactive?icon(available?'unlock':'lock',17):done?icon('check',15):i+1}</b><span>${r.name}</span>${interactive?'':stamps.map(k=>`<i class="world-stamp ${k}" aria-hidden="true">${(['direct','fixed'].includes(k)?assetImage('stamp_'+k,'stamp-img'):icon(STAMPS[k].icon,24))}</i>`).join('')}</span>`;
       const position=interactive?`--stage-x:${r.x}%;--stage-y:${i===REWARDS.length-1?20:r.y}%`:`left:${r.x}%;top:${r.y}%`;
       const attrs=`class="world-node ${done?'restored':'sleeping'} ${available?'available':'locked'} ${i===next?'next-stop':''} ${current===i?'chosen':''} ${recent===i?'just-restored':''}" style="${position}"`;
       return interactive?`<button ${attrs} data-action="map-select" data-id="${i}" ${i===next?'aria-current="step"':''} ${available?'':`aria-disabled="true" data-reason="${josa(REWARDS[mapPrerequisite(state,i)]?.name??'','을/를')} 깨우면 열려."`} aria-label="${label}">${body}</button>`:`<div ${attrs} role="img" aria-label="${label}">${body}</div>`;
     }).join('')}
-    <div class="world-core ${rewardCount(state)===5?'charged':''}">${icon('leaf',27)}<span>${state.finished?'깨어난 정원':`${rewardCount(state)} / ${MISSIONS.length}`}</span></div>
-    ${flowers?flowerTrail(state,recent):''}
+    ${interactive?'':`<div class="world-core ${rewardCount(state)===5?'charged':''}">${icon('leaf',27)}<span>${state.finished?'깨어난 정원':`${rewardCount(state)} / ${MISSIONS.length}`}</span></div>`}
+    ${(flowers||interactive&&restoredCount)?flowerTrail(state,recent):''}
+    ${interactive&&restoredCount===MISSIONS.length?'<span class="garden-core-bloom" aria-hidden="true"><svg viewBox="0 0 72 88"><path d="M36 70V32m0 28Q12 55 14 37q19-1 22 23m0-14q0-20 24-23-1 20-24 23" fill="#9ece75" stroke="#4c7842" stroke-width="3"/><path d="M36 7q-14 15 0 30 14-15 0-30" fill="#fff4a6" stroke="#bf8b44" stroke-width="3"/><ellipse cx="36" cy="71" rx="20" ry="8" fill="#6a8355"/></svg></span>':''}
   </div>`;
 }
 
-// The flower path follows the walkable trail up to the furthest restored place and spreads as more are restored.
+// Illustrated props stay by their own building: specimen trays, blossoms, flowing water,
+ // a planted bed and the finished expedition bag. They share the building's world transform.
+ function gardenDetail(i){
+   const art=[
+    '<path d="M12 30h38l-6 11H17Z" fill="#977552"/><path d="M21 29q-8-12 6-18 6 12-6 18m12 0q-2-15 12-16-1 13-12 16" fill="#80b767"/>',
+    '<path d="M13 38q12-23 25-19m-11 20q4-15 17-20" stroke="#588756" stroke-width="4" fill="none"/><circle cx="24" cy="21" r="7" fill="#f3a1b0"/><circle cx="43" cy="15" r="8" fill="#f5be98"/><circle cx="43" cy="15" r="3" fill="#ffedaa"/>',
+    '<path d="m12 33 16-14 19 4 7 12q-18 10-42-2" fill="#65aaab"/><path d="M20 31q10-6 24 1m-11 6 12-2" stroke="#e1f4d3" fill="none" stroke-width="3"/>',
+    '<path d="m11 31 28-8 15 9-26 11Z" fill="#a5784f" stroke="#656544" stroke-width="3"/><path d="m24 35 0-14m10 11 1-16m8 14 2-16" stroke="#5f963d" stroke-width="3"/><circle cx="35" cy="15" r="4" fill="#f6c08d"/><circle cx="45" cy="13" r="4" fill="#eb9eb1"/>',
+    '<path d="M24 23v-7q7-7 14 0v7" fill="none" stroke="#594837" stroke-width="4"/><rect x="17" y="20" width="29" height="22" rx="6" fill="#dca66b" stroke="#694d3b" stroke-width="3"/><path d="M20 31h23m-13-5v9" stroke="#ffe2a1" stroke-width="3"/>',
+   ][i];
+   return `<svg class="garden-work-detail" viewBox="0 0 64 48" aria-hidden="true"><ellipse cx="32" cy="41" rx="24" ry="5" fill="#3e542e" opacity=".25"/>${art}</svg>`;
+ }
+
+ // The flower path follows the walkable trail up to the furthest restored place and spreads as more are restored.
 // The stretch opened by the place just restored blooms in; the rest is already in flower.
 // Drawn like the map's own wildflowers: small clumps of soft blossoms with leaves at the path edge, a few petals on the path.
 const BLOSSOM=[0,72,144,216,288].map(a=>`<ellipse class="petal" rx="3.4" ry="5.2" cy="-4.6" transform="rotate(${a})"/>`).join('')+'<circle class="heart" r="1.9"/>';
@@ -81,9 +95,9 @@ export function evidenceSummary(state,i){
   const sorted=['edge','narrow'].reduce((n,rule)=>n+Object.keys(leaves[rule]).length+Object.keys(groups[rule]||{}).length,0);
   return [
     `잎의 특징 ${observed}곳을 살피고 ${sorted}개의 분류 기록을 남겼어.`,
-    `${state.seasonalRecords.length}장의 계절 기록으로 겨울과 봄을 연결했어.`,
+    state.seasonCompareAnswer==='parts'?'두 식물이 어디에서 다시 자랐는지 비교했어.':`${state.seasonalRecords.length}장의 계절 기록으로 겨울과 봄을 연결했어.`,
     '잎자루 속 공기, 잎에 저장한 물, 땅속에 내린 뿌리를 세 식물이 사는 곳과 연결했어.',
     `${Object.keys(state.garden).length}종의 식물이 네가 만든 정원에 자리 잡았어.`,
-    `${new Set(state.tests.map(t=>t.key)).size}가지 설계를 실제로 시험하고 비교했어.`,
+    `${new Set((fieldBagReview(state)?.trials||state.tests).map(t=>t.key)).size}가지 설계를 실제로 시험하고 비교했어.`,
   ][i];
 }

@@ -75,13 +75,11 @@ try{
  await stroke(line(await center(page.locator('[data-swipe-top]')),await center(page.locator('[data-swipe-bin="no"]')),8));
  await evidence(`JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.leaves.edge.maple==='no'`);await hint();
  for(const p of ['maple','pine','camellia']){await page.locator('[data-swipe-top][data-swipe-card="'+p+'"]').waitFor();await page.locator('[data-swipe-bin="'+(p==='pine'?'no':'yes')+'"]').tap();await evidence(`JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.leaves.edge.${p}==='${p==='pine'?'no':'yes'}'`);}
- await stage(2);for(const p of ['maple','pine','camellia'])await place('leaf:'+p,'sort:narrow:'+(p==='pine'?'yes':'no'));
- await explore();assert.equal((await saved()).page,1);
- // The field already sorted by both rules: the record page shows that sort and asks for nothing new.
- assert.equal(await page.locator('[data-action="feature-answer"]').count(),0);
- assert.equal(await page.locator('[data-action="assign-group"]').count(),0);
- assert.equal(await page.locator('[data-action="classification-proof"]').count(),0);
- assert.deepEqual((await saved()).leafEvidence,{},'classification does not invent detailed shape observations');
+ await explore();assert.equal((await saved()).page,0);
+ await a('leaf-zoom','large');await completePage();assert.equal((await saved()).page,1);
+ assert.equal(await page.locator('.leaf-grouping').count(),1);
+ await a('leaf-partner','cherry');assert.equal(await page.locator('.leaf-grouping').count(),2);
+ assert.deepEqual((await saved()).leafEvidence,{},'comparison does not invent feature answers');
  await snap('leaves-classified');
  await completePage();await missionDone(0);
 
@@ -100,8 +98,8 @@ try{
   await a('field-season-clue',kind+':'+(kind==='tree'?'branches':'rootbud'));
  }
  await explore();assert.equal((await saved()).seasonPrediction.cherry,'none');
- assert.equal((await saved()).page,3);assert.equal((await saved()).seasonalRecords.length,4);
- assert.deepEqual([...(await saved()).seasonExplained].sort(),['cherry','sowthistle']);assert.equal(await page.locator('[data-action="season-explain"]').count(),0);await snap('season-discovery');
+ assert.equal((await saved()).page,3);assert.equal((await saved()).seasonalRecords.length,0);
+ await a('season-review-answer','parts');assert.equal((await saved()).seasonCompareAnswer,'parts');await snap('season-discovery');
  await completePage();await missionDone(1);
 
  await enter(2);
@@ -114,7 +112,7 @@ try{
  await page.locator('.float-lab[data-phase="reason"]').waitFor();await page.locator('[data-tank-model="air"]').tap();
  await evidence(`JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.float.reason==='air'`);
  // The field cut already showed the petiole's air, so the repeated lab page is skipped.
- await explore();assert.equal((await saved()).page,5);
+ await explore();assert.equal((await saved()).page,4);await a('press-petiole',undefined,'.lab-dock ');await a('experiment-answer','air');await completePage();
  for(const [p,habitat] of [['hyacinth','water'],['aloe','dry'],['cherry','grass']]){await a('habitat-plant',p);await a('habitat',habitat);assert.equal(await page.locator('[data-action="habitat-feature"]').count(),0);await a('habitat-answer',p);}
  await snap('habitats-linked');await completePage();await missionDone(2);
 
@@ -124,15 +122,12 @@ try{
  // A wrong bed refuses the plant; Leafy's hint, then the right beds.
  await stage(1);await place('plant:hyacinth','plant:ridge');assert.deepEqual((await saved()).fieldEvidence.garden.plants,{});await hint();
  for(const [plant,zone] of [['hyacinth','pond'],['cherry','meadow'],['aloe','ridge']])await place('plant:'+plant,'plant:'+zone);
- await stage(2);await a('field-garden-rain');await explore();
- assert.equal((await saved()).page,7);assert.deepEqual((await saved()).garden,{hyacinth:0,cherry:2,aloe:4});
- await snap('garden-designed');
- // Reasons chosen for the same plants in mission 3 come along; nothing is asked twice.
- assert.deepEqual([...(await saved()).gardenReasons].sort(),['aloe','cherry','hyacinth']);
- // The carried-over garden is not 'ready' by itself: the student keeps it (or changes it) and picks one spot to introduce.
- assert.equal(await page.locator('.learning-footer [data-action="complete"]').getAttribute('aria-disabled'),'true');
- await a('garden-pick','cherry');assert.equal((await saved()).gardenPick,'cherry');
- await completePage();await missionDone(3);
+ await stage(2);await a('field-garden-rain');await explore();assert.equal((await saved()).page,7);
+ assert.deepEqual((await saved()).garden,{hyacinth:6,cherry:8,aloe:10});
+ await a('garden-review-pick','cherry');await a('garden-review-move');
+ assert.equal((await saved()).garden.cherry,9);
+ await a('garden-review-reason','cherry');
+ await snap('garden-reviewed');await completePage();await missionDone(3);
 
  await enter(4);await a('field-bag-predict','surface');
  // Hand: one cloud tap rains on the first bag.
@@ -142,12 +137,10 @@ try{
  // One tap on a bag card puts that bag on the stand and rains on it by itself.
  for(const [k,n] of [['lotus:open',2],['plain:flap',3],['lotus:flap',4]]){await a('field-bag-try',k);await evidence(`JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.bag.tests.length===${n}`);}
  const trials=(await saved()).fieldEvidence.bag.tests;assert.deepEqual(trials.map(t=>t.notebookDry),[false,false,false,true]);assert.deepEqual(trials.map(t=>t.rolls),[false,true,false,true]);
- await stage(2);await a('field-bag-finish');await hint();
- for(let i=0;i<4;i++){await page.locator('[data-bag-spin="1"]').tap();await page.waitForTimeout(520);}
- await page.locator('.finish-bench.turned').waitFor();await a('field-bag-finish');await evidence(`JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.bag.delivered==='lotus:flap'`);
- report.checks.push('One tap per bag card: plain → lotus only → cover only → both; only both keep the notebook dry; the finished bag turns once on the stand, then 마무리');
- // The field already built and tested the bag, so the record page opens ready with a summary.
- await explore();assert.equal((await saved()).page,9);assert.equal((await saved()).testPrediction,'surface');assert.equal(await page.locator('.invention-summary').count(),1);
+ await explore();assert.equal((await saved()).page,9);assert.equal((await saved()).testPrediction,'surface');
+ assert.equal(await page.locator('.field-review-trial').count(),4);
+ assert.equal(await page.locator('[data-action="run-test"]').count(),0);
+ await a('bag-review-answer','both');
  await snap('invention-compared');await completePage();await missionDone(4);
  await a('report');await a('note-open','4');await a('note-sticker');await a('note-check','4:0');await a('note-check','4:1');await close();
  await a('note-open','4');assert.equal(await page.locator('[data-action="note-sticker"]').getAttribute('aria-pressed'),'true');assert.match(await page.locator('.note-quiz-feedback').innerText(),/맞아/);await snap('notebook-records');await close();

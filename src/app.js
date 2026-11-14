@@ -1,17 +1,18 @@
 import {createSaveStore} from './safe-storage.js';
 import {installNpcNarration} from './npc-narration.js';
+import {characterDialogueMarkup,mountCharacterDialogue} from './character-dialogue.js';
 import {suspendMusic,stopFeedback} from './audio.js';
-installNpcNarration({selector:'.guide-talk',src:new URL('../assets/audio/npc-welcome.mp3',import.meta.url).href,text:'안녕! 나는 리피야. 우리 주변 식물의 잎과 줄기를 자세히 살펴보자. 서로 닮은 점과 다른 점을 찾으며 초록정원의 비밀을 알아보자!',enabled:isEffectsOn,volume:()=>getMusicVolume()/100,hold:()=>{stopFeedback();return suspendMusic();}});
+installNpcNarration({selector:'.guide-talk',src:new URL('../assets/audio/lipi-welcome.mp3',import.meta.url).href,text:'안녕! 나는 리피야. 우리 주변 식물의 잎과 줄기를 자세히 살펴보자. 서로 닮은 점과 다른 점을 찾으며 초록정원의 비밀을 알아보자!',enabled:isEffectsOn,volume:()=>getMusicVolume()/100,hold:()=>{stopFeedback();return suspendMusic();}});
 import {recordHint,recordResponse} from './learning-records.js';
 import {carryFieldEvidence} from './field-bridge.js';
 import {QUESTS} from './inquiry.js';
 import {mountSpatialSafely,SPATIAL_FAIL} from './runtime-support.js';
-import {ASSETS,THUMBS,assetImage,warmImage,warmMission,warmFile} from './asset-catalog.js';
-const SEASON_MODELS=['season_cherry_bare','season_sowthistle_root','season_sowthistle_rosette','season_sowthistle_flowers'];
-import {STORAGE_KEY,HABITAT_PLANTS,HABITATS,MISSIONS,SEASONS,freshState,restoreState,plantAt,terrainReady,evidenceCount,missionDone,openMission,pageReady,designKey,testDesign,testValid,canFinish,PAGE_ROUTES,routeIndex,previousRoute,misfitNote} from './model.js';
+import {ASSETS,THUMBS,assetImage,warmMission} from './asset-catalog.js';
+import {STORAGE_KEY,HABITAT_PLANTS,HABITATS,MISSIONS,SEASONS,freshState,restoreState,plantAt,terrainReady,evidenceCount,missionDone,openMission,pageReady,fieldRecordPage,singleFieldRecord,designKey,testDesign,testValid,canFinish,PAGE_ROUTES,routeIndex,previousRoute,misfitNote} from './model.js';
 import {icon,plantArt,seasonArt,heroArt} from './art.js';
 import {REWARDS,seedProgress,themePicker,worldMap,evidenceSummary,THEMES,stampBadges,stampBoard,nextMapMission,mapPrerequisite} from './rewards.js';
-import {mountStageMap} from './stage-map.js';
+import {mountStageMap,ENTRANCES} from './stage-map.js';
+import {playMapEncounter} from './audio.js';
 import {fieldMissionAction,mountFieldInteractions,fieldTodo} from './field-missions.js';
 import {fieldMissionReady} from './field-missions-state.js';
 import {nextAutoStep} from './auto-play.js';
@@ -22,17 +23,18 @@ import {renderActivity,renderReport,renderFinal,renderEnding,learningAction,next
 import {playClick,playReward,isSoundOn,setSound,soundStored,hasMusic,isMusicOn,setMusic,isEffectsOn,setEffects,getMusicVolume,setMusicVolume,playMusic,unlockMusic} from './audio.js';
 import {TEXT,appInfoSection,studentSection,teacherSection,noticeSection} from './settings-content.js';
 import {playStory} from './story.js';
-import {installCardDrag,celebrateCard} from './card-drag.js';
+import {installCardDrag} from './card-drag.js';
 import {notebookEntry,NOTE_QUIZZES} from './research-notebook.js';
 
 const app=document.querySelector('#app'),dialog=document.querySelector('#dialog');
+let dialogueCleanup=()=>{},dialogueFocus=null;
 let state=freshState(),saveFailed=false,studentState=null,studentMapDistance,mapController,fieldCleanup,guideCleanup;
 const saveStore=createSaveStore({getItem:key=>localStorage.getItem(key),setItem:(key,value)=>localStorage.setItem(key,value)},navigator.locks,updateSaveStatus);
 state=saveStore.load();
 window.addEventListener('storage',event=>saveStore.changed(event.key));
 if(state.screen==='activity'&&!missionDone(state,Math.floor(state.page/2)))state.journeyRequired[Math.floor(state.page/2)]=true;
 if(!soundStored()&&state.soundEnabled===false)setSound(false);
-let ui={plant:'cherry',zoom:1,rotation:0,selected:'cherry',map:Math.min(4,evidenceCount(state)),brush:'water',undo:[],finalTab:0,testing:false,paused:false,region:'shape',bubbling:false};
+let ui={leafZoom:false,selected:'cherry',map:Math.min(4,evidenceCount(state)),brush:'water',undo:[],finalTab:0,testing:false,paused:false,bubbling:false};
 let spatialModule,spatialEpoch=0,lastScreen;const spatialFailureShown=new Set();
 let toastTimer,paintActive=false,paintLast=-1,testRun=0;
 const $=(s)=>document.querySelector(s);
@@ -54,30 +56,51 @@ function save(){if(state.finished&&!state.legacyFinished&&!canFinish(state))stat
 function downloadRecord(raw,name){const url=URL.createObjectURL(new Blob([raw],{type:'application/json;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 function saveHelp(){modal('기록 보관과 복구',`<p>이 브라우저·주소의 기록이야. 원본 보관 파일은 읽지 못한 내용도 그대로 담으며, 파일 보관만으로 복구가 된 것은 아니야.</p><p>현재 활동 파일은 보관용이야. 앱에서 파일 가져오기는 제공하지 않아. 다른 탭의 최신 기록을 열면 이 탭에서 저장하지 못한 선택은 사라져. 먼저 파일로 보관해 줘.</p>`,btn('현재 활동 파일 보관','save-export','soft')+(saveStore.original!==null?btn('저장 원본 파일 보관','save-original','soft'):'')+(saveStore.status==='failed'?btn('다시 저장하기','save-retry','primary'):'')+(['invalid','failed'].includes(saveStore.status)&&saveStore.backup()?btn('마지막 정상 기록으로 복구','save-recover','soft'):'')+btn('저장된 최신 기록 열기','save-reload','soft')+btn('계속 살펴보기','close','soft'));}
 function toast(message){if(state.screen==='activity'){const target=app.querySelector('.activity-feedback')||app.querySelector('.guide-bubble');if(target){target.textContent=message;target.classList.remove('nudge');void target.offsetWidth;target.classList.add('nudge');}$('#announcer').textContent=message;return;}clearTimeout(toastTimer);$('.toast')?.remove();const el=document.createElement('div');el.className='toast';el.setAttribute('aria-hidden','true');el.textContent=message;document.body.append(el);$('#announcer').textContent=message;toastTimer=setTimeout(()=>el.remove(),2400);}
-function modal(title,body,buttons='',cls=''){mapController?.stop();if(!body.includes('reward-scene'))dialog.classList.remove('reward-dialog');dialog.classList.toggle('settings-dialog',cls==='settings');dialog.classList.toggle('tool-dialog',cls==='tools');dialog.classList.toggle('notebook-dialog',cls==='notebook');dialog.classList.toggle('brief-dialog',cls==='brief');dialog.innerHTML=`<div class="dialog-top"><span class="eyebrow">초록정원 연구기지</span>${btn(icon('close'),'close','icon-btn','aria-label="닫기"')}</div><h2 id="dialog-title">${title}</h2>${cls==='settings'?body:`<div class="dialog-body">${body}</div>`}<div class="dialog-actions">${buttons||btn('알겠어','close','primary')}</div>`;dialog.setAttribute('aria-labelledby','dialog-title');if(!dialog.open)dialog.showModal();}
+function modal(title,body,buttons='',cls=''){dialogueCleanup();dialogueCleanup=()=>{};dialog.classList.toggle('npc-dialogue-stage',cls==='npc');mapController?.stop();if(!body.includes('reward-scene'))dialog.classList.remove('reward-dialog');dialog.classList.toggle('settings-dialog',cls==='settings');dialog.classList.toggle('tool-dialog',cls==='tools');dialog.classList.toggle('notebook-dialog',cls==='notebook');dialog.classList.toggle('brief-dialog',cls==='brief');dialog.innerHTML=`<div class="dialog-top"><span class="eyebrow">초록정원 연구기지</span>${btn(icon('close'),'close','icon-btn','aria-label="닫기"')}</div><h2 id="dialog-title">${title}</h2>${cls==='settings'?body:`<div class="dialog-body">${body}</div>`}<div class="dialog-actions">${buttons||btn('알겠어','close','primary')}</div>`;dialog.setAttribute('aria-labelledby','dialog-title');if(!dialog.open)dialog.showModal();}
+const lipiArt='/assets/npc-dialogue/lipi.webp';
+const lipiTrack=id=>`/assets/audio/${id}.mp3`;
+const lipiWelcome={label:'인사',text:'안녕! 나는 리피야. 우리 주변 식물의 잎과 줄기를 자세히 살펴보자. 서로 닮은 점과 다른 점을 찾으며 초록정원의 비밀을 알아보자!',src:lipiTrack('lipi-welcome')};
+function lipiDialogue(index){
+ const plan=Number.isInteger(index)?EXPEDITIONS[index]:null;
+ const lines=plan?[
+  {label:'탐구 목표',text:plan.goal,src:lipiTrack(`lipi-${index}-goal`)},
+  ...plan.hints.map((text,i)=>({label:`단서 ${i+1}`,text,src:lipiTrack(`lipi-${index}-hint-${i}`)}))
+ ]:[lipiWelcome];
+ dialogueFocus=document.activeElement;
+ modal('리피와 이야기',characterDialogueMarkup,btn('돌아가기','close','primary'),'npc');
+ dialogueCleanup=mountCharacterDialogue(dialog,{characters:[{id:'lipi',name:'리피',image:lipiArt,lines}],enabled:isEffectsOn,hold:()=>{stopFeedback();return suspendMusic();}});
+}
+dialog.addEventListener('close',()=>{
+ if(dialog.open||!dialog.classList.contains('npc-dialogue-stage'))return;
+ dialogueCleanup();dialogueCleanup=()=>{};
+ if(dialogueFocus?.isConnected)dialogueFocus.focus({preventScroll:true});
+ dialogueFocus=null;
+});
 function cancelTest(){testRun++;ui.testing=false;ui.paused=false;ui.bubbling=false;ui.replaying=false;}
 function nav(screen){cancelTest();state.screen=screen;save();render();window.scrollTo(0,0);if(screen==='ending')showStory('outro');}
-function startPage(p){cancelTest();const mission=Math.floor(p/2);if(!missionDone(state,mission))state.journeyRequired[mission]=true;if(Math.floor(state.page/2)!==mission)ui.fieldMission=undefined;ui.activityFeedback='';ui.activityMode=!missionDone(state,mission)&&state.journeyRequired[mission]&&!fieldMissionReady(state,mission)?'field':'explore';if(ui.activityMode==='explore'&&fieldMissionReady(state,mission))carryFieldEvidence(state,mission);state.page=p;state.screen='activity';ui.selected=p===5||p===7?'hyacinth':'cherry';ui.plant='cherry';ui.region='shape';ui.zoom=1;ui.rotation=0;ui.undo=[];ui.gardenMode=p===7||state.gardenReviewed?'plant':'terrain';save();render();window.scrollTo(0,0);}
+function startPage(p){cancelTest();const mission=Math.floor(p/2);if(!missionDone(state,mission))state.journeyRequired[mission]=true;if(Math.floor(state.page/2)!==mission)ui.fieldMission=undefined;ui.activityFeedback='';ui.activityMode=!missionDone(state,mission)&&state.journeyRequired[mission]&&!fieldMissionReady(state,mission)?'field':'explore';if(ui.activityMode==='explore'&&fieldMissionReady(state,mission))carryFieldEvidence(state,mission);if(ui.activityMode==='explore')p=fieldRecordPage(state,p);state.page=p;state.screen='activity';ui.selected=p===5||p===7?'hyacinth':'cherry';ui.leafZoom=false;ui.undo=[];ui.gardenMode=p===7||state.gardenReviewed?'plant':'terrain';save();render();window.scrollTo(0,0);}
 function header(){return `<header class="topbar"><nav class="page-navigation" aria-label="페이지 이동" ${state.screen==='home'?'hidden':''}>${btn(icon('home'),'home','icon-btn','aria-label="홈으로 가기" title="홈으로 가기"')}${btn(icon('back'),'back','icon-btn','aria-label="이전 페이지로 가기" title="이전 페이지로 가기"')}</nav><nav class="header-tools" aria-label="공통 메뉴">${btn(icon(isSoundOn()?'sound':'muted'),'sound','icon-btn',`aria-label="${isSoundOn()?'소리 끄기':'소리 켜기'}" aria-pressed="${isSoundOn()}" title="${isSoundOn()?'소리 끄기':'소리 켜기'}"`)}${btn(icon('gear'),'settings','icon-btn','aria-label="설정" title="설정"')}${state.screen==='activity'?`<div class="auto-play-dock">${autoPlayButton(state,ui)}</div>`:''}</nav></header>`;}
 function openRoute(route){if(!route)return;if(route.screen==='activity')startPage(route.page);else nav(route.screen);}
 function progress(){return `<div class="progress-track">${MISSIONS.map((m,i)=>`<button data-action="select-mission" data-id="${i}" ${openMission(state,i)?'':'disabled'} class="progress-stop ${missionDone(state,i)?'done':''} ${Math.floor(state.page/2)===i&&state.screen==='activity'?'current':''}"><span>${missionDone(state,i)?icon('check',16):String(i+1).padStart(2,'0')}</span>${m.short}</button>`).join('')}</div>`;}
 // After every stage is done, home also offers a fresh start (it asks before erasing anything).
-function home(){const hasProgress=state.completed.some(Boolean)||Object.values(state.observation).some(a=>a.length),allDone=state.finished||state.completed.every(Boolean);return `<main class="home"><section class="home-scene">${heroArt()}<div class="home-copy"><span class="home-kicker">리피와 함께 떠나는 식물 탐험</span>${logo('hero-logo')}<p class="home-story">작은 잎에 숨은 비밀을 찾아<br><strong>잠든 초록정원을 깨워 줘!</strong></p><div class="home-actions"><div class="home-buttons">${btn((hasProgress?'탐험 이어 하기':'리피와 탐험 시작')+icon('arrow'),'begin','primary jumbo')}${allDone?btn(icon('reset')+'처음부터 다시 하기','reset-prompt','soft jumbo home-restart'):''}</div><span>네가 찾은 발견이 정원의 빛씨앗이 돼.</span></div></div><div class="hero-friends"><span class="home-invite">나와 함께 찾아볼래?</span>${mascot('leaf',true)}</div>${saveFailed?'<span class="home-save-note">기록을 저장할 수 없어</span>':''}</section></main>`;}
+function home(){const hasProgress=state.completed.some(Boolean)||state.leafComparisonSeen||Object.values(state.observation).some(a=>a.length),allDone=state.finished||state.completed.every(Boolean);return `<main class="home"><section class="home-scene">${heroArt()}<div class="home-copy"><span class="home-kicker">리피와 함께 떠나는 식물 탐험</span>${logo('hero-logo')}<p class="home-story">작은 잎에 숨은 비밀을 찾아<br><strong>잠든 초록정원을 깨워 줘!</strong></p><div class="home-actions"><div class="home-buttons">${btn((hasProgress?'탐험 이어 하기':'리피와 탐험 시작')+icon('arrow'),'begin','primary jumbo')}${allDone?btn(icon('reset')+'처음부터 다시 하기','reset-prompt','soft jumbo home-restart'):''}</div><span>네가 찾은 발견이 정원의 빛씨앗이 돼.</span>${btn('리피와 이야기','npc-lipi','soft npc-home-entry')}</div></div><div class="hero-friends"><span class="home-invite">나와 함께 찾아볼래?</span>${mascot('leaf',true)}</div>${saveFailed?'<span class="home-save-note">기록을 저장할 수 없어</span>':''}</section></main>`;}
 
 function mapPage(){
  const next=nextMapMission(state),current=next<0?Math.min(ui.map,MISSIONS.length-1):next;
- const restored=ui.rewardFocus;ui.rewardFocus=undefined;
- return `<main class="expedition-map stage-map"><div class="stage-map-viewport" tabindex="0" role="region" aria-label="탐험 지도. 길을 누르거나 방향키로 이동하고 Enter로 탐구하기.">${worldMap(state,current,restored)}</div>${state.adminUnlocked?`<div class="map-preview-note" role="status">교사용 미리보기 · 학생 기록에 반영되지 않아요${btn('미리보기 종료','admin-unlock','soft')}</div>`:''}<div class="map-bottom"><div class="map-navigation"><div class="map-dpad" role="group" aria-label="길 따라 이동">${[['up','위로','↑'],['left','왼쪽으로','←'],['down','아래로','↓'],['right','오른쪽으로','→']].map(([direction,label,arrow])=>`<button class="map-direction ${direction}" data-map-direction="${direction}" aria-label="${label} 이동">${arrow}</button>`).join('')}</div><div class="map-navigation-copy"><strong>리피와 함께 탐험해 봐!</strong><span>길 누르기 · 방향키 / WASD</span>${btn('<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5M8 8h8v8H8z"/></svg>','map-overview','quiet','aria-pressed="false" aria-label="지도 한눈에 보기" title="지도 한눈에 보기"')}${btn(icon('hand',24),'map-pan','quiet','aria-pressed="false" aria-label="지도 끌어 보기" title="지도 끌어 보기"')}</div></div><section class="map-next-card" aria-label="다음 탐구"><div>${next<0?'<span class="map-eyebrow">다섯 곳의 탐구 완료</span>':''}<h2>${next<0?'정원을 깨울 준비가 됐어!':REWARDS[next].name}</h2><p>${next<0?'모은 발견을 연구 노트에 담아 보자.':MISSIONS[next].desc}</p></div>${next<0?btn('연구 노트 펼치기'+icon('arrow'),'report','primary'):btn(`${josa(REWARDS[next].name,'으로/로')} 가기`+icon('arrow'),'map-select','primary',`data-id="${next}"`)}<div class="map-extras">${missionDone(state,1)?btn('꽃길 꾸미기','map-theme','quiet'):''}${missionDone(state,3)?btn('내 정원','map-garden','quiet'):''}${state.finished||state.legacyFinished?btn('완성한 정원','view-ending','quiet'):''}</div></section></div><p class="map-walk-status sr-only" role="status" aria-live="polite"></p></main>`;
+ const restored=ui.restoreFocus;ui.restoreFocus=undefined;
+ return `<main class="expedition-map stage-map"><div class="stage-map-viewport" tabindex="0" role="region" aria-label="탐험 지도. 길을 누르거나 방향키로 이동하고 Enter로 탐구하기.">${worldMap(state,current,restored)}</div>${state.adminUnlocked?`<div class="map-preview-note" role="status">교사용 미리보기 · 학생 기록에 반영되지 않아요${btn('미리보기 종료','admin-unlock','soft')}</div>`:''}<div class="map-bottom"><div class="map-navigation"><div class="map-dpad" role="group" aria-label="길 따라 이동">${[['up','위로','↑'],['left','왼쪽으로','←'],['down','아래로','↓'],['right','오른쪽으로','→']].map(([direction,label,arrow])=>`<button class="map-direction ${direction}" data-map-direction="${direction}" aria-label="${label} 이동">${arrow}</button>`).join('')}</div></div><section class="map-next-card" aria-label="다음 탐구"><div class="map-navigation-copy">${btn('<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5M8 8h8v8H8z"/></svg>','map-overview','quiet','aria-pressed="false" aria-label="지도 한눈에 보기" title="지도 한눈에 보기"')}${btn(icon('hand',24),'map-pan','quiet','aria-pressed="false" aria-label="지도 끌어 보기" title="지도 끌어 보기"')}</div>${next<0?btn('연구 노트 펼치기'+icon('arrow'),'report','primary'):btn(`${josa(REWARDS[next].name,'으로/로')} 가기`+icon('arrow'),'map-select','primary map-next-cue',`data-id="${next}"`)}${missionDone(state,1)||missionDone(state,3)||state.finished||state.legacyFinished?`<details class="map-more"><summary>정원 더 보기</summary><div class="map-extras">${missionDone(state,1)?btn('꽃길 꾸미기','map-theme','quiet'):''}${missionDone(state,3)?btn('내 정원','map-garden','quiet'):''}${state.finished||state.legacyFinished?btn('완성한 정원','view-ending','quiet'):''}</div></details>`:''}</section></div><p class="map-walk-status sr-only" role="status" aria-live="polite"></p></main>`;
 }
 function explainLockedMission(i){const prerequisite=mapPrerequisite(state,i),r=REWARDS[prerequisite];if(!r)return;modal('아직 잠든 곳이야 · '+REWARDS[i].name,`<div class="map-locked-message">${mascot('leaf')}<div><p>먼저 <strong>${r.name}</strong> 탐구를 마쳐 줘.</p><p>두 활동을 마치고 빛씨앗을 모으면 다음 장소가 열려!</p></div></div>`,btn(`${josa(r.name,'으로/로')} 가기`+icon('arrow'),'map-locked-next','primary',`data-id="${prerequisite}"`)+btn('지도로 돌아가기','close','soft'));}
-function missionCard(){const i=ui.map,r=REWARDS[i],done=missionDone(state,i);warmMission(i);if(i===1)SEASON_MODELS.forEach(k=>warmFile(`/assets/models/${k}.glb`));modal(r.name,renderMissionBrief(state,i),btn((done?'다시 탐험하기':'리피와 탐구 시작')+icon('arrow'),'enter-mission','primary')+(done?btn('내 보상 보기','reward-detail','soft',`data-id="${i}"`):''),'brief');}
+const missionEntryPage=i=>i*2+(state.completed[i*2]&&!state.completed[i*2+1]?1:0);
+function enterMission(i){if(!openMission(state,i)){explainLockedMission(i);return;}dialog.close();startPage(missionEntryPage(i));}
+function missionCard(){const i=ui.map,r=REWARDS[i],done=missionDone(state,i);warmMission(missionEntryPage(i),()=>state.screen==='map'&&ui.map===i);modal(r.name,renderMissionBrief(state,i),btn((done?'다시 탐험하기':'리피와 탐구 시작')+icon('arrow'),'enter-mission','primary')+(done?btn('내 보상 보기','reward-detail','soft',`data-id="${i}"`):''),'brief');}
 function notebook(title,body){return `<aside class="notebook"><div class="notebook-heading">${icon('book',22)}<h3>${title}</h3></div>${body}</aside>`;}
 function checkRow(ok,text){return `<div class="check-row ${ok?'checked':''}"><span>${ok?icon('check',16):'·'}</span>${text}</div>`;}
 function choice(label,action,id,selected=false,extra=''){return btn(label,action,`choice ${selected?'selected':''}`,`data-id="${id}" aria-pressed="${selected}" ${extra}`);}
 function gardenGrid(readonly=false){return `<div class="garden-grid ${readonly?'readonly':''}" aria-label="6열 4행 정원">${state.terrain.map((t,i)=>{const plant=HABITAT_PLANTS.find(p=>p.id===plantAt(state,i)?.id);const label=`${Math.floor(i/6)+1}행 ${i%6+1}열 ${HABITATS[t]||'빈 땅'}${plant?' '+plant.name:''}`;return readonly?`<div class="garden-cell ${t} ${plant?'planted':''}" role="img" aria-label="${label}">${plant?plantArt(plant.id):'<span></span>'}</div>`:`<button class="garden-cell ${t} ${plant?'planted':''}" data-action="garden-cell" data-id="${i}" data-drop="garden" aria-label="${label}" title="${label}">${plant?plantArt(plant.id):'<span></span>'}</button>`;}).join('')}</div>`;}
 function activity(){return renderActivity(state,ui,gardenGrid);}
 function report(){return renderReport(state,ui);}
-function finalPage(){return renderFinal(state,gardenGrid,ui);}
+function finalPage(){return renderFinal(state,ui);}
 function ending(){return renderEnding(state,gardenGrid);}
 function showSpatialFallback(host){
  spatialModule?.unmountSpatial();
@@ -93,7 +116,35 @@ function showSpatialFallback(host){
  // One notice per cause per session: later screens fall back quietly and never wait on 3D.
  if(!spatialFailureShown.has(reason)){spatialFailureShown.add(reason);toast(SPATIAL_FAIL[reason]||SPATIAL_FAIL.network);}
 }
-function render(){playMusic(state.screen==='ending'?'ending':'main');const previousGarden=app.querySelector('[data-spatial="garden"].spatial-ready');fieldCleanup?.();fieldCleanup=null;guideCleanup?.();guideCleanup=null;mapController?.destroy();mapController=null;if(!previousGarden)spatialModule?.unmountSpatial();const epoch=++spatialEpoch;document.body.dataset.screen=state.screen;document.body.classList.toggle('activity-open',state.screen==='activity');const focus=document.activeElement;const focusId=focus?.id;const focusAction=focus?.dataset?.action,focusData=focus?.dataset?.id;document.body.classList.toggle('large-text',state.largeText);app.innerHTML=header()+({home,map:mapPage,activity,report,final:finalPage,ending}[state.screen]||home)();if(state.screen!==lastScreen){lastScreen=state.screen;const main=app.querySelector('main');if(main){main.classList.add('screen-enter');main.addEventListener('animationend',e=>{if(e.target===main)main.classList.remove('screen-enter');});}}bindPinch();const fieldHost=app.querySelector('.field-mission');if(fieldHost)fieldCleanup=mountFieldInteractions(fieldHost,state,ui,action);if(state.screen==='activity')guideCleanup=mountGuideFinger(app.querySelector('main.activity'),activityGuide(state,ui));if(state.screen==='map'){mapController=mountStageMap(app.querySelector('.stage-map'),ui,i=>action('map-arrive',String(i)),{progress:state.mapVillains,completed:[0,1,2,3,4].filter(i=>missionDone(state,i)),onHit:()=>save()});warmMission(Math.max(0,nextMapMission(state)));}if(state.screen==='home')warmImage('/assets/videos/intro-poster.webp');const host=app.querySelector('[data-spatial]');const reused=previousGarden&&host?.dataset.spatial==='garden'&&spatialModule?.reuseGarden(host,state,ui);if(previousGarden&&!reused)spatialModule?.unmountSpatial();if(host&&!reused)mountSpatialSafely(()=>import('./spatial.js'),()=>epoch===spatialEpoch&&host.isConnected,module=>{spatialModule=module;module.mountSpatial(host,state,ui,action,cells=>{remember();for(const i of cells)paintCell(i,false);render();});if(host.dataset.spatialUnavailable==='true'&&!host.classList.contains('spatial-ready'))throw new Error('Spatial renderer unavailable');},()=>showSpatialFallback(host));const target=focusId?document.getElementById(focusId):focusAction?app.querySelector(`[data-action="${CSS.escape(focusAction)}"]${focusData!==undefined?`[data-id="${CSS.escape(focusData)}"]`:''}`):null;target?.focus({preventScroll:true});}
+// Preserve a loaded portrait through activity rerenders; only a new emotion gets a new reaction.
+function syncGuidePortrait(previous, epoch) {
+  const next = app.querySelector('.guide-portrait');
+  if (!next) return;
+  const sameScene = previous?.dataset.guideScene === next.dataset.guideScene;
+  if (sameScene && previous.dataset.mood === next.dataset.mood) {
+    delete previous.dataset.motion;
+    next.replaceWith(previous);
+    return;
+  }
+  const image = next.querySelector('img');
+  if (previous) next.replaceWith(previous);
+  const ready = image.complete && image.naturalWidth > 0 ? Promise.resolve() : image.decode();
+  ready.then(() => {
+    if (epoch !== spatialEpoch) return;
+    if (previous?.isConnected) previous.replaceWith(next);
+    if (!document.hidden) next.dataset.motion = sameScene && next.dataset.mood === 'happy' ? 'nod' : 'enter';
+  }).catch(() => {
+    // A failed replacement keeps the last readable, loaded character on screen.
+  });
+}
+function stopGuideMotion() {
+  const portrait = app.querySelector('.guide-portrait');
+  if (portrait) delete portrait.dataset.motion;
+}
+document.addEventListener('visibilitychange', () => { if (document.hidden) stopGuideMotion(); });
+window.addEventListener('pagehide', stopGuideMotion);
+
+function render(){playMusic(state.screen==='ending'?'ending':'main');const previousPortrait=app.querySelector('.guide-portrait');const previousGarden=app.querySelector('[data-spatial="garden"].spatial-ready');fieldCleanup?.();fieldCleanup=null;guideCleanup?.();guideCleanup=null;mapController?.destroy();mapController=null;if(!previousGarden)spatialModule?.unmountSpatial();const epoch=++spatialEpoch;document.body.dataset.screen=state.screen;document.body.classList.toggle('activity-open',state.screen==='activity');const focus=document.activeElement;const focusId=focus?.id;const focusAction=focus?.dataset?.action,focusData=focus?.dataset?.id;document.body.classList.toggle('large-text',state.largeText);app.innerHTML=header()+({home,map:mapPage,activity,report,final:finalPage,ending}[state.screen]||home)();syncGuidePortrait(previousPortrait,epoch);if(state.screen!==lastScreen){lastScreen=state.screen;const main=app.querySelector('main');if(main){main.classList.add('screen-enter');main.addEventListener('animationend',e=>{if(e.target===main)main.classList.remove('screen-enter');});}}const fieldHost=app.querySelector('.field-mission');if(fieldHost)fieldCleanup=mountFieldInteractions(fieldHost,state,ui,action);if(state.screen==='activity')guideCleanup=mountGuideFinger(app.querySelector('main.activity'),activityGuide(state,ui));if(state.screen==='map'){mapController=mountStageMap(app.querySelector('.stage-map'),ui,(i,enter)=>{ui.map=i;if(enter)enterMission(i);else action('map-arrive',String(i));},{completed:MISSIONS.map((_,i)=>studentState===null&&missionDone(state,i)),progress:state.mapEncounters,onSave:next=>{state.mapEncounters={...state.mapEncounters,...next};void save();},tone:playMapEncounter});const next=nextMapMission(state);if(next>=0)warmMission(missionEntryPage(next),()=>state.screen==='map'&&nextMapMission(state)===next);}const host=app.querySelector('[data-spatial]');const reused=previousGarden&&host?.dataset.spatial==='garden'&&spatialModule?.reuseGarden(host,state,ui);if(previousGarden&&!reused)spatialModule?.unmountSpatial();if(host&&!reused)mountSpatialSafely(()=>import('./spatial.js'),()=>epoch===spatialEpoch&&host.isConnected,module=>{spatialModule=module;module.mountSpatial(host,state,ui,action,cells=>{remember();for(const i of cells)paintCell(i,false);render();});if(host.dataset.spatialUnavailable==='true'&&!host.classList.contains('spatial-ready'))throw new Error('Spatial renderer unavailable');},()=>showSpatialFallback(host));const target=focusId?document.getElementById(focusId):focusAction?app.querySelector(`[data-action="${CSS.escape(focusAction)}"]${focusData!==undefined?`[data-id="${CSS.escape(focusData)}"]`:''}`):null;target?.focus({preventScroll:true});}
 
 function journal(){modal('나의 연구 노트',`${seedProgress(state)}${stampBoard(state)}<p>완료 수는 활동의 진행 기록이야. 이해한 내용은 처음 선택과 관찰 근거를 함께 보며 확인해.</p><div class="journal-list">${MISSIONS.map((m,i)=>`<section><h3>${m.evidence}</h3>${btn('선택·관찰 기록 펼치기','note-open','soft',`data-id="${i}"`)}</section>`).join('')}</div>`);}
 
@@ -128,15 +179,15 @@ function settings(){
 function showStory(kind,replay=false){cancelTest();mapController?.stop();spatialModule?.unmountSpatial();playStory(kind,{replay,onFinish:()=>{if(kind==='intro'&&!replay)nav('map');else{render();if(replay)settings();}}});}
 function intro(replay=false){showStory('intro',replay);}
 function showReward(i,first=false){
- if(first)playReward();
+ if(first){playReward();ui.restoreFocus=i;}
  ui.rewardFocus=i;const r=REWARDS[i];dialog.classList.add('reward-dialog');
  modal(first?r.title:'내가 깨운 '+r.name,`<div class="reward-scene">${assetImage(r.asset,'reward-building',true)}${assetImage('stamp_complete','reward-complete-stamp'+(first?' stamp-in':''),true)}<span class="reward-seed">${icon('leaf',22)} ${first?'빛씨앗 +1':'획득한 빛씨앗'}</span></div><p class="reward-why">${r.why}</p><p class="reward-proof">${evidenceSummary(state,i)}</p>${QUESTS[i].life?`<p class="reward-life">${icon('leaf',16)} ${QUESTS[i].life}</p>`:''}${renderLoot(state,i)}<div class="reward-stamps">${stampBadges(state,i)}</div>${i===1?themePicker(state):''}${i===3?`<details class="reward-own-garden"><summary>내가 심은 정원 보기</summary>${gardenGrid(true)}</details>`:''}<p class="reward-next">${EXPEDITIONS[i].next}</p>`,btn('지도에서 확인하기','reward-map','primary')+btn(i===4?'최종 연구 보고':'다음 탐구',i===4?'report':'next-mission','soft',`data-id="${i}"`));
 }
 function complete(){
  const p=state.page;
  if(!pageReady(state,p)){toast(nextHint(state,p));return;}
- if(p%2&&!state.completed[p-1]){toast('앞 활동의 연구 기록을 먼저 마쳐 줘.');return;}
- const i=Math.floor(p/2),first=!missionDone(state,i);state.completed[p]=true;save();
+ if(p%2&&!state.completed[p-1]&&!singleFieldRecord(state,p)){toast('앞 활동의 연구 기록을 먼저 마쳐 줘.');return;}
+ const i=Math.floor(p/2),first=!missionDone(state,i);if(singleFieldRecord(state,p))state.completed[p-1]=true;state.completed[p]=true;save();
  if(p%2){render();showReward(i,first);}else startPage(p+1);
 }
 function remember(){ui.undo.push({terrain:[...state.terrain],garden:{...state.garden},extras:[...state.gardenExtras],reasons:[...state.gardenReasons]});if(ui.undo.length>30)ui.undo.shift();}
@@ -166,7 +217,7 @@ const AUTO_HANDS={
 async function action(a,id,el){
  if(a.startsWith('field-')){const fieldResult=fieldMissionAction(state,ui,a,id);if(fieldResult!==false){save();render();if(fieldResult)toast(fieldResult);return;}}
  const result=learningAction(state,ui,a,id);
- if(result!==false){save();render();if(a==='assign-group'||a==='unassign-group')celebrateCard(a==='assign-group'?ui.selected:id);if(result)toast(result);return;}
+ if(result!==false){save();render();if(a==='leaf-partner'&&state.leafPartner&&!result)$('.leaf-result-title')?.focus({preventScroll:true});if(['season-review-answer','garden-review-reason','bag-review-answer'].includes(a))$('.field-review-result')?.focus({preventScroll:true});if(result)toast(result);return;}
  switch(a){
  case 'press-petiole':{if(state.experiment.step<3)return;state.experiment.step=Math.max(4,state.experiment.step);ui.bubbling=true;save();render();
   // Bubbles pop where the drawn water ends, whatever the layout.
@@ -175,8 +226,9 @@ async function action(a,id,el){
  case 'pause-test':ui.paused=!ui.paused;render();return;
  case 'replay-test':ui.replaying=!ui.replaying;render();return;
  case 'close':dialog.close();return;
- case 'journey-mode':{const m=Math.floor(state.page/2);if(id==='explore'&&!missionDone(state,m)&&state.journeyRequired[m]&&!fieldMissionReady(state,m)){{const t=fieldTodo(state,ui);toast(t?`${t.i+1}번 ${josa(t.label,'이/가')} 남았어. 왼쪽 현장 임무에서 반짝이는 단계를 눌러 줘.`:'현장 임무의 세 단서를 마치면 다음으로 갈 수 있어.');}return;}ui.activityMode=id==='field'?'field':'explore';ui.activityFeedback='';if(id==='explore'){startPage(state.page);return;}save();render();return;}
- case 'journey-help':{recordHint(state,Math.floor(state.page/2));save();const plan=EXPEDITIONS[Math.floor(state.page/2)];modal('리피의 탐구 힌트',`<p>${plan.goal}</p><ul>${plan.hints.map(h=>`<li>${h}</li>`).join('')}</ul>`);return;}
+ case 'journey-mode':{const m=Math.floor(state.page/2);if(id==='explore'&&!missionDone(state,m)&&state.journeyRequired[m]&&!fieldMissionReady(state,m)){{const t=fieldTodo(state,ui);toast(t?`${t.i+1}번 ${josa(t.label,'이/가')} 남았어. 왼쪽 현장 임무에서 반짝이는 단계를 눌러 줘.`:'현장 임무를 마치면 다음으로 갈 수 있어.');}return;}ui.activityMode=id==='field'?'field':'explore';ui.activityFeedback='';if(id==='explore'){startPage(state.page);return;}save();render();return;}
+ case 'npc-lipi':lipiDialogue();return;
+ case 'journey-help':{const index=Math.floor(state.page/2);recordHint(state,index);save();lipiDialogue(index);return;}
  // 자동 진행: observation steps one at a time with a pause to watch each; stops before the student's own choices, when the screen changes, or on a second tap.
  case 'auto-play':{if(ui.autoPlaying){ui.autoPlaying=false;render();return;}ui.autoPlaying=true;const where=()=>[state.screen,state.page,ui.activityMode].join(':'),start=where();let last='',repeat=0;for(let n=0;n<40&&ui.autoPlaying&&where()===start;n++){const step=nextAutoStep(state,ui);if(!step)break;const key=step.join('|');repeat=key===last?repeat+1:0;last=key;if(repeat>1)break;const hand=AUTO_HANDS[step[0]]?.(step[1]);if(hand){const t0=Date.now();while(ui.autoPlaying&&where()===start&&nextAutoStep(state,ui)?.join('|')===key&&Date.now()-t0<8000)await new Promise(resolve=>setTimeout(resolve,150));}else await action(...step);await new Promise(resolve=>setTimeout(resolve,1400));}if(ui.autoPlaying){ui.autoPlaying=false;if(state.screen==='activity')render();}return;}
  case 'tool-pack':modal('우리의 탐험 도구',renderToolPack(state),'','tools');return;
@@ -197,7 +249,7 @@ async function action(a,id,el){
  case 'lotus-observe':modal('연잎에서 찾은 아이디어',`<div class="lotus-detail"><figure>${assetImage('lotus_leaf_whole','',true)}<figcaption>넓고 둥근 연잎</figcaption></figure><figure>${assetImage('lotus_surface_diagram','',true)}<figcaption>표면을 크게 나타낸 모형</figcaption></figure></div><p>연잎 위의 물방울은 둥글게 맺혀 굴러가. 이 특징을 가방 겉면에 적용하면 어떨까?</p><p class="inline-tip">겉면과 입구는 다른 부분이야. 비가 들어오는 입구도 함께 살펴봐.</p>`);return;
  case 'view-ending':if(state.finished||state.legacyFinished){if(dialog.open)dialog.close();nav('ending');}return;
  case 'home':nav('home');return;
- case 'back':if(state.screen==='activity'&&state.page%2===0){await action('map');return;}if(state.screen!=='home')openRoute(previousRoute(state));return;
+ case 'back':if(state.screen==='activity'&&(state.page%2===0||singleFieldRecord(state,state.page))){await action('map');return;}if(state.screen!=='home')openRoute(previousRoute(state));return;
  case 'sound':setSound(!isSoundOn());playClick();render();return;
  case 'music-toggle':if(hasMusic())setMusic(!isMusicOn());render();settings();return;
  case 'settings-map':dialog.close();nav('map');return;
@@ -209,7 +261,7 @@ async function action(a,id,el){
  case 'offline-prep':prepareOffline();return;
  case 'admin-next':if(state.adminUnlocked)openRoute(PAGE_ROUTES[routeIndex(state)+1]);return;
  case 'map':ui.map=Math.min(4,Math.floor(state.page/2));nav('map');return;
- case 'begin':if(state.completed.some(Boolean)||Object.values(state.observation).some(a=>a.length)){nav('map');return;}intro();return;
+ case 'begin':if(state.completed.some(Boolean)||state.leafComparisonSeen||Object.values(state.observation).some(a=>a.length)){nav('map');return;}intro();return;
  case 'intro-start':dialog.close();nav('map');return;
  case 'journal':journal();return;
  case 'settings':settings();return;
@@ -217,18 +269,16 @@ async function action(a,id,el){
  case 'fullscreen':try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{toast('이 브라우저에서는 전체화면 전환을 지원하지 않아.');}return;
  case 'reset-prompt':saveStore.changed(STORAGE_KEY);if(studentState===null&&saveFailed){saveHelp();return;}modal(TEXT.resetTitle,`<p>${TEXT.resetBody}</p>`,btn(TEXT.resetCancel,'close','soft','id="reset-cancel"')+btn(TEXT.resetConfirm,'reset','danger'));$('#reset-cancel')?.focus();return;
  case 'reset':saveStore.changed(STORAGE_KEY);if(studentState===null&&saveFailed){saveHelp();return;}cancelTest();state=freshState();state.adminUnlocked=studentState!==null;state.screen='home';ui.mapDistance=undefined;ui.undo=[];state.reportSubmitted=[];ui.map=0;save();dialog.close();render();window.scrollTo(0,0);return;
- case 'map-select':if(!openMission(state,Number(id))){explainLockedMission(Number(id));return;}mapController?.goTo(Number(id));return;
+ case 'map-select':if(!openMission(state,Number(id))){explainLockedMission(Number(id));return;}mapController?.goTo(Number(id),{enter:!!el?.closest('.map-next-card')});return;
  case 'map-arrive':if(!openMission(state,Number(id))){explainLockedMission(Number(id));return;}ui.map=Number(id);missionCard();return;
- case 'map-locked-next':dialog.close();mapController?.goTo(Number(id));return;
+ case 'map-locked-next':dialog.close();if(openMission(state,Number(id)))mapController?.goTo(Number(id),{enter:true});return;
  case 'map-overview':mapController?.toggleOverview();return;
  case 'map-pan':mapController?.toggleHand();return;
  case 'map-retry':render();return;
  case 'spatial-retry':spatialFailureShown.clear();render();return;
  case 'select-mission':if(openMission(state,Number(id))){ui.map=Number(id);nav('map');}return;
- case 'enter-mission':if(!openMission(state,ui.map)){explainLockedMission(ui.map);return;}dialog.close();startPage(ui.map*2+(state.completed[ui.map*2]&&!state.completed[ui.map*2+1]?1:0));return;
+ case 'enter-mission':enterMission(ui.map);return;
  case 'guide-jump':{const it=activityGuide(state,ui)?.items.find(x=>x.key===id);if(it?.jump)await action(...it.jump);nudgeGuide(app.querySelector('main.activity'));return;}
- case 'specimen':ui.activityFeedback='';ui.plant=id;ui.region='shape';ui.zoom=1;ui.rotation=0;render();return;
- case 'rotate':ui.rotation=(ui.rotation+45)%360;$('#specimen-art').style.transform=`scale(${ui.zoom}) rotate(${ui.rotation}deg)`;return;
  case 'select-plant':ui.activityFeedback='';ui.selected=id;if(HABITAT_PLANTS.some(p=>p.id===id))ui.gardenMode='plant';render();return;
  case 'season':if([0,1,2,3,4].includes(Number(id)))state.season=Number(id);break;
  case 'underground':state.underground=!state.underground;break;
@@ -251,7 +301,7 @@ async function action(a,id,el){
  case 'edit-design':startPage(8);return;
  case 'previous':startPage(state.page-1);return;
  case 'complete':complete();return;
- case 'reward-map':dialog.close();ui.map=ui.rewardFocus??Math.floor(state.page/2);nav('map');return;
+ case 'reward-map':dialog.close();ui.map=ui.rewardFocus??Math.floor(state.page/2);ui.mapDistance=ENTRANCES[ui.map]?.distance;nav('map');return;
  case 'next-mission':{const next=Number(id)+1;if(next>4||!openMission(state,next))return;dialog.close();ui.map=next;nav('map');return;}
  case 'reward-detail':if(missionDone(state,Number(id)))showReward(Number(id));return;
  case 'garden-theme':if(!missionDone(state,1)||!THEMES[id])return;state.gardenTheme=id;save();render();if(dialog.open){if(dialog.classList.contains('reward-dialog'))showReward(ui.rewardFocus);else modal('꽃길 꾸미기',themePicker(state));}return;
@@ -270,13 +320,12 @@ async function action(a,id,el){
 document.addEventListener('click',e=>{unlockMusic();const lockedStage=e.target.closest('.world-node[aria-disabled="true"]');if(lockedStage){e.preventDefault();explainLockedMission(Number(lockedStage.dataset.id));return;}const locked=e.target.closest('[aria-disabled="true"]');if(locked){e.preventDefault();if(locked.dataset.reason)toast(locked.dataset.reason);if(state.screen==='activity')nudgeGuide(app.querySelector('main.activity'));return;}const field=e.target.closest('[data-bud-field]');if(field&&!e.target.closest('button,.spatial-layer,.spatial-controls')){const r=field.getBoundingClientRect();playClick();action('bud-look',[(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height].map(v=>Math.min(1,Math.max(0,v)).toFixed(3)).concat([Math.round(r.width),Math.round(r.height)]).join(','));return;}const b=e.target.closest('[data-action]');if(!b||b.disabled)return;if(!['sound','sfx-toggle','music-toggle'].includes(b.dataset.action))playClick();const size=b.dataset.action==='bud-hint'?$('#season-art')?.getBoundingClientRect():null;action(b.dataset.action,size?`${Math.round(size.width)},${Math.round(size.height)}`:b.dataset.id,b);});
 const SEASON_STOPS=[1,2,3,4,0];
 document.addEventListener('change',e=>{if(e.target.id==='season-range')action('season',String(SEASON_STOPS[Number(e.target.value)]));});
-document.addEventListener('input',e=>{if(e.target.id==='music-volume'){setMusicVolume(Number(e.target.value));$('#music-volume-value').textContent=`${getMusicVolume()}%`;}if(e.target.id==='zoom'){ui.zoom=Number(e.target.value);$('#specimen-art').style.transform=`scale(${ui.zoom}) rotate(${ui.rotation}deg)`;$('#zoom-value').textContent=`${Math.round(ui.zoom*100)}%`;}if(e.target.id==='season-range'){state.season=SEASON_STOPS[Number(e.target.value)];$('#season-art').innerHTML=seasonArt(state.seasonPlant,state.season,state.underground&&(![3,4].includes(state.season)||!!state.seasonPrediction[state.seasonPlant]));$('#season-label').textContent=state.season===0?'다음 해 봄':SEASONS[state.season];$('#season-caption').textContent='시간을 움직이며 같은 식물의 변화를 살펴봐.';}});
+document.addEventListener('input',e=>{if(e.target.id==='music-volume'){setMusicVolume(Number(e.target.value));$('#music-volume-value').textContent=`${getMusicVolume()}%`;}if(e.target.id==='season-range'){state.season=SEASON_STOPS[Number(e.target.value)];$('#season-art').innerHTML=seasonArt(state.seasonPlant,state.season,state.underground&&(![3,4].includes(state.season)||!!state.seasonPrediction[state.seasonPlant]));$('#season-label').textContent=state.season===0?'다음 해 봄':SEASONS[state.season];$('#season-caption').textContent='시간을 움직이며 같은 식물의 변화를 살펴봐.';}});
 // Mouse, pen and fingers share one card drag onto [data-drop] (native HTML drag ignores fingers on many tablets).
 installCardDrag((id,el,at)=>{
  // Garden cards are land tiles ("terrain:water") or plants; dropping one also makes it the current tool.
  const land=id.startsWith('terrain:')?id.slice(8):null;if(land){ui.brush=land;ui.gardenMode='terrain';}else{ui.selected=id;if(HABITAT_PLANTS.some(p=>p.id===id))ui.gardenMode='plant';}
- if(el.dataset.drop==='group')action('assign-group',el.dataset.id);else if(el.dataset.drop==='tray')action('unassign-group',id);
- else if(el.dataset.drop==='garden-board'){spatialModule?.gardenDragEnd();const cell=spatialModule?.gardenCellAt(at.x,at.y)??document.elementFromPoint(at.x,at.y)?.closest('.garden-cell[data-id]')?.dataset.id;if(cell===undefined){render();toast('정원 땅 위에 놓아 줘.');return;}onCell(Number(cell));}
+ if(el.dataset.drop==='garden-board'){spatialModule?.gardenDragEnd();const cell=spatialModule?.gardenCellAt(at.x,at.y)??document.elementFromPoint(at.x,at.y)?.closest('.garden-cell[data-id]')?.dataset.id;if(cell===undefined){render();toast('정원 땅 위에 놓아 줘.');return;}onCell(Number(cell));}
  else onCell(Number(el.dataset.id));
 },{move:(id,x,y)=>spatialModule?.gardenDragOver(id,x,y),cancel:()=>spatialModule?.gardenDragEnd()});
 // Pointer painting has a tap/keyboard alternative; one continuous stroke is one undo step.
@@ -284,7 +333,6 @@ document.addEventListener('pointerdown',e=>{const cell=e.target.closest('.garden
 document.addEventListener('pointermove',e=>{if(!paintActive)return;const cell=document.elementFromPoint(e.clientX,e.clientY)?.closest('.garden-cell[data-id]');if(!cell)return;const i=Number(cell.dataset.id);if(i!==paintLast){paintCell(i,false);cell.className=`garden-cell ${ui.brush}`;cell.innerHTML='<span></span>';paintLast=i;}});
 document.addEventListener('pointerup',()=>{if(paintActive){paintActive=false;render();}});
 document.addEventListener('pointercancel',()=>{if(paintActive){paintActive=false;render();}});
-function bindPinch(){const area=$('.specimen-stage');if(!area)return;const points=new Map();let base=0,start=1;area.addEventListener('pointerdown',e=>{if(e.target.closest('button,.spatial-layer'))return;points.set(e.pointerId,[e.clientX,e.clientY]);area.setPointerCapture(e.pointerId);if(points.size===2){const p=[...points.values()];base=Math.hypot(p[0][0]-p[1][0],p[0][1]-p[1][1]);start=ui.zoom;}});area.addEventListener('pointermove',e=>{if(!points.has(e.pointerId))return;points.set(e.pointerId,[e.clientX,e.clientY]);if(points.size===2&&base){const p=[...points.values()];ui.zoom=Math.min(1.7,Math.max(1,start*Math.hypot(p[0][0]-p[1][0],p[0][1]-p[1][1])/base));$('#specimen-art').style.transform=`scale(${ui.zoom}) rotate(${ui.rotation}deg)`;$('#zoom').value=ui.zoom;$('#zoom-value').textContent=`${Math.round(ui.zoom*100)}%`;}});['pointerup','pointercancel'].forEach(type=>area.addEventListener(type,e=>points.delete(e.pointerId)));}
 if(state.screen==='activity')startPage(state.page);else{save();render();}
 
 // Failed assets keep an accessible description instead of a broken image icon.

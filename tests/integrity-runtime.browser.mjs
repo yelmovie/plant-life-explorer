@@ -26,7 +26,7 @@ try{
   const raw=JSON.stringify({...completed,screen:'activity',page:0});
   await page.addInitScript(({raw,key})=>{localStorage.setItem(key,raw);window.testQuota=true;const original=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){if(k===key&&window.testQuota)throw new DOMException('test quota','QuotaExceededError');return original.call(this,k,v);};},{raw,key});
   await page.goto(url);await page.locator('#save-status').waitFor();assert.equal(await settled(page),raw);
-  await page.locator('[data-action="feature-answer"][data-id="cherry"]').click();assert.equal(await page.locator('#save-status').count(),1);assert.equal(await settled(page),raw);
+  await page.locator('[data-action="leaf-zoom"][data-id="large"]').click();assert.equal(await page.locator('#save-status').count(),1);assert.equal(await settled(page),raw);
   await page.evaluate(()=>window.testQuota=false);await page.locator('[data-action="save-help"]').click();await page.locator('[data-action="save-retry"]').click();await page.locator('#save-status').waitFor({state:'detached'});
   assert.notEqual(await settled(page),raw);report.storage.push({case:'quota failure on activity',persistentBanner:true,originalPreserved:true,retryClearsBanner:true});await context.close();
  }

@@ -1,14 +1,12 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {freshState,restoreState,PLANTS,recordFeature,pageReady,rewardCount} from '../src/model.js';
+import {freshState,restoreState,pageReady,rewardCount} from '../src/model.js';
 import {EXPEDITIONS,earnedTools,renderToolPack} from '../src/expedition.js';
 import {renderActivity} from '../src/learning.js';
 
 function observedAndClassified(){
   const s=freshState();
-  for(const p of PLANTS){recordFeature(s,p.id,'shape',p.id);recordFeature(s,p.id,'edge',p.edge?'yes':'no');}
-  for(const rule of ['edge','narrow']){s.groupsByRule[rule]=Object.fromEntries(PLANTS.map(p=>[p.id,p[rule]?'yes':'no']));s.classificationEvidence[rule]='cherry';}
-  s.groups={...s.groupsByRule.edge};return s;
+  s.leafComparisonSeen=true;s.leafPartner='cherry';return s;
 }
 test('새로 시작한 탐구는 기존 정답만으로 현장 임무를 건너뛰어 보상을 받지 못한다',()=>{
   const s=observedAndClassified();assert.equal(pageReady(s,1),true);
