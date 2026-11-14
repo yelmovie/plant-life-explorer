@@ -96,7 +96,7 @@ try{
  check(await page.locator('.keys-panel [data-field-item="reason:air-space"]').count()===1,'3장: button path opens the stalk first, then offers the model link');
  await act('field-keys');await page.locator('.float-lab[data-phase="reason"]').waitFor();
  await tap('[data-tank-model="air"]');await field(`e.float.reason==='air'`);
- await explore();await act('press-petiole',undefined,'.lab-dock ');await act('experiment-answer','air');await act('complete',undefined,'.learning-footer ');for(const [p,h] of [['hyacinth','water'],['aloe','dry'],['cherry','grass']]){await act('habitat-plant',p);await act('habitat',h);await act('habitat-answer',p);}
+ await explore();await act('press-petiole',undefined,'.lab-dock ');await act('experiment-answer','air');await act('complete',undefined,'.learning-footer ');await act('habitat-compare-answer','aloe');
  await complete(2);
 
  // 4장: card → bed taps, then the keep-or-change pick on the student's own garden.

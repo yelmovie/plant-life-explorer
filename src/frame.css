@@ -790,3 +790,21 @@ body dialog.reward-dialog .theme-picker small { display: none; }
  #app .field-record-view .learning-layout { min-height: 0; overflow: hidden; }
  #app .field-record-view .learning-scene { min-height: 0; }
 }
+
+#app .habitat-compare-board { max-width: 880px; }
+#app .habitat-compare-question { font-weight: 700; }
+#app .habitat-compare-grid {
+ display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 8px;
+}
+#app .habitat-compare-card {
+ display: grid; justify-items: center; align-content: start; gap: 5px; min-width: 0;
+ padding: 8px 5px; border: 2px solid #d9dec1; border-radius: 15px; background: #f8f9ed;
+ color: #243e30; font: inherit; line-height: 1.25; text-align: center; overflow-wrap: anywhere;
+}
+#app button.habitat-compare-card { cursor: pointer; }
+#app button.habitat-compare-card:is(:hover,:focus-visible), #app .habitat-compare-card.is-picked { border-color: #658b50; background: #eef5df; }
+#app .habitat-compare-art { width: 100%; height: clamp(52px, 16vh, 120px); object-fit: contain; }
+#app .habitat-compare-card b { padding: 2px 8px; border-radius: 10px; background: #e2ebce; font-size: var(--font-size-xs); }
+#app .habitat-compare-card :is(span,small) { font-size: var(--font-size-xs); }
+body .note-quiz > summary { display: list-item; min-height: 44px; padding: 10px 0; cursor: pointer; }
+body .note-quiz > summary small { margin-left: 4px; padding: 2px 7px; border-radius: 10px; background: #e7edd9; color: #3f5d3b; font: inherit; }

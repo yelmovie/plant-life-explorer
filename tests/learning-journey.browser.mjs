@@ -113,7 +113,7 @@ try{
  await evidence(`JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.float.reason==='air'`);
  // The field cut already showed the petiole's air, so the repeated lab page is skipped.
  await explore();assert.equal((await saved()).page,4);await a('press-petiole',undefined,'.lab-dock ');await a('experiment-answer','air');await completePage();
- for(const [p,habitat] of [['hyacinth','water'],['aloe','dry'],['cherry','grass']]){await a('habitat-plant',p);await a('habitat',habitat);assert.equal(await page.locator('[data-action="habitat-feature"]').count(),0);await a('habitat-answer',p);}
+ assert.equal(await page.locator('.habitat-compare-card').count(),3);await a('habitat-compare-answer','aloe');
  await snap('habitats-linked');await completePage();await missionDone(2);
 
  // One cloud tap rains on the bare beds and makes their ground.
@@ -142,8 +142,8 @@ try{
  assert.equal(await page.locator('[data-action="run-test"]').count(),0);
  await a('bag-review-answer','both');
  await snap('invention-compared');await completePage();await missionDone(4);
- await a('report');await a('note-open','4');await a('note-sticker');await a('note-check','4:0');await a('note-check','4:1');await close();
- await a('note-open','4');assert.equal(await page.locator('[data-action="note-sticker"]').getAttribute('aria-pressed'),'true');assert.match(await page.locator('.note-quiz-feedback').innerText(),/맞아/);await snap('notebook-records');await close();
+ await a('report');await a('note-open','4');await a('note-sticker');await page.locator('.note-quiz summary').tap();await a('note-check','4:0');await a('note-check','4:1');await close();
+ await a('note-open','4');assert.equal(await page.locator('[data-action="note-sticker"]').getAttribute('aria-pressed'),'true');await page.locator('.note-quiz summary').tap();assert.match(await page.locator('.note-quiz-feedback').innerText(),/맞아/);await snap('notebook-records');await close();
  const before=await saved();await page.reload();assert.deepEqual(await saved(),before);await a('note-open','4');assert.equal(await page.locator('.note-read-sticker.stuck').count(),1);await close();
  await a('start-final');await a('final-habitat','water');await a('final-habitat','dry');await a('power-core');await page.locator('[data-story-action="exit"]').tap();
  assert.equal((await saved()).finished,true);await snap('ending');

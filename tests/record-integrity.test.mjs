@@ -114,15 +114,7 @@ test('식물·장소 이름 뒤 조사는 받침과 ㄹ 받침에 맞춘다',()=
  assert.equal(josa('물길','으로/로'),'물길로','ㄹ 받침은 로');
 });
 
-test('사는 곳 잇기 문구에 개발용 조사 표기가 없고 식물마다 조사가 맞다',()=>{
- const said={};
- for(const [plant,habitat] of [['hyacinth','water'],['aloe','dry'],['cherry','grass']]){const s=freshState(),u={selected:plant};said[plant]=learningAction(s,u,'habitat',habitat);}
- assert.equal(said.hyacinth,'부레옥잠을 물가와 이었어.');assert.equal(said.aloe,'알로에를 건조 구역과 이었어.');assert.equal(said.cherry,'벚나무를 들판과 이었어.');
- for(const plant of ['hyacinth','aloe','cherry']){
-  const s=freshState();s.page=5;const html=text(renderActivity(s,{activityMode:'explore',habitatPlant:plant},null));
-  const name=HABITAT_PLANTS.find(p=>p.id===plant).name;
-  assert.match(html,new RegExp(`${josa(name,'은/는')} 어디에 살까\\?`));
- }
+test('화면 문구에 개발용 조사 표기가 없고 이름 뒤에 고정 조사를 쓰지 않는다',()=>{
  for(const file of ['app.js','learning.js','stage-map.js','rewards.js','response-tracking.js','research-notebook.js','field-missions.js','field-missions-state.js','invention.js']){
   const src=readFileSync(new URL('../src/'+file,import.meta.url),'utf8');
   assert.doesNotMatch(src,/을\(를\)|은\(는\)|이\(가\)|과\(와\)|와\(과\)|\(으\)로/,file);

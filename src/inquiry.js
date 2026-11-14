@@ -1,5 +1,3 @@
-import {HABITAT_PLANTS} from './model.js';
-
 export const QUESTS=[
  {problem:'표본 기록이 뒤섞였어.',task:'잎을 조사하고, 두 가지 기준으로 나누어 기록을 바로잡아 줘.',reward:'표본 온실의 불이 켜져.',learn:'잎의 생김새로 식물을 나누는 기준을 세워요.',life:'학교 화단의 잎도 톱니와 모양으로 나눠 볼 수 있어.'},
  {problem:'겨울 뒤의 기록이 끊겼어.',task:'시간을 움직여 겨울과 다음 봄을 잇는 두 장의 증거를 찾아 줘.',reward:'계절 꽃돔이 다시 피어나.',learn:'겨울을 지낸 식물이 봄에 다시 자라는 모습을 살펴요.',life:'겨울 화단의 시든 풀도 땅속 뿌리는 살아 있을 수 있어.'},
@@ -13,4 +11,3 @@ export const HABITAT_FACTS={
  cherry:{feature:'땅속으로 뻗은 뿌리가 있어',life:'흙에서 물을 빨아들여 생활해',source:'벚나무 관찰 자료'},
 };
 export function seasonEvidenceReady(s){return [3,0].every(n=>{const key=`${s.seasonPlant}:${n}`;return s.seasonPhotos[key]&&s.seasonalRecords.includes(key);});}
-export function habitatChain(s,id){const p=HABITAT_PLANTS.find(p=>p.id===id);return !!p&&s.habitats[id]===p.habitat&&s.habitatFeatures?.[id]===id;}

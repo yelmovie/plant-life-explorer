@@ -53,14 +53,8 @@ function experimentItems(s){
   item('press','물속에서 눌러 보기',n>=4,{target:sel('press-petiole'),tip:s.experiment.prediction||fieldMissionReady(s,2)?'잎자루를 눌러 봐':'예상을 고르고 잎자루를 눌러 봐'}),
   item('answer','공기 방울의 까닭 고르기',s.experimentAnswer==='air',ask('.reason-cards > p','무엇을 알 수 있는지 골라 봐'))];
 }
-function habitatItems(s,u){
- const done=id=>{const p=HABITAT_PLANTS.find(q=>q.id===id);return s.habitats[id]===p.habitat&&s.habitatFeatures[id]===id&&s.reasons[id]===id;};
- const shown=HABITAT_PLANTS.find(q=>q.id===u.habitatPlant)||HABITAT_PLANTS.find(q=>!done(q.id))||HABITAT_PLANTS[0];
- return HABITAT_PLANTS.map(p=>{
-  const here=shown.id===p.id,placed=s.habitats[p.id]===p.habitat;
-  const target=!here?sel('habitat-plant',p.id):'.habitat-question',tip=!here?`${p.name} 탭을 눌러 봐`:!placed?'사는 곳을 골라 봐':'도움이 되는 특징을 골라 봐';
-  return item('habitat:'+p.id,p.name+' 사는 곳 → 특징',done(p.id),{target,tip,anchor:here?'ask':undefined,jump:!here?['habitat-plant',p.id]:null});
- });
+function habitatItems(s){
+ return [item('habitat-compare','세 식물의 특징 비교하기',pageReady(s,5),ask('.habitat-compare-question','세 식물의 특징을 비교해 봐'))];
 }
 function plantItem(s,u,p,withReason){
  const cell=s.garden[p.id],planted=Number.isInteger(cell),fits=planted&&s.terrain[cell]===p.habitat,picked=u.gardenMode==='plant'&&u.selected===p.id;

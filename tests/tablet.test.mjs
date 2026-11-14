@@ -18,5 +18,15 @@ test('알로에 심화 관찰 없이 공기 방울을 해석하면 실험 완료
 test('가방의 두 부분을 동시에 바꾼 결과는 한 부품 비교가 아니다',()=>{const s=freshState();s.design={surface:'lotus',cover:'flap',linked:true};s.tests=[testDesign({surface:'plain',cover:'open'}),testDesign(s.design)];assert.equal(comparisonPair(s),null);assert.equal(testValid(s),false);});
 test('두 부품의 역할을 비교한 뒤 물방울과 입구의 비를 함께 막는 가방을 완성한다',()=>{const s=freshState();s.design={surface:'lotus',cover:'open',linked:true};s.tests=[testDesign({surface:'plain',cover:'flap'}),testDesign({surface:'plain',cover:'open'}),testDesign(s.design)];assert.equal(comparisonPair(s).before.key,'plain:open');learningAction(s,ui(),'test-explain','surface');assert.equal(testValid(s),false);completeInvention(s);assert.equal(testValid(s),true);assert.equal(s.tests.at(-1).dry,true);s.design.cover='open';assert.equal(testValid(s),false);});
 test('예전 시험의 설명은 새 비교나 다른 설계에 재사용되지 않는다',()=>{const s=freshState();s.design={surface:'lotus',cover:'open',linked:true};s.tests=[testDesign({surface:'plain',cover:'open'}),testDesign(s.design)];learningAction(s,ui(),'test-explain','surface');s.tests.push(testDesign({surface:'lotus',cover:'flap'}));s.design.cover='flap';assert.equal(testValid(s),false);assert.equal(restoreState(JSON.stringify(s)).testExplanation,null);});
-test('환경을 정하고 특징과 도움을 한 번 연결하며 틀린 선택은 증거가 되지 않는다',()=>{const s=freshState(),u=ui();u.selected='aloe';learningAction(s,u,'habitat','water');learningAction(s,u,'habitat-answer','aloe');assert.equal(s.reasons.aloe,undefined);learningAction(s,u,'habitat','dry');learningAction(s,u,'habitat-answer','cherry');assert.equal(s.habitatFeatures.aloe,undefined);assert.equal(s.reasons.aloe,undefined);learningAction(s,u,'habitat-answer','aloe');assert.equal(s.habitatFeatures.aloe,'aloe');assert.equal(s.reasons.aloe,'aloe');});
+test('세 식물을 한 번에 비교하며 잎에 물을 모아 두는 식물을 한 번 고른다',()=>{
+ const s=freshState(),u=ui();s.page=5;
+ learningAction(s,u,'habitat-compare-answer','aloe');assert.equal(pageReady(s,5),false,'실험 전에 답한 것으로 처리하지 않는다');
+ s.experiment.step=4;s.experimentAnswer='air';
+ learningAction(s,u,'habitat-compare-answer','hyacinth');assert.equal(pageReady(s,5),false);
+ learningAction(s,u,'habitat-compare-answer','aloe');assert.equal(pageReady(s,5),true);
+ assert.equal(pageReady(restoreState(JSON.stringify(s)),5),true);
+ assert.deepEqual(s.habitats,{});assert.deepEqual(s.reasons,{});
+ const old=freshState();old.completed[5]=true;old.reasons.aloe='aloe';
+ assert.equal(pageReady(restoreState(JSON.stringify(old)),5),true);assert.deepEqual(restoreState(JSON.stringify(old)).reasons,old.reasons);
+});
 test('정원은 빈 땅에서 시작하고 세 환경이 있어야 확인할 수 있다',()=>{const s=freshState(),u=ui();assert.equal(pageReady(s,6),false);assert.ok(s.terrain.every(t=>t==='empty'));learningAction(s,u,'garden-ready');assert.equal(pageReady(s,6),false);learningAction(s,u,'terrain-preset','ready');learningAction(s,u,'garden-ready');assert.equal(u.gardenMode,'plant');assert.equal(pageReady(s,6),false);s.garden={hyacinth:0,cherry:2,aloe:4};assert.equal(pageReady(s,6),true);s.garden.hyacinth=0;s.gardenReasons=['hyacinth'];learningAction(s,u,'terrain-preset','blank');assert.deepEqual(s.garden,{});assert.deepEqual(s.gardenReasons,[]);assert.equal(u.undo.at(-1).garden.hyacinth,0);assert.equal(pageReady(s,6),false);});

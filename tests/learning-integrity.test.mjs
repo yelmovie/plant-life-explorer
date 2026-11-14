@@ -52,7 +52,7 @@ test('겉면만 달아 본 가방은 마무리할 수 없고 본 탐구로 넘�
 test('첫 예상은 관찰 이후 바뀌지 않고 노트 퀴즈와 읽음은 왕복 보존된다',()=>{
  const s=freshState(),u={};s.page=4;
  fieldMissionAction(s,u,'field-predict','air:sink');fieldMissionAction(s,u,'field-predict','air:float');assert.equal(s.fieldEvidence.float.predictions.air,'sink');
- s.notebook[2]={read:true,answer:0,firstAnswer:1,attempts:2};const r=restoreState(JSON.stringify(s));assert.deepEqual(r.notebook,s.notebook);assert.match(notebookEntry(r,2).body,/note-read-sticker stuck/);assert.match(notebookEntry(r,2).body,/note-quiz-feedback correct/);
+ s.notebook[2]={read:true,answer:0,firstAnswer:1,attempts:2};const r=restoreState(JSON.stringify(s));assert.deepEqual(r.notebook,s.notebook);assert.match(notebookEntry(r,2).body,/note-read-sticker stuck/);assert.match(notebookEntry(r,2).body,/<details class="note-quiz">/);assert.match(notebookEntry(r,2,{quizOpen:true}).body,/<details class="note-quiz" open>/);assert.match(notebookEntry(r,2).body,/note-quiz-feedback correct/);
 });
 function memory(initial={}){const data=new Map(Object.entries(initial));return {getItem:k=>data.get(k)??null,setItem:(k,v)=>data.set(k,v),data};}
 function locks(){let queue=Promise.resolve();return {request:(_key,fn)=>{const next=queue.then(fn);queue=next.catch(()=>{});return next;}};}

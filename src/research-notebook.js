@@ -35,7 +35,7 @@ const entryRecord=(s,i)=>[
  leafRecordSummary(s),
  // Bud hunting is optional (not a completion condition), so it shows only when the student actually found some.
  s.seasonCompareAnswer==='parts'?'현장 겨울과 다음 봄 비교':`${s.seasonalRecords.length}장의 계절 기록${budsFoundCount(s)?` · 겨울눈 찾기(선택) ${budsFoundCount(s)}/${BUD_TOTAL}`:''}`,
- s.experimentAnswer==='air'?'공기 방울의 까닭을 찾았어':'식물과 환경을 이어 봤어',
+ s.habitatCompareAnswer?'세 식물의 사는 곳과 특징 비교':s.experimentAnswer==='air'?'공기 방울의 까닭을 찾았어':'식물과 환경을 이어 봤어',
  `물가 ${terrainCount(s,'water')}칸 · 들판 ${terrainCount(s,'grass')}칸 · 건조 ${terrainCount(s,'dry')}칸`,
  `${(fieldBagReview(s)?.trials||s.tests).length}번의 가방 시험`,
 ][i];
@@ -55,7 +55,7 @@ export function observationRecord(s,i){
    return [...(s.leafComparisonSeen?['벚나무·은행나무·강아지풀 잎을 확대해 비교했어.']:[]),...(s.leafPartner===LEAF_PARTNER?[partnerDiscovery]:[]),...FIELD_LEAVES.flatMap(p=>e.leaves.scans[p.id].map(k=>`${p.name} · ${feature(k)} 관찰 기록`)),...Object.entries(s.leafEvidence).flatMap(([id,v])=>Object.keys(v).map(k=>`${PLANTS.find(p=>p.id===id)?.name||id} · ${feature(k)} 관찰 기록`)),...['edge','narrow'].flatMap(rule=>[...FIELD_LEAVES.filter(p=>e.leaves[rule][p.id]).map(p=>`${p.name} · ${rule==='edge'?'가장자리':'모양'} 기준 분류: ${group(rule,e.leaves[rule][p.id])}`),...PLANTS.filter(p=>leafGroups(s)[rule]?.[p.id]).map(p=>`${p.name} · 새 표본 분류: ${group(rule,leafGroups(s)[rule][p.id])}`)])];
   }
   case 1:return [...s.seasonalRecords.map(key=>{const [p,n]=key.split(':');return `${p==='cherry'?'벚나무':'씀바귀'} ${['다음 봄','여름','가을','겨울'][n]} 사진${s.seasonPhotos[key]?.underground?' · 땅속 포함':''}`;}),...(s.budsFound?.cherry?.length?[`벚나무 가지 끝 겨울눈 ${s.budsFound.cherry.length}개 찾음`]:[]),...(s.budsFound?.sowthistle?.length?['씀바귀 뿌리 머리 새눈 찾음']:[])];
-  case 2:return [...e.float.tested.map(id=>`${id==='air'?'공기 방 모형: 수면에 뜸':'꽉 찬 모형: 바닥으로 내려감'}`),...(s.experiment.step>=4?[s.fieldBridges?.[2]&&e.float.reason==='air'?'현장에서 연 잎자루 단면: 공기 공간과 방울 관찰':'물속에서 누른 잎자루: 공기 방울 관찰']:[])];
+  case 2:return [...(s.habitatCompareAnswer?['알로에는 두꺼운 잎에 물을 모아 두어 물이 적을 때 쓸 수 있어.']:[]),...e.float.tested.map(id=>`${id==='air'?'공기 방 모형: 수면에 뜸':'꽉 찬 모형: 바닥으로 내려감'}`),...(s.experiment.step>=4?[s.fieldBridges?.[2]&&e.float.reason==='air'?'현장에서 연 잎자루 단면: 공기 공간과 방울 관찰':'물속에서 누른 잎자루: 공기 방울 관찰']:[])];
   case 3:return ['water','grass','dry'].filter(t=>terrainCount(s,t)).map(t=>`${({water:'물가',grass:'들판',dry:'건조 구역'})[t]} ${terrainCount(s,t)}칸`).concat(e.garden.testedKey?['현장 정원의 빗물 시험 기록 있음']:[],gardenReviewReady(s)?[`${plantName(s.gardenReview.plant)} · ${s.gardenReview.from===s.gardenReview.cell?'처음 자리 확인':'옆 자리로 옮김'}: ${HABITAT_PLANTS.find(p=>p.id===s.gardenReview.plant).reason}`]:[]);
   case 4:{
    // The bridge copies the field trials into the start of the core history; show that shared prefix once.
@@ -103,7 +103,7 @@ function sawThings(s,i,rows){
    const buds=[...(s.budsFound?.cherry?.length?[`벚나무 겨울눈 ${s.budsFound.cherry.length}개`]:[]),...(s.budsFound?.sowthistle?.length?['씀바귀 새눈']:[])];
    return buds.length?[...lines,`${buds.join(' · ')} 찾았어`]:lines;
   }
-  case 2:return [...e.float.tested.map(id=>id==='air'?'공기 방 모형 → 물 위에 둥둥 떴어':'꽉 찬 모형 → 바닥으로 가라앉았어'),...(s.experiment.step>=4?[s.fieldBridges?.[2]&&e.float.reason==='air'?'잎자루를 열어 보니 공기 공간과 방울이 보였어':'물속에서 잎자루를 누르니 공기 방울이 나왔어']:[])];
+  case 2:return [...(s.habitatCompareAnswer?['알로에는 두꺼운 잎에 물을 모아 두어 물이 적을 때 쓸 수 있어.']:[]),...e.float.tested.map(id=>id==='air'?'공기 방 모형 → 물 위에 둥둥 떴어':'꽉 찬 모형 → 바닥으로 가라앉았어'),...(s.experiment.step>=4?[s.fieldBridges?.[2]&&e.float.reason==='air'?'잎자루를 열어 보니 공기 공간과 방울이 보였어':'물속에서 잎자루를 누르니 공기 방울이 나왔어']:[])];
   case 3:{
    const made=Object.keys(ZONES).filter(t=>terrainCount(s,t)).map(t=>`${ZONES[t]} ${terrainCount(s,t)}칸`);
    const planted=['hyacinth','cherry','aloe'].filter(id=>Number.isInteger(s.garden?.[id])&&ZONES[s.terrain[s.garden[id]]]).map(id=>`${plantName(id)} → ${ZONES[s.terrain[s.garden[id]]]}`);
@@ -131,13 +131,13 @@ function gardenSnap(s){
  if(!s.gardenPhoto)return '';
  return `<div class="note-garden-snap"><b>${icon('camera',18)} 내가 만든 정원</b><figure class="note-photo"><span class="note-tape" aria-hidden="true"></span><div class="garden-grid readonly" role="img" aria-label="내가 찍은 정원 사진">${s.gardenPhoto.cells.map(([t,id])=>`<div class="garden-cell ${t} ${id?'planted':''}">${id?plantArt(id):'<span></span>'}</div>`).join('')}</div></figure></div>`;
 }
-export function notebookEntry(s,i){
+export function notebookEntry(s,i,{quizOpen=false}={}){
  const e=ENTRIES[i],q=NOTE_QUIZZES[i],done=missionDone(s,i),record=s.learningRecords?.[i],note=s.notebook?.[i]||{},responses=Object.values(record?.responses||{});
  const known=record?.known===true,rows=observationRecord(s,i);
  const quizAnswered=[0,1].includes(note.answer),quizCorrect=note.answer===q.answer;
  const thoughts=firstThoughts(responses),revised=changedThoughts(responses),saw=sawThings(s,i,rows);
  const kept=!known?'바뀐 생각은 기록되지 않았어.':!responses.length?'아직 남긴 기록이 없어.':responses.every(r=>r.correct)?'처음 생각 그대로 맞았어!':'처음 생각 그대로 두었어.';
- const memory=`<div class="note-memory"><figure class="note-photo"><span class="note-tape" aria-hidden="true"></span>${assetImage(e.asset,'note-memory-art',true)}<figcaption>${e.subtitle}</figcaption></figure><span class="note-read-sticker ${note.read?'stuck':''}" aria-hidden="true">읽었어!</span><button class="btn soft" data-action="note-sticker" aria-pressed="${note.read===true}">${note.read?'읽었어 스티커 ✓':'읽었어 스티커 붙이기'}</button><div class="note-quiz"><span class="note-quiz-kicker">기억 퀴즈</span><p>${q.question}</p><div>${q.choices.map((c,n)=>`<button class="btn ${note.answer===n?'selected':'soft'}" data-action="note-check" data-id="${i}:${n}" aria-pressed="${note.answer===n}">${c}</button>`).join('')}</div><p class="note-quiz-feedback ${quizAnswered&&quizCorrect?'correct':''}" role="status">${quizAnswered?(quizCorrect?q.feedback:q.hint):'기억을 떠올리며 골라 봐.'}</p></div></div>`;
+ const memory=`<div class="note-memory"><figure class="note-photo"><span class="note-tape" aria-hidden="true"></span>${assetImage(e.asset,'note-memory-art',true)}<figcaption>${e.subtitle}</figcaption></figure><span class="note-read-sticker ${note.read?'stuck':''}" aria-hidden="true">읽었어!</span><button class="btn soft" data-action="note-sticker" aria-pressed="${note.read===true}">${note.read?'읽었어 스티커 ✓':'읽었어 스티커 붙이기'}</button><details class="note-quiz"${quizOpen?' open':''}><summary class="note-quiz-kicker">기억 퀴즈 <small>선택</small></summary><p>${q.question}</p><div>${q.choices.map((c,n)=>`<button class="btn ${note.answer===n?'selected':'soft'}" data-action="note-check" data-id="${i}:${n}" aria-pressed="${note.answer===n}">${c}</button>`).join('')}</div><p class="note-quiz-feedback ${quizAnswered&&quizCorrect?'correct':''}" role="status">${quizAnswered?(quizCorrect?q.feedback:q.hint):'기억을 떠올리며 골라 봐.'}</p></details></div>`;
  const hand=handBlock('first',icon('book',20),'처음 생각',thoughts,known?'아직 남긴 기록이 없어.':'처음 생각은 기록되지 않았어.')
   +handBlock('saw',icon('zoom',20),'내가 본 것',saw,'아직 남긴 기록이 없어.')+(i===1?seasonSnaps(s):i===3?gardenSnap(s):'')
   +handBlock('changed',icon('spark',20),'바뀐 생각',revised.length>3?[...revised.slice(0,3),`<small>그리고 ${revised.length-3}개 더 고쳤어</small>`]:revised,kept);

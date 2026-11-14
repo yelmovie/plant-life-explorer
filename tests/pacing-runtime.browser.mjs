@@ -56,8 +56,8 @@ try{
   report.checks.push('Leaving bag rain after all drops launch cancels callbacks and never adds a late trial');await context.close();
  }
  for(const [width,height] of [[1280,800],[1024,768],[1280,720],[768,1024]]){
-  const {context,page}=await fixture({...completed,screen:'activity',page:5,reasons:{},habitatFeatures:{}});await page.setViewportSize({width,height});
-  const options=page.locator('.habitat-options [data-action="habitat-answer"]');assert.equal(await options.count(),3);
+  const {context,page}=await fixture({...completed,screen:'activity',page:5,completed:completed.completed.map((value,i)=>i===5?false:value),habitatCompareAnswer:'',reasons:{},habitatFeatures:{}});await page.setViewportSize({width,height});
+  const options=page.locator('[data-action="habitat-compare-answer"]');assert.equal(await options.count(),3);
   assert.equal(await page.locator('[data-action="habitat-feature"]').count(),0);
   for(const option of await options.all()){
    await option.scrollIntoViewIfNeeded();const box=await option.boundingBox();assert.ok(box.width>=44&&box.height>=44);
@@ -65,7 +65,7 @@ try{
   }
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
   await page.screenshot({path:fileURLToPath(new URL(`habitat-choice-${width}x${height}.png`,output)),fullPage:true});
-  await action(page,'habitat-answer','hyacinth');const state=await read(page);assert.equal(state.habitatFeatures.hyacinth,'hyacinth');assert.equal(state.reasons.hyacinth,'hyacinth');
+  await action(page,'habitat-compare-answer','aloe');const state=await read(page);assert.equal(state.habitatCompareAnswer,'aloe');
   report.checks.push(`Combined habitat choice: ${width}x${height}, readable touch cards and one evidence choice`);await context.close();
  }
  assert.deepEqual(report.errors,[]);

@@ -92,11 +92,6 @@ test('예상은 틀려도 헛다리가 아니고 겨울 땅속은 예상 뒤에 
  learningAction(s,u,'test-predict','surface');assert.equal(s.testPrediction,'surface');assert.deepEqual(s.misses,[0,0,0,0,0]);
  s.design.linked=true;assert.equal(pageReady(s,8),true);s.testPrediction='';assert.equal(pageReady(s,8),false);
 });
-test('맞지 않는 환경과 이으면 단서가 나오고 헛다리로 남는다',()=>{
- const s=freshState(),u=ui2();u.selected='aloe';
- const clue=learningAction(s,u,'habitat','water');assert.match(clue,/물/);assert.doesNotMatch(clue,/죽/);assert.equal(s.misses[2],1);
- learningAction(s,u,'habitat','dry');assert.equal(s.misses[2],1);
-});
 test('스탬프 두 종은 첫 완료 때 한 번만 찍히고 완료한 미션의 헛다리는 늘지 않는다',()=>{
  const s=freshState();recordResponse(s,0,'test','맞음',true,'관찰');recordResponse(s,1,'test','수정',true,'관찰');assert.equal(awardStamp(s,0),'direct');addMiss(s,1);assert.equal(awardStamp(s,1),'fixed');
  s.completed[0]=s.completed[1]=true;assert.equal(awardStamp(s,0),null);addMiss(s,0);assert.equal(s.misses[0],0);assert.deepEqual(missionStamps(s,0),['direct']);

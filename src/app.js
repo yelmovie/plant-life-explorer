@@ -217,7 +217,7 @@ const AUTO_HANDS={
 async function action(a,id,el){
  if(a.startsWith('field-')){const fieldResult=fieldMissionAction(state,ui,a,id);if(fieldResult!==false){save();render();if(fieldResult)toast(fieldResult);return;}}
  const result=learningAction(state,ui,a,id);
- if(result!==false){save();render();if(a==='leaf-partner'&&state.leafPartner&&!result)$('.leaf-result-title')?.focus({preventScroll:true});if(['season-review-answer','garden-review-reason','bag-review-answer'].includes(a))$('.field-review-result')?.focus({preventScroll:true});if(result)toast(result);return;}
+ if(result!==false){save();render();if(a==='leaf-partner'&&state.leafPartner&&!result)$('.leaf-result-title')?.focus({preventScroll:true});if(['season-review-answer','habitat-compare-answer','garden-review-reason','bag-review-answer'].includes(a))$('.field-review-result')?.focus({preventScroll:true});if(result)toast(result);return;}
  switch(a){
  case 'press-petiole':{if(state.experiment.step<3)return;state.experiment.step=Math.max(4,state.experiment.step);ui.bubbling=true;save();render();
   // Bubbles pop where the drawn water ends, whatever the layout.
@@ -236,8 +236,8 @@ async function action(a,id,el){
  case 'journey-reward':if(missionDone(state,Math.floor(state.page/2)))showReward(Math.floor(state.page/2));return;
  case 'map-theme':modal('꽃길 꾸미기',themePicker(state));return;
  case 'map-garden':modal('내가 심은 정원',gardenGrid(true));return;
- case 'note-open':{const i=Math.max(0,Math.min(4,Number(id)||0));ui.notePage=i;const note=notebookEntry(state,i);modal(note.title,note.body,btn('← 앞 기록','note-open','soft',`data-id="${(i+4)%5}"`)+btn('다음 기록 →','note-open','soft',`data-id="${(i+1)%5}"`)+btn('노트 덮기','close','primary'),'notebook');return;}
- case 'note-check':{const [i,answer]=id.split(':').map(Number),question=NOTE_QUIZZES[i];if(!question||![0,1].includes(answer))return;const note=state.notebook[i];note.firstAnswer??=answer;note.answer=answer;note.attempts++;save();await action('note-open',String(i));return;}
+ case 'note-open':{const i=Math.max(0,Math.min(4,Number(id)||0));ui.notePage=i;const note=notebookEntry(state,i,{quizOpen:!!el?.closest('.note-quiz[open]')});modal(note.title,note.body,btn('← 앞 기록','note-open','soft',`data-id="${(i+4)%5}"`)+btn('다음 기록 →','note-open','soft',`data-id="${(i+1)%5}"`)+btn('노트 덮기','close','primary'),'notebook');return;}
+ case 'note-check':{const [i,answer]=id.split(':').map(Number),question=NOTE_QUIZZES[i];if(!question||![0,1].includes(answer))return;const note=state.notebook[i];note.firstAnswer??=answer;note.answer=answer;note.attempts++;await save();if(!dialog.open||!el?.isConnected)return;await action('note-open',String(i),el);dialog.querySelector('[data-action="note-check"][aria-pressed="true"]')?.focus();return;}
  case 'note-sticker':{const i=ui.notePage??0;state.notebook[i].read=!state.notebook[i].read;save();await action('note-open',String(i));return;}
  case 'save-help':saveHelp();return;
  case 'save-export':downloadRecord(JSON.stringify(studentState??state,null,2),'초록정원-현재활동-보관.json');return;

@@ -4,7 +4,6 @@ import {freshState,restoreState} from '../src/model.js';
 import {fieldMissionAction} from '../src/field-missions.js';
 import {learningStamp} from '../src/learning-records.js';
 import {learningAction} from '../src/learning.js';
-import {coreResponse} from '../src/response-tracking.js';
 
 function setup(){
  const s=freshState(),u={};
@@ -53,16 +52,14 @@ test('은행잎 새 짝의 첫 선택과 고친 선택이 남고 맞춘 뒤에�
  assert.deepEqual(restoreState(JSON.stringify(s)).learningRecords,s.learningRecords);
 });
 
-test('알맞은 환경을 고른 뒤 특징과 도움을 한 번에 연결한 실제 응답만 기록한다',()=>{
- const s=freshState(),u={selected:'hyacinth'};s.page=5;
- const record=id=>coreResponse(s,u,'habitat-answer',id)?.();
- record('hyacinth');s.habitats.hyacinth='dry';record('hyacinth');
+test('한 번의 식물 비교에서 실제 선택과 수정만 기록한다',()=>{
+ const s=freshState(),u={};s.page=5;s.experiment.step=4;s.experimentAnswer='air';
+ learningAction(s,u,'habitat-compare-answer','unknown');
  assert.deepEqual(s.learningRecords[2].responses,{});
- s.habitats.hyacinth='water';record('aloe');record('hyacinth');
- const r=s.learningRecords[2].responses['core:reason:hyacinth'];
- assert.equal(r.first,'알로에');assert.equal(r.last,'부레옥잠');
- assert.equal(r.wrong,1);assert.equal(r.correct,true);
- assert.match(r.label,/특징과 생활 연결/);
- const before=JSON.stringify(s.learningRecords);record('unknown');u.selected='pine';record('hyacinth');
- assert.equal(JSON.stringify(s.learningRecords),before);
+ learningAction(s,u,'habitat-compare-answer','hyacinth');
+ learningAction(s,u,'habitat-compare-answer','aloe');
+ learningAction(s,u,'habitat-compare-answer','cherry');
+ const r=s.learningRecords[2].responses['core:habitat-compare'];
+ assert.equal(r.first,'부레옥잠');assert.equal(r.last,'알로에');
+ assert.equal(r.attempts,2);assert.equal(r.wrong,1);assert.equal(r.correct,true);
 });

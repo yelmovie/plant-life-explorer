@@ -1,5 +1,5 @@
 // Offline cache for classroom Wi-Fi drops. scripts/build.mjs rewrites CACHE_VERSION and APP_SHELL in dist/sw.js.
-const CACHE_VERSION='0.5.1';
+const CACHE_VERSION='0.5.2';
 const CACHE=`green-garden-${CACHE_VERSION}`;
 const APP_SHELL=['/','/index.html','/manifest.webmanifest','/src/app.js','/src/style.css'];
 

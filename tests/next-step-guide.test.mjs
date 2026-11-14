@@ -12,7 +12,7 @@ const html=(s,u)=>renderActivity(s,u,()=>'<div class="garden-grid"></div>');
 const onScreen=(s,u,guide)=>{const page=html(s,u);const m=guide.target.match(/^(?:\.([\w-]+) )?(?:\[data-action="([^"]+)"\](?:\[data-id="([^"]+)"\])?|\.([\w-]+)(?:\[data-id="([^"]+)"\])?)(?: > p)?$/);assert.ok(m,guide.target);
  if(m[2])assert.match(page,new RegExp(`data-action="${m[2]}"${m[3]?`[^>]*data-id="${m[3]}"`:''}`),guide.target);else assert.match(page,new RegExp(`class="[^"]*\\b${m[4]}\\b`),guide.target);};
 // The hand never gives the answer away: no choice control is ever its target, and a question line is marked from above ('ask').
-const CHOICE=/data-action="leaf-partner"|season-predict|season-explain|experiment-predict|experiment-answer|"habitat"|habitat-answer|garden-answer|garden-pick|test-predict|test-explain/;
+const CHOICE=/data-action="leaf-partner"|season-predict|season-explain|experiment-predict|experiment-answer|data-action="habitat-compare-answer"|garden-answer|garden-pick|test-predict|test-explain/;
 const QUESTION=/(?: > p|\.(?:habitat|leaf-partner)-question)$/;
 function noAnswer(g){for(const it of g.items){if(!it.target)continue;assert.doesNotMatch(it.target,CHOICE,`${it.key} points at a choice`);if(QUESTION.test(it.target))assert.equal(it.anchor,'ask',`${it.key}: a question line is marked from above`);}
  assert.doesNotMatch(g.tip,/기준과 달라/,'the tip never names the leaf that is wrong');}
@@ -49,11 +49,9 @@ test('잎자루 실험과 사는 곳 잇기도 남은 항목과 손가락 자리
  learningAction(s,u,'lab-next','cut');g=expectLeft(s,u,3);assert.equal(g.target,'[data-action="lab-next"][data-id="water"]');
  learningAction(s,u,'lab-next','water');g=expectLeft(s,u,2);assert.equal(g.target,'[data-action="press-petiole"]');
  s.experiment.step=4;g=expectLeft(s,u,1);assert.equal(g.target,'.reason-cards > p');learningAction(s,u,'experiment-answer','air');expectLeft(s,u,0);
- s.page=5;g=expectLeft(s,u,3);assert.equal(g.target,'.habitat-question');assert.equal(g.anchor,'ask');assert.match(g.tip,/사는 곳/);
- // The open tab comes first; a finished tab hands over to the first plant left.
- u.habitatPlant='aloe';g=expectLeft(s,u,3);assert.equal(g.next.key,'habitat:aloe');assert.equal(g.target,'.habitat-question');
- u.selected='aloe';learningAction(s,u,'habitat','dry');learningAction(s,u,'habitat-answer','aloe');g=expectLeft(s,u,2);assert.equal(g.next.key,'habitat:hyacinth');assert.equal(g.target,'[data-action="habitat-plant"][data-id="hyacinth"]');
- for(const p of HABITAT_PLANTS){u.habitatPlant=p.id;u.selected=p.id;learningAction(s,u,'habitat',p.habitat);learningAction(s,u,'habitat-answer',p.id);}
+ s.page=5;g=expectLeft(s,u,1);assert.equal(g.target,'.habitat-compare-question');assert.equal(g.anchor,'ask');
+ learningAction(s,u,'habitat-compare-answer','cherry');expectLeft(s,u,1);
+ learningAction(s,u,'habitat-compare-answer','aloe');
  expectLeft(s,u,0);
 });
 test('정원: 땅 칸 수와 식물 심기가 항목으로 남고 심기 전엔 카드, 고른 뒤엔 정원을 가리킨다',()=>{

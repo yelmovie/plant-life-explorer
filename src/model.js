@@ -15,6 +15,7 @@ export const HABITAT_PLANTS = [
   {id:'aloe',name:'알로에',unit:'포기',habitat:'dry',reason:'두꺼운 잎에 물을 저장해'},
   PLANTS[0],
 ];
+export const HABITAT_COMPARE_PLANT='aloe';
 export const HABITATS = {water:'물가',grass:'들판',dry:'건조 구역'};
 export const MISSIONS = [
   {name:'식물 기록 보관소',short:'관찰과 분류',npc:'leaf',evidence:'표본 관찰·분류 기록',desc:'잎 속에 숨은 단서를 찾아봐!',color:'#638948'},
@@ -46,7 +47,7 @@ export const PAGES = [
   ],
   [
     "식물이 사는 곳",
-    "식물이 살 곳과 그곳에서 도움이 되는 특징을 골라 줘."
+    "세 식물의 사는 곳과 특징을 나란히 비교해 봐."
   ],
   [
     "정원 꾸미기",
@@ -68,7 +69,7 @@ export const PAGES = [
 // Index 4 (초봄) is a view-only stop between winter and the next spring; records keep keys 0-3.
 export const SEASONS=['봄','여름','가을','겨울','초봄'];
 export function freshState() {
-  return {version:2,mapEncounters:{},learningRecords:emptyLearningRecords(),fieldBridges:Array(5).fill(false),notebook:normalizeNotebook(),fieldEvidence:normalizeFieldEvidence(null),journeyRequired:Array(5).fill(false),legacyCompleted:[],legacyFinished:false,leafComparisonSeen:false,leafPartner:'',leafEvidence:{},groupsByRule:{edge:{},narrow:{}},classificationEvidence:{},seasonPhotos:{},seasonExplanation:'',seasonExplained:[],habitatFeatures:{},experimentAnswer:'',gardenReviewed:false,testExplanation:null,inventionRevision:2,inventionExplanations:{},testPrediction:'',bagReviewAnswer:'',activeTestKey:'',seasonPrediction:{},seasonCompareAnswer:'',undergroundSeen:[],budsFound:normalizeBuds(),misses:Array(5).fill(0),stamps:{direct:[],fixed:[],helped:[],unknown:[]},sharing:{status:'pending',question:'',response:''},highlight:0,screen:'home',page:0,completed:Array(10).fill(false),observation:{cherry:[],ginkgo:[],grass:[]},rule:'edge',groups:{},seasonPlant:'cherry',season:1,underground:false,seasonalRecords:[],linkedEvidence:[],experiment:{step:0,compared:false,prediction:''},habitats:{},reasons:{},terrain:Array(24).fill('empty'),garden:{},gardenExtras:[],gardenReasons:[],gardenPick:'',gardenFromField:false,gardenReview:null,gardenPhoto:null,design:{surface:'plain',cover:'open',linked:false},tests:[],reportSubmitted:[],finalChecks:{classification:false,habitat:false,garden:false,invention:false},finished:false,gardenTheme:'pink',largeText:false,soundEnabled:true,adminUnlocked:false};
+  return {version:2,mapEncounters:{},learningRecords:emptyLearningRecords(),fieldBridges:Array(5).fill(false),notebook:normalizeNotebook(),fieldEvidence:normalizeFieldEvidence(null),journeyRequired:Array(5).fill(false),legacyCompleted:[],legacyFinished:false,leafComparisonSeen:false,leafPartner:'',leafEvidence:{},groupsByRule:{edge:{},narrow:{}},classificationEvidence:{},seasonPhotos:{},seasonExplanation:'',seasonExplained:[],habitatFeatures:{},habitatCompareAnswer:'',experimentAnswer:'',gardenReviewed:false,testExplanation:null,inventionRevision:2,inventionExplanations:{},testPrediction:'',bagReviewAnswer:'',activeTestKey:'',seasonPrediction:{},seasonCompareAnswer:'',undergroundSeen:[],budsFound:normalizeBuds(),misses:Array(5).fill(0),stamps:{direct:[],fixed:[],helped:[],unknown:[]},sharing:{status:'pending',question:'',response:''},highlight:0,screen:'home',page:0,completed:Array(10).fill(false),observation:{cherry:[],ginkgo:[],grass:[]},rule:'edge',groups:{},seasonPlant:'cherry',season:1,underground:false,seasonalRecords:[],linkedEvidence:[],experiment:{step:0,compared:false,prediction:''},habitats:{},reasons:{},terrain:Array(24).fill('empty'),garden:{},gardenExtras:[],gardenReasons:[],gardenPick:'',gardenFromField:false,gardenReview:null,gardenPhoto:null,design:{surface:'plain',cover:'open',linked:false},tests:[],reportSubmitted:[],finalChecks:{classification:false,habitat:false,garden:false,invention:false},finished:false,gardenTheme:'pink',largeText:false,soundEnabled:true,adminUnlocked:false};
 }
 export function presetTerrain(){return Array.from({length:24},(_,i)=>['water','grass','dry'][Math.floor((i%6)/2)]);}
 export function evidenceCount(s){return MISSIONS.filter((_,i)=>s.completed[i*2]&&s.completed[i*2+1]).length;}
@@ -176,7 +177,7 @@ export function pageReady(s,p){
     case 2:return ['cherry','sowthistle'].every(plant=>[0,3].every(n=>s.seasonalRecords.includes(`${plant}:${n}`)&&s.seasonPhotos[`${plant}:${n}`]));
     case 3:return fieldSeasonReview(s)?s.seasonCompareAnswer==='parts':pageReady(s,2)&&['cherry','sowthistle'].every(plant=>s.seasonExplained.includes(plant)&&[0,3].every(n=>s.seasonalRecords.includes(`${plant}:${n}`)));
     case 4:return s.experiment.step>=4&&s.experimentAnswer==='air';
-    case 5:return pageReady(s,4)&&HABITAT_PLANTS.every(p=>s.habitats[p.id]===p.habitat&&s.habitatFeatures[p.id]===p.id&&s.reasons[p.id]===p.id);
+    case 5:return s.completed[5]||pageReady(s,4)&&(s.habitatCompareAnswer===HABITAT_COMPARE_PLANT||HABITAT_PLANTS.every(p=>s.habitats[p.id]===p.habitat&&s.habitatFeatures[p.id]===p.id&&s.reasons[p.id]===p.id));
     // New rules (3-cell area, prediction) apply only to pages not yet completed; saved completions keep the old rule.
     case 6:return s.gardenReviewed&&(s.completed[6]?['water','grass','dry'].every(t=>s.terrain.includes(t)):terrainReady(s)&&gardenPlaced(s));
     // A garden carried over from the field still needs the student's own keep-or-change pick; saved completions keep the old rule.
@@ -227,6 +228,7 @@ export function restoreState(raw){
       const {plant,from,cell,explained}=v.gardenReview;
       if(Number.isInteger(from)&&s.terrain[from]===s.terrain[s.garden[plant]]&&cell===s.garden[plant])s.gardenReview={plant,from,cell,explained:explained===true};
     }
+    if(v.habitatCompareAnswer===HABITAT_COMPARE_PLANT)s.habitatCompareAnswer=v.habitatCompareAnswer;
     if(v.seasonCompareAnswer==='parts')s.seasonCompareAnswer='parts';
     if(v.bagReviewAnswer==='both')s.bagReviewAnswer='both';
     // 내 정원 사진: 24 cells of [land, plant]; a malformed photo is dropped, never repaired into a different garden.
