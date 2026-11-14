@@ -1,4 +1,5 @@
 import {recordResponse} from './learning-records.js';
+import {pageReady,LEAF_PARTNER,fieldSeasonReview,SEASON_REVIEW_ANSWERS,fieldBagReview,gardenReviewReady,HABITAT_PLANTS,BAG_REVIEW_ANSWERS} from './model.js';
 import {josa} from './josa.js';
 const plantNames={cherry:'벚나무',ginkgo:'은행나무',grass:'강아지풀',hyacinth:'부레옥잠',aloe:'알로에',sowthistle:'씀바귀',maple:'단풍나무',pine:'소나무',camellia:'동백나무'};
 const labels={yes:'톱니 있음',no:'톱니 없음',roots:'뿌리가 남음',none:'아무것도 없음',bubbles:'공기 방울이 나옴',air:'공기',soil:'흙',water:'물가',grass:'들판',dry:'건조 구역',growth:'살아 있던 부분에서 다시 자람',gone:'모두 사라짐',roll:'겉면의 물방울이 굴러감',close:'입구도 저절로 막힘',surface:'겉면',cover:'입구 덮개',float:'뜸',sink:'가라앉음',trunk:'줄기와 뿌리',root:'뿌리',leaf:'새로 나온 잎',branches:'겨울눈에서 새잎과 꽃이 나옴',rootbud:'뿌리가 살아 있어 땅 위로 새싹이 남',color:'꽃 색깔만 같음',pond:'물이 고이는 자리',meadow:'물이 배어드는 자리',ridge:'물이 빠지는 자리'};
@@ -9,20 +10,26 @@ function revise(s,m,keys,value){
   if(key){const r=s.learningRecords[m].responses[key];recordResponse(s,m,key,value,true,r.label,r.phase);}
 }
 export function coreResponse(s,u,a,id) {
-  const m=Math.floor(s.page/2),plant=u.plant||'cherry',selected=u.selected;
+  const m=Math.floor(s.page/2),selected=u.selected;
   const spec=(key,ok,label,phase='observation',value=id)=>()=>add(s,m,'core:'+key,value,ok,label,phase);
   switch(a){
-    case 'feature-answer': if(u.recheck===`${plant}:${u.region||'shape'}`)return; return spec(`leaf:${plant}:${u.region||'shape'}`,id===(u.region==='edge'?(plant==='cherry'?'yes':'no'):plant),`${named(plant)} · ${u.region==='edge'?'가장자리':'모양'}`);
-    case 'assign-group':if(!['edge','narrow'].includes(s.rule)||!['cherry','ginkgo','grass'].includes(selected)||!['yes','no'].includes(id))return;return spec(`classify:${s.rule}:${selected}`,id===((s.rule==='edge'?selected==='cherry':selected==='grass')?'yes':'no'),`${named(selected)} · ${s.rule==='edge'?'톱니 분류':'모양 분류'}`,'application',s.rule==='edge'?(id==='yes'?'톱니 있음':'톱니 없음'):(id==='yes'?'길쭉함':'다른 모양'));
-    case 'check-rule': if(Object.keys(s.groups).length<3)return; return spec('classify:'+s.rule,['cherry','ginkgo','grass'].every(p=>s.groups[p]===((s.rule==='edge'?p==='cherry':p==='grass')?'yes':'no')),'잎 분류 · '+(s.rule==='edge'?'톱니':'모양'),'application',Object.entries(s.groups).map(([p,g])=>`${named(p)}: ${s.rule==='edge'?(g==='yes'?'톱니 있음':'톱니 없음'):(g==='yes'?'길쭉함':'다른 모양')}`).join(' / '));
-    case 'classification-proof':if(!u.ruleCheck?.valid)return;return spec('proof:'+s.rule,id.split(':')[1]===(s.rule==='edge'?'edge':'shape'),'분류 근거','application',`${named(id.split(':')[0])} · ${id.endsWith(':edge')?'가장자리':'모양'}`);
+    case 'leaf-partner':if(s.page!==1||!pageReady(s,0)||s.completed[1]||s.leafPartner||!['cherry','grass'].includes(id))return;return spec('leaf-partner',id===LEAF_PARTNER,'은행잎의 새 짝','application');
     case 'season-predict':if(s.undergroundSeen.includes(s.seasonPlant)||s.seasonPrediction[s.seasonPlant])return;return spec('season:'+s.seasonPlant,id==='roots',`${named(s.seasonPlant)} 겨울 땅속`,'prediction');
+    case 'season-review-answer':if(s.page!==3||!fieldSeasonReview(s)||s.seasonCompareAnswer||!Object.hasOwn(SEASON_REVIEW_ANSWERS,id))return;return spec('season-review',id==='parts','두 식물이 다시 자란 부분','application',SEASON_REVIEW_ANSWERS[id]);
     case 'season-explain':{if(![0,3].every(n=>s.seasonalRecords.includes(`${s.seasonPlant}:${n}`)))return;const record=spec('season-reason:'+s.seasonPlant,id==='growth',`${named(s.seasonPlant)} 겨울과 봄 연결`),plant=s.seasonPlant;return ()=>{record();if(id==='growth')revise(s,m,['field:season-predict:'+(plant==='cherry'?'tree':'herb'),'core:season:'+plant],named('roots'));};}
     case 'experiment-predict':if(s.experiment.prediction||s.experiment.step>=4)return;return spec('experiment-predict',id==='bubbles','물속 잎자루 예상','prediction');
     case 'experiment-answer':{if(s.experiment.step<4)return;const record=spec('experiment-answer',id==='air','누른 잎자루에서 나온 방울');return ()=>{record();if(id==='air')revise(s,m,['core:experiment-predict'],named('bubbles'));};}
     case 'habitat':if(!plantNames[selected]||s.habitats[selected]===id)return;return spec('habitat:'+selected,id===({hyacinth:'water',aloe:'dry',cherry:'grass'})[selected],`${named(selected)}의 환경`,'application');
     case 'habitat-feature':return spec('feature:'+selected,id===selected,`${named(selected)}의 특징`,'application');
     case 'habitat-answer':if(!['hyacinth','aloe','cherry'].includes(selected)||!['hyacinth','aloe','cherry'].includes(id)||s.habitats[selected]!==({hyacinth:'water',aloe:'dry',cherry:'grass'})[selected])return;return spec('reason:'+selected,id===selected,`${named(selected)}의 특징과 생활 연결`,'application');
+    case 'garden-review-reason':{
+      const r=s.gardenReview,p=HABITAT_PLANTS.find(p=>p.id===id);
+      if(s.page!==7||!s.gardenFromField||!r||gardenReviewReady(s)||!p)return;
+      return spec('garden-site:'+r.plant,id===r.plant,'정원에서 고른 자리의 까닭','application',p.reason);
+    }
+    case 'bag-review-answer':
+      if(s.page!==9||!fieldBagReview(s)||s.bagReviewAnswer||!Object.hasOwn(BAG_REVIEW_ANSWERS,id))return;
+      {const record=spec('bag-review',id==='both','두 가방 부품이 필요한 까닭','application',BAG_REVIEW_ANSWERS[id]);return ()=>{record();if(id==='both')revise(s,4,['field:bag-prediction','core:bag-prediction'],'입구로 오는 비도 막아야 함');};}
     case 'garden-answer':if(!Number.isInteger(s.garden[selected]))return;return spec('garden:'+selected,id===selected&&s.terrain[s.garden[selected]]===({hyacinth:'water',aloe:'dry',cherry:'grass'})[selected],`${josa(named(selected),'을/를')} 심은 까닭`,'application');
     case 'design-answer':if(!s.design.observed&&!s.design.linked)return;return spec('design-answer',id==='roll','연잎의 특징을 쓰는 방법');
     case 'test-predict':if(s.testPrediction)return;return spec('bag-prediction',id==='cover','비 오는 가방 예상','prediction',id==='surface'?'겉면만 바꾸면 됨':'입구로 오는 비도 막아야 함');
@@ -33,7 +40,7 @@ export function fieldResponse(s,a,id) {
   const [x,y,z]=id.split(':'),e=s.fieldEvidence,m=Math.floor(s.page/2);
   const spec=(key,ok,label,phase='observation',value=y)=>(observedCorrect)=>add(s,m,'field:'+key,value,ok??observedCorrect,label,phase);
   switch(a){
-    case 'field-sort':if(!['edge','narrow'].includes(x)||!['maple','pine','camellia'].includes(y)||!['yes','no'].includes(z)||!['shape','edge'].every(k=>e.leaves.scans.maple?.includes(k)))return;return spec(`sort:${x}:${y}`,z===((x==='edge'?y!=='pine':y==='pine')?'yes':'no'),`${named(y)} · ${x==='edge'?'톱니 분류':'모양 분류'}`,'application',x==='edge'?(z==='yes'?'톱니 있음':'톱니 없음'):(z==='yes'?'길쭉함':'다른 모양'));
+    case 'field-sort':if(x!=='edge'||!['maple','pine','camellia'].includes(y)||!['yes','no'].includes(z)||!['shape','edge'].every(k=>e.leaves.scans.maple?.includes(k)))return;return spec(`sort:${x}:${y}`,z===(y!=='pine'?'yes':'no'),`${named(y)} · 톱니 분류`,'application',z==='yes'?'톱니 있음':'톱니 없음');
     case 'field-season-predict':if(e.seasons.predictions[x])return;return spec('season-predict:'+x,y==='roots',`${x==='tree'?'벚나무':'씀바귀'} 겨울 예상`,'prediction');
     case 'field-season-link':{const ok=y===(x==='tree'?'trunk':'root'),record=spec('season-link:'+x,ok,`${x==='tree'?'벚나무':'씀바귀'} 살아 있던 부분`);return ()=>{record();if(ok)revise(s,m,['field:season-predict:'+x],named('roots'));};}
     case 'field-season-clue':return spec('season-clue:'+x,y===(x==='tree'?'branches':'rootbud'),`${x==='tree'?'벚나무':'씀바귀'} 그림에서 고른 근거`);
@@ -45,7 +52,5 @@ export function fieldResponse(s,a,id) {
     case 'field-place-environment':return spec('environment:'+y,x===({pond:'water',meadow:'grass',ridge:'dry'})[y],`${named(y)}의 환경`,'application',x);
     case 'field-place-plant':return spec('plant:'+x,y===({hyacinth:'pond',cherry:'meadow',aloe:'ridge'})[x],`${josa(named(x),'을/를')} 심을 자리`,'application');
     case 'field-bag-predict':if(e.bag.prediction)return;return spec('bag-prediction',x==='cover','비 오는 가방 예상','prediction',x==='surface'?'겉면만 바꾸면 됨':'입구로 오는 비도 막아야 함');
-    // Delivering the finished bag (lotus surface + cover) revises a first 'surface only' prediction.
-    case 'field-bag-finish':{const record=spec('bag-finish',true,'완성 가방','observation','연잎 겉면 + 덮개');return ok=>{if(!ok)return;record(true);revise(s,m,['field:bag-prediction','core:bag-prediction'],'입구로 오는 비도 막아야 함');};}
   }
 }

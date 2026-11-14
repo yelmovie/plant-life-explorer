@@ -6,7 +6,7 @@ import {fieldMissionAction} from '../src/field-missions.js';
 import {nextAutoStep} from '../src/auto-play.js';
 
 // Choices that belong to the student; auto-play must never make them.
-const STUDENT_ONLY=new Set(['field-sort','field-season-turn','field-bag-upgrade','field-season-predict','field-season-link','field-season-clue','field-order','field-predict','field-model-reason','field-place-plant','field-place-environment','field-bag-predict','field-bag-turned','field-bag-finish']);
+const STUDENT_ONLY=new Set(['field-sort','leaf-partner','field-season-turn','field-bag-upgrade','field-season-predict','field-season-link','field-season-clue','field-order','field-predict','field-model-reason','field-place-plant','field-place-environment','field-bag-predict','field-bag-turned','field-bag-finish']);
 const fieldSetup=(mission,stage=0)=>{
  const s=freshState();s.screen='activity';s.page=mission*2;
  const u={activityMode:'field',fieldMission:{mission,stage}};
@@ -28,7 +28,8 @@ test('현장 0: 단풍나무·소나무·동백나무 잎을 돋보기로 살피
  assert.deepEqual(drive(s,u),['maple','pine','camellia'].flatMap(id=>[['field-scan',id+':shape'],['field-scan',id+':edge']]));
  assert.equal(u.fieldMission.stage,0,'나누기 단계로 넘어가지 않는다');
  const sort=fieldSetup(0,1);assert.equal(nextAutoStep(sort.s,sort.u),null,'톱니 나누기는 학생 몫이다');
- const shape=fieldSetup(0,2);assert.equal(nextAutoStep(shape.s,shape.u),null,'모양 나누기는 학생 몫이다');
+ assert.deepEqual(nextAutoStep(s,{activityMode:'explore'}),['leaf-zoom','large']);
+ s.page=1;assert.equal(nextAutoStep(s,{activityMode:'explore'}),null,'은행잎의 짝은 학생이 고른다');
 });
 
 test('현장 1: 예상 전에는 아무것도 하지 않고, 예상 뒤에는 파 보기만 한다',()=>{
@@ -66,8 +67,8 @@ test('현장 4: 예상 전에는 멈추고, 예상 뒤에는 처음 가방과 �
  const blank=fieldSetup(4);assert.equal(nextAutoStep(blank.s,blank.u),null);
  const {s,u,act}=fieldSetup(4);act('field-bag-predict','surface');
  assert.deepEqual(drive(s,u),[['field-bag-test',''],['field-stage','1'],['field-bag-try','lotus:open'],['field-bag-test',''],['field-bag-try','plain:flap'],['field-bag-test',''],['field-bag-try','lotus:flap'],['field-bag-test','']]);
- assert.deepEqual(fieldSteps(s.fieldEvidence,4),[true,true,false]);assert.equal(u.fieldMission.stage,1,'답을 고르는 단계로는 넘어가지 않는다');
- assert.equal(s.fieldEvidence.bag.delivered,'','완성 가방 돌려 보기와 마무리는 학생이 한다');
+ assert.deepEqual(fieldSteps(s.fieldEvidence,4),[true,true]);assert.equal(u.fieldMission.stage,1,'답을 고르는 단계로는 넘어가지 않는다');
+ assert.equal(s.fieldEvidence.bag.delivered,'','자동으로 까닭을 기록하지 않는다');
  assert.deepEqual(s.fieldEvidence.bag.prediction,'surface','처음 예상은 그대로다');
  // A card the student tapped is rained on first, then the bags still left.
  const later=fieldSetup(4,1);later.act('field-bag-predict','cover');later.act('field-bag-test');later.act('field-bag-try','lotus:flap');

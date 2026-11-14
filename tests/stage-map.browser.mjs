@@ -48,12 +48,12 @@ try{
     for(const p of FIELD_LEAVES){for(const k of ['shape','edge'])applyFieldAction(s,{},'field-scan',`${p.id}:${k}`);for(const r of ['edge','narrow'])applyFieldAction(s,{},'field-sort',`${r}:${p.id}:${p[r]?'yes':'no'}`);}
     for(const p of PLANTS){recordFeature(s,p.id,'shape',p.id);recordFeature(s,p.id,'edge',p.edge?'yes':'no');}
     for(const rule of ['edge','narrow']){s.groupsByRule[rule]=Object.fromEntries(PLANTS.map(p=>[p.id,p[rule]?'yes':'no']));s.classificationEvidence[rule]='cherry';}
-    s.groups={...s.groupsByRule.edge};localStorage.setItem('green-garden-mvp-v2',JSON.stringify(s));
+    s.leafPartner='cherry';s.groups={...s.groupsByRule.edge};localStorage.setItem('green-garden-mvp-v2',JSON.stringify(s));
   });
   await page.reload();
   assert.equal(await page.locator('main h1').innerText(),'잎을 살펴봐요');
   await page.locator('[data-action="complete"]').click();
-  assert.equal(await page.locator('main h1').innerText(),'잎을 나누어 봐요');
+  assert.equal(await page.locator('main h1').innerText(),'은행잎의 새 짝 찾기');
   await page.locator('[data-action="complete"]').click();
   await page.locator('#dialog [data-action="reward-map"]').click();
   await page.locator('.stage-map .world-node.restored').waitFor();

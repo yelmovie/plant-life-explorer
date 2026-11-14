@@ -70,8 +70,8 @@ try{
  for(const p of ['maple','pine','camellia']){await page.locator(`[data-swipe-top][data-swipe-card="${p}"]`).waitFor();const bin=page.locator(`[data-swipe-bin="${p==='pine'?'no':'yes'}"]`);
   if(p==='pine'){await bin.tap();await bin.tap();}else await bin.tap();await field(`e.leaves.edge.${p}==='${p==='pine'?'no':'yes'}'`);}
  check((await saved()).fieldEvidence.leaves.edge.camellia==='yes','1장: a fast double tap throws one card only');
- await stage(2);for(const p of ['maple','pine','camellia']){await page.locator(`[data-swipe-top][data-swipe-card="${p}"]`).waitFor();await tap(`[data-swipe-bin="${p==='pine'?'yes':'no'}"]`);await field(`e.leaves.narrow.${p}`);}
- await explore();check(await page.locator('.sort-board').count()===0&&/단풍나무/.test(await page.locator('.sort-summary').innerText()),'1장: the record page shows the field sort instead of sorting new leaves again');
+ await explore();await act('leaf-zoom','large');await act('complete');await act('leaf-partner','cherry');
+ check(await page.locator('.leaf-grouping').count()===2,'1장: one partner choice shows both sets of groups');
  await complete(0);
 
  // 2장: dial and string drag are done with the visible button panel.
@@ -79,7 +79,7 @@ try{
  await keysOn();await panel('data-field-drop','link:tree:trunk');await panel('data-field-drop','link:herb:root');await field(`e.seasons.links.herb==='root'`);
  for(const [n,kind] of [[1,'tree'],[2,'herb']]){await stage(n);if(!await page.locator('.keys-panel').count())await keysOn();await panel('data-action','field-season-turn');await tap(`.keys-panel [data-action="field-season-clue"][data-id="${kind}:${kind==='tree'?'branches':'rootbud'}"]`);await field(`e.seasons.clues.${kind}`);}
  check(true,'2장: all field steps done with visible buttons (no drag, no keyboard)');
- await explore();await complete(1);
+ await explore();await act('season-review-answer','parts');await complete(1);
 
  // 3장: every required step by touch, three ways to open the stalk.
  await enter(2);await tap('[data-heft="air"] [data-heft-pick="float"]');await field(`e.float.predictions.air`);await tap('[data-heft="solid"] [data-heft-pick="sink"]');await field(`e.float.predictions.solid`);
@@ -96,7 +96,7 @@ try{
  check(await page.locator('.keys-panel [data-field-item="reason:air-space"]').count()===1,'3장: button path opens the stalk first, then offers the model link');
  await act('field-keys');await page.locator('.float-lab[data-phase="reason"]').waitFor();
  await tap('[data-tank-model="air"]');await field(`e.float.reason==='air'`);
- await explore();for(const [p,h] of [['hyacinth','water'],['aloe','dry'],['cherry','grass']]){await act('habitat-plant',p);await act('habitat',h);await act('habitat-answer',p);}
+ await explore();await act('press-petiole',undefined,'.lab-dock ');await act('experiment-answer','air');await act('complete',undefined,'.learning-footer ');for(const [p,h] of [['hyacinth','water'],['aloe','dry'],['cherry','grass']]){await act('habitat-plant',p);await act('habitat',h);await act('habitat-answer',p);}
  await complete(2);
 
  // 4장: card → bed taps, then the keep-or-change pick on the student's own garden.
@@ -105,14 +105,12 @@ try{
  check(Object.keys((await saved()).fieldEvidence.garden.plants).length===0,'4장: a wrong bed refuses the plant without penalty');
  for(const [p,z] of [['hyacinth','pond'],['cherry','meadow'],['aloe','ridge']]){await tap(`[data-field-item="plant:${p}"]`);await tap(`[data-field-drop="plant:${z}"]`);}
  await stage(2);await act('field-garden-rain');await explore();
- const fitsCol=await page.evaluate(()=>{const c=document.querySelector('.garden-confirm').getBoundingClientRect(),f=document.querySelector('.garden-feedback').getBoundingClientRect();return c.bottom<=Math.min(f.bottom,innerHeight)+1&&c.top>=f.top-1;});check(fitsCol,'4장: the whole keep-or-change card is on screen without scrolling');
- check(await page.locator('.learning-footer [data-action="complete"]').getAttribute('aria-disabled')==='true','4장: the carried-over garden is not "ready" until the student picks');
- check(await page.locator('.garden-confirm [data-action="edit-terrain"]').count()===1,'4장: "땅 모양 바꾸기" sits in the confirm card');
- await snap('garden-confirm-1180x757');await act('garden-pick','aloe');await act('garden-pick','aloe');
- check((await saved()).gardenPick==='aloe','4장: pick recorded (double tap safe)');
+ check((await saved()).page===7&&await page.locator('.field-review-bed').count()===3,'4장: original three sites open without a second planting');
+ await act('garden-review-pick','aloe');await act('garden-review-move');await act('garden-review-reason','aloe');
+ check((await saved()).gardenReview.explained,'4장: one site explanation recorded');
  const gardenBefore=(await saved()).garden;await complete(3);
 
- // 5장: guess → rain on the plain bag → one tap per bag card → turn the finished bag once → 마무리.
+ // 5장: guess → rain on the plain bag → one tap per bag card → explain the two parts once.
  await enter(4);const first=await page.locator('.field-objective').innerText();
  check(/먼저 예상/.test(first)&&!/구름/.test(first),'5장: first objective names only the prediction on screen');
  await act('field-bag-predict','surface');check(/구름/.test(await page.locator('.field-objective').innerText()),'5장: after the guess the objective moves to the first rain');
@@ -120,17 +118,14 @@ try{
  await stage(1);check(/가방 카드/.test(await page.locator('.bag-hint').innerText()),'5장: the bag step asks for a tap on a bag card');
  for(const [k,n] of [['lotus:open',2],['plain:flap',3],['lotus:flap',4]]){await tap(`[data-action="field-bag-try"][data-id="${k}"]`);await field(`e.bag.tests.length===${n}`);}
  check((await saved()).fieldEvidence.bag.tests.map(t=>t.notebookDry).join()==='false,false,false,true','5장: one tap per bag card rains on that bag by itself');
- await stage(2);await tap('[data-action="field-bag-finish"]');check(/한 바퀴/.test(await page.locator('.guide-bubble').innerText()),'5장: 마무리 before a full turn asks for the turn first');
- for(let i=0;i<4;i++){await tap('[data-bag-spin="1"]');await page.waitForTimeout(520);}
- await page.locator('.finish-bench.turned').waitFor({timeout:4000});check(/마무리/.test(await page.locator('.bag-hint').innerText()),'5장: four arrow taps make one full turn and unlock 마무리');
- await tap('[data-action="field-bag-finish"]');await field(`e.bag.delivered==='lotus:flap'`);
- await explore();check(await page.locator('.invention-summary').count()===1,'5장: the record page sums up the field trials without a second experiment');
+ await explore();check(await page.locator('.field-review-trial').count()===4,'5장: the four rain records are visible together');
+ await act('bag-review-answer','both');
  await complete(4);
 
  // Final record → ending, then refresh keeps progress and the garden layout.
  await act('report');await act('start-final');await act('final-habitat','water');await act('final-habitat','dry');await act('power-core');await page.locator('[data-story-action="exit"]').tap();
  const end=await saved();check(end.finished===true,'Ending reached by touch only');
- await page.reload();const after=await saved();report.gardenAfter={before:gardenBefore,after:after.garden,pick:after.gardenPick,finished:after.finished,screen:after.screen};check(after.finished&&['hyacinth','cherry','aloe'].every(k=>after.garden[k]===gardenBefore[k])&&after.gardenPick==='aloe','Refresh keeps the ending, garden layout and pick');
+ await page.reload();const after=await saved();report.gardenAfter={before:gardenBefore,after:after.garden,pick:after.gardenReview?.plant,finished:after.finished,screen:after.screen};check(after.finished&&['hyacinth','cherry','aloe'].every(k=>after.garden[k]===gardenBefore[k])&&after.gardenReview?.plant==='aloe','Refresh keeps the ending, garden layout and pick');
  const toasts=await page.evaluate(()=>window.__toasts);report.toasts=toasts;
  await writeFile(new URL('completed-touch-record.json',output),JSON.stringify(after,null,2));
 

@@ -8,7 +8,7 @@ import {carryFieldEvidence} from './field-bridge.js';
 import {QUESTS} from './inquiry.js';
 import {mountSpatialSafely,SPATIAL_FAIL} from './runtime-support.js';
 import {ASSETS,THUMBS,assetImage,warmMission} from './asset-catalog.js';
-import {STORAGE_KEY,HABITAT_PLANTS,HABITATS,MISSIONS,SEASONS,freshState,restoreState,plantAt,terrainReady,evidenceCount,missionDone,openMission,pageReady,designKey,testDesign,testValid,canFinish,PAGE_ROUTES,routeIndex,previousRoute,gardenResumePage,misfitNote} from './model.js';
+import {STORAGE_KEY,HABITAT_PLANTS,HABITATS,MISSIONS,SEASONS,freshState,restoreState,plantAt,terrainReady,evidenceCount,missionDone,openMission,pageReady,fieldRecordPage,singleFieldRecord,designKey,testDesign,testValid,canFinish,PAGE_ROUTES,routeIndex,previousRoute,gardenResumePage,misfitNote} from './model.js';
 import {icon,plantArt,seasonArt,heroArt} from './art.js';
 import {REWARDS,seedProgress,themePicker,worldMap,evidenceSummary,THEMES,stampBadges,stampBoard,nextMapMission,mapPrerequisite} from './rewards.js';
 import {mountStageMap,ENTRANCES} from './stage-map.js';
@@ -23,7 +23,7 @@ import {renderActivity,renderReport,renderFinal,renderEnding,learningAction,next
 import {playClick,playReward,isSoundOn,setSound,soundStored,hasMusic,isMusicOn,setMusic,isEffectsOn,setEffects,getMusicVolume,setMusicVolume,playMusic,unlockMusic} from './audio.js';
 import {TEXT,appInfoSection,studentSection,teacherSection,noticeSection} from './settings-content.js';
 import {playStory} from './story.js';
-import {installCardDrag,celebrateCard} from './card-drag.js';
+import {installCardDrag} from './card-drag.js';
 import {notebookEntry,NOTE_QUIZZES} from './research-notebook.js';
 
 const app=document.querySelector('#app'),dialog=document.querySelector('#dialog');
@@ -34,7 +34,7 @@ state=saveStore.load();
 window.addEventListener('storage',event=>saveStore.changed(event.key));
 if(state.screen==='activity'&&!missionDone(state,Math.floor(state.page/2)))state.journeyRequired[Math.floor(state.page/2)]=true;
 if(!soundStored()&&state.soundEnabled===false)setSound(false);
-let ui={plant:'cherry',zoom:1,rotation:0,selected:'cherry',map:Math.min(4,evidenceCount(state)),brush:'water',undo:[],finalTab:0,testing:false,paused:false,region:'shape',bubbling:false};
+let ui={leafZoom:false,selected:'cherry',map:Math.min(4,evidenceCount(state)),brush:'water',undo:[],finalTab:0,testing:false,paused:false,bubbling:false};
 let spatialModule,spatialEpoch=0,lastScreen;const spatialFailureShown=new Set();
 let toastTimer,paintActive=false,paintLast=-1,testRun=0;
 const $=(s)=>document.querySelector(s);
@@ -77,7 +77,7 @@ dialog.addEventListener('close',()=>{
 });
 function cancelTest(){testRun++;ui.testing=false;ui.paused=false;ui.bubbling=false;ui.replaying=false;}
 function nav(screen){cancelTest();state.screen=screen;save();render();window.scrollTo(0,0);if(screen==='ending')showStory('outro');}
-function startPage(p){cancelTest();const mission=Math.floor(p/2);if(!missionDone(state,mission))state.journeyRequired[mission]=true;if(Math.floor(state.page/2)!==mission)ui.fieldMission=undefined;ui.activityFeedback='';ui.activityMode=!missionDone(state,mission)&&state.journeyRequired[mission]&&!fieldMissionReady(state,mission)?'field':'explore';if(ui.activityMode==='explore'&&fieldMissionReady(state,mission))carryFieldEvidence(state,mission);state.page=p;state.screen='activity';ui.selected=p===5||p===7?'hyacinth':'cherry';ui.plant='cherry';ui.region='shape';ui.zoom=1;ui.rotation=0;ui.undo=[];ui.gardenMode=p===7||state.gardenReviewed?'plant':'terrain';save();render();window.scrollTo(0,0);}
+function startPage(p){cancelTest();const mission=Math.floor(p/2);if(!missionDone(state,mission))state.journeyRequired[mission]=true;if(Math.floor(state.page/2)!==mission)ui.fieldMission=undefined;ui.activityFeedback='';ui.activityMode=!missionDone(state,mission)&&state.journeyRequired[mission]&&!fieldMissionReady(state,mission)?'field':'explore';if(ui.activityMode==='explore'&&fieldMissionReady(state,mission))carryFieldEvidence(state,mission);if(ui.activityMode==='explore')p=fieldRecordPage(state,p);state.page=p;state.screen='activity';ui.selected=p===5||p===7?'hyacinth':'cherry';ui.leafZoom=false;ui.undo=[];ui.gardenMode=p===7||state.gardenReviewed?'plant':'terrain';save();render();window.scrollTo(0,0);}
 function header(){return `<header class="topbar"><nav class="page-navigation" aria-label="페이지 이동" ${state.screen==='home'?'hidden':''}>${btn(icon('home'),'home','icon-btn','aria-label="홈으로 가기" title="홈으로 가기"')}${btn(icon('back'),'back','icon-btn','aria-label="이전 페이지로 가기" title="이전 페이지로 가기"')}</nav><nav class="header-tools" aria-label="공통 메뉴">${btn(icon(isSoundOn()?'sound':'muted'),'sound','icon-btn',`aria-label="${isSoundOn()?'소리 끄기':'소리 켜기'}" aria-pressed="${isSoundOn()}" title="${isSoundOn()?'소리 끄기':'소리 켜기'}"`)}${btn(icon('gear'),'settings','icon-btn','aria-label="설정" title="설정"')}${state.screen==='activity'?`<div class="auto-play-dock">${autoPlayButton(state,ui)}</div>`:''}</nav></header>`;}
 function openRoute(route){if(!route)return;if(route.screen==='activity')startPage(route.page);else nav(route.screen);}
 function progress(){return `<div class="progress-track">${MISSIONS.map((m,i)=>`<button data-action="select-mission" data-id="${i}" ${openMission(state,i)?'':'disabled'} class="progress-stop ${missionDone(state,i)?'done':''} ${Math.floor(state.page/2)===i&&state.screen==='activity'?'current':''}"><span>${missionDone(state,i)?icon('check',16):String(i+1).padStart(2,'0')}</span>${m.short}</button>`).join('')}</div>`;}
@@ -144,7 +144,7 @@ function stopGuideMotion() {
 document.addEventListener('visibilitychange', () => { if (document.hidden) stopGuideMotion(); });
 window.addEventListener('pagehide', stopGuideMotion);
 
-function render(){playMusic(state.screen==='ending'?'ending':'main');const previousPortrait=app.querySelector('.guide-portrait');const previousGarden=app.querySelector('[data-spatial="garden"].spatial-ready');fieldCleanup?.();fieldCleanup=null;guideCleanup?.();guideCleanup=null;mapController?.destroy();mapController=null;if(!previousGarden)spatialModule?.unmountSpatial();const epoch=++spatialEpoch;document.body.dataset.screen=state.screen;document.body.classList.toggle('activity-open',state.screen==='activity');const focus=document.activeElement;const focusId=focus?.id;const focusAction=focus?.dataset?.action,focusData=focus?.dataset?.id;document.body.classList.toggle('large-text',state.largeText);app.innerHTML=header()+({home,map:mapPage,activity,report,final:finalPage,ending}[state.screen]||home)();syncGuidePortrait(previousPortrait,epoch);if(state.screen!==lastScreen){lastScreen=state.screen;const main=app.querySelector('main');if(main){main.classList.add('screen-enter');main.addEventListener('animationend',e=>{if(e.target===main)main.classList.remove('screen-enter');});}}bindPinch();const fieldHost=app.querySelector('.field-mission');if(fieldHost)fieldCleanup=mountFieldInteractions(fieldHost,state,ui,action);if(state.screen==='activity')guideCleanup=mountGuideFinger(app.querySelector('main.activity'),activityGuide(state,ui));if(state.screen==='map'){mapController=mountStageMap(app.querySelector('.stage-map'),ui,(i,enter)=>{ui.map=i;if(enter)enterMission(i);else action('map-arrive',String(i));},{clearIndex,completed:MISSIONS.map((_,i)=>studentState===null&&missionDone(state,i)),progress:state.mapEncounters,onSave:next=>{state.mapEncounters={...state.mapEncounters,...next};void save();},tone:playMapEncounter});const next=nextMapMission(state);if(next>=0)warmMission(missionEntryPage(next),()=>state.screen==='map'&&nextMapMission(state)===next);}const host=app.querySelector('[data-spatial]');const reused=previousGarden&&host?.dataset.spatial==='garden'&&spatialModule?.reuseGarden(host,state,ui);if(previousGarden&&!reused)spatialModule?.unmountSpatial();if(host&&!reused)mountSpatialSafely(()=>import('./spatial.js'),()=>epoch===spatialEpoch&&host.isConnected,module=>{spatialModule=module;module.mountSpatial(host,state,ui,action,cells=>{remember();for(const i of cells)paintCell(i,false);render();});if(host.dataset.spatialUnavailable==='true'&&!host.classList.contains('spatial-ready'))throw new Error('Spatial renderer unavailable');},()=>showSpatialFallback(host));const target=focusId?document.getElementById(focusId):focusAction?app.querySelector(`[data-action="${CSS.escape(focusAction)}"]${focusData!==undefined?`[data-id="${CSS.escape(focusData)}"]`:''}`):null;target?.focus({preventScroll:true});}
+function render(){playMusic(state.screen==='ending'?'ending':'main');const previousPortrait=app.querySelector('.guide-portrait');const previousGarden=app.querySelector('[data-spatial="garden"].spatial-ready');fieldCleanup?.();fieldCleanup=null;guideCleanup?.();guideCleanup=null;mapController?.destroy();mapController=null;if(!previousGarden)spatialModule?.unmountSpatial();const epoch=++spatialEpoch;document.body.dataset.screen=state.screen;document.body.classList.toggle('activity-open',state.screen==='activity');const focus=document.activeElement;const focusId=focus?.id;const focusAction=focus?.dataset?.action,focusData=focus?.dataset?.id;document.body.classList.toggle('large-text',state.largeText);app.innerHTML=header()+({home,map:mapPage,activity,report,final:finalPage,ending}[state.screen]||home)();syncGuidePortrait(previousPortrait,epoch);if(state.screen!==lastScreen){lastScreen=state.screen;const main=app.querySelector('main');if(main){main.classList.add('screen-enter');main.addEventListener('animationend',e=>{if(e.target===main)main.classList.remove('screen-enter');});}}const fieldHost=app.querySelector('.field-mission');if(fieldHost)fieldCleanup=mountFieldInteractions(fieldHost,state,ui,action);if(state.screen==='activity')guideCleanup=mountGuideFinger(app.querySelector('main.activity'),activityGuide(state,ui));if(state.screen==='map'){mapController=mountStageMap(app.querySelector('.stage-map'),ui,(i,enter)=>{ui.map=i;if(enter)enterMission(i);else action('map-arrive',String(i));},{clearIndex,completed:MISSIONS.map((_,i)=>studentState===null&&missionDone(state,i)),progress:state.mapEncounters,onSave:next=>{state.mapEncounters={...state.mapEncounters,...next};void save();},tone:playMapEncounter});const next=nextMapMission(state);if(next>=0)warmMission(missionEntryPage(next),()=>state.screen==='map'&&nextMapMission(state)===next);}const host=app.querySelector('[data-spatial]');const reused=previousGarden&&host?.dataset.spatial==='garden'&&spatialModule?.reuseGarden(host,state,ui);if(previousGarden&&!reused)spatialModule?.unmountSpatial();if(host&&!reused)mountSpatialSafely(()=>import('./spatial.js'),()=>epoch===spatialEpoch&&host.isConnected,module=>{spatialModule=module;module.mountSpatial(host,state,ui,action,cells=>{remember();for(const i of cells)paintCell(i,false);render();});if(host.dataset.spatialUnavailable==='true'&&!host.classList.contains('spatial-ready'))throw new Error('Spatial renderer unavailable');},()=>showSpatialFallback(host));const target=focusId?document.getElementById(focusId):focusAction?app.querySelector(`[data-action="${CSS.escape(focusAction)}"]${focusData!==undefined?`[data-id="${CSS.escape(focusData)}"]`:''}`):null;target?.focus({preventScroll:true});}
 
 function journal(){modal('나의 연구 노트',`${seedProgress(state)}${stampBoard(state)}<p>완료 수는 활동의 진행 기록이야. 이해한 내용은 처음 선택과 관찰 근거를 함께 보며 확인해.</p><div class="journal-list">${MISSIONS.map((m,i)=>`<section><h3>${m.evidence}</h3>${btn('선택·관찰 기록 펼치기','note-open','soft',`data-id="${i}"`)}</section>`).join('')}</div>`);}
 
@@ -186,8 +186,8 @@ function showReward(i,first=false){
 function complete(){
  const p=state.page;
  if(!pageReady(state,p)){toast(nextHint(state,p));return;}
- if(p%2&&!state.completed[p-1]){toast('앞 활동의 연구 기록을 먼저 마쳐 줘.');return;}
- const i=Math.floor(p/2),first=!missionDone(state,i);state.completed[p]=true;save();
+ if(p%2&&!state.completed[p-1]&&!singleFieldRecord(state,p)){toast('앞 활동의 연구 기록을 먼저 마쳐 줘.');return;}
+ const i=Math.floor(p/2),first=!missionDone(state,i);if(singleFieldRecord(state,p))state.completed[p-1]=true;state.completed[p]=true;save();
  if(p%2){render();showReward(i,first);}else startPage(p+1);
 }
 function remember(){ui.undo.push({terrain:[...state.terrain],garden:{...state.garden},extras:[...state.gardenExtras],reasons:[...state.gardenReasons]});if(ui.undo.length>30)ui.undo.shift();}
@@ -217,7 +217,7 @@ const AUTO_HANDS={
 async function action(a,id,el){
  if(a.startsWith('field-')){const fieldResult=fieldMissionAction(state,ui,a,id);if(fieldResult!==false){save();render();if(fieldResult)toast(fieldResult);return;}}
  const result=learningAction(state,ui,a,id);
- if(result!==false){save();render();if(a==='assign-group'||a==='unassign-group')celebrateCard(a==='assign-group'?ui.selected:id);if(result)toast(result);return;}
+ if(result!==false){save();render();if(a==='leaf-partner'&&state.leafPartner&&!result)$('.leaf-result-title')?.focus({preventScroll:true});if(['season-review-answer','garden-review-reason','bag-review-answer'].includes(a))$('.field-review-result')?.focus({preventScroll:true});if(result)toast(result);return;}
  switch(a){
  case 'press-petiole':{if(state.experiment.step<3)return;state.experiment.step=Math.max(4,state.experiment.step);ui.bubbling=true;save();render();
   // Bubbles pop where the drawn water ends, whatever the layout.
@@ -226,7 +226,7 @@ async function action(a,id,el){
  case 'pause-test':ui.paused=!ui.paused;render();return;
  case 'replay-test':ui.replaying=!ui.replaying;render();return;
  case 'close':dialog.close();return;
- case 'journey-mode':{const m=Math.floor(state.page/2);if(id==='explore'&&!missionDone(state,m)&&state.journeyRequired[m]&&!fieldMissionReady(state,m)){{const t=fieldTodo(state,ui);toast(t?`${t.i+1}번 ${josa(t.label,'이/가')} 남았어. 왼쪽 현장 임무에서 반짝이는 단계를 눌러 줘.`:'현장 임무의 세 단서를 마치면 다음으로 갈 수 있어.');}return;}ui.activityMode=id==='field'?'field':'explore';ui.activityFeedback='';if(id==='explore'){startPage(state.page);return;}save();render();return;}
+ case 'journey-mode':{const m=Math.floor(state.page/2);if(id==='explore'&&!missionDone(state,m)&&state.journeyRequired[m]&&!fieldMissionReady(state,m)){{const t=fieldTodo(state,ui);toast(t?`${t.i+1}번 ${josa(t.label,'이/가')} 남았어. 왼쪽 현장 임무에서 반짝이는 단계를 눌러 줘.`:'현장 임무를 마치면 다음으로 갈 수 있어.');}return;}ui.activityMode=id==='field'?'field':'explore';ui.activityFeedback='';if(id==='explore'){startPage(state.page);return;}save();render();return;}
  case 'npc-lipi':lipiDialogue();return;
  case 'journey-help':{const index=Math.floor(state.page/2);recordHint(state,index);save();lipiDialogue(index);return;}
  // 자동 진행: observation steps one at a time with a pause to watch each; stops before the student's own choices, when the screen changes, or on a second tap.
@@ -249,7 +249,7 @@ async function action(a,id,el){
  case 'lotus-observe':modal('연잎에서 찾은 아이디어',`<div class="lotus-detail"><figure>${assetImage('lotus_leaf_whole','',true)}<figcaption>넓고 둥근 연잎</figcaption></figure><figure>${assetImage('lotus_surface_diagram','',true)}<figcaption>표면을 크게 나타낸 모형</figcaption></figure></div><p>연잎 위의 물방울은 둥글게 맺혀 굴러가. 이 특징을 가방 겉면에 적용하면 어떨까?</p><p class="inline-tip">겉면과 입구는 다른 부분이야. 비가 들어오는 입구도 함께 살펴봐.</p>`);return;
  case 'view-ending':if(state.finished||state.legacyFinished){if(dialog.open)dialog.close();nav('ending');}return;
  case 'home':nav('home');return;
- case 'back':if(state.screen==='activity'&&state.page%2===0){await action('map');return;}if(state.screen!=='home')openRoute(previousRoute(state));return;
+ case 'back':if(state.screen==='activity'&&(state.page%2===0||singleFieldRecord(state,state.page))){await action('map');return;}if(state.screen!=='home')openRoute(previousRoute(state));return;
  case 'sound':setSound(!isSoundOn());playClick();render();return;
  case 'music-toggle':if(hasMusic())setMusic(!isMusicOn());render();settings();return;
  case 'settings-map':dialog.close();nav('map');return;
@@ -279,8 +279,6 @@ async function action(a,id,el){
  case 'select-mission':if(openMission(state,Number(id))){ui.map=Number(id);nav('map');}return;
  case 'enter-mission':enterMission(ui.map);return;
  case 'guide-jump':{const it=activityGuide(state,ui)?.items.find(x=>x.key===id);if(it?.jump)await action(...it.jump);nudgeGuide(app.querySelector('main.activity'));return;}
- case 'specimen':ui.activityFeedback='';ui.plant=id;ui.region='shape';ui.zoom=1;ui.rotation=0;render();return;
- case 'rotate':ui.rotation=(ui.rotation+45)%360;$('#specimen-art').style.transform=`scale(${ui.zoom}) rotate(${ui.rotation}deg)`;return;
  case 'select-plant':ui.activityFeedback='';ui.selected=id;if(HABITAT_PLANTS.some(p=>p.id===id))ui.gardenMode='plant';render();return;
  case 'season':if([0,1,2,3,4].includes(Number(id)))state.season=Number(id);break;
  case 'underground':state.underground=!state.underground;break;
@@ -322,13 +320,12 @@ async function action(a,id,el){
 document.addEventListener('click',e=>{unlockMusic();const lockedStage=e.target.closest('.world-node[aria-disabled="true"]');if(lockedStage){e.preventDefault();explainLockedMission(Number(lockedStage.dataset.id));return;}const locked=e.target.closest('[aria-disabled="true"]');if(locked){e.preventDefault();if(locked.dataset.reason)toast(locked.dataset.reason);if(state.screen==='activity')nudgeGuide(app.querySelector('main.activity'));return;}const field=e.target.closest('[data-bud-field]');if(field&&!e.target.closest('button,.spatial-layer,.spatial-controls')){const r=field.getBoundingClientRect();playClick();action('bud-look',[(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height].map(v=>Math.min(1,Math.max(0,v)).toFixed(3)).concat([Math.round(r.width),Math.round(r.height)]).join(','));return;}const b=e.target.closest('[data-action]');if(!b||b.disabled)return;if(!['sound','sfx-toggle','music-toggle'].includes(b.dataset.action))playClick();const size=b.dataset.action==='bud-hint'?$('#season-art')?.getBoundingClientRect():null;action(b.dataset.action,size?`${Math.round(size.width)},${Math.round(size.height)}`:b.dataset.id,b);});
 const SEASON_STOPS=[1,2,3,4,0];
 document.addEventListener('change',e=>{if(e.target.id==='season-range')action('season',String(SEASON_STOPS[Number(e.target.value)]));});
-document.addEventListener('input',e=>{if(e.target.id==='music-volume'){setMusicVolume(Number(e.target.value));$('#music-volume-value').textContent=`${getMusicVolume()}%`;}if(e.target.id==='zoom'){ui.zoom=Number(e.target.value);$('#specimen-art').style.transform=`scale(${ui.zoom}) rotate(${ui.rotation}deg)`;$('#zoom-value').textContent=`${Math.round(ui.zoom*100)}%`;}if(e.target.id==='season-range'){state.season=SEASON_STOPS[Number(e.target.value)];$('#season-art').innerHTML=seasonArt(state.seasonPlant,state.season,state.underground&&(![3,4].includes(state.season)||!!state.seasonPrediction[state.seasonPlant]));$('#season-label').textContent=state.season===0?'다음 해 봄':SEASONS[state.season];$('#season-caption').textContent='시간을 움직이며 같은 식물의 변화를 살펴봐.';}});
+document.addEventListener('input',e=>{if(e.target.id==='music-volume'){setMusicVolume(Number(e.target.value));$('#music-volume-value').textContent=`${getMusicVolume()}%`;}if(e.target.id==='season-range'){state.season=SEASON_STOPS[Number(e.target.value)];$('#season-art').innerHTML=seasonArt(state.seasonPlant,state.season,state.underground&&(![3,4].includes(state.season)||!!state.seasonPrediction[state.seasonPlant]));$('#season-label').textContent=state.season===0?'다음 해 봄':SEASONS[state.season];$('#season-caption').textContent='시간을 움직이며 같은 식물의 변화를 살펴봐.';}});
 // Mouse, pen and fingers share one card drag onto [data-drop] (native HTML drag ignores fingers on many tablets).
 installCardDrag((id,el,at)=>{
  // Garden cards are land tiles ("terrain:water") or plants; dropping one also makes it the current tool.
  const land=id.startsWith('terrain:')?id.slice(8):null;if(land){ui.brush=land;ui.gardenMode='terrain';}else{ui.selected=id;if(HABITAT_PLANTS.some(p=>p.id===id))ui.gardenMode='plant';}
- if(el.dataset.drop==='group')action('assign-group',el.dataset.id);else if(el.dataset.drop==='tray')action('unassign-group',id);
- else if(el.dataset.drop==='garden-board'){spatialModule?.gardenDragEnd();const cell=spatialModule?.gardenCellAt(at.x,at.y)??document.elementFromPoint(at.x,at.y)?.closest('.garden-cell[data-id]')?.dataset.id;if(cell===undefined){render();toast('정원 땅 위에 놓아 줘.');return;}onCell(Number(cell));}
+ if(el.dataset.drop==='garden-board'){spatialModule?.gardenDragEnd();const cell=spatialModule?.gardenCellAt(at.x,at.y)??document.elementFromPoint(at.x,at.y)?.closest('.garden-cell[data-id]')?.dataset.id;if(cell===undefined){render();toast('정원 땅 위에 놓아 줘.');return;}onCell(Number(cell));}
  else onCell(Number(el.dataset.id));
 },{move:(id,x,y)=>spatialModule?.gardenDragOver(id,x,y),cancel:()=>spatialModule?.gardenDragEnd()});
 // Pointer painting has a tap/keyboard alternative; one continuous stroke is one undo step.
@@ -336,7 +333,6 @@ document.addEventListener('pointerdown',e=>{const cell=e.target.closest('.garden
 document.addEventListener('pointermove',e=>{if(!paintActive)return;const cell=document.elementFromPoint(e.clientX,e.clientY)?.closest('.garden-cell[data-id]');if(!cell)return;const i=Number(cell.dataset.id);if(i!==paintLast){paintCell(i,false);cell.className=`garden-cell ${ui.brush}`;cell.innerHTML='<span></span>';paintLast=i;}});
 document.addEventListener('pointerup',()=>{if(paintActive){paintActive=false;render();}});
 document.addEventListener('pointercancel',()=>{if(paintActive){paintActive=false;render();}});
-function bindPinch(){const area=$('.specimen-stage');if(!area)return;const points=new Map();let base=0,start=1;area.addEventListener('pointerdown',e=>{if(e.target.closest('button,.spatial-layer'))return;points.set(e.pointerId,[e.clientX,e.clientY]);area.setPointerCapture(e.pointerId);if(points.size===2){const p=[...points.values()];base=Math.hypot(p[0][0]-p[1][0],p[0][1]-p[1][1]);start=ui.zoom;}});area.addEventListener('pointermove',e=>{if(!points.has(e.pointerId))return;points.set(e.pointerId,[e.clientX,e.clientY]);if(points.size===2&&base){const p=[...points.values()];ui.zoom=Math.min(1.7,Math.max(1,start*Math.hypot(p[0][0]-p[1][0],p[0][1]-p[1][1])/base));$('#specimen-art').style.transform=`scale(${ui.zoom}) rotate(${ui.rotation}deg)`;$('#zoom').value=ui.zoom;$('#zoom-value').textContent=`${Math.round(ui.zoom*100)}%`;}});['pointerup','pointercancel'].forEach(type=>area.addEventListener(type,e=>points.delete(e.pointerId)));}
 if(state.screen==='activity')startPage(state.page);else{save();render();}
 
 // Failed assets keep an accessible description instead of a broken image icon.

@@ -1,5 +1,5 @@
-import {designKey,currentTrial,testValid} from './model.js';
-import {FIELD_LEAVES,FIELD_BAG_VARIANTS,normalizeFieldEvidence,fieldSteps,fieldBagKey,fieldGardenKey,fieldGardenValid} from './field-missions-state.js';
+import {fieldBagReview,designKey,currentTrial,testValid} from './model.js';
+import {FIELD_LEAVES,FIELD_BAG_VARIANTS,normalizeFieldEvidence,fieldSteps,fieldMissionReady,fieldBagKey,fieldGardenKey,fieldGardenValid} from './field-missions-state.js';
 // 자동 진행: returns the next hands-on step ([action,id]) of the current screen, or null.
 // Only observation steps (looking, testing, watching) run here. Sorting, predictions, linking, design changes and
 // answer choices are the student's own; the steps stop right before them.
@@ -39,7 +39,7 @@ function seasonStep(s){
  return [0,3].every(n=>s.seasonalRecords.includes(`${other}:${n}`)&&s.seasonPhotos[`${other}:${n}`])?null:['season-plant',other];
 }
 function bagTestStep(s,u){
- if(u.testing||!s.design.linked||testValid(s))return null;
+ if(fieldBagReview(s)||u.testing||!s.design.linked||testValid(s))return null;
  if(!currentTrial(s))return s.tests.some(t=>t.key===designKey(s.design))?['use-tested-design','']:['run-test',''];
  return null;
 }
@@ -48,8 +48,9 @@ export function nextAutoStep(s,u){
  const p=s.page;
  if(u.activityMode==='field')return fieldStep(s,u.fieldMission??{},Math.floor(p/2));
  switch(p){
+  case 0:return s.leafComparisonSeen||u.leafZoom?null:['leaf-zoom','large'];
   case 2:return seasonStep(s);
-  case 4:{const n=s.experiment.step;return n===0?['lab-next','cut']:n<3?['lab-next','water']:n===3&&s.experiment.prediction?['press-petiole','']:null;}
+  case 4:{const n=s.experiment.step;return n===0?['lab-next','cut']:n<3?['lab-next','water']:n===3&&(s.experiment.prediction||fieldMissionReady(s,2))?['press-petiole','']:null;}
   case 8:return !u.lotusDrop&&!s.design.observed?['lotus-drop','']:null;
   case 9:return bagTestStep(s,u);
   default:return null;

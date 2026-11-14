@@ -14,28 +14,26 @@ import {REWARDS} from '../src/rewards.js';
 import {josa,repairPlantLabel} from '../src/josa.js';
 
 const CLAIMS=/시험으로 확인했어|생각을 고쳤어/;
-function bagRun(prediction,steps=['test','surface','test','cover','test','surface','test','answer']){
+function bagRun(prediction,steps=['test','surface','test','cover','test','surface','test']){
  const s=freshState(),u={};s.page=8;
  const act=(action,id='')=>fieldMissionAction(s,u,action,id);
  act('field-bag-predict',prediction);
  const said=[];
- for(const step of steps)said.push(step==='test'?act('field-bag-test'):step==='answer'?(act('field-bag-turned'),act('field-bag-finish')):act('field-bag-upgrade',step));
+ for(const step of steps)said.push(step==='test'?act('field-bag-test'):act('field-bag-upgrade',step));
  return {s,u,act,said};
 }
 const text=html=>html.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ');
 
 test('A. 첫 예상이 틀리면 첫 예상·시험 결과·결론을 따로 쓰고 "시험으로 생각을 고쳤어"라고 기록한다',()=>{
- const {s,said}=bagRun('surface');
- assert.match(said.at(-1),/시험으로 생각을 고쳤어/);
+ const {s}=bagRun('surface');
  carryFieldEvidence(s,4);
- // The record page starts empty; here the student redoes the same three rains on that page.
- s.tests=s.fieldEvidence.bag.tests.map(testDesign);
+ s.page=9;assert.doesNotMatch(predictionLine(s),CLAIMS);learningAction(s,{},'bag-review-answer','both');
  const rows=predictionRecord(s);
  assert.deepEqual(rows.map(r=>r.kind),['prediction','result','conclusion','change']);
  assert.equal(rows[0].text,'연잎 겉면만 바꾸면 돼.','첫 예상은 학생이 고른 그대로');
- assert.equal(rows[1].text,'처음 가방 공책 젖음 → 연잎 겉면 공책 젖음 → 연잎 겉면+덮개 공책 뽀송 → 덮개 공책 젖음');
+ assert.equal(rows[1].text,'처음 가방 공책 젖음 → 연잎 겉면 공책 젖음 → 덮개 공책 젖음 → 연잎 겉면+덮개 공책 뽀송');
  assert.equal(rows[3].text,'시험으로 생각을 고쳤어.');
- const page=text(renderTests(s,{}));
+ const page=text(predictionLine(s));
  assert.match(page,/현장에서 남긴 첫 예상 연잎 겉면만 바꾸면 돼\. 시험 결과 .* 알아낸 것 연잎 겉면과 덮개가 함께 공책을 지켰어\. 하나만 달면 젖었어\. 시험으로 생각을 고쳤어\./);
  assert.doesNotMatch(page,/시험으로 확인했어/,'틀린 예상을 확인한 것처럼 쓰지 않는다');
  // The student notebook shows the revision from the saved response, not a pre-written thought.
@@ -45,10 +43,9 @@ test('A. 첫 예상이 틀리면 첫 예상·시험 결과·결론을 따로 쓰
 });
 
 test('B. 첫 예상이 맞으면 "예상을 시험으로 확인했어"만 쓰고 생각을 고쳤다고 쓰지 않는다',()=>{
- const {s,said}=bagRun('cover');
- assert.match(said.at(-1),/처음 예상을 시험으로 확인했어/);assert.doesNotMatch(said.at(-1),/고쳤어/);
- carryFieldEvidence(s,4);
- const page=text(renderTests(s,{}));
+ const {s}=bagRun('cover');
+ carryFieldEvidence(s,4);s.page=9;learningAction(s,{},'bag-review-answer','both');
+ const page=text(predictionLine(s));
  assert.match(page,/입구로 오는 비도 막아야 해\..*알아낸 것 연잎 겉면과 덮개가 함께.*예상을 시험으로 확인했어\./);
  assert.doesNotMatch(page,/생각을 고쳤어/);
  const r=s.learningRecords[4].responses['field:bag-prediction'];
@@ -67,11 +64,11 @@ test('C. 시험 도중 새로고침하면 첫 예상과 한 시험만 남고, �
  const rows=predictionRecord(peek);
  assert.deepEqual(rows.map(r=>r.kind),['prediction','result'],'결론과 생각 수정은 아직 없다');
  assert.equal(rows[1].text,'처음 가방 공책 젖음 → 연잎 겉면 공책 젖음');
- const u={};for(const [a,id] of [['field-bag-upgrade','cover'],['field-bag-test',''],['field-bag-upgrade','surface'],['field-bag-test',''],['field-bag-turned',''],['field-bag-finish','']])fieldMissionAction(back,u,a,id);
- carryFieldEvidence(back,4);
+ const u={};for(const [a,id] of [['field-bag-upgrade','cover'],['field-bag-test',''],['field-bag-upgrade','surface'],['field-bag-test','']])fieldMissionAction(back,u,a,id);
+ carryFieldEvidence(back,4);back.page=9;assert.doesNotMatch(predictionLine(back),CLAIMS);learningAction(back,u,'bag-review-answer','both');
  assert.match(predictionLine(back),/시험으로 생각을 고쳤어/);
- // Pressing 마무리 again (연타) does not add trials or a second revision.
- fieldMissionAction(back,u,'field-bag-finish','');
+ // A repeated click does not add trials or a second revision.
+ learningAction(back,u,'bag-review-answer','both');
  assert.equal(back.fieldEvidence.bag.tests.length,4);assert.equal(back.learningRecords[4].responses['field:bag-prediction'].changes,1);
 });
 
@@ -105,13 +102,6 @@ test('겨울눈 찾기는 선택 활동이라 찾지 않았으면 연구노트 �
  cover=text(renderResearchNotebook(s));
  assert.match(cover,/겨울눈 찾기\(선택\) 2\/4/,'실제로 찾은 수만, 선택임을 밝혀서');
  assert.match(text(renderResearchNotebook(restoreState(JSON.stringify(s)))),/겨울눈 찾기\(선택\) 2\/4/);
-});
-
-test('두 기준 분류를 마친 안내는 실제 다음 버튼과 화면(두 기준 기록 확인)을 가리킨다',()=>{
- const src=readFileSync(new URL('../src/field-missions-state.js',import.meta.url),'utf8');
- assert.doesNotMatch(src,/처음 보는 잎에 기준을 써 보자/);
- assert.match(src,/“발견을 연구 노트에 담기”를 눌러 두 기준으로 나눈 기록을 확인하자/);
- assert.match(readFileSync(new URL('../src/learning.js',import.meta.url),'utf8'),/발견을 연구 노트에 담기/);
 });
 
 test('식물·장소 이름 뒤 조사는 받침과 ㄹ 받침에 맞춘다',()=>{

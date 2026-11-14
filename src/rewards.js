@@ -1,4 +1,4 @@
-import {MISSIONS,missionDone,openMission,rewardCount,canChooseGardenTheme,missionStamps} from './model.js';
+import {MISSIONS,missionDone,openMission,rewardCount,canChooseGardenTheme,missionStamps,fieldBagReview} from './model.js';
 import {QUESTS} from './inquiry.js';
 import {normalizeFieldEvidence} from './field-missions-state.js';
 import {assetImage} from './asset-catalog.js';
@@ -95,9 +95,9 @@ export function evidenceSummary(state,i){
   const sorted=['edge','narrow'].reduce((n,rule)=>n+Object.keys(leaves[rule]).length+Object.keys(groups[rule]||{}).length,0);
   return [
     `잎의 특징 ${observed}곳을 살피고 ${sorted}개의 분류 기록을 남겼어.`,
-    `${state.seasonalRecords.length}장의 계절 기록으로 겨울과 봄을 연결했어.`,
+    state.seasonCompareAnswer==='parts'?'두 식물이 어디에서 다시 자랐는지 비교했어.':`${state.seasonalRecords.length}장의 계절 기록으로 겨울과 봄을 연결했어.`,
     '잎자루 속 공기, 잎에 저장한 물, 땅속에 내린 뿌리를 세 식물이 사는 곳과 연결했어.',
     `${Object.keys(state.garden).length}종의 식물이 네가 만든 정원에 자리 잡았어.`,
-    `${new Set(state.tests.map(t=>t.key)).size}가지 설계를 실제로 시험하고 비교했어.`,
+    `${new Set((fieldBagReview(state)?.trials||state.tests).map(t=>t.key)).size}가지 설계를 실제로 시험하고 비교했어.`,
   ][i];
 }

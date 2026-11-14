@@ -1,6 +1,6 @@
 import {plantConceptMarkup} from './plant-concepts.js';
 import {assetImage} from './asset-catalog.js';
-import {missionDone,terrainCount,inventionEvidence,PLANTS,HABITAT_PLANTS} from './model.js';
+import {missionDone,fieldBagReview,SEASON_REVIEW_ANSWERS,gardenReviewReady,BAG_REVIEW_ANSWERS,terrainCount,inventionEvidence,PLANTS,HABITAT_PLANTS,LEAF_PARTNER} from './model.js';
 import {normalizeFieldEvidence,FIELD_BAG_ROLES,FIELD_LEAVES} from './field-missions-state.js';
 import {BUD_TOTAL,budsFoundCount} from './winter-buds.js';
 import {josa} from './josa.js';
@@ -22,20 +22,22 @@ export const NOTE_QUIZZES = [
  {question:'연잎 겉면만 바꾸면 열린 입구도 막아 줄까?',choices:['입구도 저절로 막힌다','입구를 막는 덮개는 따로 필요하다'],answer:1,feedback:'맞아! 자연의 아이디어와 필요한 부품을 함께 써서 생활 문제를 해결했어.',hint:'겉면을 굴러가는 물과 입구로 떨어지는 비는 길이 달라.'},
 ];
 
+const partnerDiscovery='톱니로 보면 은행잎은 강아지풀과, 모양으로 보면 벚나무와 한 팀이야.';
 const leafGroups=s=>({...s.groupsByRule,[s.rule]:s.groups});
 function leafRecordSummary(s){
  const field=normalizeFieldEvidence(s.fieldEvidence).leaves;
- const observed=Object.values(s.leafEvidence).reduce((n,e)=>n+Number(!!e.shape)+Number(!!e.edge),0)+Object.values(field.scans).reduce((n,scans)=>n+scans.length,0);
+ const observed=(s.leafComparisonSeen?3:0)+Object.values(s.leafEvidence).reduce((n,e)=>n+Number(!!e.shape)+Number(!!e.edge),0)+Object.values(field.scans).reduce((n,scans)=>n+scans.length,0);
  const sorted=['edge','narrow'].reduce((n,rule)=>n+Object.keys(field[rule]).length+Object.keys(leafGroups(s)[rule]||{}).length,0);
+ if(s.leafPartner===LEAF_PARTNER)return '세 잎 비교 · 은행잎의 새 짝';
  return observed||sorted?`관찰 ${observed}곳 · 분류 ${sorted}개`:'이전에 마친 관찰 기록';
 }
 const entryRecord=(s,i)=>[
  leafRecordSummary(s),
  // Bud hunting is optional (not a completion condition), so it shows only when the student actually found some.
- `${s.seasonalRecords.length}장의 계절 기록${budsFoundCount(s)?` · 겨울눈 찾기(선택) ${budsFoundCount(s)}/${BUD_TOTAL}`:''}`,
+ s.seasonCompareAnswer==='parts'?'현장 겨울과 다음 봄 비교':`${s.seasonalRecords.length}장의 계절 기록${budsFoundCount(s)?` · 겨울눈 찾기(선택) ${budsFoundCount(s)}/${BUD_TOTAL}`:''}`,
  s.experimentAnswer==='air'?'공기 방울의 까닭을 찾았어':'식물과 환경을 이어 봤어',
  `물가 ${terrainCount(s,'water')}칸 · 들판 ${terrainCount(s,'grass')}칸 · 건조 ${terrainCount(s,'dry')}칸`,
- `${s.tests.length}번의 가방 시험`,
+ `${(fieldBagReview(s)?.trials||s.tests).length}번의 가방 시험`,
 ][i];
 
 const COVER_NOTES=['같은 기준으로 잎을 나누었다.','겨울을 지나 다시 자랐다.','잎자루 속 공기를 찾았다.','사는 곳에 맞게 식물을 심었다.','연잎의 비밀을 가방에 담았다.'];
@@ -50,16 +52,16 @@ export function observationRecord(s,i){
  switch(i){
   case 0:{
    const feature=k=>k==='shape'?'모양':'가장자리',group=(rule,answer)=>rule==='edge'?(answer==='yes'?'톱니 있음':'톱니 없음'):(answer==='yes'?'가늘고 긴 잎':'그 밖의 잎');
-   return [...FIELD_LEAVES.flatMap(p=>e.leaves.scans[p.id].map(k=>`${p.name} · ${feature(k)} 관찰 기록`)),...Object.entries(s.leafEvidence).flatMap(([id,v])=>Object.keys(v).map(k=>`${PLANTS.find(p=>p.id===id)?.name||id} · ${feature(k)} 관찰 기록`)),...['edge','narrow'].flatMap(rule=>[...FIELD_LEAVES.filter(p=>e.leaves[rule][p.id]).map(p=>`${p.name} · ${rule==='edge'?'가장자리':'모양'} 기준 분류: ${group(rule,e.leaves[rule][p.id])}`),...PLANTS.filter(p=>leafGroups(s)[rule]?.[p.id]).map(p=>`${p.name} · 새 표본 분류: ${group(rule,leafGroups(s)[rule][p.id])}`)])];
+   return [...(s.leafComparisonSeen?['벚나무·은행나무·강아지풀 잎을 확대해 비교했어.']:[]),...(s.leafPartner===LEAF_PARTNER?[partnerDiscovery]:[]),...FIELD_LEAVES.flatMap(p=>e.leaves.scans[p.id].map(k=>`${p.name} · ${feature(k)} 관찰 기록`)),...Object.entries(s.leafEvidence).flatMap(([id,v])=>Object.keys(v).map(k=>`${PLANTS.find(p=>p.id===id)?.name||id} · ${feature(k)} 관찰 기록`)),...['edge','narrow'].flatMap(rule=>[...FIELD_LEAVES.filter(p=>e.leaves[rule][p.id]).map(p=>`${p.name} · ${rule==='edge'?'가장자리':'모양'} 기준 분류: ${group(rule,e.leaves[rule][p.id])}`),...PLANTS.filter(p=>leafGroups(s)[rule]?.[p.id]).map(p=>`${p.name} · 새 표본 분류: ${group(rule,leafGroups(s)[rule][p.id])}`)])];
   }
   case 1:return [...s.seasonalRecords.map(key=>{const [p,n]=key.split(':');return `${p==='cherry'?'벚나무':'씀바귀'} ${['다음 봄','여름','가을','겨울'][n]} 사진${s.seasonPhotos[key]?.underground?' · 땅속 포함':''}`;}),...(s.budsFound?.cherry?.length?[`벚나무 가지 끝 겨울눈 ${s.budsFound.cherry.length}개 찾음`]:[]),...(s.budsFound?.sowthistle?.length?['씀바귀 뿌리 머리 새눈 찾음']:[])];
   case 2:return [...e.float.tested.map(id=>`${id==='air'?'공기 방 모형: 수면에 뜸':'꽉 찬 모형: 바닥으로 내려감'}`),...(s.experiment.step>=4?[s.fieldBridges?.[2]&&e.float.reason==='air'?'현장에서 연 잎자루 단면: 공기 공간과 방울 관찰':'물속에서 누른 잎자루: 공기 방울 관찰']:[])];
-  case 3:return ['water','grass','dry'].filter(t=>terrainCount(s,t)).map(t=>`${({water:'물가',grass:'들판',dry:'건조 구역'})[t]} ${terrainCount(s,t)}칸`).concat(e.garden.testedKey?['현장 정원의 빗물 시험 기록 있음']:[]);
+  case 3:return ['water','grass','dry'].filter(t=>terrainCount(s,t)).map(t=>`${({water:'물가',grass:'들판',dry:'건조 구역'})[t]} ${terrainCount(s,t)}칸`).concat(e.garden.testedKey?['현장 정원의 빗물 시험 기록 있음']:[],gardenReviewReady(s)?[`${plantName(s.gardenReview.plant)} · ${s.gardenReview.from===s.gardenReview.cell?'처음 자리 확인':'옆 자리로 옮김'}: ${HABITAT_PLANTS.find(p=>p.id===s.gardenReview.plant).reason}`]:[]);
   case 4:{
    // The bridge copies the field trials into the start of the core history; show that shared prefix once.
    const carried=s.fieldBridges?.[4]&&e.bag.delivered&&e.bag.tests.every((t,i)=>s.tests[i]?.key===t.key)?e.bag.tests.length:0;
    const extraProof=Object.keys(proof).filter(k=>proof[k]&&(e.bag.comparisons[k]?.before!==s.inventionExplanations[k]?.before||e.bag.comparisons[k]?.after!==s.inventionExplanations[k]?.key));
-   return [...e.bag.tests.map((t,n)=>`현장 시험 ${n+1} · ${t.surface==='lotus'?'연잎 겉면':'보통 천'}, 입구 ${t.cover==='flap'?'닫힘':'열림'} → 물방울 ${t.rolls?'굴러감':'남음'}, 공책 ${t.notebookDry?'마름':'젖음'}`),...Object.keys(e.bag.comparisons).filter(k=>FIELD_BAG_ROLES[k]).map(k=>'현장에서 비교한 역할: '+FIELD_BAG_ROLES[k]),...s.tests.slice(carried).map((t,n)=>`이어 한 시험 ${carried+n+1} · ${t.surface==='lotus'?'연잎 겉면':'보통 천'}, 입구 ${t.cover==='flap'?'닫힘':'열림'} → 물방울 ${t.clean?'굴러감':'남음'}, 수첩 ${t.dry?'마름':'젖음'}`),...extraProof.map(k=>'이어 비교한 역할: '+FIELD_BAG_ROLES[k])];
+   return [...e.bag.tests.map((t,n)=>`현장 시험 ${n+1} · ${t.surface==='lotus'?'연잎 겉면':'보통 천'}, 입구 ${t.cover==='flap'?'닫힘':'열림'} → 물방울 ${t.rolls?'굴러감':'남음'}, 공책 ${t.notebookDry?'마름':'젖음'}`),...Object.keys(e.bag.comparisons).filter(k=>FIELD_BAG_ROLES[k]).map(k=>'현장에서 비교한 역할: '+FIELD_BAG_ROLES[k]),...s.tests.slice(carried).map((t,n)=>`이어 한 시험 ${carried+n+1} · ${t.surface==='lotus'?'연잎 겉면':'보통 천'}, 입구 ${t.cover==='flap'?'닫힘':'열림'} → 물방울 ${t.clean?'굴러감':'남음'}, 수첩 ${t.dry?'마름':'젖음'}`),...extraProof.map(k=>'이어 비교한 역할: '+FIELD_BAG_ROLES[k]),...(s.bagReviewAnswer==='both'&&fieldBagReview(s)?[BAG_REVIEW_ANSWERS.both]:[])];
   }
   default:return [];
  }
@@ -90,6 +92,8 @@ function sawThings(s,i,rows){
    const ids=(rule,answer)=>[...FIELD_LEAVES.filter(p=>e.leaves[rule][p.id]===answer),...PLANTS.filter(p=>leafGroups(s)[rule]?.[p.id]===answer)].map(p=>p.id);
    const lines=[['edge','yes','톱니 있음'],['edge','no','톱니 없음'],['narrow','yes','가늘고 긴 잎']].map(([rule,answer,name])=>[name,ids(rule,answer)]).filter(([,list])=>list.length).map(([name,list])=>`<b>${name}</b> ${list.map(leafChip).join('')}`);
    const looked=FIELD_LEAVES.filter(p=>e.leaves.scans[p.id].length).length+Object.values(s.leafEvidence||{}).filter(v=>Object.keys(v).length).length;
+   if(s.leafPartner===LEAF_PARTNER)return [...lines,partnerDiscovery];
+   if(s.leafComparisonSeen)return [...lines,'잎 세 장을 한꺼번에 크게 보고 모양을 비교했어.'];
    return lines.length<3&&looked?[...lines,`돋보기로 잎 ${looked}장을 살펴봤어`]:lines;
   }
   case 1:{
@@ -103,7 +107,7 @@ function sawThings(s,i,rows){
   case 3:{
    const made=Object.keys(ZONES).filter(t=>terrainCount(s,t)).map(t=>`${ZONES[t]} ${terrainCount(s,t)}칸`);
    const planted=['hyacinth','cherry','aloe'].filter(id=>Number.isInteger(s.garden?.[id])&&ZONES[s.terrain[s.garden[id]]]).map(id=>`${plantName(id)} → ${ZONES[s.terrain[s.garden[id]]]}`);
-   return [...(made.length?[`${josa(made.join(' · '),'을/를')} 만들었어`]:[]),...(planted.length?[planted.join(', ')]:[]),...(e.garden.testedKey?['정원에 비를 내려 시험해 봤어']:[])];
+   return [...(made.length?[`${josa(made.join(' · '),'을/를')} 만들었어`]:[]),...(planted.length?[planted.join(', ')]:[]),...(e.garden.testedKey?['정원에 비를 내려 시험해 봤어']:[]),...(gardenReviewReady(s)?[rows.at(-1)]:[])];
   }
   case 4:{
    const trials=[...e.bag.tests.map(t=>({surface:t.surface,cover:t.cover,rolls:t.rolls,dry:t.notebookDry})),...s.tests.map(t=>({surface:t.surface,cover:t.cover,rolls:t.clean,dry:t.dry}))];

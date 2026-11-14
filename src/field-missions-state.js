@@ -61,13 +61,12 @@ export function fieldBagPair(b){
 }
 export function fieldSteps(e,m){
  switch(m){
-  case 0:return [['shape','edge'].every(k=>e.leaves.scans.maple.includes(k)),FIELD_LEAVES.every(p=>e.leaves.edge[p.id]===(p.edge?'yes':'no')),FIELD_LEAVES.every(p=>e.leaves.narrow[p.id]===(p.narrow?'yes':'no'))];
+  case 0:return [['shape','edge'].every(k=>e.leaves.scans.maple.includes(k)),FIELD_LEAVES.every(p=>e.leaves.edge[p.id]===(p.edge?'yes':'no'))];
   case 1:return [e.seasons.links.tree==='trunk'&&e.seasons.links.herb==='root',ordered(e.seasons.tree)&&e.seasons.clues.tree==='branches',ordered(e.seasons.herb)&&e.seasons.clues.herb==='rootbud'];
   case 2:return [Object.keys(e.float.predictions).length===2,['air','solid'].every(m=>e.float.tested.includes(m)),e.float.observed.air==='float'&&e.float.observed.solid==='sink'&&e.float.reason==='air'];
   case 3:return [FIELD_ZONES.every(z=>e.garden.environments[z]===FIELD_ENV[z]),Object.entries(FIELD_PLANTS).every(([p,env])=>FIELD_ENV[e.garden.plants[p]]===env),fieldGardenValid(e.garden)&&e.garden.testedKey===fieldGardenKey(e.garden)];
-  // Rain on the plain bag, then rain on lotus only, cover only and both (one part changed at a time), then say what kept the notebook dry.
-  // A delivered bag (also from the older assemble-and-circle flow) counts as done.
-  case 4:{const b=e.bag,done=!!b.delivered&&b.delivered===fieldBagKey(b.design),both=FIELD_BAG_VARIANTS.every(k=>b.tests.some(t=>t.key===k))&&BAG_PARTS.every(k=>b.comparisons[k]);return [done||(!!b.prediction&&b.tests.length>0),done||both,done];}
+  // The field collects the rain evidence; the record page asks for one explanation.
+  case 4:{const b=e.bag,old=!!b.delivered&&b.delivered===fieldBagKey(b.design),base=!!b.prediction&&b.tests.some(t=>t.key==='plain:open');return [old||base,old||base&&FIELD_BAG_VARIANTS.every(k=>b.tests.some(t=>t.key===k))];}
   default:return [false,false,false];
  }
 }
@@ -84,7 +83,7 @@ export function applyFieldAction(state,ui,action,id=''){
 function applyFieldActionCore(state,ui,action,id=''){
  if(!action.startsWith('field-'))return false;
  const e=fieldEvidence(state),u=ui.fieldMission??={},[a,b,c]=String(id).split(':');
- if(action==='field-stage'){const m=Math.floor(state.page/2);if(Number(a)>0&&((m===1&&!['tree','herb'].every(k=>e.seasons.predictions[k]))||(m===4&&!e.bag.prediction)))return feedback(u,'관찰 전에 첫 예상을 먼저 남겨 줘. 첫 단계에서 골라 보자.');const n=Number(a);if(Number.isInteger(n)&&n>=0&&n<3){u.stage=n;u.mission=Math.floor(state.page/2);u.selected='';u.feedback='';}return '';}
+ if(action==='field-stage'){const m=Math.floor(state.page/2);if(Number(a)>0&&((m===1&&!['tree','herb'].every(k=>e.seasons.predictions[k]))||(m===4&&!e.bag.prediction)))return feedback(u,'관찰 전에 첫 예상을 먼저 남겨 줘. 첫 단계에서 골라 보자.');const n=Number(a);if(Number.isInteger(n)&&n>=0&&n<fieldSteps(e,m).length){u.stage=n;u.mission=Math.floor(state.page/2);u.selected='';u.feedback='';}return '';}
  if(action==='field-select'){u.selected=id;return '';}
  if(action==='field-scan'){
   const p=FIELD_LEAVES.find(p=>p.id===a);if(!p||!['shape','edge'].includes(b))return '';
@@ -92,12 +91,12 @@ function applyFieldActionCore(state,ui,action,id=''){
   return feedback(u,b==='shape'?`${p.name}: ${p.shape}.`:`${p.name} 가장자리: ${p.edgeSeen}.`,true);
  }
  if(action==='field-sort'){
-  const p=FIELD_LEAVES.find(p=>p.id===b);if(!p||!['edge','narrow'].includes(a)||!['yes','no'].includes(c))return '';
+  const p=FIELD_LEAVES.find(p=>p.id===b);if(!p||a!=='edge'||!['yes','no'].includes(c))return '';
   if(!['shape','edge'].every(k=>e.leaves.scans.maple.includes(k)))return feedback(u,'먼저 단풍나무의 모양과 가장자리를 돋보기로 살펴봐.');
-  e.leaves[a][b]=c;u.selected='';const ok=c===(p[a]?'yes':'no');if(!ok)return feedback(u,`리피: 잎을 다시 골라 그림의 ${a==='edge'?'가장자리':'전체 모양'}와 내가 고른 바구니의 설명을 비교해 봐.`);
-  // Short reply per card; the last card names the next thing to do instead of repeating praise.
-  const left=FIELD_LEAVES.filter(q=>e.leaves[a][q.id]!==(q[a]?'yes':'no')).length;
-  return feedback(u,left?`✓ ${p.name} · ${a==='edge'?(c==='yes'?'톱니 있음':'톱니 없음'):(c==='yes'?'가늘고 긴 잎':'가늘고 길지 않은 잎')}. 남은 카드 ${left}장.`:a==='edge'?'✓ 톱니 기준으로 다 나눴어! 위의 “다음 도전”에서 같은 잎을 모양 기준으로 다시 나눠 봐.':'✓ 모양 기준으로도 다 나눴어! 아래 “발견을 연구 노트에 담기”를 눌러 두 기준으로 나눈 기록을 확인하자.',true);
+  e.leaves.edge[b]=c;u.selected='';const ok=c===(p.edge?'yes':'no');
+  if(!ok)return feedback(u,'리피: 잎을 다시 골라 가장자리를 바구니의 설명과 비교해 봐.');
+  const left=FIELD_LEAVES.filter(q=>e.leaves.edge[q.id]!==(q.edge?'yes':'no')).length;
+  return feedback(u,left?`✓ ${p.name} · ${c==='yes'?'톱니 있음':'톱니 없음'}. 남은 카드 ${left}장.`:'✓ 톱니 기준으로 다 나눴어! 이제 다른 잎들의 모양을 비교하러 가자.',true);
  }
  if(action==='field-season-predict'){
   if(!['tree','herb'].includes(a)||!['roots','none'].includes(b)||e.seasons.predictions[a])return '';
@@ -174,21 +173,10 @@ function applyFieldActionCore(state,ui,action,id=''){
   b.tests.push(t);if(b.tests.length>16)b.tests.shift();b.delivered='';
   // Each part's comparison is any two rained bags that differ only in that part, newest first, whatever order they were tried in.
   for(const part of BAG_PARTS){const pair=bagPairFor(b.tests,part);if(pair)b.comparisons[part]=pair;}
-  return feedback(u,t.notebookDry?'연잎 겉면은 물방울을 굴려 보내고 덮개는 입구를 막았어. 공책이 뽀송해!':t.rolls?'물방울은 또르르 굴러가는데, 열린 입구로 비가 들어가 공책이 젖었어.':t.cover==='flap'?'덮개로 입구는 막았는데, 보통 천에 빗물이 스며들어 공책이 젖었어.':'겉면에 물기가 남고, 입구로 비가 들어가 공책이 젖었어.',true);
+  return feedback(u,t.notebookDry?'두 부품을 단 가방에서는 물방울이 굴러가고 공책이 뽀송해!':t.rolls?'물방울은 또르르 굴러가는데, 열린 입구로 비가 들어가 공책이 젖었어.':t.cover==='flap'?'덮개로 입구는 막았는데, 보통 천에 빗물이 스며들어 공책이 젖었어.':'겉면에 물기가 남고, 입구로 비가 들어가 공책이 젖었어.',true);
  }
  if(action==='field-bag-reset'){
   const b=e.bag;b.design={surface:'plain',cover:'open'};b.tests=[];b.comparisons={};b.compared={before:'',after:'',part:''};b.delivered='';u.stage=0;return feedback(u,'처음 가방으로 돌아왔어. 다시 비를 내려 보자.',true);
- }
- // Last step: the finished bag (lotus surface + cover) turns on a stand. One full turn, then 마무리 delivers it.
- if(action==='field-bag-turned'){
-  if(!fieldSteps(e,4)[1]||u.bagTurned)return '';u.bagTurned=true;return feedback(u,'한 바퀴 다 돌려 봤어! 연잎 겉면과 덮개가 다 붙어 있지? 마무리를 눌러 줘.',true);
- }
- if(action==='field-bag-finish'){
-  const b=e.bag;if(!fieldSteps(e,4)[1])return feedback(u,'연잎만, 덮개만, 둘 다 단 가방에 비를 내려 본 뒤에 마무리하자.');
-  if(b.delivered)return '';
-  if(!u.bagTurned)return feedback(u,'완성 가방을 한 바퀴 돌려 본 뒤에 마무리하자. 가방을 끌거나 화살표를 눌러 봐.');
-  b.design={surface:'lotus',cover:'flap'};b.compared={...b.comparisons.cover};b.delivered=fieldBagKey(b.design);
-  return feedback(u,`완성! 연잎 겉면은 빗물을 굴려 보내고, 덮개는 입구를 막아. 둘이 함께 공책을 지켰어. ${b.prediction==='cover'?'처음 예상을 시험으로 확인했어!':'처음엔 겉면만 바꾸면 된다고 생각했지? 시험으로 생각을 고쳤어.'}`,true);
  }
  return false;
 }

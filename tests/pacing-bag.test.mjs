@@ -1,10 +1,10 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {freshState,testDesign,testValid,designKey} from '../src/model.js';
+import {freshState,restoreState,testDesign,testValid,designKey} from '../src/model.js';
 import {fieldMissionAction} from '../src/field-missions.js';
 import {fieldMissionReady} from '../src/field-missions-state.js';
+import {learningAction,renderActivity} from '../src/learning.js';
 import {carryFieldEvidence} from '../src/field-bridge.js';
-import {learningAction} from '../src/learning.js';
 import {observationRecord,notebookEntry} from '../src/research-notebook.js';
 import {mountBagHands} from '../src/field-hands-bag.js';
 
@@ -12,17 +12,20 @@ import {pageReady} from '../src/model.js';
 function fullBag(){
  const s=freshState(),u={};s.page=8;
  const act=(action,id='')=>fieldMissionAction(s,u,action,id);
- act('field-bag-predict','surface');act('field-bag-test');act('field-bag-upgrade','surface');act('field-bag-test');act('field-bag-upgrade','cover');act('field-bag-test');act('field-bag-upgrade','surface');act('field-bag-test');act('field-bag-turned');act('field-bag-finish');
+ act('field-bag-predict','surface');act('field-bag-test');act('field-bag-upgrade','surface');act('field-bag-test');act('field-bag-upgrade','cover');act('field-bag-test');act('field-bag-upgrade','surface');act('field-bag-test');
  return {s,u,act};
 }
 
-test('현장 가방 시험을 마쳐도 본 탐구는 미리 채워지지 않고 학생이 직접 시험해야 기록이 준비된다',()=>{
- const {s,act}=fullBag();
+test('현장 시험 결과에 대한 한 응답으로 가방 기록을 마치고, 재시험을 만들지 않는다',()=>{
+ const {s,act}=fullBag(),u={};
  assert.equal(fieldMissionReady(s,4),true);assert.equal(s.fieldEvidence.bag.tests.length,4);
- carryFieldEvidence(s,4);assert.equal(s.tests.length,0,'현장 시험을 본 탐구 시험으로 옮기지 않는다');assert.equal(s.testPrediction,'surface','첫 예상만 이어 쓴다');
- assert.equal(testValid(s),false);assert.equal(pageReady(s,8),false);assert.equal(pageReady(s,9),false);
- act('field-bag-finish');assert.equal(s.fieldEvidence.bag.tests.length,4,'마무리를 다시 눌러도 시험은 늘지 않는다');
- act('field-bag-reset');assert.equal(fieldMissionReady(s,4),false,'처음 가방으로 돌리면 다시 시험해야 한다');
+ carryFieldEvidence(s,4);s.page=9;
+ assert.equal(pageReady(s,9),false);
+ learningAction(s,u,'bag-review-answer','surface');assert.equal(pageReady(s,9),false);
+ learningAction(s,u,'bag-review-answer','both');assert.equal(testValid(s),true);assert.equal(pageReady(s,9),true);
+ assert.equal(pageReady(restoreState(JSON.stringify(s)),9),true);assert.deepEqual(s.tests,[]);assert.equal(s.testPrediction,'surface');
+ assert.match(renderActivity(s,{activityMode:'explore'},()=>''),/그래서 둘 다 필요해!/);
+ act('field-bag-reset');assert.equal(fieldMissionReady(s,4),false);assert.equal(pageReady(s,9),false);
 });
 
 test('연구노트는 이어받은 시험과 역할을 한 번만 보이고 실제 추가 시험은 보존한다',()=>{
