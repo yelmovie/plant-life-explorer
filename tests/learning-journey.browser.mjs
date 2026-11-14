@@ -16,7 +16,7 @@ const selector=(name,id)=>`[data-action="${name}"]${id!==undefined?`[data-id="${
 // Old card/slot buttons now sit in a visually hidden .lens-fallback (keyboard path); press those with focus+Enter.
 const press=async loc=>{if(await loc.evaluate(el=>!!el.closest('.lens-fallback'))){await loc.focus();await page.keyboard.press('Enter');}else await loc.tap();};
 const a=async(name,id,scope='')=>{await press(page.locator(scope+selector(name,id)).first());};
-const close=()=>a('close',undefined,'#dialog .dialog-top ');
+const close=()=>page.locator('#dialog[open] button[data-action="close"]:visible').first().tap();
 const stage=n=>a('field-stage',String(n),'.today-panel .mission-journey ');
 // Keyboard select-then-place. Some steps have no source card (magnifier, season string): the slot alone acts.
 const place=async(item,target)=>{
@@ -50,15 +50,15 @@ async function enter(m){
 }
 async function explore(){await a('journey-mode','explore','.learning-footer ');await page.locator('.field-mission').waitFor({state:'detached'});}
 async function completePage(){const button=page.locator('.learning-footer [data-action="complete"]');assert.notEqual(await button.getAttribute('aria-disabled'),'true',await page.locator('.guide-bubble').innerText());await button.tap();}
-async function missionDone(m){
+async function missionDone(m,stamp='helped'){
  const state=await saved();assert.equal(state.completed[m*2],true);assert.equal(state.completed[m*2+1],true);
- assert.ok(state.stamps.helped.includes(m),'wrong → requested hint → correction must receive helped stamp');
+ assert.ok(state.stamps[stamp].includes(m),`corrected response should receive the ${stamp} stamp`);
  assert.ok(Object.values(state.learningRecords[m].responses).some(r=>r.wrong),'wrong response retained');
  for(const r of Object.values(state.learningRecords[m].responses).filter(r=>r.phase==='prediction'&&!r.firstCorrect)){
   assert.equal(r.correct,true,'observation-linked correction is retained');assert.notEqual(r.first,r.last,'first prediction remains distinct from corrected choice');
  }
- assert.match(await page.locator('#dialog').innerText(),/도움을 받아 찾았어/);
- report.missions.push({mission:m+1,completed:true,stamp:'helped',firstAndRevisionsRecorded:true});
+ assert.match(await page.locator('#dialog').innerText(),stamp==='fixed'?/관찰하고 고쳤어/:/도움을 받아 찾았어/);
+ report.missions.push({mission:m+1,completed:true,stamp,firstAndRevisionsRecorded:true});
  await snap(`mission-${m+1}-reward`);await a('reward-map',undefined,'#dialog ');
  const before=await saved();await page.reload();assert.deepEqual(await saved(),before);
  report.checks.push(`Mission ${m+1}: refresh retains progress and responses`);
@@ -76,7 +76,7 @@ try{
  await evidence(`JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.leaves.edge.maple==='no'`);await hint();
  for(const p of ['maple','pine','camellia']){await page.locator('[data-swipe-top][data-swipe-card="'+p+'"]').waitFor();await page.locator('[data-swipe-bin="'+(p==='pine'?'no':'yes')+'"]').tap();await evidence(`JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.leaves.edge.${p}==='${p==='pine'?'no':'yes'}'`);}
  await explore();assert.equal((await saved()).page,0);
- await a('leaf-zoom','large');await completePage();assert.equal((await saved()).page,1);
+ await a('leaf-zoom','large');await completePage();await page.locator('main.activity-1').waitFor();await evidence("JSON.parse(localStorage['green-garden-mvp-v2']).page===1");
  assert.equal(await page.locator('.leaf-grouping').count(),1);
  await a('leaf-partner','cherry');assert.equal(await page.locator('.leaf-grouping').count(),2);
  assert.deepEqual((await saved()).leafEvidence,{},'comparison does not invent feature answers');
@@ -141,13 +141,13 @@ try{
  assert.equal(await page.locator('.field-review-trial').count(),4);
  assert.equal(await page.locator('[data-action="run-test"]').count(),0);
  await a('bag-review-answer','both');
- await snap('invention-compared');await completePage();await missionDone(4);
+ await snap('invention-compared');await completePage();await missionDone(4,'fixed');
  await a('report');await a('note-open','4');await a('note-sticker');await page.locator('.note-quiz summary').tap();await a('note-check','4:0');await a('note-check','4:1');await close();
  await a('note-open','4');assert.equal(await page.locator('[data-action="note-sticker"]').getAttribute('aria-pressed'),'true');await page.locator('.note-quiz summary').tap();assert.match(await page.locator('.note-quiz-feedback').innerText(),/맞아/);await snap('notebook-records');await close();
  const before=await saved();await page.reload();assert.deepEqual(await saved(),before);await a('note-open','4');assert.equal(await page.locator('.note-read-sticker.stuck').count(),1);await close();
  await a('start-final');await a('final-habitat','water');await a('final-habitat','dry');await a('power-core');await page.locator('[data-story-action="exit"]').tap();
  assert.equal((await saved()).finished,true);await snap('ending');
- await a('home');await a('begin');await a('report');await a('note-open','4');assert.equal(await page.locator('.note-read-sticker.stuck').count(),1);await close();
+ await a('home');await a('begin');await page.locator('main.activity-9').waitFor();await a('settings');await a('settings-journal',undefined,'#dialog[open] ');await a('note-open','4');assert.equal(await page.locator('.note-read-sticker.stuck').count(),1);await close();
  report.checks.push('Fresh completion: 5 field missions, carried observations, new plant application, ending and research notebook; home/re-entry retains notebook');
  report.finalState=await saved();
  await writeFile(new URL('completed-test-record.json',output),JSON.stringify(report.finalState,null,2));

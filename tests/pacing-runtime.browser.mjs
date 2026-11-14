@@ -33,17 +33,17 @@ try{
  {
   const state=freshState();state.screen='activity';state.page=2;state.completed[0]=state.completed[1]=true;state.fieldEvidence.seasons=completed.fieldEvidence.seasons;
   const {context,page}=await fixture(state);assert.equal((await read(page)).page,3);assert.equal(await page.locator('[data-action="season-explain"]').count(),0);
-  await action(page,'season-review-answer','parts');assert.notEqual(await page.locator('[data-action="complete"]').getAttribute('aria-disabled'),'true');
+  await action(page,'season-review-answer','parts');await page.waitForFunction(key=>JSON.parse(localStorage.getItem(key))?.seasonCompareAnswer==='parts',STORAGE_KEY);assert.notEqual(await page.locator('[data-action="complete"]').getAttribute('aria-disabled'),'true');
   await page.reload();assert.equal((await read(page)).seasonCompareAnswer,'parts');
   report.checks.push('Reload after season field game: carries observations and explanations without repeated questions');await context.close();
  }
  {
-  const {context,page}=await fixture({...completed,screen:'activity',page:7});
+  const {context,page}=await fixture({...completed,screen:'activity',page:7,gardenFromField:false,gardenReview:null,garden:{...completed.garden,hyacinth:0},gardenReasons:['hyacinth','cherry','aloe']});
   await page.locator('.garden-cell[data-id="0"]').waitFor({state:'visible'});
   const before=await read(page);await action(page,'garden-cell','0');assert.deepEqual(await read(page),before);
-  await action(page,'garden-cell','1');let state=await read(page);assert.deepEqual(state.gardenReasons,before.gardenReasons);assert.equal(state.gardenExtras.length,before.gardenExtras.length+1);
+  await action(page,'garden-cell','1');await page.waitForFunction(key=>JSON.parse(localStorage.getItem(key))?.gardenExtras.some(plant=>plant.cell===1),STORAGE_KEY);let state=await read(page);assert.deepEqual(state.gardenReasons,before.gardenReasons);assert.equal(state.gardenExtras.length,before.gardenExtras.length+1);
   assert.equal(await page.locator('[data-action="garden-answer"]').count(),0);assert.notEqual(await page.locator('[data-action="complete"]').getAttribute('aria-disabled'),'true');
-  await action(page,'undo');state=await read(page);assert.deepEqual(state.gardenExtras,before.gardenExtras);assert.deepEqual(state.gardenReasons,before.gardenReasons);
+  await action(page,'undo');await page.waitForFunction(([key,count])=>JSON.parse(localStorage.getItem(key))?.gardenExtras.length===count,[STORAGE_KEY,before.gardenExtras.length]);state=await read(page);assert.deepEqual(state.gardenExtras,before.gardenExtras);assert.deepEqual(state.gardenReasons,before.gardenReasons);
   report.checks.push('Garden: same-cell tap is a no-op; optional extra planting and undo preserve reasons and readiness');await context.close();
  }
  {
@@ -65,7 +65,7 @@ try{
   }
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
   await page.screenshot({path:fileURLToPath(new URL(`habitat-choice-${width}x${height}.png`,output)),fullPage:true});
-  await action(page,'habitat-compare-answer','aloe');const state=await read(page);assert.equal(state.habitatCompareAnswer,'aloe');
+  await action(page,'habitat-compare-answer','aloe');await page.waitForFunction(key=>JSON.parse(localStorage.getItem(key))?.habitatCompareAnswer==='aloe',STORAGE_KEY);const state=await read(page);assert.equal(state.habitatCompareAnswer,'aloe');
   report.checks.push(`Combined habitat choice: ${width}x${height}, readable touch cards and one evidence choice`);await context.close();
  }
  assert.deepEqual(report.errors,[]);
