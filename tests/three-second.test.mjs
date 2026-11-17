@@ -37,3 +37,11 @@ test('의뢰 편지는 세 줄 요약이고 팝업 배경은 0.3 이하 토큰 �
   for(const rule of css.match(/::backdrop\s*\{[^}]*\}/g)||[])if(/background:/.test(rule))assert.match(rule,/var\(--scrim\)/,file);
  }
 });
+
+test('탐구 기록을 마치면 말풍선이 아래 주 버튼 이름을 그대로 부르고 왼쪽 목록은 완료 표시만 한다',()=>{
+ const s=Object.assign(freshState(),{screen:'activity',page:0});s.completed[0]=true;
+ const html=renderActivity(s,{activityMode:'explore'},()=>'');
+ assert.match(html,/btn primary go-now/,'완료 기록으로 주 버튼이 열린다');
+ assert.match(bubble(html),/<b>다음 기록을<\/b> 눌러 줘/);
+ assert.doesNotMatch(html,/다음으로 가 보자/);
+});

@@ -643,7 +643,7 @@ html body[data-screen] .toast { top: calc(var(--hud-top) + 8px); max-width: min(
   #app .exploration-activity .test-layout .learning-scene:has(.test-comparison) > .reason-cards :is(p,.btn) { font-size: 16px; line-height: 1.35; }
   #app .exploration-activity .test-layout .learning-scene:has(.test-comparison) .notebook-result { width: 66px; height: 104px; right: 6px; bottom: 5px; }
   #app .exploration-activity .test-layout .learning-scene:has(.test-comparison) .notebook-result img { height: 54px; }
-  #app .exploration-activity .test-layout .learning-scene:has(.test-comparison) .notebook-result span { font-size: 16px; line-height: 1.15; white-space: normal; text-align: center; }
+  #app .exploration-activity .test-layout .learning-scene:has(.test-comparison) .notebook-result span { font-size: 18px; line-height: 1.15; white-space: normal; text-align: center; }
   #app .map-navigation-copy strong { display: none; }
   #app .stage-map .map-title p { display: none; }
   #app .map-next-card { max-width: 400px; }
@@ -671,7 +671,7 @@ html body[data-screen] .toast { top: calc(var(--hud-top) + 8px); max-width: min(
   #app .activity-9 .water-paths text { display: none; }
   #app .exploration-activity.activity-9 .test-layout .learning-scene .notebook-result { top: 8px; right: 6px; bottom: auto; width: 60px; height: auto; min-height: 88px; padding: 2px; }
   #app .exploration-activity.activity-9 .test-layout .learning-scene .notebook-result img { height: 46px; }
-  #app .exploration-activity.activity-9 .test-layout .learning-scene .notebook-result span { width: 100%; font-size: 16px; line-height: 1.1; white-space: normal; text-align: center; }
+  #app .exploration-activity.activity-9 .test-layout .learning-scene .notebook-result span { width: 100%; font-size: 18px; line-height: 1.1; white-space: normal; text-align: center; }
   #app .map-navigation-copy strong { display: none; }
   #app .map-navigation-copy { max-width: 125px; }
   #app .map-next-card { gap: 8px 12px; max-width: 410px; }

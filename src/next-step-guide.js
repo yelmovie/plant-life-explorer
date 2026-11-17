@@ -131,7 +131,8 @@ export function renderRemaining(guide){
  if(!guide||guide.field)return '';
  const subs=it=>it.sub?`<small class="remaining-subs">${it.sub.map(x=>`<i class="${x.done?'done':''}">${x.done?'✓':'○'} ${esc(x.label)}</i>`).join('')}</small>`:'';
  const rows=guide.items.map(it=>{const next=it===guide.next;return `<li class="${it.done?'done':next?'next':''}"><button type="button" data-action="guide-jump" data-id="${esc(it.key)}" ${next?'aria-current="step"':''}><span class="remaining-mark">${it.done?icon('check',14):next?handIcon('mini'):'○'}</span><span class="remaining-label">${esc(it.label)}${subs(it)}</span></button></li>`;}).join('');
- const head=guide.ready?`${icon('check',18)} 다 했어! 다음으로 가 보자`:`남은 활동 <b>${guide.left}</b>`;
+ // Done: the list only marks it; Leafy's bubble names the button to press (one instruction place).
+ const head=guide.ready?`${icon('check',18)} 다 했어!`:`남은 활동 <b>${guide.left}</b>`;
  return `<section class="remaining-list ${guide.ready?'all-done':''}" aria-label="남은 활동"><h3>${head}</h3><ol>${rows}</ol></section>`;
 }
 

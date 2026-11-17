@@ -75,19 +75,19 @@ body dialog.npc-dialogue-stage > :is(.dialog-body,.modal-body) {
   border-radius: 7px;
   background: #2c5540;
   color: #fff9e9;
-  font-size: clamp(17px, 2.15vw, 23px);
+  font-size: clamp(18px, 2.15vw, 23px);
   line-height: 1.22;
 }
 .npc-dialogue-card [data-npc-speech] {
   margin: 0 38px 0 0;
   max-height: 25dvh;
   overflow: auto;
-  font-size: clamp(17px, 2vw, 23px);
+  font-size: clamp(18px, 2vw, 23px);
   line-height: 1.42;
   word-break: keep-all;
   overflow-wrap: anywhere;
 }
-.npc-dialogue-card [data-npc-status] { margin: 0; font-size: 14px; }
+.npc-dialogue-card [data-npc-status] { margin: 0; font-size: 18px; }
 .npc-dialogue-card [data-npc-status]:empty { display: none; }
 .npc-dialogue-controls, .npc-dialogue-tabs, .npc-dialogue-topics { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 7px; }
 .npc-dialogue-tabs[hidden], .npc-dialogue-topics[hidden] { display: none; }
@@ -100,7 +100,7 @@ body dialog.npc-dialogue-stage > :is(.dialog-body,.modal-body) {
   border-radius: 8px;
   box-shadow: none;
   font: inherit;
-  font-size: clamp(14px, 1.6vw, 17px);
+  font-size: clamp(18px, 1.6vw, 20px);
   cursor: pointer;
 }
 .npc-dialogue-card button[aria-pressed="true"] { color: #fff9e8; background: #325f45; border-color: #325f45; }
@@ -119,7 +119,7 @@ body dialog.npc-dialogue-stage > :is(.dialog-body,.modal-body) {
 @media (max-height: 520px) {
   .npc-dialogue-portrait { width: min(45dvh, 58vw); }
   .npc-dialogue-card { padding: 14px 12px 6px; gap: 4px; }
-  .npc-dialogue-card [data-npc-speech] { font-size: 17px; }
+  .npc-dialogue-card [data-npc-speech] { font-size: 18px; }
 }
 @media (max-width: 490px) {
   .npc-dialogue-portrait { width: min(60vw, 36dvh); margin-left: 0; }
