@@ -40,6 +40,10 @@ function layoutSpeech(host, entries){
 }
 
 const REPEAT=380;
+// Input shows at once; the strike, flinch, meter and impact sound land together after a short wind-up.
+const WINDUP=90,EXIT_SOUND=280,APPEAR_SETTLE=700;
+// Once per stage per page session, so re-entering the map does not repeat the entrance cue.
+const announced=new Set();
 const CUES={
   cap:'M9 10h14v12H9zm3-4h8v4h-8z', pane:'M6 7h20v18H6zm4 4v10h12V11z',
   file:'M7 5h12l6 6v16H7zm12 2v6h5M11 17h10m-10 4h8', label:'M5 10h15l7 6-7 6H5zm5 4h5m-5 4h7',
@@ -111,7 +115,7 @@ export function mountMapEncounters({
   const distance=(p,q)=>p?Math.hypot(p.x-q.x,p.y-q.y):Infinity;
   const paused=()=>doc.hidden||blocked()||Boolean(host.closest('[inert]'))||Boolean(doc.querySelector('dialog[open]'));
   const pose={hero:null,ally:null};
-  let current=null,lastNear=null,lastHit=-Infinity,lastTone=-Infinity,saved={},last=null,closed=false;
+  let current=null,lastNear=null,lastHit=-Infinity,lastTone=-Infinity,saved={},last=null,closed=false,pending=null,appearFrom=null;
 
   function speak(foe,text,time){
     for(const other of foes)if(other!==foe){other.saidUntil=0;other.bubble.hidden=true;}
@@ -125,17 +129,23 @@ export function mountMapEncounters({
     if(closed||!current||!last||paused())return;
     const time=view?.performance.now()??performance.now();
     if(time-lastHit<REPEAT||current.hits>=HITS||distance(last.hero,current.point)>reach)return;
-    const foe=current,n=++foe.hits;lastHit=time;
+    if(pending)return;
+    const foe=current;lastHit=time;
     clearUntil=0;callback.hidden=true;
     if(Math.abs(foe.point.x-last.hero.x)>3)foe.facing=last.hero.x<foe.point.x?-1:1;
-    const calm=still(),duration=calm?170:n===HITS?660:360;
+    pose.hero={kind:'attack',direction:-foe.facing,start:time,end:time+(still()?140:320)};
+    pending={foe,at:time+WINDUP};tone('swing',foe.hits+1);
+    update({...last,now:time});
+  }
+  function strike(foe,time){
+    pending=null;
+    const n=++foe.hits,calm=still(),duration=calm?170:n===HITS?660:360;
     foe.poseUntil=time+duration;foe.hitAt=time;foe.hurtAt=undefined;
-    pose.hero={kind:'attack',direction:-foe.facing,start:time,end:time+(calm?140:320)};
+    if(n===HITS)foe.exitSoundAt=time+EXIT_SOUND;
     saved={...saved,[foe.s.id]:n};onSave({...saved});tone(n===HITS?'finish':'hit',n);
     speak(foe, n===HITS?foe.s.finish??'앗, 물러날게!':foe.s.hit?.[n-1]??(n===1?'앗, 들켰네!':'이번 건 제법인데!'),time+(n===HITS?2750:1800));
     live.textContent+=n===HITS?' 세 번 명중! 악당이 물러나요.':` ${n}번 명중. ${HITS-n}번 남았어요.`;
     if(n===HITS&&requiredFoes>0&&stages.length===requiredFoes&&stages.every(s=>(saved[s.id]??record[s.id])===HITS))finaleAt=time+2920;
-    update({...last,now:time});
   }
   attack.addEventListener('click',hit,{signal});
   let tap=null;
@@ -174,10 +184,14 @@ export function mountMapEncounters({
   function update(input){
     last=input;
     const {hero,ally,project,scale=1,now=view?.performance.now()??performance.now()}=input;
+    if(pending&&now>=pending.at&&!closed)strike(pending.foe,now);
     const calm=still(),stop=paused(),size=Math.max(29,Math.min(90,57*scale));
+    if(stop)appearFrom=null;else appearFrom??=now;
+    let appeared=false;
     let nearest=null,best=Infinity;
     const width=host.clientWidth,height=host.clientHeight;
     for(const foe of foes){
+      if(foe.exitSoundAt&&now>=foe.exitSoundAt){foe.exitSoundAt=0;tone('exit',HITS);}
       if(foe.hits>=HITS&&now>=Math.max(foe.poseUntil,foe.saidUntil)){foe.el.hidden=true;continue;}
       const dHome=distance(hero,foe.s),patrol=villainPatrol(now,foe.i);
       const animate=!stop&&!calm&&foe.hits<HITS&&now>=foe.poseUntil;
@@ -197,6 +211,10 @@ export function mountMapEncounters({
       foe.el.hidden=off;
       if(off)continue;
       const {el,actor}=foe;
+      // A quiet entrance cue once the map has settled; several foes in view share one cue.
+      if(!stop&&foe.hits<HITS&&now-appearFrom>=APPEAR_SETTLE&&!announced.has(foe.s.id)){
+        announced.add(foe.s.id);if(!appeared&&!pending){appeared=true;tone('appear',foe.hits);}
+      }
       el.style.transform=`translate(${point.x.toFixed(1)}px,${point.y.toFixed(1)}px)`;
       el.style.setProperty('--encounter-size',size.toFixed(1)+'px');
       const d=distance(hero,foe.point);
@@ -255,7 +273,7 @@ export function mountMapEncounters({
       }
       callback.hidden=now>=clearUntil;
     }
-    if(finaleAt&&now>=finaleAt&&!stop){finaleAt=0;openMapFinale(host,"/assets/videos/outro.mp4");}
+    if(finaleAt&&now>=finaleAt&&!stop){finaleAt=0;tone('victory',HITS);openMapFinale(host,"/assets/videos/outro.mp4");}
     const changed=nearest!==current;
     current=nearest;
     if(current&&current!==lastNear&&current.saidUntil<=now&&now-lastHit>REPEAT&&now>=clearUntil){

@@ -49,8 +49,15 @@ function syncMusic(){
 }
 function stopClick(){
   if(!currentClick)return;
-  const {tone,volume}=currentClick;currentClick=null;
+  const {tone,volume,sample}=currentClick;currentClick=null;
   tone.onended=null;
+  // A sample fades for a few milliseconds so the next strike does not start on a click.
+  if(sample&&context){
+    const now=context.currentTime;
+    try{volume.gain.cancelScheduledValues(now);volume.gain.setTargetAtTime(0,now,.012);tone.stop(now+.06);}catch{/* It may already have finished. */}
+    tone.onended=()=>{tone.disconnect();volume.disconnect();};
+    return;
+  }
   try{tone.stop();}catch{/* It may already have finished. */}
   tone.disconnect();volume.disconnect();
 }
@@ -65,7 +72,50 @@ export function setSound(on){setMusic(on);setEffects(on);}
 export function playClick(){chirp(480,720,.075,.03,'sine');}
 // Card handling: a rising lift, a soft wooden drop into a box, a falling slide back to the tray.
 const DRAG_SOUNDS={lift:[420,680,.09,.03,'sine'],drop:[560,240,.14,.05,'triangle'],back:[380,250,.11,.025,'sine']};
-export function playMapEncounter(kind,hits){const notes=kind==='finish'?[670,310,.28,.05,'sine']:kind==='contact'?[210,133,.12,.05,'triangle']:hits===2?[470,205,.16,.07,'triangle']:[390,235,.09,.05,'sine'];chirp(...notes);}
+// Map combat uses locally hosted CC0 samples (assets/CREDITS.md): a twig swish, seed pops and a leafy retreat.
+// They share the one effects voice; only the swing keeps ringing under the strike it leads into.
+const MAP_SOUNDS={
+  swing:['/assets/audio/sfx/wind-whoosh-02.mp3',0.5],
+  hit1:['/assets/audio/sfx/hit-light-03.mp3',0.7],
+  hit2:['/assets/audio/sfx/hit-light-02.mp3',0.6],
+  finish:['/assets/audio/sfx/hit-heavy-01.mp3',0.65],
+  exit:['/assets/audio/sfx/leaf-rustle-03.mp3',0.3],
+  appear:['/assets/audio/sfx/leaf-rustle-02.mp3',0.25],
+  contact:['/assets/audio/sfx/hurt-bump-01.mp3',0.7],
+  victory:['/assets/audio/sfx/victory-jingle-04.mp3',0.4],
+};
+const samples=new Map();
+const activated=()=>globalThis.navigator?.userActivation?.hasBeenActive!==false;
+function loadSample(key){
+  if(samples.has(key)||!MAP_SOUNDS[key])return;
+  // An offline context decodes before any tap, so preloading never trips the autoplay policy.
+  const Offline=globalThis.window?.OfflineAudioContext||globalThis.window?.webkitOfflineAudioContext;
+  if(!Offline||typeof fetch!=='function'){samples.set(key,null);return;}
+  samples.set(key,null);
+  fetch(MAP_SOUNDS[key][0]).then(r=>{if(!r.ok)throw new Error(r.status);return r.arrayBuffer();})
+    .then(data=>new Offline(1,1,44100).decodeAudioData(data)).then(buffer=>{samples.set(key,buffer);})
+    .catch(()=>{/* The synthesized fallback keeps the map responsive. */});
+}
+export function preloadMapSounds(){if(effectsEnabled)for(const key of Object.keys(MAP_SOUNDS))loadSample(key);}
+const MAP_TONES={swing:[300,520,.08,.03,'sine'],hit1:[390,235,.09,.05,'sine'],hit2:[470,205,.16,.07,'triangle'],finish:[670,310,.28,.05,'sine'],contact:[210,133,.12,.05,'triangle']};
+// kind: swing (button pressed), hit (strike lands; hits 1 or 2), finish (third strike), exit, appear, contact, victory.
+export function playMapEncounter(kind,hits){
+  const key=kind==='hit'?(hits===2?'hit2':'hit1'):kind;
+  if(!effectsEnabled||globalThis.document?.hidden||!MAP_SOUNDS[key]||!activated())return;
+  const buffer=samples.get(key);
+  if(!buffer){loadSample(key);if(MAP_TONES[key])chirp(...MAP_TONES[key]);return;}
+  const AudioContext=globalThis.window?.AudioContext||globalThis.window?.webkitAudioContext;if(!AudioContext)return;
+  try{
+    context ||= new AudioContext();
+    if(currentClick?.lead)currentClick=null;else stopClick();
+    if(context.state==='suspended')void context.resume().catch(()=>{});
+    const tone=context.createBufferSource(),volume=context.createGain();
+    tone.buffer=buffer;volume.gain.value=MAP_SOUNDS[key][1];
+    currentClick={tone,volume,sample:true,lead:key==='swing'};
+    tone.connect(volume);volume.connect(context.destination);tone.start();
+    tone.onended=()=>{tone.disconnect();volume.disconnect();if(currentClick?.tone===tone)currentClick=null;};
+  }catch{stopClick();}
+}
 export function playDragSound(kind){const s=DRAG_SOUNDS[kind];if(s)chirp(...s);}
 function chirp(from,to,length,gain,type){
   if(!effectsEnabled||globalThis.document?.hidden)return;

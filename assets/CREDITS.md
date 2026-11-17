@@ -21,7 +21,7 @@
 | Higgsfield 도장 3종·3D 생성 입력 그림 | Higgsfield GPT Image 2.5 제작 기록 | 제작 도구 기록 있음. 계정별 상업 이용 조건은 배포 전 문서 확인 대상 |
 | Meshy GLB 7종 (`models/`, 2026-10-25 계절 4종 추가) | Meshy AI 생성·Blender 가공 기록 | 생성·입력·가공 기록 보존. 상업 이용 가능한 조건으로 제작했음을 2026-10-24 사용자 확인(10-25 계절 4종도 같은 조건 제작 전제). 파일 존재와 현재 런타임 연결 여부는 `models/README.md`에서 구분 |
 | Suno 배경 음악 2곡 (`audio/`) | 기획자 자체 AI 생성 음원 | 상업 이용 가능한 조건으로 제작했음을 2026-10-24 사용자 확인. 요금제·계약 세부는 저장소에 없음 |
-| 효과음 | 앱 코드(Web Audio)로 직접 합성 | 외부 음원 없음 |
+| 효과음 | 화면 조작음은 앱 코드(Web Audio)로 직접 합성. 지도 악당 전투음 8개는 CC0 파일(`audio/sfx/`, 아래 2026-11-17 절) | 사용 가능. 출처 페이지에서 CC0 재확인 |
 | npm 의존성 | 없음 (`package.json`에 dependencies 없음) | 하위 작업 폴더까지 `package.json` 정적 탐색 시 본 앱 1개. 직접 동봉한 Three.js는 위에서 별도 검토 |
 
 - `generated/`: OpenAI 내장 이미지 생성 도구로 제작한 기본 2D 그림 17종(2026-10-14)과 추가 그림 13종(2026-10-15). 추가 그림은 캐릭터 3종, 시설 5종, 지도 1종, 수첩 2종, 코팅 가방 2종이다. PNG 원본과 화면용 WebP를 함께 보관한다.
@@ -145,3 +145,18 @@
 2026-10-25 추가: 겨울눈 찾기 렌즈에 `generated/season_cherry_winter_bud.webp`(위 겨울눈 원본을 512px로 줄임)와 `generated/season_sowthistle_crown_bud.webp`를 연결했다. 뒤의 것은 `M2-sowthistle-root.png`의 뿌리 머리 부분을 잘라 만들었다. 새로 생성하지 않았다. 편집용 PNG는 `_source/generated-images/`에 있다.
 
 2026-10-27: 사용자가 제공한 `Meshy_AI_cherry_tree_sapling_1019114653_image-to-3d-texture.glb`를 경량화해 `models/plant_cherry_full.glb`로 정원에 연결했다. 원본은 보존했다. 압축 해제에는 Three.js r181 배포본의 MeshoptDecoder(meshoptimizer, Copyright 2016–2024 Arseny Kapoulkine, MIT)를 사용한다. 원문 라이선스는 `meshopt-license.txt`, 출처와 파일 해시는 `docs/reviews/existing-models-20261027/asset-provenance.json`에 기록했다.
+
+## 2026-11-17 지도 전투 효과음 (CC0)
+
+과학34 공통 효과음 라이브러리(`_shared/sfx-library-20261117`, 라이선스 재확인 CC0만)에서 골라 `audio/sfx/`에 그대로 복사했다. 라이브러리 가공(앞뒤 무음 제거·짧은 페이드·음량 맞춤·모노 MP3)만 거쳤고 피치·속도 변경은 없다. 화면 조작·정답·보상 소리는 기존 합성음을 그대로 쓴다. 효과음 끄기·전체 음소거·탭 숨김을 따른다.
+
+| 파일 | 쓰는 곳 | 원본 · 만든 사람 | 라이선스 · 출처 |
+|---|---|---|---|
+| `audio/sfx/wind-whoosh-02.mp3` | 공격 버튼(가지 휘두르기) | swosh windy 36.flac · qubodup | CC0 · https://freesound.org/people/qubodup/sounds/60023 |
+| `audio/sfx/hit-light-03.mp3` | 1타 명중(씨앗 뽁) | Pop 1.ogg · javapimp | CC0 · https://freesound.org/people/javapimp/sounds/439184 |
+| `audio/sfx/hit-light-02.mp3` | 2타 명중 | cartoon pop or drip · AlaskaRobotics | CC0 · https://freesound.org/people/AlaskaRobotics/sounds/221091 |
+| `audio/sfx/hit-heavy-01.mp3` | 3타 명중 | impactPunch_heavy_000 · Kenney | CC0 · https://kenney.nl/assets/impact-sounds |
+| `audio/sfx/leaf-rustle-03.mp3` | 악당 퇴장(낙엽 속으로 도망) | leafpilehit.wav · j1987 | CC0 · https://freesound.org/people/j1987/sounds/106130 |
+| `audio/sfx/leaf-rustle-02.mp3` | 악당 등장(덤불 바스락, 작게) | Leaves Rustling Mastered · 12062703 | CC0 · https://freesound.org/people/12062703/sounds/449528 |
+| `audio/sfx/hurt-bump-01.mp3` | 아군이 악당에 닿을 때 | LowHit_01.wav · Faulkin | CC0 · https://freesound.org/people/Faulkin/sounds/336495 |
+| `audio/sfx/victory-jingle-04.mp3` | 다섯 악당 모두 격퇴(피날레 영상 직전, 영상은 무음) | game-win.mp3 · mickleness | CC0 · https://freesound.org/people/mickleness/sounds/269198 |

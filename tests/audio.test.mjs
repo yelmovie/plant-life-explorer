@@ -126,3 +126,23 @@ test('탭을 숨기면 음악이 멈추고 복귀 시 음소거 설정과 영상
  audio.setMusic(false);document.dispatchEvent(new Event('visibilitychange'));assert.equal(player.paused,true);
  audio.setMusic(true);const resume=audio.suspendMusic();document.hidden=true;document.dispatchEvent(new Event('visibilitychange'));document.hidden=false;document.dispatchEvent(new Event('visibilitychange'));assert.equal(player.paused,true);resume();assert.equal(player.paused,false);
 });
+
+test('지도 전투 효과음은 효과음 설정을 따르고 샘플이 없으면 합성음으로 대신한다',async t=>{
+ const {audio,contexts,storage}=await audioFixture(t);
+ const fetchDescriptor=Object.getOwnPropertyDescriptor(globalThis,'fetch');
+ t.after(()=>{if(fetchDescriptor)Object.defineProperty(globalThis,'fetch',fetchDescriptor);else delete globalThis.fetch;});
+ const requested=[],sources=[];
+ globalThis.fetch=async url=>{requested.push(url);return {ok:true,arrayBuffer:async()=>new ArrayBuffer(8)};};
+ window.OfflineAudioContext=class {decodeAudioData(){return Promise.resolve({duration:.2});}};
+ window.AudioContext.prototype.createBufferSource=function(){const source={connect(){},start(){this.started=true;},stop(){},disconnect(){}};sources.push(source);return source;};
+ audio.playMapEncounter('swing',1);
+ assert.equal(contexts[0].tones.length,1,'처음 한 번은 합성음으로 바로 반응한다');
+ audio.preloadMapSounds();await new Promise(resolve=>setTimeout(resolve,0));
+ assert.ok(requested.every(url=>url.startsWith('/assets/audio/sfx/')&&url.endsWith('.mp3')));
+ assert.equal(new Set(requested).size,8,'역할마다 한 번만 받는다');
+ for(const [kind,hits] of [['swing',1],['hit',1],['hit',2],['finish',3],['exit',3],['appear',0],['contact',0],['victory',3]])audio.playMapEncounter(kind,hits);
+ assert.equal(sources.length,8);assert.ok(sources.every(source=>source.started&&source.buffer));
+ audio.playMapEncounter('unknown',0);assert.equal(sources.length,8);
+ audio.setEffects(false);assert.equal(storage.get(audio.SOUND_KEY),'off');
+ audio.playMapEncounter('hit',1);assert.equal(sources.length,8,'효과음을 끄면 지도 전투음도 나지 않는다');
+});
