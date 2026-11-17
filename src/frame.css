@@ -118,7 +118,7 @@
   width: fit-content; max-width: 100%; margin-inline: auto; padding: 6px 14px; border-radius: 12px;
   background: var(--text-plate); color: var(--scene-ink);
 }
-dialog::backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgb(24 46 34 / .62); }
+dialog::backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--scrim); }
 #app .exploration-activity :is(.design-layout .learning-note, .test-layout .learning-note) {
   -webkit-backdrop-filter: none; backdrop-filter: none; background: rgb(255 253 244 / .93);
 }
@@ -533,12 +533,12 @@ body #dialog > .dialog-body > p { font-size: var(--font-size-sm); color: var(--m
 #app .exploration-activity .guide-avatar .guide-mascot { height: 100%; max-height: clamp(100px, 19vh, 176px); min-height: 0; }
 
 /* 리피의 부탁: a wider letter that fits one screen without scrolling; the ruled lines follow the line height. */
-body #dialog.brief-dialog { width: min(860px, calc(100% - 46px)); max-width: min(860px, calc(100% - 46px)); }
+body #dialog.brief-dialog { width: min(640px, max(50vw, 520px), calc(100% - 32px)); max-width: min(640px, max(50vw, 520px), calc(100% - 32px)); }
 body #dialog.brief-dialog > .dialog-body { overflow-x: hidden; }
 body #dialog.brief-dialog .expedition-brief { grid-template-columns: 120px minmax(0,1fr); gap: 18px; }
 body #dialog.brief-dialog .brief-leafy { width: 120px; height: 170px; }
 body #dialog.brief-dialog .lipi-letter { margin: 10px 0 12px; padding: 18px 22px 12px; font-size: 23px; line-height: 32px; background: repeating-linear-gradient(#fffaf0 0 31px, #e9dfc4 31px 32px); }
-body #dialog.brief-dialog .mission-loot { padding: 8px 12px; font-size: 17px; }
+body #dialog.brief-dialog .mission-loot { padding: 8px 12px; font-size: 18px; }
 body #dialog.brief-dialog .mission-loot > img { width: 52px; height: 58px; }
 @media (max-height: 760px) {
   body #dialog.brief-dialog .lipi-letter { font-size: 21px; line-height: 29px; background: repeating-linear-gradient(#fffaf0 0 28px, #e9dfc4 28px 29px); }

@@ -15,7 +15,7 @@ body dialog.npc-dialogue-stage[open] {
   backdrop-filter: none;
   overflow: hidden;
 }
-body dialog.npc-dialogue-stage::backdrop { background: #102a248f; }
+body dialog.npc-dialogue-stage::backdrop { background: var(--scrim); }
 body dialog.npc-dialogue-stage > :is(.dialog-top,.close,.dialog-actions,.modal-portrait) { display: none; }
 body dialog.npc-dialogue-stage > #dialog-title {
   position: absolute;
