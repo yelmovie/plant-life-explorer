@@ -88,10 +88,10 @@ ESBUILD_MODULE_PATH="<SSD>/DevCaches/tools/wrangler-4.154.0/node_modules/esbuild
 
 브라우저 테스트는 QA 포트에 서버를 띄운 뒤 실행한다(예: `PORT=4328`/`4351`, 각 파일 상단의 `JOURNEY_URL` 등 기본값 참고). Mac에서는 `BROWSER_EXECUTABLE`과 `PLAYWRIGHT_MODULE_PATH`를 반드시 지정한다(기본값이 Windows 경로다).
 
-### 설치·배포 명령(설명만, 요청 없이 실행 금지)
+### 설치·배포 명령
 
 - 의존성 설치: 필요 없음.
-- 배포: `npm run check` → `npm test` → `npm run build` → `wrangler pages deploy dist --project-name leafy-garden --branch main`. GitHub push로 자동 배포되지 않는다. 자세한 절차·확인 항목은 `docs/DEPLOYMENT.md`. 배포·커밋·푸시는 사용자가 요청할 때만 한다.
+- 배포: `npm run check` → `npm test` → `npm run build` → `wrangler pages deploy dist --project-name leafy-garden --branch main`. GitHub push로 자동 배포되지 않는다. 자세한 절차·확인 항목은 `docs/DEPLOYMENT.md`. 운영 배포는 자동 승인이다(2026-11-16 사용자 지시): 요청한 코드 변경이 검사·테스트·빌드·동작 확인을 통과하면 이번 변경만 커밋해 `main`에 푸시하고, 같은 작업 안에서 검증한 `dist/`를 바로 배포한 뒤 운영 주소에서 확인한다. 로컬만·검토만·배포 보류를 요청받은 작업은 그 범위를 따른다.
 
 ## D. 두 OS를 오갈 때의 규칙
 
