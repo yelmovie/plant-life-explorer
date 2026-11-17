@@ -192,7 +192,7 @@ body .map-locked-message .mascot-wrap{width:90px;height:120px;flex-shrink:0}
 
 /* Map controls float directly over the scene. */
 #app .stage-map {
-  --map-edge: 16px; --map-key: 52px; --map-gap: 7px;
+  --map-edge: 16px; --map-key: 48px; --map-gap: 6px;
   --map-cta-height: 60px; --map-cta-size: 19px; --map-arrow-size: 26px;
 }
 #app .stage-map .map-dpad {
@@ -203,7 +203,7 @@ body .map-locked-message .mascot-wrap{width:90px;height:120px;flex-shrink:0}
 #app .stage-map .map-dpad .map-direction {
   display: grid; place-items: center; box-sizing: border-box; pointer-events: auto;
   width: var(--map-key); height: var(--map-key); min-width: var(--map-key); min-height: var(--map-key);
-  padding: 0; color: #233e33; background: #fff6dc; border: 2px solid #475b42;
+  padding: 0; color: #233e33; background: rgb(255 246 220 / .82); border: 2px solid #475b42b3;
   border-radius: 12px; box-shadow: 0 3px 0 #263e30;
   font: 800 var(--map-arrow-size)/1 system-ui, sans-serif; transition: transform .12s ease;
 }

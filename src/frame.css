@@ -804,3 +804,49 @@ body dialog.reward-dialog .theme-picker small { display: none; }
 #app .habitat-compare-card :is(span,small) { font-size: var(--font-size-xs); }
 body .note-quiz > summary { display: list-item; min-height: 44px; padding: 10px 0; cursor: pointer; }
 body .note-quiz > summary small { margin-left: 4px; padding: 2px 7px; border-radius: 10px; background: #e7edd9; color: #3f5d3b; font: inherit; }
+
+/* ── 11. 3초 규칙 (2026-11-17): 가운데 위 알약 한 줄(장소 이름 + 여정 1·2·3), 지시는 리피 말풍선 한 곳.
+   장면 안 같은 지시 문장은 숨기고(말풍선이 대신 말함), 위 띠를 줄여 놀이 영역을 넓힌다. ── */
+#app .activity-pill {
+  grid-column: 1 / -1; grid-row: 1; display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: fit-content; max-width: 100%; margin: 0 auto; padding: 4px 6px 4px 20px;
+  background: var(--frame-paper); border: 1px solid #e4e8ce; border-radius: 28px; box-shadow: 0 4px 0 #3c4f3530;
+}
+#app .activity-pill h1 {
+  position: static; width: auto; max-width: none; margin: 0; padding: 0; border: 0; border-radius: 0;
+  background: none; box-shadow: none; color: var(--scene-ink); text-align: left; text-wrap: balance;
+  font: clamp(20px, 1.7vw, 26px)/1.25 var(--font-display);
+}
+#app .activity-pill .mission-journey-root {
+  display: flex; flex-shrink: 0; gap: 4px; width: auto; margin: 0; padding: 0;
+  border: 0; border-radius: 0; background: none; box-shadow: none;
+}
+/* The journey is a small 1·2·3 progress mark; each step keeps its name for screen readers and as a tooltip. */
+#app .activity-pill .mission-step { min-width: 44px; min-height: 44px; padding: 0 7px; gap: 0; border-radius: 22px; }
+#app .activity-pill .mission-step > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+#app .activity-pill .mission-step b { width: 30px; height: 30px; font-size: 18px; }
+@media (min-width: 901px) and (orientation: landscape) {
+  #app .exploration-activity { padding-top: 72px; grid-template-rows: 0 minmax(0, 1fr) auto; }
+  #app .activity-pill { grid-area: auto; position: absolute; top: var(--hud-edge); left: 50%; transform: translateX(-50%); z-index: 21; max-width: calc(100% - 580px); }
+  /* 자동 진행 joins the sound/settings row instead of hanging over the scene. */
+  #app .topbar .auto-play-dock { position: static; order: -1; margin: 0; }
+}
+#app .scene-hint-moved .field-mission :is(.lens-hint:not(:has(.clue-drawer)), .field-request, .field-season-predictions > .direct-hint) { display: none; }
+#app .scene-hint-moved .field-mission .lens-hint:has(.clue-drawer) { justify-content: flex-end; }
+#app .scene-hint-moved .field-mission .lens-hint:has(.clue-drawer) > span:first-child { display: none; }
+#app .guide-bubble .bubble-next { display: block; margin-top: 6px; padding-top: 6px; border-top: 1px dashed #b9c79f; }
+/* Short notices (locked button, saved) float over the scene and leave Leafy's line alone. */
+#app .scene-toast {
+  position: absolute; left: 50%; bottom: calc(var(--frame-footer) + 8px); transform: translateX(-50%); z-index: 22;
+  width: max-content; max-width: min(560px, calc(100% - 32px)); margin: 0; padding: 10px 18px;
+  border: 2px solid #d4a74c; border-radius: 14px; background: #fffdf1; color: var(--scene-ink);
+  font: 20px/1.4 var(--font-display); box-shadow: 0 6px 18px #24392b33; pointer-events: none;
+  animation: frame-pop .3s cubic-bezier(.2,1.4,.4,1) both;
+}
+/* Leafy's greeting voice control: a quiet secondary control on one plate, not a bare form widget. */
+#app .guide-talk [data-npc-audio] { display: flex; align-items: center; flex-wrap: wrap; gap: 2px 8px; padding: 2px 10px 4px; border-radius: 14px; background: var(--text-plate); color: var(--scene-ink); font-size: 18px; }
+#app .guide-talk [data-npc-voice] { padding: 4px 14px; border: 2px solid #a9b99a; border-radius: 22px; background: var(--frame-paper); color: var(--scene-ink); font-family: var(--font-display); font-size: 18px; }
+#app .guide-talk [data-npc-audio] > small { font-size: 18px; }
+#app .guide-talk [data-npc-caption] { flex-basis: 100%; margin: 4px 0 0; font-size: 18px; }
+/* The left 남은 활동 list already counts land tiles and plant spots; the garden side panel does not repeat them. */
+#app .exploration-activity:is(.activity-6, .activity-7) .garden-feedback :is(.garden-terrain-status, .garden-placement-progress) { display: none; }
