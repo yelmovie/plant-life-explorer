@@ -48,7 +48,7 @@
 @keyframes map-walk{to{transform:translateY(-5px) rotate(3deg)}}
 #app .map-hud{position:absolute;inset:18px 24px auto;display:flex;justify-content:space-between;align-items:flex-start;gap:20px;pointer-events:none;z-index:5}
 #app .stage-map .map-title{position:static;max-width:none;padding:15px 20px;border:1px solid #fffdf3;background:#fffdf3f2;border-radius:20px;box-shadow:0 6px 24px #24402b12}
-#app .map-eyebrow{display:block;font-family:var(--font-body);font-weight:700;font-size:12px;letter-spacing:.02em;color:#74805f}
+#app .map-eyebrow{display:block;font-family:var(--font-body);font-weight:700;font-size:18px;letter-spacing:.02em;color:#74805f}
 #app .stage-map .map-title h1{font-size:26px;line-height:1.25;margin:5px 0 6px;color:#2c5037}
 #app .stage-map .map-title p{font-size:15px;line-height:1.4;margin:0;color:#626f59}
 #app .stage-map .map-seeds{position:absolute;left:0;top:134px;max-width:220px;background:#fffdf3f2;padding:14px 18px;border-radius:20px;border:1px solid #fffdf3;box-shadow:0 6px 24px #24402b12}
@@ -56,7 +56,7 @@
 #app .stage-map .seed-dots{gap:5px}
 #app .stage-map .seed-dot{width:30px;height:36px}
 #app .stage-map .seed-progress strong{font-size:17px;white-space:nowrap}
-#app .map-progress-caption{display:block;margin-top:7px;font-size:12px;color:#6b775e;text-align:center;line-height:1.5}
+#app .map-progress-caption{display:block;margin-top:7px;font-size:18px;color:#6b775e;text-align:center;line-height:1.5}
 #app .stage-map .map-bottom{left:24px;right:24px;bottom:16px;align-items:flex-end;gap:20px;z-index:5}
 #app .map-bottom .map-navigation{display:flex;align-items:center;gap:16px;background:#fffdf2ed;padding:12px 18px 12px 12px;border:1px solid #fffdf7;border-radius:24px;box-shadow:0 8px 24px #24402b12}
 #app .map-dpad{display:grid;grid-template-columns:repeat(3,48px);grid-template-rows:repeat(2,48px);gap:4px}

@@ -566,7 +566,7 @@ html body[data-screen] .toast { top: calc(var(--hud-top) + 8px); max-width: min(
   #app .field-season-images :is(svg,.season-atlas) { height: 135px; min-height: 135px; }
   #app .field-season-images .season-atlas { width: min(100%, 202px); height: auto; min-height: 0; }
   #app .field-season-images :is(.season-dig, .link-target) { width: min(100%, 202px); }
-  #app .field-season-images .field-token, #app .field-link-targets .field-target { font-size: 16px; }
+  #app .field-season-images .field-token, #app .field-link-targets .field-target { font-size: 18px; }
   #app .field-restoration { gap: 10px; }
   #app .field-garden-zone { min-height: 205px; padding: 10px; }
   #app .field-garden-zone > strong { font-size: 18px; }

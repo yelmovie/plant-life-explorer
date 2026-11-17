@@ -6,7 +6,7 @@
 #app .zone-ground img { width: 100%; height: 100%; object-fit: cover; opacity: .55; }
 #app .zone-water { position: absolute; left: 0; right: 0; bottom: 0; height: 0; z-index: 0; pointer-events: none; background: linear-gradient(#8fd0e8cc, #4f9fc4cc); border-radius: 50% 50% 0 0 / 18px 18px 0 0; transition: height 1.2s ease-out; }
 #app .field-garden-zone > strong { padding: 2px 12px; border-radius: 12px; background: #fffcefd9; font: 20px/1.3 var(--font-display, var(--font-body)); }
-#app .field-garden-zone > .field-zone-name { padding: 2px 10px; border-radius: 10px; background: #fffcefb3; color: #4b5a3c; font-size: 15px; }
+#app .field-garden-zone > .field-zone-name { padding: 2px 10px; border-radius: 10px; background: #fffcefb3; color: #4b5a3c; font-size: 18px; }
 #app .field-garden-zone > img.plant-illustration { flex: none; height: 110px; }
 #app .field-garden-zone > img + span, #app .field-garden-zone > .field-plant-space { padding: 2px 10px; border-radius: 12px; background: #fffcefd9; }
 
@@ -54,7 +54,7 @@
 #app .garden-field.rainbow::before { content: ''; position: absolute; left: 50%; top: -10px; z-index: 7; width: 420px; height: 210px; margin-left: -210px; border-radius: 210px 210px 0 0; pointer-events: none; background: radial-gradient(circle at 50% 100%, transparent 58%, #e5737380 59%, #f2b55a80 63%, #f2e36a80 67%, #8fd06a80 71%, #6aaee080 75%, #9a7ad880 79%, transparent 80%); animation: garden-rainbow 2.4s ease-out forwards; }
 @keyframes garden-rainbow { 0% { clip-path: inset(0 100% 0 0); opacity: 1; } 40% { clip-path: inset(0 0 0 0); opacity: 1; } 100% { clip-path: inset(0 0 0 0); opacity: 0; } }
 
-@media (max-width: 1100px) { #app .garden-cloud-btn { min-height: 60px; font-size: 18px; } #app .garden-card { font-size: 16px; padding-right: 12px; } }
+@media (max-width: 1100px) { #app .garden-cloud-btn { min-height: 60px; font-size: 18px; } #app .garden-card { font-size: 18px; padding-right: 12px; } }
 @media (prefers-reduced-motion: reduce) {
  #app .garden-cloud-art, #app .field-garden-zone :is(.zone-water, .zone-ground), #app .field-garden-zone.just-planted > img, #app .field-garden-zone.missed, #app .garden-field.storm .field-garden-zone::after { animation: none !important; }
  #app .garden-field.rainbow::before { display: none; }

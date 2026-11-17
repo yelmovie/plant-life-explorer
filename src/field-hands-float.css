@@ -4,7 +4,7 @@
 #app .float-lab .field-float-model { width: auto; height: var(--mh); object-fit: contain; filter: drop-shadow(0 7px 4px #244a3c33); pointer-events: none; }
 #app .float-hint > span { padding: 4px 16px; border-radius: 999px; background: #fffdf3e6; }
 #app .float-bench { display: flex; flex-wrap: nowrap; align-items: flex-end; justify-content: center; gap: 12px; padding: 12px 10px 16px; border-radius: 18px; background: linear-gradient(#fffdf399 0 74%, #c9a777 74% 84%, #a9845a 84%); }
-#app .float-empty { margin: auto; color: #5a6b4c; font: 17px/1.35 var(--font-display); text-align: center; }
+#app .float-empty { margin: auto; color: #5a6b4c; font: 18px/1.35 var(--font-display); text-align: center; }
 /* The shared tank. Models sit under a translucent water layer so the wet part looks submerged. */
 #app .float-tank { position: relative; min-height: 280px; border: 3px solid #d5efe5; border-top: 12px solid #e6f8ef; border-radius: 22px 22px 32px 32px; background: linear-gradient(#d6eff2aa 0 var(--surface), #6ac6d4cc var(--surface) 80%, #4c9dacc7); box-shadow: inset 0 0 32px #ffffff80, 0 9px 0 #34686b35; transition: box-shadow .2s; }
 #app .float-tank::before { content: ''; position: absolute; left: 0; right: 0; top: var(--surface); height: 3px; background: #e2faff; z-index: 3; }
@@ -19,11 +19,11 @@
 #app .float-tag { position: absolute; left: 50%; bottom: calc(100% + 2px); transform: translateX(-50%); padding: 2px 10px; border-radius: 999px; background: #f2f9dc; border: 2px solid #8fb36a; color: #2f4a26; font: 15px/1.3 var(--font-display); white-space: nowrap; }
 #app .float-ripple { position: absolute; top: var(--surface); z-index: 4; width: 130px; height: 26px; margin: -13px 0 0 -65px; border: 3px solid #ffffffd9; border-radius: 50%; pointer-events: none; animation: float-ripple .85s ease-out forwards; }
 @keyframes float-ripple { from { transform: scale(.2); opacity: 1; } to { transform: scale(1.5); opacity: 0; } }
-#app .float-say { position: absolute; right: 12px; top: 10px; z-index: 6; max-width: 60%; padding: 4px 12px; border-radius: 12px; background: #fffdf3f0; color: #2f4a26; font: 17px/1.35 var(--font-display); opacity: 0; pointer-events: none; }
+#app .float-say { position: absolute; right: 12px; top: 10px; z-index: 6; max-width: 60%; padding: 4px 12px; border-radius: 12px; background: #fffdf3f0; color: #2f4a26; font: 18px/1.35 var(--font-display); opacity: 0; pointer-events: none; }
 #app .float-say.show { animation: float-say 2.6s ease forwards; }
 @keyframes float-say { 0% { opacity: 0; transform: translateY(6px); } 10%, 80% { opacity: 1; transform: none; } 100% { opacity: 0; } }
-#app .float-tank-label { position: absolute; left: 12px; bottom: 8px; z-index: 3; padding: 2px 10px; border-radius: 999px; background: #ffffffb3; color: #24505a; font: 15px/1.3 var(--font-display); pointer-events: none; }
-#app .float-model.on-bench { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1 1 0; min-width: 0; max-width: 170px; padding: 6px 10px; font: 17px/1.25 var(--font-display); color: var(--scene-ink); text-align: center; touch-action: manipulation; user-select: none; -webkit-user-select: none; cursor: pointer; }
+#app .float-tank-label { position: absolute; left: 12px; bottom: 8px; z-index: 3; padding: 2px 10px; border-radius: 999px; background: #ffffffb3; color: #24505a; font: 18px/1.3 var(--font-display); pointer-events: none; }
+#app .float-model.on-bench { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1 1 0; min-width: 0; max-width: 170px; padding: 6px 10px; font: 18px/1.25 var(--font-display); color: var(--scene-ink); text-align: center; touch-action: manipulation; user-select: none; -webkit-user-select: none; cursor: pointer; }
 #app .float-model.on-bench > span { padding: 2px 10px; border-radius: 12px; background: #fffdf3e6; word-break: keep-all; text-wrap: balance; }
 #app .float-model.on-bench img { transition: transform .2s; }
 #app .float-model.on-bench:hover img { transform: translateY(-6px); }
@@ -38,7 +38,7 @@
 #app .heft-hand { position: absolute; left: 50%; bottom: 14px; width: 150px; height: 46px; margin-left: -75px; border-radius: 50% 50% 40% 40%; background: #f2c9a0; box-shadow: inset 0 -6px 0 #d9a77a; }
 #app .heft-side { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 10px; text-align: center; }
 #app .heft-side strong { font: 19px/1.3 var(--font-display); color: var(--scene-ink); word-break: keep-all; }
-#app .heft-side .heft-inside { margin-top: -6px; color: #5f6e52; font: 14px/1.3 var(--font-body); word-break: keep-all; }
+#app .heft-side .heft-inside { margin-top: -6px; color: #5f6e52; font: 18px/1.3 var(--font-body); word-break: keep-all; }
 /* The model and hand stay inside the palm column so they never cover the label beside them. */
 #app .heft-palm { overflow: hidden; }
 #app .heft-model { max-width: 100%; }
@@ -47,14 +47,14 @@
 /* Where the models come from: a cut water hyacinth leaf stalk full of air rooms. */
 #app .float-origin { display: flex; align-items: center; gap: 14px; margin: 0 0 8px; padding: 8px 14px; border-radius: 16px; background: #fffdf3e6; }
 #app .float-origin-pic { flex: none; width: 92px; height: 72px; object-fit: contain; }
-#app .float-origin p { margin: 0; font: 17px/1.45 var(--font-display); color: var(--scene-ink); word-break: keep-all; }
+#app .float-origin p { margin: 0; font: 18px/1.45 var(--font-display); color: var(--scene-ink); word-break: keep-all; }
 #app .float-origin b { color: #3d6b45; font-weight: 400; }
 #app .heft-meter { position: relative; height: 22px; border-radius: 999px; background: #e3e9d6; overflow: hidden; box-shadow: inset 0 2px 0 #0000001a; }
 #app .heft-meter i { position: absolute; inset: 0 auto 0 0; width: calc(var(--w,0) * 100%); border-radius: inherit; background: linear-gradient(90deg,#8fc46a,#e2b04a 60%,#d9773f); transition: width .25s; }
-#app .heft-word { min-height: 2.6em; text-wrap: balance; color: #3d5a32; font: 17px/1.3 var(--font-display); word-break: keep-all; }
+#app .heft-word { min-height: 2.6em; text-wrap: balance; color: #3d5a32; font: 18px/1.3 var(--font-display); word-break: keep-all; }
 /* Vertical predict switch: knob dragged up (float) or down (sink); the labels are tap targets too. */
 #app .heft-switch { display: flex; flex-direction: column; align-items: center; gap: 6px; transition: opacity .2s; }
-#app .sw-label { min-height: 48px; width: 100%; display: grid; place-items: center; padding: 4px 6px; border-radius: 12px; background: #eef5f7; color: #24505a; font: 15px/1.2 var(--font-display); text-align: center; word-break: keep-all; cursor: pointer; }
+#app .sw-label { min-height: 48px; width: 100%; display: grid; place-items: center; padding: 4px 6px; border-radius: 12px; background: #eef5f7; color: #24505a; font: 18px/1.2 var(--font-display); text-align: center; word-break: keep-all; cursor: pointer; }
 #app .sw-track { position: relative; width: 56px; height: 150px; border-radius: 999px; background: linear-gradient(#d6eff2, #8fd3dc 50%, #4c9dac); box-shadow: inset 0 3px 6px #0000002a; }
 #app .sw-knob { position: absolute; left: 4px; top: calc(50% - 24px); width: 48px; height: 48px; border-radius: 50%; background: #fffdf3; box-shadow: 0 4px 0 #8a9a7a, 0 0 0 3px #3d663f; touch-action: none; cursor: grab; transition: transform .25s cubic-bezier(.34,1.56,.5,1); }
 #app .sw-knob.held { transition: none; cursor: grabbing; }
@@ -74,7 +74,7 @@
 #app .float-press.on { opacity: 1; }
 #app .float-press i { position: absolute; left: 4px; right: 4px; bottom: 4px; height: calc(var(--p,0) * (100% - 8px)); border-radius: 999px; background: linear-gradient(#d9773f, #f2c94c); }
 #app .float-press.full i { --shake: 1; animation: float-push .1s linear infinite; }
-#app .float-press b { position: absolute; right: 36px; bottom: 0; padding: 2px 8px; border-radius: 999px; background: #ffffffd9; color: #24505a; font: 14px/1.3 var(--font-display); white-space: nowrap; }
+#app .float-press b { position: absolute; right: 36px; bottom: 0; padding: 2px 8px; border-radius: 999px; background: #ffffffd9; color: #24505a; font: 18px/1.3 var(--font-display); white-space: nowrap; }
 
 /* Step 3: the petiole, then the tank model it explains. */
 @keyframes float-glow { to { box-shadow: 0 0 0 5px #f6e27a77; } }
@@ -101,7 +101,7 @@
  #app .float-tank { min-height: 230px; }
  #app .heft-palm { min-height: 190px; }
  #app .float-heft { grid-template-columns: minmax(0,.75fr) minmax(0,1.25fr) 84px; padding: 10px; gap: 6px 8px; }
- #app .sw-label { font-size: 14px; }
+ #app .sw-label { font-size: 18px; }
  #app .petiole-cut { max-width: 270px; }
  #app .float-lab.record { grid-template-columns: minmax(0,1.2fr) minmax(220px,1fr); }
 }
@@ -114,7 +114,7 @@
 @media (max-height: 780px) {
  #app .float-origin { margin-bottom: 4px; padding: 6px 12px; }
  #app .float-origin-pic { width: 64px; height: 48px; }
- #app .float-origin p { font-size: 15px; line-height: 1.4; }
+ #app .float-origin p { font-size: 18px; line-height: 1.4; }
  #app .heft-palm { min-height: 160px; padding-bottom: 40px; }
  #app .float-tank { min-height: 180px; }
  #app .petiole-cut { max-width: 250px; }

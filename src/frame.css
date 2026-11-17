@@ -52,10 +52,10 @@
 #app .exploration-activity .today-steps .mission-step.active b { background: #cbe6a4; border-color: #cbe6a4; color: #26462e; }
 #app .exploration-activity .today-steps .mission-step.done:not(.active) { background: #e2eec8; color: #2e5d3d; }
 #app .exploration-activity .today-steps .mission-step.done:not(.active) b { background: #5d8f4b; border-color: #5d8f4b; color: #fff; }
-#app .today-panel :is(details, .miss-note) { margin: 0; font-size: 16px; }
+#app .today-panel :is(details, .miss-note) { margin: 0; font-size: 18px; }
 #app .today-panel details > summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; color: #3f5d3b; font-family: var(--font-display); }
-#app .today-panel details > p { margin: 0; font-size: 16px; line-height: 1.5; color: #46553d; }
-#app .today-panel .btn { min-height: 48px; font-size: 17px; }
+#app .today-panel details > p { margin: 0; font-size: 18px; line-height: 1.5; color: #46553d; }
+#app .today-panel .btn { min-height: 48px; font-size: 18px; }
 
 #app .guide-talk { display: flex; flex-direction: column; align-items: stretch; justify-content: flex-end; gap: 4px; flex: 1 0 auto; min-height: 0; }
 #app .exploration-activity .guide-talk .guide-bubble {
@@ -68,7 +68,7 @@
 #app .guide-avatar { display: flex; align-items: flex-end; gap: 4px; padding-left: 6px; min-height: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer; }
 #app .exploration-activity .guide-avatar .guide-mascot { order: 0; height: clamp(100px, 19vh, 176px); min-height: 0; width: auto; max-width: 130px; flex-shrink: 1; }
 #app .exploration-activity .guide-avatar .guide-partner {
-  order: 1; margin-bottom: 8px; padding: 3px 12px; font-size: 16px; line-height: 1.25;
+  order: 1; margin-bottom: 8px; padding: 3px 12px; font-size: 18px; line-height: 1.25;
   white-space: normal; max-width: 7.5em; text-align: center;
   color: #fffced; background: var(--today-head-bottom); border-radius: 999px; box-shadow: 0 2px 0 #173824;
 }
@@ -299,13 +299,13 @@ dialog::backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; backgro
 }
 #app .garden-workbench .garden-frame .spatial-controls button {
   width: 100%; min-width: 0; height: auto; min-height: 48px;
-  font-size: 16px; white-space: normal; padding: 6px 8px;
+  font-size: 18px; white-space: normal; padding: 6px 8px;
 }
 #app .garden-frame .spatial-controls [data-view="orbit"] { grid-column: span 2; }
 #app .garden-frame .spatial-controls [data-view="orbit"][aria-pressed="true"] { background: #315d40; color: #fffcef; border-color: #315d40; }
 #app .garden-frame .garden-angle {
   grid-column: span 2; display: flex; align-items: center; justify-content: center; gap: 6px;
-  color: #31543b; font: 16px/1.25 var(--font-display);
+  color: #31543b; font: 18px/1.25 var(--font-display);
 }
 #app .garden-frame .garden-angle select {
   min-width: 0; width: 60%; min-height: 48px; padding: 5px 8px;
@@ -313,7 +313,7 @@ dialog::backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; backgro
 }
 #app .garden-workbench .garden-frame .spatial-controls > .garden-view-hint {
   grid-column: 1 / -1; display: block; margin: 0; padding: 0; text-align: center;
-  background: none; font: 16px/1.3 var(--font-body); color: #415c3d;
+  background: none; font: 18px/1.3 var(--font-body); color: #415c3d;
 }
 #app .garden-workbench .garden-frame.spatial-flat .spatial-controls { display: flex; justify-content: center; }
 #app .garden-workbench .garden-frame.spatial-flat { padding: 0 8px var(--garden-controls-height, 80px) !important; }
@@ -372,12 +372,12 @@ dialog::backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; backgro
   display: flex; flex-direction: column; gap: 6px; min-width: 0; padding: 10px;
   border-radius: 18px; background: #fffcedeb; box-shadow: 0 4px 14px #294c3518;
 }
-#app .garden-palette .palette-label { display: flex; align-items: baseline; gap: 6px; margin: 0; font: 17px/1.2 var(--font-display); color: #2f5a3b; }
-#app .garden-palette .palette-label small { font: 14px/1.2 var(--font-body); color: #53664a; }
+#app .garden-palette .palette-label { display: flex; align-items: baseline; gap: 6px; margin: 0; font: 18px/1.2 var(--font-display); color: #2f5a3b; }
+#app .garden-palette .palette-label small { font: 18px/1.2 var(--font-body); color: #53664a; }
 #app .garden-palette .terrain-tools { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; min-height: 0; margin: 0; }
 #app .garden-palette .terrain-tools .btn {
   display: flex; align-items: center; justify-content: flex-start; gap: 6px; min-width: 0; min-height: 52px;
-  padding: 4px 8px; font-size: 16px; line-height: 1.2; white-space: normal; cursor: grab; touch-action: none;
+  padding: 4px 8px; font-size: 18px; line-height: 1.2; white-space: normal; cursor: grab; touch-action: none;
 }
 #app .garden-palette .terrain-tools .habitat-picture { flex: none; width: 40px; height: 34px; }
 #app .garden-palette .soil-swatch { flex: none; width: 34px; height: 26px; border-radius: 6px; background: linear-gradient(#8a6440, #6d4c2e); box-shadow: inset 0 -3px 0 #4e3520; }
@@ -387,11 +387,11 @@ dialog::backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; backgro
   width: auto; min-width: 0; min-height: 86px; padding: 4px; text-align: center; cursor: grab;
 }
 #app .garden-palette .garden-plant-pick img { width: auto; height: 44px; }
-#app .garden-palette .garden-plant-pick span { font-size: 16px; line-height: 1.2; }
-#app .garden-palette .garden-plant-pick small { font-size: 14px; line-height: 1.2; }
+#app .garden-palette .garden-plant-pick span { font-size: 18px; line-height: 1.2; }
+#app .garden-palette .garden-plant-pick small { font-size: 18px; line-height: 1.2; }
 #app .garden-palette > .btn { min-height: 48px; }
 #app .garden-palette :is(.terrain-tools .btn, .garden-plant-pick).drag-origin { opacity: .45; }
-#app .garden-feedback .garden-move-tip { margin: 0; font-size: 15px; line-height: 1.35; color: #53664a; }
+#app .garden-feedback .garden-move-tip { margin: 0; font-size: 18px; line-height: 1.35; color: #53664a; }
 /* Short landscape screens: a slimmer palette leaves room for the progress panel under it. */
 @media (min-width: 901px) and (orientation: landscape) and (max-height: 820px) {
   #app .garden-palette { gap: 4px; padding: 8px; }
@@ -478,10 +478,10 @@ dialog::backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; backgro
 #app .objective-keys { min-height: 48px; padding: 6px 14px; font-size: 16px; background: #fffdf3; color: #2f4a26; border: 2px solid #b9d39a; box-shadow: 0 3px 0 #b9d39a; }
 #app .objective-keys[aria-pressed="true"] { background: #e3f0cf; }
 #app .leaf-tap-controls { display:grid; gap:6px; margin-top:6px; }
-#app .leaf-tap-controls .field-hotspot { position:static; min-width:0; min-height:44px; width:100%; padding:4px 6px; font-size:clamp(13px,1.4vw,17px); line-height:1.2; }
+#app .leaf-tap-controls .field-hotspot { position:static; min-width:0; min-height:44px; width:100%; padding:4px 6px; font-size:clamp(18px,1.4vw,20px); line-height:1.2; }
 #app .leaf-tap-controls .leaf-tap-next { outline:2px solid #507a36; outline-offset:-2px; }
 #app .leaf-tap-primary { position:relative; z-index:8; display:grid; grid-template-columns:auto repeat(2,minmax(0,1fr)); align-items:center; gap:8px; margin:0 0 8px; padding:6px 8px; border-radius:12px; background:#fffdf3; }
-#app .leaf-tap-primary > strong { color:#274f3a; font-size:clamp(13px,1.6vw,18px); }
+#app .leaf-tap-primary > strong { color:#274f3a; font-size:clamp(18px,1.6vw,20px); }
 @media (max-width:600px) { #app .leaf-tap-primary { grid-template-columns:repeat(2,minmax(0,1fr)); } #app .leaf-tap-primary > strong { grid-column:1 / -1; } }
 #app .field-mission .keys-panel {
   position: static;
@@ -510,19 +510,19 @@ body #dialog > .dialog-body > p { font-size: var(--font-size-sm); color: var(--m
 
 /* Mission 4 page 2: keep-or-change check for the student's own garden. */
 #app .garden-confirm { display: grid; gap: 5px; margin-top: 0; padding: 8px 10px; border-radius: 16px; background: #fff8e1; border: 2px solid #f2c94c; }
-#app .garden-confirm > p { margin: 0; font-size: 16px; line-height: 1.4; color: var(--scene-ink, #2f4a26); }
+#app .garden-confirm > p { margin: 0; font-size: 18px; line-height: 1.4; color: var(--scene-ink, #2f4a26); }
 #app .garden-confirm-picks { display: grid; gap: 5px; }
 #app .garden-confirm-picks .btn { display: grid; justify-items: start; gap: 2px; min-height: 44px; padding: 4px 12px; text-align: left; white-space: normal; }
 /* Changing the land is the other choice, so it looks different from the three spots. */
-#app .garden-confirm > .btn { min-height: 44px; padding: 4px 12px; font-size: 16px; background: transparent; border: 2px dashed #c9a94a; box-shadow: none; }
-#app .garden-confirm-picks .btn small { font-size: 15px; line-height: 1.35; }
+#app .garden-confirm > .btn { min-height: 44px; padding: 4px 12px; font-size: 18px; background: transparent; border: 2px dashed #c9a94a; box-shadow: none; }
+#app .garden-confirm-picks .btn small { font-size: 18px; line-height: 1.35; }
 
 /* 자동 진행 sits right under the sound/settings icons. */
 #app .topbar .header-tools { position: relative; }
 #app .topbar .auto-play-dock { position: absolute; top: 100%; right: 0; margin-top: 8px; }
 #app .topbar .auto-play-dock .btn { min-height: 44px; white-space: nowrap; }
 #app .today-panel .field-step-tools { display: flex; gap: 6px; }
-#app .today-panel .field-step-tools .btn { flex: 1 1 0; min-width: 0; min-height: 48px; padding: 4px 8px; font-size: 16px; justify-content: center; white-space: nowrap; }
+#app .today-panel .field-step-tools .btn { flex: 1 1 0; min-width: 0; min-height: 48px; padding: 4px 8px; font-size: 18px; justify-content: center; white-space: nowrap; }
 
 /* Every activity: the left panel and the workspace fit one screen; Leafy shrinks first, but never below a tappable
    84px. Past that, 오늘의 연구 scrolls inside itself so Leafy's reply bubble always stays on screen. */
