@@ -19,7 +19,16 @@ wrangler pages deploy dist --project-name leafy-garden --branch main
 
 이 Mac에는 시스템 Node가 없다. 도구는 외장 SSD에만 둔다: Node `DevCaches/tools/node-v24.22.2-darwin-arm64`, wrangler `DevCaches/tools/wrangler-4.154.0`(exFAT라 `--no-bin-links`로 설치). wrangler 로그인 정보는 `HOME=DevCaches/tools/wrangler-home`으로 실행해 SSD에 저장한다. 빌드는 `ESBUILD_MODULE_PATH`를 그 wrangler의 `node_modules/esbuild`로 지정한다. exFAT가 만드는 `._*` 파일은 업로드 전에 `dist`에서 지운다.
 
-## 최근 배포 — 2026-11-01 (리피 힌트 버튼이 탐구 화면에서 사라지던 문제 수정)
+## 최근 배포 — 2026-11-18 (3초 규칙 디자인 고도화)
+
+- 기능 커밋: `bf5f601`(지시 한 곳·진행 알약), `c760f40`(팝업 배경 0.26·의뢰 편지 3줄), `09f187d`·`8a048e7`(학생 글자 18px 이상, 완료 시 말풍선이 주 버튼 이름을 부름), `87e3fd9`(AGENTS 배포 자동 승인 문구). GitHub `main`에 푸시.
+- 1차 배포 https://996f6b23.leafy-garden.pages.dev (`87e3fd9`), 그 뒤 다른 세션의 효과음 배포 `d66ffa4`, 최종 배포 https://01762ec8.leafy-garden.pages.dev (`8a048e7`, `dirty=false`). 되돌릴 대상: https://1b7d5aae.leafy-garden.pages.dev (`d66ffa4`), 그 전 https://0b0e9b9b.leafy-garden.pages.dev (`01afada`).
+- 빌드는 다른 세션의 미커밋 변경이 섞이지 않게 `.tmp/deploy-wt`(해당 커밋의 git worktree)에서 했다. 운영 주소 `build-info.json` 커밋 `8a048e7`, `src/app.bundle.js`·`src/bundle.css` SHA-256이 로컬 빌드와 같음을 확인했다.
+- 바뀐 것: 활동 화면 위쪽 제목 띠와 3단계 탭을 가운데 위 알약 하나(장소 이름 + 1·2·3)로 합치고 자동 진행을 오른쪽 위 줄로 올려 놀이 영역이 화면 높이의 79~84%가 됐다. 현장 임무의 지시는 리피 말풍선 한 곳(장면 안 같은 문장은 숨김), 알림은 장면 위 짧은 표시로 바꿔 말풍선을 덮어쓰지 않는다. 미션 5 첫 예상 화면에서 질문이 숨고 말풍선이 엉뚱한 안내를 하던 문제도 고쳤다. 팝업 배경은 `--scrim`(0.26) 하나로 통일, 의뢰 편지는 3줄 + 「출발」, 폭 640px(1280×800에서 면적 29%).
+- 검증(Mac, Node v24.22.2): `npm run check` 57개 파일, `npm test` 158/158. 1280×800·1920×1080·1024×768에서 홈·지도·의뢰 편지·현장 임무 5개·탐구 기록 10개·보고서·최종 화면을 열어 재고 캡처했다(`.tmp/design-3sec-20261117/before`·`after`, Git 제외). 지도 장소 이름은 계산값 16px이지만 지도 확대(`--map-scale`)로 실제 표시는 약 20px이다.
+- 미검증: 실물 iPad Safari·Android Chrome 손가락 터치, 태블릿 GPU, 학생 반응. 헤드리스 캡처는 WebGL을 끈 상태라 정원·잎자루 입체 대신 그림 화면이 나온다.
+
+## 이전 배포 — 2026-11-01 (리피 힌트 버튼이 탐구 화면에서 사라지던 문제 수정)
 
 - 기능 커밋: `3323a9e`(`sort-board-drag`, GitHub push 안 함). 배포 빌드 커밋 `3323a9e9d3870afdfd6e9147eb9a9f728fc29d26`, `dirty=false`.
 - 배포 주소: https://cc5a6132.leafy-garden.pages.dev
