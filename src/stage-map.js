@@ -35,7 +35,8 @@ export function mountStageMap(root,ui,onArrive,encounterOptions={}){
   let hand=false,free=null,grab=null,dragged=false,zoom=1,saved=null,cameraAt=0,settle=0;
   const touches=new Map();let pinch=null;
   const reduce=matchMedia('(prefers-reduced-motion: reduce)');
-  const blocked=()=>document.querySelector('#dialog')?.open||root.querySelector('.map-load-error');
+  // An open achievement card makes #app inert: walking waits like it does behind a dialog.
+  const blocked=()=>document.querySelector('#dialog')?.open||root.closest('[inert]')||root.querySelector('.map-load-error');
   const flower=document.createElement('div');flower.className='map-walker map-flower';flower.setAttribute('aria-hidden','true');
   flower.innerHTML=assetImage('mascot_flower');flower.style.width='54px';
   const encounters=mountVillageEncounters({host:viewport,clearIndex:encounterOptions.clearIndex,stages:ENTRANCES.map((entry,i)=>{

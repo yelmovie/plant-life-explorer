@@ -84,24 +84,34 @@ const MAP_SOUNDS={
   contact:['/assets/audio/sfx/hurt-bump-01.mp3',0.7],
   victory:['/assets/audio/sfx/victory-jingle-04.mp3',0.4],
 };
+// Achievement cards (reward-cards.js) share that voice: fly in, reveal (the two rarest use the longer jingle), land in a slot, full set.
+const CARD_SOUNDS={
+  'card-whoosh':['/assets/audio/sfx/wind-whoosh-03.mp3',0.5],
+  'card-reveal':['/assets/audio/sfx/reward-01.mp3',0.5],
+  'card-epic':['/assets/audio/sfx/reward-03.mp3',0.5],
+  'card-slot':['/assets/audio/sfx/pickup-01.mp3',0.6],
+  'card-complete':['/assets/audio/sfx/victory-jingle-01.mp3',0.4],
+};
+const sampleOf=key=>MAP_SOUNDS[key]??CARD_SOUNDS[key];
 const samples=new Map();
 const activated=()=>globalThis.navigator?.userActivation?.hasBeenActive!==false;
 function loadSample(key){
-  if(samples.has(key)||!MAP_SOUNDS[key])return;
+  if(samples.has(key)||!sampleOf(key))return;
   // An offline context decodes before any tap, so preloading never trips the autoplay policy.
   const Offline=globalThis.window?.OfflineAudioContext||globalThis.window?.webkitOfflineAudioContext;
   if(!Offline||typeof fetch!=='function'){samples.set(key,null);return;}
   samples.set(key,null);
-  fetch(MAP_SOUNDS[key][0]).then(r=>{if(!r.ok)throw new Error(r.status);return r.arrayBuffer();})
+  fetch(sampleOf(key)[0]).then(r=>{if(!r.ok)throw new Error(r.status);return r.arrayBuffer();})
     .then(data=>new Offline(1,1,44100).decodeAudioData(data)).then(buffer=>{samples.set(key,buffer);})
     .catch(()=>{/* The synthesized fallback keeps the map responsive. */});
 }
 export function preloadMapSounds(){if(effectsEnabled)for(const key of Object.keys(MAP_SOUNDS))loadSample(key);}
+export function preloadCardSounds(){if(effectsEnabled)for(const key of Object.keys(CARD_SOUNDS))loadSample(key);}
 const MAP_TONES={swing:[300,520,.08,.03,'sine'],hit1:[390,235,.09,.05,'sine'],hit2:[470,205,.16,.07,'triangle'],finish:[670,310,.28,.05,'sine'],contact:[210,133,.12,.05,'triangle']};
 // kind: swing (button pressed), hit (strike lands; hits 1 or 2), finish (third strike), exit, appear, contact, victory.
 export function playMapEncounter(kind,hits){
   const key=kind==='hit'?(hits===2?'hit2':'hit1'):kind;
-  if(!effectsEnabled||globalThis.document?.hidden||!MAP_SOUNDS[key]||!activated())return;
+  if(!effectsEnabled||globalThis.document?.hidden||!sampleOf(key)||!activated())return;
   const buffer=samples.get(key);
   if(!buffer){loadSample(key);if(MAP_TONES[key])chirp(...MAP_TONES[key]);return;}
   const AudioContext=globalThis.window?.AudioContext||globalThis.window?.webkitAudioContext;if(!AudioContext)return;
@@ -110,12 +120,14 @@ export function playMapEncounter(kind,hits){
     if(currentClick?.lead)currentClick=null;else stopClick();
     if(context.state==='suspended')void context.resume().catch(()=>{});
     const tone=context.createBufferSource(),volume=context.createGain();
-    tone.buffer=buffer;volume.gain.value=MAP_SOUNDS[key][1];
+    tone.buffer=buffer;volume.gain.value=sampleOf(key)[1];
     currentClick={tone,volume,sample:true,lead:key==='swing'};
     tone.connect(volume);volume.connect(context.destination);tone.start();
     tone.onended=()=>{tone.disconnect();volume.disconnect();if(currentClick?.tone===tone)currentClick=null;};
   }catch{stopClick();}
 }
+// name: whoosh, reveal, epic, slot, complete. The finale jingle ('victory') takes over the voice, so the two never overlap.
+export function playCardSound(name){playMapEncounter('card-'+name);}
 export function playDragSound(kind){const s=DRAG_SOUNDS[kind];if(s)chirp(...s);}
 function chirp(from,to,length,gain,type){
   if(!effectsEnabled||globalThis.document?.hidden)return;

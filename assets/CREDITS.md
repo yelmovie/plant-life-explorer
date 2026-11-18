@@ -160,3 +160,15 @@
 | `audio/sfx/leaf-rustle-02.mp3` | 악당 등장(덤불 바스락, 작게) | Leaves Rustling Mastered · 12062703 | CC0 · https://freesound.org/people/12062703/sounds/449528 |
 | `audio/sfx/hurt-bump-01.mp3` | 아군이 악당에 닿을 때 | LowHit_01.wav · Faulkin | CC0 · https://freesound.org/people/Faulkin/sounds/336495 |
 | `audio/sfx/victory-jingle-04.mp3` | 다섯 악당 모두 격퇴(피날레 영상 직전, 영상은 무음) | game-win.mp3 · mickleness | CC0 · https://freesound.org/people/mickleness/sounds/269198 |
+
+## 2026-11-18 성취 카드 (지도 악당 격퇴 보상)
+
+카드 그림 5장(`reward-cards/card-*.webp` 640×960, `thumb-*.webp` 96×144)은 기존 리피·꽃이 그림과 장소 배경을 참고로 GPT 이미지(Codex 내장 이미지 도구)로 생성해 WebP로 줄였다. 효과음 5개는 과학34 공통 효과음 라이브러리(`_shared/sfx-library-20261117`, 라이선스 재확인 CC0만)에서 `audio/sfx/`에 그대로 복사했다(앞뒤 무음 제거·음량 정규화·모노 MP3, 피치·속도 변경 없음). 효과음 끄기·전체 음소거·탭 숨김을 따른다.
+
+| 파일 | 쓰는 곳 | 원본 · 만든 사람 | 라이선스 · 출처 |
+|---|---|---|---|
+| `audio/sfx/wind-whoosh-03.mp3` | 성취 카드가 날아올 때·보관함으로 들어갈 때 | Slow Swosh 40 · qubodup | CC0 · https://freesound.org/people/qubodup/sounds/60027 |
+| `audio/sfx/reward-01.mp3` | 성취 카드 공개(별 1~3개) | Fantasy_ui_Button_3.wav · ZenithInfinitiveStudios | CC0 · https://freesound.org/people/ZenithInfinitiveStudios/sounds/376745 |
+| `audio/sfx/reward-03.mp3` | 성취 카드 공개(별 4~5개) | Achievement Happy Beeps Jingle · CogFireStudios | CC0 · https://freesound.org/people/CogFireStudios/sounds/619838 |
+| `audio/sfx/pickup-01.mp3` | 카드가 보관함 칸에 들어갈 때 | item-pickup-v1.wav · DeltaCode | CC0 · https://freesound.org/people/DeltaCode/sounds/678384 |
+| `audio/sfx/victory-jingle-01.mp3` | 카드 5장 완성 축하 | Game Success Fanfare Short · el_boss | CC0 · https://freesound.org/people/el_boss/sounds/677858 |
