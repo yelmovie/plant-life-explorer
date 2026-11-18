@@ -714,7 +714,8 @@
    "sha256": "3f37b2d6c473de8bffd0a7cb20bb53aff3c32e6977182ce17102ebf3100173b1",
    "file": "assets/audio/lipi-concept-2-0.mp3",
    "screen": "notebook concept frame",
-   "reviewNote": "\"잎자루\"[입짜루]·\"부레옥잠\"을 받아쓰기가 다른 말로 적음. 낱말 자체 발음 문제로 보지만 사람 청취 미확인 / 재생성 1회(yUEjHMddUZlb0o9RvG09, 0.786)도 같은 받아쓰기라 원래 파일 유지"
+   "reviewNote": "\"잎자루\"[입짜루]·\"부레옥잠\"을 받아쓰기가 다른 말로 적음. 낱말 자체 발음 문제로 보지만 사람 청취 미확인 / 재생성 1회(yUEjHMddUZlb0o9RvG09, 0.786)도 같은 받아쓰기라 원래 파일 유지",
+   "userCheck": "사용자 청취 확인(2026-11-18): 괜찮음. 지금 파일 유지"
   },
   {
    "key": "lipi-concept-2-1",
@@ -757,7 +758,8 @@
    "sha256": "43e2dd183b4fbee45d172a3cf9f56455a51f46b8c4002967d1ad4cf8f330f510",
    "file": "assets/audio/lipi-concept-2-2.mp3",
    "screen": "notebook concept frame",
-   "reviewNote": "\"잎자루\"·\"부레옥잠\" 받아쓰기 혼동(위와 같음) / 재생성 1회(3sUKHh1vJH1oqDPErxT6, 0.857)도 같은 받아쓰기라 원래 파일 유지"
+   "reviewNote": "\"잎자루\"·\"부레옥잠\" 받아쓰기 혼동(위와 같음) / 재생성 1회(3sUKHh1vJH1oqDPErxT6, 0.857)도 같은 받아쓰기라 원래 파일 유지",
+   "userCheck": "사용자 청취 확인(2026-11-18): 괜찮음. 지금 파일 유지"
   },
   {
    "key": "lipi-concept-3-0",
@@ -1264,7 +1266,7 @@
    "sha256": "5c334fc1d242f5267a07ed2cd388e9afc1df1eb0552b499659ab66d91cfcaa73",
    "file": "assets/audio/thief-season-1.mp3",
    "screen": "map villain bubble",
-   "reviewNote": "\"열두\"를 숫자 \"12\"로 받아씀(형식 차이) / 재생성 시도는 429 한도로 못 함"
+   "reviewNote": "\"열두\"를 숫자 \"12\"로 받아씀(형식 차이) / ElevenLabs API로 재생성(requestId wPrIsDJLuV3sTf67PcIa)했지만 받아쓰기가 똑같이 숫자로 적어 형식 차이로 판단, 원래 파일 유지"
   },
   {
    "key": "thief-season-2",
@@ -1475,7 +1477,7 @@
    "sha256": "9d8182418a3dec4d868c7aea2628e9c44cb2b45d60d7a1c38119d51b65c02e26",
    "file": "assets/audio/thief-seedling-1.mp3",
    "screen": "map villain bubble",
-   "reviewNote": "\"백\"을 숫자 \"100\"으로 받아씀(형식 차이) / 재생성 시도는 429 한도로 못 함"
+   "reviewNote": "\"백\"을 숫자 \"100\"으로 받아씀(형식 차이) / ElevenLabs API로 재생성(requestId moKZf0AmiE3AJhjRaqE8)했지만 받아쓰기가 똑같이 숫자로 적어 형식 차이로 판단, 원래 파일 유지"
   },
   {
    "key": "thief-seedling-2",
@@ -1646,5 +1648,5 @@
    "screen": "map villain bubble"
   }
  ],
- "retakes": "자동 검수 미통과 8줄 중 4줄은 재생성 1회 후 통과해 교체. 잎자루·부레옥잠 2줄은 재생성도 같은 받아쓰기라 원래 파일 유지. 숫자 표기 2줄은 429 일일 한도로 재생성 못 함."
+ "retakes": "자동 검수 미통과 8줄 중 4줄은 재생성 후 통과해 교체. 숫자 표기 2줄은 API 재생성도 숫자로 받아써서(형식 차이) 원래 파일 유지. 잎자루·부레옥잠 2줄은 사람 청취 확인 대기."
 }
