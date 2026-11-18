@@ -25,17 +25,29 @@ const flying=new Set();
 export const rewardCardsOwned=progress=>CARDS.map(([id])=>progress?.[id]===3);
 export const newRewardCards=(before,after)=>CARDS.flatMap(([id],i)=>before?.[id]!==3&&after?.[id]===3?[i]:[]);
 export const rewardSlotsHtml=progress=>cards().slotsHtml(rewardCardsOwned(progress).map((owned,i)=>owned&&!flying.has(i)));
-// Call with the strike record before and after each save. onMap: the map is still showing with no dialog over it.
-export function awardRewardCards(before,after,onMap){
+// Cards whose turn has come (the villain has left) and that are not in their slot yet.
+let due=0;
+// True from a card's turn until it is put away. The map adds it to the villains' blocked() (stage-map.js `hold`),
+// so the finale film cannot slip in ahead of a card that is still waiting for a dialog to close.
+export const rewardCardDue=()=>due>0;
+// Call with the strike record before and after each save. onMap: the map is still the screen in view.
+// covered: a dialog is over the map, so the card waits for it to close.
+export function awardRewardCards(before,after,onMap,covered=()=>false){
   preloadCardSounds(); // From the first strike, so the reveal does not start silent.
   for(const i of newRewardCards(before,after)){
     flying.add(i);
     // Wait for the villain's exit. An open card makes #app inert, which pauses the map, so the finale film follows the card.
     setTimeout(()=>{
-      const owned=rewardCardsOwned(after);
-      if(!onMap()){flying.delete(i);cards().syncSlots(owned);return;}
-      const foe=document.querySelector(`.map-encounter-foe[data-encounter="${CARDS[i][0]}"]`),box=foe&&!foe.hidden?foe.getBoundingClientRect():null;
-      void cards().reveal(i,box?{x:box.left,y:box.top-30}:undefined,owned).finally(()=>flying.delete(i));
+      due++;
+      const done=()=>{due--;flying.delete(i);};
+      const show=()=>{
+        const owned=rewardCardsOwned(after);
+        if(!onMap()){done();cards().syncSlots(owned);return;}
+        if(covered()){setTimeout(show,300);return;}
+        const foe=document.querySelector(`.map-encounter-foe[data-encounter="${CARDS[i][0]}"]`),box=foe&&!foe.hidden?foe.getBoundingClientRect():null;
+        void new Promise(resolve=>resolve(cards().reveal(i,box?{x:box.left,y:box.top-30}:undefined,owned))).finally(done);
+      };
+      show();
     },matchMedia('(prefers-reduced-motion: reduce)').matches?520:760);
   }
 }

@@ -30,3 +30,11 @@ test('카드 그림·스타일·효과음이 배포물에 들어간다',()=>{
  for(const [,file] of audio.matchAll(/'card-[a-z]+':\['\/(assets\/audio\/sfx\/[\w-]+\.mp3)'/g))assert.ok(existsSync(new URL(`../${file}`,import.meta.url)),file);
  assert.equal([...audio.matchAll(/'card-[a-z]+':\[/g)].length,5);
 });
+
+test('카드 차례가 파이널보다 먼저다: 창이 열려 있으면 카드가 기다리고, 그동안 악당 모듈이 멈춘다',()=>{
+ const cards=read('src/achievement-cards.js');
+ assert.match(cards,/if\(covered\(\)\)\{setTimeout\(show,300\);return;\}/);
+ assert.match(cards,/export const rewardCardDue=\(\)=>due>0;/);
+ assert.match(read('src/app.js'),/hold:rewardCardDue,/);
+ assert.match(read('src/stage-map.js'),/blocked:\(\)=>!!blocked\(\)\|\|overview\|\|!!encounterOptions\.hold\?\.\(\),/);
+});
