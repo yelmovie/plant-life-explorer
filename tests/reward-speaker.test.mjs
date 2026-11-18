@@ -42,4 +42,6 @@ test('작업판이 장면 높이에 맞춰 커진다',()=>{
  // 5장 설계는 가로 화면 전체에서, 시험은 글이 줄바꿈되지 않는 넓고 높은 화면에서만 키운다.
  assert.match(css,/\.design-layout \.learning-scene \.picture-parts \.part-card \{ min-height: 88px; \}/);
  assert.match(css,/@media \(min-width: 1200px\) and \(min-height: 780px\) and \(orientation: landscape\) \{\s*#app \.exploration-activity \.test-layout \.learning-scene \.test-record \{/);
+ // 낮은 화면에서는 물 뿌리기 그림 칸이 줄어 장면이 넘치지 않는다.
+ assert.match(css,/\.activity-9 \.test-layout > \.learning-scene \{ grid-template-rows: minmax\(clamp\(145px, calc\(var\(--stage-h\) - 314px\), 230px\), 1fr\) auto auto auto; \}/);
 });

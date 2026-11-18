@@ -1028,3 +1028,8 @@ body .note-quiz > summary small { margin-left: 4px; padding: 2px 7px; border-rad
   #app .exploration-activity .test-layout .learning-scene :is(.comparison-question, .test-control-row) .btn { min-height: 64px; font-size: 22px; }
   #app .exploration-activity .test-layout > .learning-note .idea-application .btn { min-height: 64px; font-size: 22px; }
 }
+/* 5장 시험: 낮은 화면에서는 물 뿌리기 그림 칸이 줄어 아래 답 버튼까지 한 화면에 들어온다(전에는 최소 230px라 1280×720에서 10px 넘쳤다). */
+@media (min-width: 901px) and (orientation: landscape) {
+  #app .exploration-activity.activity-9 .test-layout > .learning-scene { grid-template-rows: minmax(clamp(145px, calc(var(--stage-h) - 314px), 230px), 1fr) auto auto auto; }
+  #app .exploration-activity.activity-9 .test-layout .water-demo { min-height: clamp(145px, calc(var(--stage-h) - 314px), 230px); }
+}
