@@ -1,5 +1,6 @@
 import {createSaveStore} from './safe-storage.js';
 import {characterDialogueMarkup,mountCharacterDialogue} from './character-dialogue.js';
+import {installVoiceLines,speakDialog,speakEnding} from './voice-lines.js';
 import {suspendMusic,stopFeedback} from './audio.js';
 import {recordHint,recordResponse} from './learning-records.js';
 import {carryFieldEvidence} from './field-bridge.js';
@@ -26,6 +27,7 @@ import {notebookEntry,NOTE_QUIZZES} from './research-notebook.js';
 
 const app=document.querySelector('#app'),dialog=document.querySelector('#dialog');
 let dialogueCleanup=()=>{},dialogueFocus=null;
+installVoiceLines(dialog);
 let state=freshState(),saveFailed=false,studentState=null,studentMapDistance,mapController,fieldCleanup,guideCleanup;
 const saveStore=createSaveStore({getItem:key=>localStorage.getItem(key),setItem:(key,value)=>localStorage.setItem(key,value)},navigator.locks,updateSaveStatus);
 state=saveStore.load();
@@ -54,7 +56,7 @@ function downloadRecord(raw,name){const url=URL.createObjectURL(new Blob([raw],{
 function saveHelp(){modal('기록 보관과 복구',`<p>이 브라우저·주소의 기록이야. 원본 보관 파일은 읽지 못한 내용도 그대로 담으며, 파일 보관만으로 복구가 된 것은 아니야.</p><p>현재 활동 파일은 보관용이야. 앱에서 파일 가져오기는 제공하지 않아. 다른 탭의 최신 기록을 열면 이 탭에서 저장하지 못한 선택은 사라져. 먼저 파일로 보관해 줘.</p>`,btn('현재 활동 파일 보관','save-export','soft')+(saveStore.original!==null?btn('저장 원본 파일 보관','save-original','soft'):'')+(saveStore.status==='failed'?btn('다시 저장하기','save-retry','primary'):'')+(['invalid','failed'].includes(saveStore.status)&&saveStore.backup()?btn('마지막 정상 기록으로 복구','save-recover','soft'):'')+btn('저장된 최신 기록 열기','save-reload','soft')+btn('계속 살펴보기','close','soft'));}
 // In an activity a short note appears over the scene; Leafy's bubble keeps the one instruction line (2026-11-17).
 function toast(message){const stage=state.screen==='activity'?app.querySelector('.exploration-activity'):null;if(stage){clearTimeout(toastTimer);app.querySelector('.scene-toast')?.remove();const el=document.createElement('p');el.className='scene-toast';el.setAttribute('aria-hidden','true');el.textContent=message;stage.append(el);$('#announcer').textContent=message;toastTimer=setTimeout(()=>el.remove(),3200);return;}clearTimeout(toastTimer);$('.toast')?.remove();const el=document.createElement('div');el.className='toast';el.setAttribute('aria-hidden','true');el.textContent=message;document.body.append(el);$('#announcer').textContent=message;toastTimer=setTimeout(()=>el.remove(),2400);}
-function modal(title,body,buttons='',cls=''){dialogueCleanup();dialogueCleanup=()=>{};dialog.classList.toggle('npc-dialogue-stage',cls==='npc');mapController?.stop();if(!body.includes('reward-scene'))dialog.classList.remove('reward-dialog');dialog.classList.toggle('settings-dialog',cls==='settings');dialog.toggleAttribute('data-science-settings',cls==='settings');dialog.classList.toggle('tool-dialog',cls==='tools');dialog.classList.toggle('notebook-dialog',cls==='notebook');dialog.classList.toggle('brief-dialog',cls==='brief');dialog.innerHTML=`<div class="dialog-top">${cls==='settings'?'':'<span class="eyebrow">초록정원 연구기지</span>'}${btn(icon('close'),'close','icon-btn','aria-label="닫기"')}</div><h2 id="dialog-title">${title}</h2>${cls==='settings'?body:`<div class="dialog-body">${body}</div>`}<div class="dialog-actions${cls==='settings'?' science-settings-footer':''}">${buttons||btn('알겠어','close','primary')}</div>`;dialog.setAttribute('aria-labelledby','dialog-title');if(!dialog.open)dialog.showModal();}
+function modal(title,body,buttons='',cls=''){dialogueCleanup();dialogueCleanup=()=>{};dialog.classList.toggle('npc-dialogue-stage',cls==='npc');mapController?.stop();if(!body.includes('reward-scene'))dialog.classList.remove('reward-dialog');dialog.classList.toggle('settings-dialog',cls==='settings');dialog.toggleAttribute('data-science-settings',cls==='settings');dialog.classList.toggle('tool-dialog',cls==='tools');dialog.classList.toggle('notebook-dialog',cls==='notebook');dialog.classList.toggle('brief-dialog',cls==='brief');dialog.innerHTML=`<div class="dialog-top">${cls==='settings'?'':'<span class="eyebrow">초록정원 연구기지</span>'}${btn(icon('close'),'close','icon-btn','aria-label="닫기"')}</div><h2 id="dialog-title">${title}</h2>${cls==='settings'?body:`<div class="dialog-body">${body}</div>`}<div class="dialog-actions${cls==='settings'?' science-settings-footer':''}">${buttons||btn('알겠어','close','primary')}</div>`;dialog.setAttribute('aria-labelledby','dialog-title');if(!dialog.open)dialog.showModal();speakDialog(dialog);}
 const lipiArt='/assets/npc-dialogue/lipi.webp';
 const lipiTrack=id=>`/assets/audio/${id}.mp3`;
 const lipiWelcome={label:'인사',text:'안녕! 나는 리피야. 우리 주변 식물의 잎과 줄기를 자세히 살펴보자. 서로 닮은 점과 다른 점을 찾으며 초록정원의 비밀을 알아보자!',src:lipiTrack('lipi-welcome')};
@@ -175,7 +177,7 @@ function settings(){
  for(const key of open)dialog.querySelector(`details[data-key="${key}"]`)?.setAttribute('open','');
  const pane=dialog.querySelector('.settings-body');if(pane&&scroll)pane.scrollTop=scroll;
 }
-function showStory(kind,replay=false){cancelTest();mapController?.stop();spatialModule?.unmountSpatial();playStory(kind,{replay,onFinish:()=>{if(kind==='intro'&&!replay)nav('map');else{render();if(replay)settings();}}});}
+function showStory(kind,replay=false){cancelTest();mapController?.stop();spatialModule?.unmountSpatial();playStory(kind,{replay,onFinish:()=>{if(kind==='intro'&&!replay)nav('map');else{render();if(replay)settings();else if(kind==='outro'&&state.screen==='ending')speakEnding(app);}}});}
 function intro(replay=false){showStory('intro',replay);}
 function showReward(i,first=false){
  if(first){playReward();ui.restoreFocus=i;}

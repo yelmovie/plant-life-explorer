@@ -172,3 +172,7 @@
 | `audio/sfx/reward-03.mp3` | 성취 카드 공개(별 4~5개) | Achievement Happy Beeps Jingle · CogFireStudios | CC0 · https://freesound.org/people/CogFireStudios/sounds/619838 |
 | `audio/sfx/pickup-01.mp3` | 카드가 보관함 칸에 들어갈 때 | item-pickup-v1.wav · DeltaCode | CC0 · https://freesound.org/people/DeltaCode/sounds/678384 |
 | `audio/sfx/victory-jingle-01.mp3` | 카드 5장 완성 축하 | Game Success Fanfare Short · el_boss | CC0 · https://freesound.org/people/el_boss/sounds/677858 |
+
+## 2026-11-18 캐릭터 음성 (ElevenLabs)
+- 리피(ElevenLabs Voice Library "Aria", eleven_v4)와 지도 악당 표찰 도둑("Harry - Character", eleven_v4)의 팝업·말풍선 음성 77줄: `audio/lipi-*-problem·reward·locked·concept·note·ending-diary.mp3`, `audio/thief-*.mp3`.
+- ElevenLabs Creator 이상 유료 요금제 생성물(상업 이용 가능). 줄별 원문·생성 ID·받아쓰기·음량·SHA-256은 `docs/VOICE-FILL-20261118.json`.

@@ -14,7 +14,7 @@ self.addEventListener('fetch',event=>{
   const request=event.request;
   if(request.method!=='GET'||new URL(request.url).origin!==self.location.origin)return;
   const pathname=new URL(request.url).pathname;
-  if(pathname==='/assets/audio/npc-welcome.mp3'||/^\/assets\/audio\/lipi-[\w-]+\.mp3$/.test(pathname)){
+  if(pathname==='/assets/audio/npc-welcome.mp3'||/^\/assets\/audio\/(?:lipi|thief)-[\w-]+\.mp3$/.test(pathname)){
     event.respondWith(caches.match(pathname).then(hit=>hit||fetch(request)));
     return;
   }

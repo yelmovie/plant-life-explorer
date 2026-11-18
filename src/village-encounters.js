@@ -1,5 +1,6 @@
 import {mountMapEncounters,normalizeMapHits} from './map-encounters.js';
 import {preloadMapSounds} from './audio.js';
+import {speakTexts} from './voice-lines.js';
 
 // This copy ships with its own map so offline play needs no cross-project request.
 const STAGES = [
@@ -36,7 +37,7 @@ export function mountVillageEncounters({host,stages,progress,onSave,blocked,redu
   });
   if(!points.some(({id})=>(progress?.[id]||0)<3))return null;
   preloadMapSounds();
-  const runtime=mountMapEncounters({requiredFoes:5,host,stages:points,progress,onSave,blocked,reduced,tone,art,palette,clearStage:()=>STAGES[clearIndex]?.[0],
+  const runtime=mountMapEncounters({requiredFoes:5,host,stages:points,progress,onSave,blocked,reduced,tone,art,palette,clearStage:()=>STAGES[clearIndex]?.[0],voice:text=>speakTexts([text]),
     reach:95,contact:25});
   const layer=host.querySelector('.map-encounter-layer');
   const poses=reactions.map((src,i)=>{

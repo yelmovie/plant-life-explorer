@@ -1,4 +1,5 @@
 import {assetImage} from './asset-catalog.js';
+import {speakTexts,stopVoice} from './voice-lines.js';
 
 // An optional illustrated concept sequence, not a film or a learner's saved observation.
 export const PLANT_CONCEPTS = [
@@ -20,9 +21,10 @@ if(typeof customElements!=='undefined'&&!customElements.get('plant-concept-playe
   if(!document.querySelector('link[data-plant-concepts]')){const l=document.createElement('link');l.rel='stylesheet';l.href=new URL('./plant-concepts.css',import.meta.url).href;l.dataset.plantConcepts='';document.head.append(l);}
   this.innerHTML=`<section class="plant-concept" aria-label="${clip.title} 그림 개념 설명"><header><small>그림으로 다시 발견</small><strong>${clip.title}</strong></header><div class="plant-concept-scene"></div><p class="plant-concept-caption" role="status" aria-live="polite"></p><nav aria-label="개념 장면 선택">${clip.frames.map((f,i)=>`<button type="button" data-frame="${i}">${i+1}. ${f[1]}</button>`).join('')}</nav><div class="plant-concept-controls"><button type="button" data-plant-play>장면 이어 보기</button><span>장면을 눌러 천천히 살펴봐도 좋아.</span></div></section>`;
   this.paint=()=>{const [asset,label,text]=clip.frames[this.index];this.querySelector('.plant-concept-scene').innerHTML=assetImage(asset,'',true)+`<span>${escape(label)}</span>`;this.querySelector('.plant-concept-caption').innerHTML=plantEmphasis(text,clip.terms);this.querySelectorAll('[data-frame]').forEach((b,i)=>{b.classList.toggle('current',i===this.index);b.setAttribute('aria-pressed',String(i===this.index));});this.classList.toggle('is-moving',this.playing&&!matchMedia('(prefers-reduced-motion: reduce)').matches);this.querySelector('[data-plant-play]').textContent=this.playing?'일시정지':'장면 이어 보기';};
+  this.say=()=>speakTexts([clip.frames[this.index][2]]);
   this.pause=()=>{clearTimeout(this.timer);this.timer=null;this.playing=false;this.classList.remove('is-moving');this.querySelector('[data-plant-play]').textContent='장면 이어 보기';};
-  const tick=()=>{if(!this.isConnected||!this.playing)return;if(this.index===clip.frames.length-1){this.pause();return;}this.index++;this.paint();this.timer=setTimeout(tick,6000);};
-  this.addEventListener('click',event=>{const b=event.target.closest('button');if(!b)return;event.stopPropagation();if(b.hasAttribute('data-frame')){this.pause();this.index=Number(b.dataset.frame);this.paint();}else{if(this.playing){this.pause();return;}if(this.index===clip.frames.length-1)this.index=0;this.playing=true;this.paint();this.timer=setTimeout(tick,6000);}},{signal:this.controller.signal});
+  const tick=()=>{if(!this.isConnected||!this.playing)return;if(this.index===clip.frames.length-1){this.pause();return;}this.index++;this.paint();this.say();this.timer=setTimeout(tick,6000);};
+  this.addEventListener('click',event=>{const b=event.target.closest('button');if(!b)return;event.stopPropagation();if(b.hasAttribute('data-frame')){this.pause();this.index=Number(b.dataset.frame);this.paint();this.say();}else{if(this.playing){this.pause();stopVoice();return;}if(this.index===clip.frames.length-1)this.index=0;this.playing=true;this.paint();this.say();this.timer=setTimeout(tick,6000);}},{signal:this.controller.signal});
   document.addEventListener('visibilitychange',()=>{if(document.hidden)this.pause();},{signal:this.controller.signal});
   const details=this.closest('details');details?.addEventListener('toggle',()=>{if(!details.open)this.pause();},{signal:this.controller.signal});
   this.paint();
