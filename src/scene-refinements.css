@@ -13,6 +13,12 @@
 }
 #app .home-title span { display: block; }
 #app .home-title span:last-child { color: #3b6538; }
+/* 2026-11-18: picture-lettering title logo replaces the text title (alt text keeps the name). */
+#app .home-title-art { display: block; margin: 0 0 10px -1.5%; text-shadow: none; line-height: 0; }
+#app .home-title-logo { display: block; width: min(100%, 48vh, 23vw); height: auto; filter: drop-shadow(0 8px 14px #1f3d2433); }
+@media(max-width:1000px) { #app .home-title-logo { width: min(100%, 48vh, 38vw); } }
+/* Small or short screens: the logo takes the kicker's room so the start button stays where it was. */
+@media(max-width:760px),(max-height:520px) { #app .home-kicker { display: none; } #app .home-title-logo { width: min(62%, 38vh); } }
 #app .home-copy .home-story { font-size: clamp(21px,2vw,30px); line-height: 1.65; }
 #app .home-copy .home-story strong { font-size: 1.08em; }
 #app .home .home-actions { margin-top: 24px; gap: 14px; }
