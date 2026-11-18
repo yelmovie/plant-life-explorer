@@ -111,7 +111,7 @@ function rainStage(b,ready,say){return `<div class="bag-stage with-sky" data-bag
 function invention(e,u,stage){
  const b=e.bag,last=b.tests.at(-1),untested=last?.key!==fieldBagKey(b.design),fresh=!!u.bagLast&&u.bagLast!==(last?.key||'')+b.tests.length;u.bagLast=(last?.key||'')+b.tests.length;
  if(stage===0&&!b.prediction)return `<div class="field-bag-predict"><div class="field-predict-picture">${bagArt({surface:'plain',cover:'open'})}</div><div><p class="field-request">비가 오면 리피의 공책이 젖어! 무엇을 바꾸면 될까?</p><div class="field-predict-choices">${btn('연잎 겉면만 바꾸면 돼','field-bag-predict','surface')}${btn('입구로 오는 비도 막아야 해','field-bag-predict','cover')}</div></div></div>`;
- const rainBtn=`<div class="lens-fallback">${btn(icon('drop')+' 비 내리기','field-bag-test','','primary')}</div>`;
+ const rainBtn=`<div class="lens-fallback">${btn(icon('drop')+' 비 내리기','field-bag-test','','')}</div>`;
  if(stage===0)return `<div class="bag-bench rain-bench">${bagHint(last?'처음 가방은 공책이 젖었어. 이제 다른 가방 세 개에 비를 내려 보자!':u.keys?'아래의 <b>비 내리기</b> 버튼으로 보통 가방을 시험해 봐.':'구름을 <b>톡</b> 눌러 보통 가방에 비를 내려 봐.')}${rainStage(b,!last,last?'공책이 젖었어…':'구름을 눌러 봐.')}<div class="bag-results">${trials(b,fresh)}</div>${rainBtn}</div>`;
  // Step 2: three ready-made bags. One tap puts a bag on the stand and rains on it; its card keeps the result.
  if(stage===1){
@@ -157,6 +157,13 @@ export function renderFieldSteps(state,ui,page=state.page){
  // The select-then-place (.lens-fallback) buttons for touch users are switched on here.
  const keysBtn=`<button type="button" class="btn mission-tool objective-keys" data-action="field-keys" aria-pressed="${!!u.keys}">${u.keys?'버튼 접기':'버튼 보이기'}</button>`;
  return `<div class="mission-journey today-steps">${stages[mission].map((label,i)=>`<button class="mission-step ${i===stage?'active':''} ${done[i]?'done':''} ${done[stage]&&i===done.findIndex(v=>!v)?'next-up':''}" data-action="field-stage" data-id="${i}" ${i===stage?'aria-current="step"':''}><b>${done[i]?icon('check',16):i+1}</b><span>${label}</span></button>`).join('')}</div><p class="field-objective sr-only">${objective(e,mission,stage)}</p><div class="field-step-tools">${mission===0&&stage===0?'':keysBtn}</div>`;
+}
+// Without the left step panel (2026-11-18) the 버튼 보이기/접기 switch sits in the footer; the objective stays for screen readers.
+export function fieldKeysToggle(state,ui,page=state.page){
+ const mission=Math.floor(page/2);if(mission<0||mission>4)return '';
+ const e=normalizeFieldEvidence(state.fieldEvidence),u=ui.fieldMission??{},stage=stageOf(u,mission);
+ const keys=mission===0&&stage===0?'':`<button type="button" class="btn mission-tool objective-keys" data-action="field-keys" aria-pressed="${!!u.keys}">${u.keys?'버튼 접기':'버튼 보이기'}</button>`;
+ return `<p class="field-objective sr-only">${objective(e,mission,stage)}</p>${keys}`;
 }
 export const fieldFeedback=ui=>({text:ui.fieldMission?.feedback||(ui.fieldMission?.keys?BUTTON_FEEDBACK:DEFAULT_FEEDBACK),success:!!ui.fieldMission?.success});
 

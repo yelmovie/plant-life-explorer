@@ -270,7 +270,7 @@ body .notebook-dialog .dialog-actions { display: flex; gap: 10px; margin-top: 14
   #app .activity-9 .test-layout > .learning-note .picture-parts { gap: 6px; }
   #app .activity-9 .test-layout > .learning-note .picture-parts legend { font-size: 14px; margin-bottom: 3px; }
   #app .activity-9 .test-layout > .learning-note .invention-feedback p { font-size: var(--font-size-sm); }
-  #app .activity-9 .test-layout > .learning-note .invention-feedback h3 { font-size: 17px; }
+  #app .activity-9 .test-layout > .learning-note .invention-feedback h3 { font-size: 18px; }
   #app .activity-9 .invention-proof { margin-block: 8px; }
   #app .notebook-heading { padding: 6px 20px; }
   #app .notebook-overview { gap: 10px; }

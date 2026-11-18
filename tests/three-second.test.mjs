@@ -6,7 +6,7 @@ import {freshState} from '../src/model.js';
 import {renderActivity} from '../src/learning.js';
 import {renderMissionBrief} from '../src/expedition.js';
 
-const bubble=html=>/<p class="guide-bubble[^"]*"[^>]*>([\s\S]*?)<\/p><button/.exec(html)?.[1]||'';
+const bubble=html=>/<p class="guide-bubble[^"]*"[^>]*>([\s\S]*?)<\/p><\/div>/.exec(html)?.[1]||'';
 const field=i=>{const s=Object.assign(freshState(),{screen:'activity',page:2*i});s.journeyRequired[i]=true;return s;};
 
 test('현장 임무의 지시 문장은 리피 말풍선에 한 번만 나오고 장면 안 문장은 숨김 표시된다',()=>{
@@ -21,7 +21,7 @@ test('현장 임무의 지시 문장은 리피 말풍선에 한 번만 나오고
 test('제목과 여정 1·2·3은 가운데 위 알약 하나에 있고 주 버튼은 하나다',()=>{
  const html=renderActivity(field(0),{activityMode:'field'},()=>'');
  assert.match(html,/<header class="activity-pill"><h1>[^<]+<\/h1><nav class="mission-journey-root"/);
- assert.doesNotMatch(html,/<aside class="field-guide"><h1>/);
+ assert.doesNotMatch(html,/field-guide|today-panel|인사 듣기/);
  assert.equal((html.match(/class="btn primary/g)||[]).length,1);
 });
 

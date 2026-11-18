@@ -91,10 +91,10 @@ test('현장 임무에서는 단계 목록이 체크리스트이고 손가락은
  u.fieldMission.stage=0;g=activityGuide(s,u);assert.equal(g.target,'.objective-next');assert.match(html(s,u),/objective-next/);
  fieldMissionAction(s,u,'field-stage','2');assert.equal(u.fieldMission.stage,0);
 });
-test('남은 활동 목록은 오늘의 연구 패널에 들어가고 다음 항목에만 손 아이콘이 붙는다',()=>{
+test('왼쪽 패널 없이 장면이 화면을 쓰고, 다음 할 일은 리피 말풍선이 말한다 (2026-11-18)',()=>{
  const [s,u]=open(0);const page=html(s,u);
- assert.match(page,/class="today-panel"[\s\S]*remaining-list[\s\S]*guide-talk/);
- assert.equal((page.match(/data-action="guide-jump"/g)||[]).length,1);
- assert.equal((page.match(/guide-hand mini/g)||[]).length,1);assert.match(page,/남은 활동 <b>1<\/b>/);
+ assert.doesNotMatch(page,/today-panel|remaining-list|guide-jump|field-guide/);
+ assert.match(page,/<footer class="learning-footer">[\s\S]*guide-talk[\s\S]*btn primary/);
+ assert.match(page,/class="bubble-next">[^<]+</);
  assert.doesNotMatch(renderRemaining(null),/remaining/);
 });
