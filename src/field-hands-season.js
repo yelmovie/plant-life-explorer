@@ -25,15 +25,15 @@ export function timeDial(e,u,kind,fallback){
  const arr=FIELD_ORDER,done=inOrder(e.seasons[kind]),named=clueOK(e,kind),herb=kind==='herb';
  const descend=herb&&!u.camDown;if(herb)u.camDown=true;
  const pin=u.pin?.[kind],mark=done&&pin&&e.seasons.clues[kind]?`<span class="regrow-mark ${named?'ok':''}" style="left:${pin[0]*100}%;top:${pin[1]*100}%"></span>`:'';
- const tip=u.keys&&!done?'아래의 <b>바늘 한 바퀴 돌리기</b> 버튼을 눌러 겨울 뒤에 어떻게 자라는지 지켜봐.':u.keys&&done&&!named?'아래의 <b>관찰 결과 버튼</b>에서 다시 자란 부분을 골라 줘.':done&&!named?'타임랩스가 <b>초봄</b>에서 멈췄어. 새로 돋은 곳에 <b>새싹 핀</b>을 꽂아 봐.'
+ const tip=u.keys&&!done?'아래의 <b>바늘 한 바퀴 돌리기</b> 버튼을 눌러 겨울 뒤에 어떻게 자라는지 지켜봐.':u.keys&&done&&!named?'아래의 <b>관찰 결과 버튼</b>에서 다시 자란 부분을 골라 줘.':done&&!named?'<b>초봄</b>에서 멈췄어. 새로 돋은 곳을 <b>톡</b> 눌러 새싹 핀을 꽂아 봐.'
   :done?'다시 자란 모습과 근거를 모두 찾았어. 바늘을 다시 돌려 타임랩스를 봐도 돼.'
-  :herb?'이번엔 카메라가 <b>땅속</b>으로 내려갔어. 바늘을 <b>한 바퀴</b> 돌려 겨울 땅속에서 무슨 일이 생기는지 봐.'
-  :'바늘을 잡아 <b>시계 방향으로 한 바퀴</b> 돌려 봐. 겨울 → 초봄 → 다음 봄으로 시간이 흘러가.';
+  :herb?'이번엔 <b>땅속</b>이야. 바늘을 <b>한 바퀴</b> 돌려 봐.'
+  :'바늘을 잡아 <b>시계 방향으로 한 바퀴</b> 돌려 봐.';
  const card=(phase,slot)=>`<div class="dial-card" data-dial-card="${phase}" style="--a:${HALF+slot*SPAN}deg">${frameArt(kind,phase)}</div>`;
  const seat=(phase,slot)=>`<span class="dial-seat seat-${phase}" style="--a:${HALF+slot*SPAN}deg"><b>${slot+1}</b>${seatIcon[phase]} ${shortName[phase]}</span>`;
- const side=done&&!named?`<span class="regrow-pin" data-regrow-pin aria-hidden="true"></span><p>핀을 끌어 화면에 꽂거나, 화면을 눌러 꽂아 봐.</p>`
+ const side=done&&!named?`<span class="regrow-pin" data-regrow-pin aria-hidden="true"></span>`
   :done?`<p class="dial-status ok">✓ ${herb?'뿌리가 살아 있어서 땅 위로 새싹이 났어.':'가지의 겨울눈에서 새잎과 꽃이 나왔어.'}</p>`
-  :'<p class="dial-status">바늘을 돌리는 만큼 오른쪽 화면에서 시간이 흘러가.</p>';
+  :'';
  return `<p class="lens-hint season-hint" data-dial-tip><span>${tip}</span></p><div class="time-bench kind-${kind} ${done?'is-done':''} ${done&&!named?'pin-mode':''}" data-time-dial="${kind}" data-arr="${arr.join(',')}" data-turn="${done?HALF+SPAN:0}">
 <div class="time-dial" aria-hidden="true"><span class="dial-sweep"></span><span class="dial-start">출발</span><div class="dial-face" data-dial-face>${[0,1,2].map(i=>`<i class="dial-tick" style="--a:${i*SPAN}deg"></i>`).join('')}<span class="dial-hand"><span class="dial-knob"></span></span><span class="dial-hub"></span></div>${arr.map(card).join('')}${FIELD_ORDER.map(seat).join('')}</div>
 <div class="time-view"><div class="time-viewer ${herb?'underground-cam':''} ${descend?'cam-descend':''}" data-viewer role="img" aria-label="${herb?'씀바귀':'벚나무'} 타임랩스 화면"><div class="viewer-film">${arr.map(phase=>`<div class="viewer-layer" data-layer="${phase}">${frameArt(kind,phase)}</div>`).join('')}</div><span class="viewer-badge">${herb?'땅속 카메라':'타임랩스'}</span><span class="viewer-bloom" aria-hidden="true">${Array.from({length:16},(_,i)=>`<i style="--x:${(i*37+11)%96}%;--d:${(i%5)*.09}s;--s:${.7+(i%3)*.3}"></i>`).join('')}</span>${mark}</div><div class="time-side">${side}</div></div>

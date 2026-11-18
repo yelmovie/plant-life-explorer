@@ -872,3 +872,108 @@ body .note-quiz > summary small { margin-left: 4px; padding: 2px 7px; border-rad
 /* The dial's "how to turn" line repeats Leafy's bubble; only its ✓ result stays, on a plate over the painting. */
 #app .scene-hint-moved .field-mission .dial-status:not(.ok) { display: none; }
 #app .field-mission .time-bench .dial-status.ok { width: fit-content; max-width: 100%; margin-inline: auto; padding: 4px 14px; border-radius: 12px; background: var(--text-plate); }
+
+/* ── 13. 조작물 크게 · 글 줄이기 (2026-11-18): 현장 임무의 조작물이 장면 높이를 채운다. 설명 글과 큰 종이판은
+   걷어 내고, 지시는 리피 말풍선 한 줄만 남긴다. 버튼 방식·자동 진행 스위치는 설정 창에 있다. ── */
+#app .exploration-activity { --stage-h: calc(100dvh - 190px); }
+/* 잎 위에서 깜빡이는 점: 연습 잎에서 눌러 볼 곳. */
+#app .leaf-spark.leaf-dot { width: 46px; height: 46px; clip-path: none; border-radius: 50%; border: 4px solid #fff7c2; background: #f2c94c59; box-shadow: 0 0 0 3px #e3a72f, 0 0 14px #fff6; filter: none; }
+#app .leaf-spark.leaf-dot.placed { opacity: 1; animation: leaf-dot-pulse 1.3s ease-in-out infinite; }
+@keyframes leaf-dot-pulse { 50% { transform: translate(-50%, -50%) scale(1.28); box-shadow: 0 0 0 3px #e3a72f, 0 0 22px #fffbe0; } }
+@media (prefers-reduced-motion: reduce) { #app .leaf-spark.leaf-dot.placed { animation: none; } }
+@media (min-width: 901px) and (orientation: landscape) {
+  #app .field-mission-view .field-mission .mission-workspace { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; justify-content: center; }
+  /* 1 잎: 표본을 크게, 단서 칩은 한 줄로. */
+  #app .field-mission-view .field-mission.mission-0 .lens-leaf .field-leaf-picture { height: clamp(180px, calc(var(--stage-h) * .5), 420px); }
+  #app .field-mission-view .field-layout:has(> .objective-next) .field-mission.mission-0 .lens-leaf .field-leaf-picture { height: clamp(160px, calc(var(--stage-h) * .42), 380px); }
+  #app .field-mission-view .field-mission.mission-0 .lens-clues { grid-template-columns: 1fr 1fr; }
+  #app .field-mission-view .field-mission.mission-0 .lens-hint { min-height: 72px; }
+  /* 1-2 나누기: 바구니는 테두리만, 카드는 크게. */
+  #app .field-mission-view .swipe-sort.axis-x { grid-template-columns: minmax(0, 1fr) clamp(260px, calc(var(--stage-h) * .56), 380px) minmax(0, 1fr); min-height: calc(var(--stage-h) * .8); }
+  #app .field-mission-view .swipe-bin { background: #fffce84d; box-shadow: none; }
+  #app .field-mission-view .swipe-bin > strong { padding: 4px 16px; border-radius: 999px; background: var(--text-plate); font-size: 26px; }
+  #app .field-mission-view .swipe-bin-leaves .field-leaf-picture { width: 96px; height: 88px; }
+  #app .field-mission-view .swipe-bin-leaves > span { padding: 4px 8px; border-radius: 12px; background: var(--text-plate); font-size: 18px; }
+  #app .field-mission-view .axis-x .swipe-deck { min-height: 0; display: grid; place-items: center; }
+  #app .field-mission-view .axis-x .swipe-card { top: 50%; width: clamp(220px, calc(var(--stage-h) * .5), 340px); margin: calc(var(--stage-h) * -.3) 0 0 calc(clamp(220px, calc(var(--stage-h) * .5), 340px) / -2); }
+  #app .field-mission-view .axis-x .swipe-card .field-leaf-picture { width: 80%; height: calc(var(--stage-h) * .34); }
+  #app .field-mission-view .axis-x .swipe-count { align-self: end; }
+  /* 2 계절: 식물마다 한 줄(겨울 → 다음 봄), 그림이 높이를 나눠 쓴다. */
+  #app .field-mission-view .field-season-pairs { grid-template-columns: minmax(0, 1fr); gap: 12px; --pic-h: clamp(150px, calc((var(--stage-h) - 30px) / 2), 400px); }
+  #app .field-mission-view .field-season-pair { display: grid; grid-template-columns: auto auto; justify-content: center; align-items: center; gap: 14px; }
+  #app .field-mission-view .field-season-pair > h3 { margin: 0; font-size: 24px; }
+  #app .field-mission-view .field-season-images { grid-template-columns: repeat(2, auto); gap: 30px; }
+  #app .field-mission-view .field-season-images > div { position: relative; }
+  #app .field-mission-view .field-season-images :is(.season-dig, .link-target) { width: calc(var(--pic-h) * 1.5); }
+  #app .field-mission-view .field-season-images .season-atlas { width: 100%; }
+  #app .field-mission-view .field-season-images .season-cap { position: absolute; left: 8px; top: 8px; z-index: 4; padding: 2px 12px; border-radius: 999px; background: var(--text-plate); pointer-events: none; }
+  /* 2-2·2-3 시간 다이얼: 다이얼과 화면을 함께 키운다(각도로만 계산하므로 zoom에 안전). */
+  #app .field-mission-view .field-mission .time-bench { grid-template-columns: auto minmax(0, 1fr); gap: 22px; padding: 0; }
+  #app .field-mission-view .field-mission .time-dial { zoom: clamp(1, calc((100dvh - 190px) / 470px), 1.5); }
+  #app .field-mission-view .field-mission .time-viewer { width: min(100%, calc((var(--stage-h) - 100px) * 1.5)); }
+  /* 3 잎자루 모형: 판은 걷고 모형·수조·스위치를 키운다. */
+  #app .field-mission-view .float-lab { --mh: clamp(110px, calc(var(--stage-h) * .27), 230px); --sw-h: clamp(150px, calc(var(--stage-h) * .42), 280px); margin: 0; }
+  #app .field-mission-view .float-origin { align-self: center; margin: 0 0 6px; padding: 4px 16px 4px 8px; border-radius: 999px; background: var(--text-plate); }
+  #app .field-mission-view .float-origin-pic { width: 56px; height: 44px; }
+  #app .field-mission-view .float-heft { background: none; box-shadow: none; padding: 0 8px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 120px; }
+  #app .field-mission-view .heft-palm { min-height: calc(var(--stage-h) * .62); background: none; overflow: visible; }
+  #app .field-mission-view .heft-side { padding: 12px; border-radius: 18px; background: var(--text-plate); }
+  #app .field-mission-view .heft-side strong { font-size: 24px; }
+  #app .field-mission-view .sw-track { width: 68px; height: var(--sw-h); }
+  #app .field-mission-view .sw-knob { left: 5px; top: calc(50% - 29px); width: 58px; height: 58px; }
+  #app .field-mission-view .heft-switch.set-float .sw-knob { transform: translateY(calc((var(--sw-h) - 58px) / -2)) !important; }
+  #app .field-mission-view .heft-switch.set-sink .sw-knob { transform: translateY(calc((var(--sw-h) - 58px) / 2)) !important; }
+  #app .field-mission-view .sw-label { font-size: 20px; }
+  #app .field-mission-view .float-lab.predict { gap: 48px; }
+  #app .field-mission-view .float-lab:is(.test, .record) { flex: 1 1 auto; min-height: 0; }
+  #app .field-mission-view .float-tank { min-height: calc(var(--stage-h) - 30px); }
+  #app .field-mission-view .float-bench { background: linear-gradient(#0000 0 74%, #c9a777 74% 84%, #a9845a 84%); }
+  #app .field-mission-view .float-petiole { background: none; padding: 0; }
+  #app .field-mission-view .petiole-cut { max-width: min(100%, calc(var(--stage-h) * .78)); }
+  #app .field-mission-view .petiole-count { align-self: center; padding: 2px 14px; border-radius: 999px; background: var(--text-plate); }
+  /* 4 정원: 세 땅이 장면 높이를 채운다. */
+  #app .field-mission-view .garden-field .field-restoration { margin: 0; }
+  #app .field-mission-view .garden-field .field-garden-zone { min-height: calc(var(--stage-h) - 150px); }
+  #app .field-mission-view .garden-field .field-garden-zone.bare { background: linear-gradient(#efe4cfb8, #c9a97fd9); }
+  #app .field-mission-view .garden-field .field-plant-space { flex: none; display: grid; place-items: center; min-width: 60%; min-height: 110px; margin: auto 0; font-size: 20px; }
+  #app .field-mission-view .garden-cloud-btn { min-height: 84px; width: min(100%, 520px); font-size: 26px; }
+  #app .field-mission-view .garden-cloud-art { width: 92px; height: 54px; }
+  #app .field-mission-view .garden-field .field-garden-zone > img.plant-illustration { height: calc(var(--stage-h) * .34); }
+  #app .field-mission-view .garden-card { min-height: 76px; font-size: 22px; }
+  #app .field-mission-view .garden-card > :is(img, svg) { width: 64px; height: 64px; }
+  /* 5 가방: 가방과 구름을 키운다. */
+  #app .field-mission-view .bag-bench { align-items: center; }
+  #app .field-mission-view .rain-bench > .bag-results { grid-row: 1; }
+  #app .field-mission-view .bag-stage.with-sky { padding-top: 124px; }
+  #app .field-mission-view .bag-cloud { width: 220px; height: 124px; margin-left: -110px; }
+  #app .field-mission-view .bag-cloud > b { font-size: 24px; }
+  #app .field-mission-view .rain-bench .bag-canvas, #app .field-mission-view .bag-bench .bag-canvas { max-width: min(100%, calc((var(--stage-h) - 180px) * 1.5)); }
+  #app .field-mission-view .bag-pick { grid-template-columns: 110px minmax(0, 1fr); min-height: 112px; }
+  #app .field-mission-view .bag-pick > .bag-art { width: 110px; height: 96px; }
+  #app .field-mission-view .bag-pick strong { font-size: 22px; }
+  #app .field-mission-view .field-bag-predict .bag-art { max-height: calc(var(--stage-h) * .7); }
+  #app .field-mission-view .field-bag-predict .field-predict-picture { background: none; }
+  #app .field-mission-view .field-season-predictions .field-predict-picture { width: min(100%, calc((var(--stage-h) - 190px) * 1.5)); }
+}
+#app .bag-say:empty { display: none; }
+/* 탐구 기록: 작업판이 장면 너비를 쓰고 그림·선택 카드를 키운다. 말풍선과 겹치는 안내 줄은 숨긴다. */
+#app .exploration-activity .work-board :is(.field-review-kicker, .garden-review-question) { display: none; }
+#app .exploration-activity .guide-bubble > .bubble-next:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
+#app .exploration-activity :is(.leaf-specimen, .habitat-compare-card:not(.is-picked), .season-review-plants section, .leaf-grouping) { background: #fffdf38c; border-color: #ffffff99; }
+@media (min-width: 901px) and (orientation: landscape) {
+  #app .exploration-activity .learning-scene > .work-board { width: min(100%, 1180px); }
+  #app .exploration-activity .leaf-specimen-picture { height: clamp(200px, calc(var(--stage-h) - 190px), 520px); }
+  #app .exploration-activity .leaf-specimen-picture img { width: 78%; height: 78%; }
+  #app .exploration-activity .leaf-tile img { height: clamp(64px, calc(var(--stage-h) * .2), 170px); }
+  #app .exploration-activity .leaf-tile b, #app .exploration-activity .leaf-group-bin h3 { font-size: 20px; }
+  #app .exploration-activity .season-review-pair .season-atlas { height: auto; aspect-ratio: 3 / 2; max-height: calc(var(--stage-h) - 300px); }
+  #app .exploration-activity .field-review-choices .btn { min-height: 84px; font-size: 20px; }
+  #app .exploration-activity .habitat-compare-art { height: clamp(110px, calc(var(--stage-h) - 300px), 340px); }
+  #app .exploration-activity .habitat-compare-card :is(strong, b) { font-size: 22px; }
+  #app .exploration-activity .field-review-bed { height: clamp(160px, calc(var(--stage-h) - 150px), 460px); }
+  #app .exploration-activity .field-review-bed > span { font-size: 22px; padding: 6px 16px; }
+}
+#app .mission-0.keys-on .keys-panel .field-hotspot { grid-column: span 2; }
+#app .exploration-activity :is(.invention-goal, .discovery-prompt) { display: none; }
+#app .exploration-activity .field-review-bed { background: #ffffff59; border-color: #ffffffb3; }
+#app .exploration-activity .field-review-bed .habitat-picture { object-fit: contain; }

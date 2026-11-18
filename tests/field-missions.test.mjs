@@ -10,8 +10,7 @@ test('버튼 모드 안내를 바꾸고 분류가 끝난 표본 버튼을 제외
  renderFieldMission(s,u);
  for(const region of ['shape','edge'])drop('lens',`scan:maple:${region}`);
  act('field-stage','1');
- act('field-keys');
- assert.match(fieldFeedback(u).text,/버튼 보이기/);
+ assert.doesNotMatch(fieldFeedback(u).text,/버튼 보이기/,'버튼 방식 스위치는 설정에 있다');
  act('field-keys');
  assert.match(fieldFeedback(u).text,/버튼으로 해 보자/);
  assert.match(renderFieldMission(s,u),/분류 버튼/);

@@ -38,7 +38,9 @@ export function mountLens(bench,ui,onAction){
  // Without dragging: tapping a spot on a leaf (or a scan button) carries the lens there, so the clue is still seen through the glass.
  const goto=(x,y)=>{const b=bench.getBoundingClientRect();place(x-b.left,y-b.top);};
  // A tap on the glass itself (it may be covering the leaf) also moves it; the click that ends a real drag does not.
- const tap=e=>{if(drag)return;if(e.target.closest('[data-lens]')){if(!dragged)goto(e.clientX,e.clientY);return;}const box=e.target.closest('[data-lens-leaf]');if(box)return goto(e.clientX,e.clientY);
+ const tap=e=>{if(drag)return;if(e.target.closest('[data-lens]')){if(!dragged)goto(e.clientX,e.clientY);return;}const box=e.target.closest('[data-lens-leaf]');
+  // A tap near a clue spot lands the lens exactly on it, so a finger does not have to be precise.
+  if(box){const r=drawnRect(box.querySelector('img'));let best=null;for(const spots of Object.values(LENS_SPOTS[box.dataset.lensLeaf]))for(const [a,b] of spots){const x=r.left+a*r.width,y=r.top+b*r.height,d=Math.hypot(e.clientX-x,e.clientY-y);if(d<r.height*.2&&(!best||d<best.d))best={d,x,y};}return best?goto(best.x,best.y):goto(e.clientX,e.clientY);}
   // A scan button still records at once (keyboard pace); the lens only goes along to show the spot.
   const key=e.target.closest('[data-field-drop^="scan:"]')?.dataset.fieldDrop;if(!key)return;
   const [,id,kind]=key.split(':'),img=bench.querySelector(`[data-lens-leaf="${id}"] img`),r=drawnRect(img),[x,y]=LENS_SPOTS[id][kind][0];goto(r.left+x*r.width,r.top+y*r.height);};

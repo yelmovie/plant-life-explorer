@@ -44,7 +44,7 @@ export function predictionLine(s){
 
 export function inventionHint(s){
  const last=currentTrial(s),pair=comparisonPair(s),proof=inventionEvidence(s);
- if(!last)return {title:'비로 시험하거나 기록을 다시 써 봐.',text:'이 설계의 이전 시험이 있으면 기록을 다시 쓸 수 있어. 처음 시험하는 설계라면 비를 뿌려 봐.'};
+ if(!last)return {title:'비를 뿌려 시험해 봐.',text:'시험한 적 있는 설계라면 그 기록을 다시 쓸 수 있어.'};
  if(last.key!==designKey(s.design))return {title:'바꾼 가방을 시험해 봐.',text:'부품은 하나만 바꾸고, 같은 비로 시험해 봐.'};
  if(!pair)return {title:'부품 하나만 바꾸어 볼까?',text:'겉면이나 입구 중 하나만 바꾸어야 그 부품의 역할을 알 수 있어.'};
  if(!proof.surface)return {title:'겉면이 하는 일을 찾아봐.',text:'입구는 그대로 두고 겉면만 바꾼 결과에서 물방울·먼지를 견줘 봐.'};

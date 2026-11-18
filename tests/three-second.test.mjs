@@ -14,8 +14,10 @@ test('현장 임무의 지시 문장은 리피 말풍선에 한 번만 나오고
  assert.match(bubble(html),/무엇을 바꾸면 될까/,'첫 예상 질문이 말풍선에 나온다');
  assert.match(html,/class="activity [^"]*scene-hint-moved/);
  const first=renderActivity(field(0),{activityMode:'field'},()=>'');
- assert.match(bubble(first),/잎 가운데.*가장자리 살펴보기/,'말풍선이 화면의 버튼 이름을 그대로 쓴다');
- assert.match(first,/>잎 가운데 살펴보기</);
+ assert.match(bubble(first),/반짝이는 곳.*톡 눌러/,'말풍선이 잎을 직접 누르라고 말한다');
+ assert.match(first,/class="leaf-spark leaf-dot" data-spark="maple:shape"/,'누를 곳은 잎 위 점으로 보인다');
+ assert.match(first,/<div class="lens-fallback"><button[^>]*data-field-drop="scan:maple:shape"/,'살펴보기 버튼은 키보드·버튼 방식 경로로만 남는다');
+ assert.doesNotMatch(first,/leaf-tap-controls|objective-keys|버튼 보이기/);
 });
 
 test('제목과 여정 1·2·3은 가운데 위 알약 하나에 있고 주 버튼은 하나다',()=>{
