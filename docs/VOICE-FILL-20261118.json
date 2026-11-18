@@ -1,6 +1,6 @@
 {
  "date": "2026-11-18",
- "provider": "ElevenLabs (Starter paid plan, commercial use allowed; confirmed 2026-11-18)",
+ "provider": "ElevenLabs (Creator paid plan, commercial use allowed; confirmed by account lookup 2026-11-18)",
  "model": "eleven_v4",
  "takes": 1,
  "representativeVoices": [
@@ -258,20 +258,20 @@
    "voiceName": "Aria",
    "model": "eleven_v4",
    "flowId": "Ipm6KA8godlv8UDZqm6U",
-   "generationId": "7kgXOeVkMH6wed4BqZGo",
+   "generationId": "Oy0dRnkTdsm8cVKeQ0RO",
    "text": "연못에 맑은 물이 돌아왔어!",
    "prompt": "[warmly] 연못에 맑은 물이 돌아왔어!",
-   "asr": "연못에 말든 물이 돌아왔어.",
-   "match": 0.818,
-   "end": 0.8,
-   "asrPass": false,
-   "lufs": -16.53,
-   "peakDbtp": -1.91,
-   "duration": 2.87,
-   "sha256": "16d596ddbd6c9560126ee85cb1aac389baa411672c7f9003badc4522d5381956",
+   "asr": "연못에 맑은 물이 돌아왔어.",
+   "match": 1.0,
+   "end": 1.0,
+   "asrPass": true,
+   "lufs": -16.55,
+   "peakDbtp": -1.94,
+   "duration": 2.8,
+   "sha256": "d8b1c9bcd9df6a95023cb125ac88ed82bc113f0cc58720654216f5b40390856e",
    "file": "assets/audio/lipi-reward-2-title.mp3",
    "screen": "reward popup (first)",
-   "reviewNote": "\"맑은\"[말근]을 \"말든\"으로 받아씀. 사람 청취 미확인"
+   "retake": "2026-11-18 21:4x 재생성 1회, 통과해 교체"
   },
   {
    "key": "lipi-reward-2-why",
@@ -616,20 +616,20 @@
    "voiceName": "Aria",
    "model": "eleven_v4",
    "flowId": "Ipm6KA8godlv8UDZqm6U",
-   "generationId": "2CuwGWWtbvKJtOQzLoyw",
+   "generationId": "ePynjHkMbH4TSqesucxH",
    "text": "새로 만난 잎에도 같은 기준을 적용해 나누어 봐.",
    "prompt": "[warmly] 새로 만난 잎에도 같은 기준을 적용해 나누어 봐.",
-   "asr": "새로 만난 입회도 같은 기준을 적용해 나누어 봐",
-   "match": 0.895,
+   "asr": "새로 만난 잎에도 같은 기준을 적용해 나누어 봐.",
+   "match": 1.0,
    "end": 1.0,
-   "asrPass": false,
-   "lufs": -17.1,
-   "peakDbtp": -1.85,
-   "duration": 4.0,
-   "sha256": "1ee6c9cea0cccf951779647fd1b9284f18088c50f01372ec9b6484d01d7f0c31",
+   "asrPass": true,
+   "lufs": -16.73,
+   "peakDbtp": -1.9,
+   "duration": 3.92,
+   "sha256": "58bc90f80293961eff91899434cfa28967bf0c16145733fc5142958fb3eb9e77",
    "file": "assets/audio/lipi-concept-0-2.mp3",
    "screen": "notebook concept frame",
-   "reviewNote": "\"잎에도\"를 [이페도]로 읽어 받아쓰기가 \"입회도\"로 적음(발음 규칙대로)"
+   "retake": "2026-11-18 21:4x 재생성 1회, 통과해 교체"
   },
   {
    "key": "lipi-concept-1-0",
@@ -714,7 +714,7 @@
    "sha256": "3f37b2d6c473de8bffd0a7cb20bb53aff3c32e6977182ce17102ebf3100173b1",
    "file": "assets/audio/lipi-concept-2-0.mp3",
    "screen": "notebook concept frame",
-   "reviewNote": "\"잎자루\"[입짜루]·\"부레옥잠\"을 받아쓰기가 다른 말로 적음. 낱말 자체 발음 문제로 보지만 사람 청취 미확인"
+   "reviewNote": "\"잎자루\"[입짜루]·\"부레옥잠\"을 받아쓰기가 다른 말로 적음. 낱말 자체 발음 문제로 보지만 사람 청취 미확인 / 재생성 1회(yUEjHMddUZlb0o9RvG09, 0.786)도 같은 받아쓰기라 원래 파일 유지"
   },
   {
    "key": "lipi-concept-2-1",
@@ -757,7 +757,7 @@
    "sha256": "43e2dd183b4fbee45d172a3cf9f56455a51f46b8c4002967d1ad4cf8f330f510",
    "file": "assets/audio/lipi-concept-2-2.mp3",
    "screen": "notebook concept frame",
-   "reviewNote": "\"잎자루\"·\"부레옥잠\" 받아쓰기 혼동(위와 같음)"
+   "reviewNote": "\"잎자루\"·\"부레옥잠\" 받아쓰기 혼동(위와 같음) / 재생성 1회(3sUKHh1vJH1oqDPErxT6, 0.857)도 같은 받아쓰기라 원래 파일 유지"
   },
   {
    "key": "lipi-concept-3-0",
@@ -934,20 +934,20 @@
    "voiceName": "Aria",
    "model": "eleven_v4",
    "flowId": "Ipm6KA8godlv8UDZqm6U",
-   "generationId": "GXsXzxPYsUVKNcvrGCFt",
+   "generationId": "N2snLuVf7WZJ1ADPGpaL",
    "text": "공기 방울이 나왔다! 잎자루 속 공기는 부레옥잠이 물에 뜨는 데 도움을 준다.",
    "prompt": "[warmly] 공기 방울이 나왔다! 잎자루 속 공기는 부레옥잠이 물에 뜨는 데 도움을 준다.",
-   "asr": "공기방울이 나왔다! 입자루 속 공기는 불의 혹잠이 물에 뜨는데 도움을 준다.",
-   "match": 0.867,
+   "asr": "공기방울이 나왔다 입자루 속 공기는 불의 옥잠이 물에 뜨는데 도움을 준다",
+   "match": 0.9,
    "end": 1.0,
-   "asrPass": false,
-   "lufs": -16.97,
-   "peakDbtp": -1.86,
-   "duration": 6.32,
-   "sha256": "49f2680bc222718032ead7f60ee0e78cc9961e60ce84f1eaa0ac3092cdd08b78",
+   "asrPass": true,
+   "lufs": -16.85,
+   "peakDbtp": -1.85,
+   "duration": 6.24,
+   "sha256": "6951244ed1a3d103739c01041cd5af3d90b6b8178e86b50ca13c1c4b2351d264",
    "file": "assets/audio/lipi-note-2-found.mp3",
    "screen": "notebook summary",
-   "reviewNote": "\"잎자루\"·\"부레옥잠\" 받아쓰기 혼동(위와 같음)"
+   "retake": "2026-11-18 21:4x 재생성 1회, 통과해 교체"
   },
   {
    "key": "lipi-note-3-found",
@@ -1124,20 +1124,20 @@
    "voiceName": "Harry - Character",
    "model": "eleven_v4",
    "flowId": "Ipm6KA8godlv8UDZqm6U",
-   "generationId": "dCpe9ytBrYMXUgaPE3Wv",
+   "generationId": "QAwk34j4U72nc5aIum7p",
    "text": "잎맥에 가장자리까지 봤어? 뒤집은 표찰이 소용없잖아!",
    "prompt": "[mischievous] 잎맥에 가장자리까지 봤어? 뒤집은 표찰이 소용없잖아!",
-   "asr": "인맥의 가장자리까지 봤어? 뒤집은 표 차례 소용없잖아.",
-   "match": 0.818,
-   "end": 0.8,
-   "asrPass": false,
-   "lufs": -16.14,
-   "peakDbtp": -1.93,
-   "duration": 5.12,
-   "sha256": "58597950950ac0db8688add30461086376dee6ac6c7ff28913c0c320227be401",
+   "asr": "인맥의 가장자리까지 봤어? 뒤집은 표찰이 소용없잖아",
+   "match": 0.909,
+   "end": 1.0,
+   "asrPass": true,
+   "lufs": -16.34,
+   "peakDbtp": -1.89,
+   "duration": 4.96,
+   "sha256": "6fe3549cbb95dd987973f922b86d89698f0fd96f2b7e06262ad5af630e13b067",
    "file": "assets/audio/thief-leaf-0.mp3",
    "screen": "map villain bubble",
-   "reviewNote": "\"잎맥에\"[임매게]·\"표찰이\"[표차리]를 다른 말로 받아씀(발음 규칙대로)"
+   "retake": "2026-11-18 21:4x 재생성 1회, 통과해 교체"
   },
   {
    "key": "thief-leaf-1",
@@ -1264,7 +1264,7 @@
    "sha256": "5c334fc1d242f5267a07ed2cd388e9afc1df1eb0552b499659ab66d91cfcaa73",
    "file": "assets/audio/thief-season-1.mp3",
    "screen": "map villain bubble",
-   "reviewNote": "\"열두\"를 숫자 \"12\"로 받아씀(형식 차이)"
+   "reviewNote": "\"열두\"를 숫자 \"12\"로 받아씀(형식 차이) / 재생성 시도는 429 한도로 못 함"
   },
   {
    "key": "thief-season-2",
@@ -1475,7 +1475,7 @@
    "sha256": "9d8182418a3dec4d868c7aea2628e9c44cb2b45d60d7a1c38119d51b65c02e26",
    "file": "assets/audio/thief-seedling-1.mp3",
    "screen": "map villain bubble",
-   "reviewNote": "\"백\"을 숫자 \"100\"으로 받아씀(형식 차이)"
+   "reviewNote": "\"백\"을 숫자 \"100\"으로 받아씀(형식 차이) / 재생성 시도는 429 한도로 못 함"
   },
   {
    "key": "thief-seedling-2",
@@ -1646,5 +1646,5 @@
    "screen": "map villain bubble"
   }
  ],
- "retakes": "자동 검수 미통과 8줄은 다시 만들지 못함: 같은 날 ElevenLabs flow 일일 생성 횟수 한도(429 daily_generation_limit_reached)에 걸림. reviewNote 참고."
+ "retakes": "자동 검수 미통과 8줄 중 4줄은 재생성 1회 후 통과해 교체. 잎자루·부레옥잠 2줄은 재생성도 같은 받아쓰기라 원래 파일 유지. 숫자 표기 2줄은 429 일일 한도로 재생성 못 함."
 }

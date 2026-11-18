@@ -175,7 +175,7 @@
 
 ## 2026-11-18 캐릭터 음성 (ElevenLabs)
 - 리피(ElevenLabs Voice Library "Aria", eleven_v4)와 지도 악당 표찰 도둑("Harry - Character", eleven_v4)의 팝업·말풍선 음성 77줄: `audio/lipi-*-problem·reward·locked·concept·note·ending-diary.mp3`, `audio/thief-*.mp3`.
-- ElevenLabs Starter 유료 요금제 생성물(상업 이용 가능, 2026-11-18 사용자 확인·계정 조회). 줄별 원문·생성 ID·받아쓰기·음량·SHA-256은 `docs/VOICE-FILL-20261118.json`.
+- ElevenLabs Creator 유료 요금제 생성물(상업 이용 가능, 2026-11-18 계정 조회로 확인: 같은 날 Starter에서 Creator로 올림). 줄별 원문·생성 ID·받아쓰기·음량·SHA-256은 `docs/VOICE-FILL-20261118.json`.
 
 ## 2026-11-18 타이틀 그림글자
 - `title-logo.webp`: 시작 화면 제목 "초록정원 연구기지" 그림글자. ChatGPT 구독 계정의 Codex 내장 이미지 도구(GPT 이미지)로 생성했고, 2번·4번 로고와 온실 배경을 그림체 참고로 붙였다. 투명 배경 PNG 원본은 `_source/branding/title-logo-20261118.png`(Git 제외), 화면용은 여백을 잘라 1200px WebP로 변환했다. 납품 썸네일(`thumbnails/`)에도 같은 그림글자를 쓴다. 글자는 생성 뒤 한 자씩 확인했다.
