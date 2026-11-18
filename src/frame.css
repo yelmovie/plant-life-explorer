@@ -976,9 +976,15 @@ body .note-quiz > summary small { margin-left: 4px; padding: 2px 7px; border-rad
   #app .exploration-activity .field-review-bed > span { font-size: 22px; padding: 6px 16px; }
 }
 #app .mission-0.keys-on .keys-panel .field-hotspot { grid-column: span 2; }
-#app .exploration-activity :is(.invention-goal, .discovery-prompt) { display: none; }
+#app .idea-application > span:empty { display: none; }
 #app .exploration-activity .field-review-bed { background: #ffffff59; border-color: #ffffffb3; }
 #app .exploration-activity .field-review-bed .habitat-picture { object-fit: contain; }
 /* Dial size steps by screen height (plain numbers: length ÷ length is not supported on older tablets). */
 @media (min-width: 901px) and (orientation: landscape) and (min-height: 780px) { #app .field-mission-view .field-mission .time-dial { zoom: 1.3; } }
 @media (min-width: 901px) and (orientation: landscape) and (min-height: 960px) { #app .field-mission-view .field-mission .time-dial { zoom: 1.5; } }
+/* 5장 설계: 글이 줄어 남는 높이는 가방이 쓴다. */
+@media (min-width: 901px) and (orientation: landscape) {
+  #app .exploration-activity .design-layout .learning-scene > .compact-bag { flex: 1 1 auto; height: auto; min-height: 0; }
+  #app .exploration-activity .bag-review-board .field-review-trial .bag-art { height: clamp(90px, calc(var(--stage-h) - 370px), 300px); }
+  #app .exploration-activity .field-review-trial :is(h2, b) { font-size: 20px; }
+}
