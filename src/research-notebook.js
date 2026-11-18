@@ -56,7 +56,7 @@ export function observationRecord(s,i){
   }
   case 1:return [...s.seasonalRecords.map(key=>{const [p,n]=key.split(':');return `${p==='cherry'?'벚나무':'씀바귀'} ${['다음 봄','여름','가을','겨울'][n]} 사진${s.seasonPhotos[key]?.underground?' · 땅속 포함':''}`;}),...(s.budsFound?.cherry?.length?[`벚나무 가지 끝 겨울눈 ${s.budsFound.cherry.length}개 찾음`]:[]),...(s.budsFound?.sowthistle?.length?['씀바귀 뿌리 머리 새눈 찾음']:[])];
   case 2:return [...(s.habitatCompareAnswer?['알로에는 두꺼운 잎에 물을 모아 두어 물이 적을 때 쓸 수 있어.']:[]),...e.float.tested.map(id=>`${id==='air'?'공기 방 모형: 수면에 뜸':'꽉 찬 모형: 바닥으로 내려감'}`),...(s.experiment.step>=4?[s.fieldBridges?.[2]&&e.float.reason==='air'?'현장에서 연 잎자루 단면: 공기 공간과 방울 관찰':'물속에서 누른 잎자루: 공기 방울 관찰']:[])];
-  case 3:return ['water','grass','dry'].filter(t=>terrainCount(s,t)).map(t=>`${({water:'물가',grass:'들판',dry:'건조 구역'})[t]} ${terrainCount(s,t)}칸`).concat(e.garden.testedKey?['현장 정원의 빗물 시험 기록 있음']:[],gardenReviewReady(s)?[`${plantName(s.gardenReview.plant)} · ${s.gardenReview.from===s.gardenReview.cell?'처음 자리 확인':'옆 자리로 옮김'}: ${HABITAT_PLANTS.find(p=>p.id===s.gardenReview.plant).reason}`]:[]);
+  case 3:return ['water','grass','dry'].filter(t=>terrainCount(s,t)).map(t=>`${({water:'물가',grass:'들판',dry:'건조 구역'})[t]} ${terrainCount(s,t)}칸`).concat(e.garden.testedKey?['현장 정원의 빗물 시험 기록 있음']:[],gardenReviewReady(s)?[`${plantName(s.gardenReview.plant)} · ${s.gardenReview.from===s.gardenReview.cell?'처음 자리 확인':'옆자리로 옮김'}: ${HABITAT_PLANTS.find(p=>p.id===s.gardenReview.plant).reason}`]:[]);
   case 4:{
    // The bridge copies the field trials into the start of the core history; show that shared prefix once.
    const carried=s.fieldBridges?.[4]&&e.bag.delivered&&e.bag.tests.every((t,i)=>s.tests[i]?.key===t.key)?e.bag.tests.length:0;
