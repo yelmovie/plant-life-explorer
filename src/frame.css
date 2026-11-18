@@ -988,3 +988,28 @@ body .note-quiz > summary small { margin-left: 4px; padding: 2px 7px; border-rad
   #app .exploration-activity .bag-review-board .field-review-trial .bag-art { height: clamp(90px, calc(var(--stage-h) - 370px), 300px); }
   #app .exploration-activity .field-review-trial :is(h2, b) { font-size: 20px; }
 }
+/* 2026-11-18 작업판이 주인공: 장면 틀은 이미 화면의 97%×78%를 쓰는데 그 안의 판·그림·버튼이 작아 배경이 더 커 보였다.
+   판과 그림을 장면 높이(--stage-h)에 맞춰 키우고, 가운데에 옅은 빛을 깔아 작업 층이 그림 배경에서 떠 보이게 한다. */
+#app .exploration-activity { --scrim-bg: radial-gradient(ellipse 78% 66% at 50% 47%, #fffdf26b, #fffdf22e 68%, #fffdf200), linear-gradient(180deg, #152c2012, transparent 24%, transparent 72%, #1830252b); }
+@media (min-width: 901px) and (orientation: landscape) {
+  /* 1장 기록(은행잎의 새 짝): 잎 그림이 판 높이를 채운다. */
+  #app .exploration-activity .leaf-partner .leaf-tile img { height: clamp(64px, calc(var(--stage-h) - 350px), 300px); }
+  #app .exploration-activity .leaf-partner :is(.leaf-tile b, .leaf-group-bin h3, .leaf-grouping h2) { font-size: 22px; }
+  #app .exploration-activity .leaf-partner .leaf-group-bin > div { gap: 10px; }
+  #app .exploration-activity .leaf-partner .leaf-tile { flex: 1 1 0; padding: 8px 6px; }
+  /* 3장 기록(식물이 사는 곳): 판이 장면 너비를 쓴다. */
+  #app .exploration-activity .habitat-compare-board { max-width: none; }
+  #app .exploration-activity .habitat-compare-card small { font-size: 18px; }
+  /* 2장 탐구(계절을 바꿔 봐요): 식물 고르기 줄은 제 높이만 쓰고, 그림 칸이 왼쪽 칸을 다 쓴다. */
+  #app .activity-2 .learning-scene { grid-template-rows: max-content; grid-template-columns: minmax(0, 1fr) minmax(260px, 34%); }
+  #app .activity-2 .season-scene { max-width: none; }
+  #app .activity-2 .learning-scene > :is(.timeline, .season-caption, .rule-result) { align-self: center; }
+  #app .activity-2 .season-caption { font-size: 22px; }
+  /* 5장 현장 예상: 가방 그림과 두 선택 버튼을 키운다. */
+  #app .field-mission-view .field-bag-predict { grid-template-columns: minmax(0, 46%) minmax(0, 1fr); gap: 28px; }
+  #app .field-mission-view .field-bag-predict .bag-art { height: clamp(220px, calc(var(--stage-h) * .66), 440px); }
+  #app .field-mission-view .field-predict-choices { gap: 16px; }
+  #app .field-mission-view .field-predict-choices .btn { min-height: 92px; font-size: 24px; }
+  /* 5장 설계·시험: 오른쪽 질문 칸을 세로 가운데에 둔다. */
+  #app .exploration-activity :is(.design-layout, .test-layout) > .learning-note { align-self: center; }
+}

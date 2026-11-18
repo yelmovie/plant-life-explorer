@@ -87,22 +87,28 @@ export const VOICE_LINES={
  "쳇, 부품은 둘게. 난 새 장난을 연구하러 간다!":"thief-bag-4"
 };
 export const voiceSrc=text=>VOICE_LINES[String(text??'').trim()]?`/assets/audio/${VOICE_LINES[String(text).trim()]}.mp3`:null;
-let player=null,release=null,dialogSig='';
+let player=null,release=null,dialogSig='',notify=null;
 const volume=()=>{try{const saved=localStorage.getItem('npc-narration-volume');if(saved!==null&&Number.isFinite(Number(saved)))return Math.min(1,Math.max(0,Number(saved)));}catch{}return .7;};
 export function stopVoice(){
  const current=player;player=null;
- if(current){current.onended=current.onerror=null;current.pause();current.removeAttribute('src');current.load();}
+ if(current){current.onended=current.onerror=current.onplaying=current.onpause=current.onwaiting=null;current.pause();current.removeAttribute('src');current.load();}
  release?.();release=null;
+ const told=notify;notify=null;told?.(-1,false);
 }
 // Plays the voiced lines among `texts` one after another; a new call (another popup or bubble) replaces the old one.
-export function speakTexts(texts){
- const queue=texts.map(voiceSrc).filter(Boolean);
+// onState(index,audible): which of `texts` is being read and whether sound is really coming out (the `playing` event,
+// not buffering or paused). It ends with (-1,false). A speaking character moves its mouth from this.
+export function speakTexts(texts,onState){
+ const queue=texts.map((text,index)=>[voiceSrc(text),index]).filter(([src])=>src);
  stopVoice();
  if(!queue.length||!isEffectsOn()||globalThis.document?.hidden||!volume()||typeof Audio==='undefined')return;
- release=suspendMusic();
+ release=suspendMusic();notify=onState??null;
  const next=()=>{
-  const src=queue.shift();if(!src){stopVoice();return;}
-  const audio=player=new Audio(src);audio.volume=volume();
+  const item=queue.shift();if(!item){stopVoice();return;}
+  const audio=player=new Audio(item[0]);audio.volume=volume();
+  const state=audible=>{if(player===audio)notify?.(item[1],audible);};
+  audio.onplaying=()=>state(!globalThis.document?.hidden&&!audio.paused);
+  audio.onwaiting=audio.onpause=()=>state(false);
   audio.onended=()=>{if(player===audio)next();};audio.onerror=()=>{if(player===audio)stopVoice();};
   try{void audio.play()?.catch(()=>{if(player===audio)stopVoice();});}catch{stopVoice();}
  };
@@ -111,10 +117,18 @@ export function speakTexts(texts){
 // Popups: the mission brief, reward, and locked-place dialogs read their lines when they open; closing stops the voice.
 const DIALOG_LINES='#dialog-title, .lipi-letter p, .reward-why, .reward-next, .map-locked-message p';
 // A re-render of the same open popup (e.g. picking a flower-path colour) does not start the lines again.
+// While a line is audible the popup carries data-speaking="true" and that line data-voice-now, so a character drawn in
+// the popup (the reward popup's Lipi) talks only with the real sound. The lines are looked up again on every change
+// because a re-render replaces them.
 export function speakDialog(dialog){
- const texts=[...dialog.querySelectorAll(DIALOG_LINES)].map(el=>el.textContent),key=texts.map(voiceSrc).filter(Boolean).join('|');
+ const lines=()=>[...dialog.querySelectorAll(DIALOG_LINES)];
+ const texts=lines().map(el=>el.textContent),key=texts.map(voiceSrc).filter(Boolean).join('|');
  if(key&&key===dialogSig)return;
- dialogSig=key;speakTexts(texts);
+ dialogSig=key;
+ speakTexts(texts,(index,audible)=>{
+  dialog.dataset.speaking=String(audible);
+  lines().forEach((el,i)=>el.toggleAttribute('data-voice-now',i===index));
+ });
 }
 export function installVoiceLines(dialog){
  dialog.addEventListener('close',()=>{dialogSig='';stopVoice();});

@@ -130,3 +130,83 @@ body dialog.npc-dialogue-stage > :is(.dialog-body,.modal-body) {
 }
 .npc-home-entry { min-height: 44px; }
 body:has(.npc-dialogue-stage[open]) :is(.hero-friends,.guide-avatar .guide-portrait) { visibility: hidden; }
+
+/* Reward popup (stage complete): Lipi stands in front of the restored place and says the lines the voice reads.
+   Her mouth moves only while the popup carries data-speaking="true" (voice-lines.js speakDialog). */
+body dialog.reward-dialog .reward-lipi {
+  position: absolute;
+  z-index: 3;
+  left: -11%;
+  bottom: -16px;
+  width: auto;
+  height: 90%;
+  margin: 0;
+  transform-origin: 50% 100%;
+  animation: reward-lipi-in 420ms cubic-bezier(.34, 1.56, .64, 1) 520ms backwards;
+}
+body dialog.reward-dialog .reward-scene .reward-building { translate: 11% -10%; scale: .8; }
+body dialog.reward-dialog .reward-scene .reward-seed { left: 72%; }
+@keyframes reward-lipi-in {
+  from { opacity: 0; transform: translateY(22px) scale(.82); }
+  to { opacity: 1; transform: none; }
+}
+body dialog.reward-dialog[data-speaking="true"] .reward-lipi {
+  animation: npc-dialogue-speech 840ms step-end infinite, reward-lipi-talk 840ms ease-in-out infinite;
+}
+@keyframes reward-lipi-talk {
+  0%, 100% { transform: none; }
+  50% { transform: translateY(-3px) rotate(-1.2deg); }
+}
+body dialog.reward-dialog > .dialog-body > .reward-say {
+  position: relative;
+  margin: 18px 0 8px;
+  padding: 16px 16px 10px;
+  background: linear-gradient(140deg, #fffbed, #eef3dd);
+  border: 2px solid #aab88d;
+  border-radius: 14px;
+  color: #234f3a;
+}
+/* The tail points at Lipi in the left column. */
+body dialog.reward-dialog .reward-say::before {
+  content: "";
+  position: absolute;
+  left: -11px;
+  bottom: 18px;
+  width: 18px;
+  height: 18px;
+  background: #f9f8e8;
+  border: solid #aab88d;
+  border-width: 0 0 2px 2px;
+  rotate: 45deg;
+}
+body dialog.reward-dialog .reward-say > b {
+  position: absolute;
+  top: -15px;
+  left: 14px;
+  padding: 2px 12px;
+  border-radius: 7px;
+  background: #2c5540;
+  color: #fff9e9;
+  font: 18px/1.3 var(--font-display);
+}
+body dialog.reward-dialog .reward-say > p {
+  margin: 2px -6px;
+  padding: 2px 6px;
+  border-radius: 8px;
+  color: inherit;
+  font-size: 18px;
+  line-height: 1.4;
+  word-break: keep-all;
+  transition: background-color 160ms;
+}
+body dialog.reward-dialog .reward-say > p[data-voice-now] { background: #fbeeb0; }
+@media (max-height: 780px) {
+  body dialog.reward-dialog .reward-lipi { height: 100%; bottom: -10px; }
+}
+@media (max-height: 740px) {
+  body dialog.reward-dialog > .dialog-body > .reward-say { margin: 16px 0 4px; padding: 14px 14px 6px; }
+  body dialog.reward-dialog .reward-say > p { line-height: 1.3; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body dialog.reward-dialog .reward-lipi, body dialog.reward-dialog[data-speaking="true"] .reward-lipi { animation: none; }
+}
