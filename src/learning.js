@@ -188,7 +188,9 @@ export function renderActivity(s,u,grid){
  const nextLabel=todo?.currentDone?(todo.i===(u.fieldMission?.stage??0)+1?'다음 도전':`${todo.i+1}번 임무로 가기`):'';
  const hint=field&&!fieldReady&&!todo?.currentDone?sceneHint(fieldScene):'',said=field?fieldFeedback(u):null;
  const doneLabel=p%2?'장소 복구하고 보상 받기':p===8?'가방 시험하러 가기':'다음 기록';
- const reply=!field?{text:u.activityFeedback?esc(u.activityFeedback):ready?`${single?'발견을 기록했어.':'기록이 준비됐어.'} 아래의 <b>${josa(doneLabel,'을/를')}</b> 눌러 줘.`:help,success:ready}
+ // The hand on the stage is only a marker; what to tap next is said here, in the one bubble.
+ const tip=!field&&!ready&&guide?.target&&guide.tip?`<span class="bubble-next">${esc(guide.tip)}</span>`:'';
+ const reply=!field?{text:u.activityFeedback?esc(u.activityFeedback)+tip:ready?`${single?'발견을 기록했어.':'기록이 준비됐어.'} 아래의 <b>${josa(doneLabel,'을/를')}</b> 눌러 줘.`:help+tip,success:ready}
   :fieldReady?{text:`현장 임무 성공! 아래의 <b>${i!==0&&i!==2?'현장 결과 확인하기':'발견을 연구 노트에 담기'}</b>를 눌러 줘.`,success:true}
   :todo?.currentDone?{text:`이 단계는 끝! 이제 <b>${todo.i+1}번 ${todo.label}</b>만 남았어. 오른쪽 아래 <b>${josa(nextLabel,'을/를')}</b> 눌러 줘.`,success:true}
   :u.fieldMission?.feedback?{text:hint&&hint!==said.text?`${said.text}<span class="bubble-next">${hint}</span>`:said.text,success:said.success}

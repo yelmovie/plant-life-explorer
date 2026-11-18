@@ -145,7 +145,7 @@ export function mountGuideFinger(main,guide){
  if(!main||!guide?.target)return ()=>{};
  const target=main.querySelector(guide.target);if(!target)return ()=>{};
  const el=document.createElement('div');el.className='guide-finger';el.setAttribute('aria-hidden','true');
- el.innerHTML=`${HAND}<span class="guide-finger-tip">${esc(guide.tip)}</span>`;
+ el.innerHTML=HAND; // a marker only: Leafy's bubble says what to do there
  main.append(el);main.dataset.guideTarget=guide.target;
  const place=()=>{
   const m=main.getBoundingClientRect(),t=target.getBoundingClientRect();

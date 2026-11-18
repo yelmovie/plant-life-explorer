@@ -45,3 +45,11 @@ test('탐구 기록을 마치면 말풍선이 아래 주 버튼 이름을 그대
  assert.match(bubble(html),/<b>다음 기록을<\/b> 눌러 줘/);
  assert.doesNotMatch(html,/다음으로 가 보자/);
 });
+
+test('탐구 기록 중에는 손가락은 표식만 하고 누를 곳 이름은 말풍선이 말한다',async()=>{
+ const s=Object.assign(freshState(),{screen:'activity',page:0});
+ const html=renderActivity(s,{activityMode:'explore'},()=>'');
+ assert.match(bubble(html),/<span class="bubble-next">[^<]*눌러 봐<\/span>/);
+ const guide=await readFile(new URL('../src/next-step-guide.js',import.meta.url),'utf8');
+ assert.doesNotMatch(guide,/<span class="guide-finger-tip">/);
+});
