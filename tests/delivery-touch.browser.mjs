@@ -24,7 +24,7 @@ const field=path=>until(`(e=>${path})(JSON.parse(localStorage['${KEY}']).fieldEv
 // Every control is tapped. A control that only exists for keyboard focus fails the check.
 async function tap(sel){const loc=page.locator(sel).first();await loc.waitFor();assert.equal(await loc.evaluate(el=>!!el.closest('.lens-fallback')),false,'focus-only control: '+sel);await loc.tap();}
 const act=(name,id,scope='')=>tap(`${scope}[data-action="${name}"]${id!==undefined?`[data-id="${id}"]`:''}`);
-const stage=n=>act('field-stage',String(n),'.today-panel .mission-journey ');
+const stage=n=>act('field-stage',String(n),'');
 // The drifting rain cloud never settles for an actionability check, so it is tapped at its centre.
 const tapCenter=async sel=>{const b=await page.locator(sel).boundingBox();await page.touchscreen.tap(b.x+b.width/2,b.y+b.height/2);};
 const keysOn=()=>act('field-keys');

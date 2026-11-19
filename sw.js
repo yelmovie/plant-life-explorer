@@ -21,8 +21,9 @@ self.addEventListener('fetch',event=>{
   // Let the browser stream/seek films. Partial 206 responses cannot use cache.put.
   if(request.headers.has('range')||request.destination==='video'||request.destination==='audio')return;
   // HTML: network first so a new deploy shows up, cache when offline.
+  // Fallback is '/' (ignoring ?query): Pages answers /index.html with a 308 redirect, and a redirected response cannot answer a navigation.
   if(request.mode==='navigate'||request.destination==='document'){
-    event.respondWith(fetch(request).then(response=>remember(request,response)).catch(()=>caches.match(request).then(hit=>hit||caches.match('/index.html'))));
+    event.respondWith(fetch(request).then(response=>remember(request,response)).catch(()=>caches.match(request,{ignoreSearch:true}).then(hit=>hit||caches.match('/'))));
     return;
   }
   // Everything else: cache first. A new CACHE_VERSION replaces the whole cache.

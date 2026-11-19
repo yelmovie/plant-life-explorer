@@ -52,7 +52,8 @@ const source=item=>page.locator(`[data-field-item="${item}"]`);
 const target=id=>page.locator(`[data-field-drop="${id}"]`);
 async function keyboardPlace(item,id){await source(item).focus();await page.keyboard.press('Enter');await target(id).focus();await page.keyboard.press('Enter');report.inputs.keyboardPlacements++;}
 async function keyboardPress(selector){await page.locator(selector).first().focus();await page.keyboard.press('Enter');report.inputs.keyboardPlacements++;}
-async function stage(n){await tap(`.today-panel .mission-step[data-action="field-stage"][data-id="${n}"]`);await page.locator(`.today-panel .mission-step.active[data-id="${n}"]`).waitFor();}
+// The step list is gone; "다음 도전" (.objective-next) carries field-stage and disappears once that stage opens.
+async function stage(n){const next=`[data-action="field-stage"][data-id="${n}"]`;await tap(next);await page.waitForFunction(sel=>!document.querySelector(sel),next);}
 async function action(name){await tap(`.field-mission [data-action="${name}"]`);}
 // Leafy's reply must turn into a specific, non-success explanation.
 async function wrongFeedback(needle){
@@ -130,7 +131,6 @@ async function initialise(mission){
  return context;
 }
 async function finish(mission,result){
- await page.waitForFunction(()=>document.querySelectorAll('.today-panel .mission-step.done').length===3);
  // The DOM re-renders before the asynchronous save lands; wait for the saved state too.
  const end=Date.now()+20000;while(!await ready(mission)&&Date.now()<end)await page.waitForTimeout(40);
  assert.equal(await ready(mission),true,'all three field steps must be ready');

@@ -17,7 +17,7 @@ const selector=(name,id)=>`[data-action="${name}"]${id!==undefined?`[data-id="${
 const press=async loc=>{if(await loc.evaluate(el=>!!el.closest('.lens-fallback'))){await loc.focus();await page.keyboard.press('Enter');}else await loc.tap();};
 const a=async(name,id,scope='')=>{await press(page.locator(scope+selector(name,id)).first());};
 const close=()=>page.locator('#dialog[open] button[data-action="close"]:visible').first().tap();
-const stage=n=>a('field-stage',String(n),'.today-panel .mission-journey ');
+const stage=n=>a('field-stage',String(n),'');
 // Keyboard select-then-place. Some steps have no source card (magnifier, season string): the slot alone acts.
 const place=async(item,target)=>{
  const source=page.locator(`[data-field-item="${item}"]`);

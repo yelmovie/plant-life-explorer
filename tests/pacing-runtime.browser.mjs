@@ -49,9 +49,9 @@ try{
  {
   const state={...structuredClone(completed),screen:'activity',page:8};state.completed[8]=state.completed[9]=false;state.finished=false;state.fieldBridges[4]=false;
   state.fieldEvidence.bag={...freshState().fieldEvidence.bag,prediction:'cover',assembled:['surface','cover'],design:{surface:'lotus',cover:'flap'}};state.design=freshState().design;state.tests=[];state.inventionExplanations={};state.testExplanation=null;
-  const {context,page}=await fixture(state);await page.locator('.today-panel [data-action="field-stage"][data-id="1"]').tap();
+  const {context,page}=await fixture(state);await page.locator('[data-action="field-stage"][data-id="1"]').tap();
   const cloud=await page.locator('[data-bag-cloud]').boundingBox();await page.touchscreen.tap(cloud.x+cloud.width/2,cloud.y+cloud.height/2);await page.waitForFunction(()=>document.querySelector('[data-rain-count] b')?.textContent==='10');
-  await page.locator('.today-panel [data-action="field-stage"][data-id="0"]').tap();await page.waitForTimeout(2300);
+  await page.locator('[data-action="field-stage"][data-id="0"]').tap();await page.waitForTimeout(2300);
   assert.equal((await read(page)).fieldEvidence.bag.tests.length,0);
   report.checks.push('Leaving bag rain after all drops launch cancels callbacks and never adds a late trial');await context.close();
  }
