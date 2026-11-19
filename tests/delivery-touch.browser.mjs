@@ -27,7 +27,12 @@ const act=(name,id,scope='')=>tap(`${scope}[data-action="${name}"]${id!==undefin
 const stage=n=>act('field-stage',String(n),'');
 // The drifting rain cloud never settles for an actionability check, so it is tapped at its centre.
 const tapCenter=async sel=>{const b=await page.locator(sel).boundingBox();await page.touchscreen.tap(b.x+b.width/2,b.y+b.height/2);};
-const keysOn=()=>act('field-keys');
+// 버튼으로 조작 is a switch in 설정 (2026-11-18); it carries into later missions until switched back.
+async function keys(on){await act('settings');const b=page.locator('#dialog[open] [data-action="keys-mode"]');await b.waitFor({state:'attached'});
+ if(!await b.isVisible())await page.locator('#dialog[open] details:has([data-action="keys-mode"]) > summary').tap();await b.waitFor();
+ if((await b.getAttribute('aria-pressed')==='true')!==on)await b.tap();await page.locator(`#dialog[open] [data-action="keys-mode"][aria-pressed="${on}"]`).waitFor();
+ await tap('#dialog[open] .dialog-actions [data-action="close"]');await page.waitForFunction(()=>!document.querySelector('#dialog[open]'));}
+const keysOn=()=>keys(true);
 const panel=(attr,v)=>tap(`.keys-panel [${attr}="${v}"]`);
 async function touch(points,gap=16){await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:points[0][0],y:points[0][1]}]});for(const [x,y] of points.slice(1)){await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x,y}]});await page.waitForTimeout(gap);}await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});}
 const line=([x0,y0],[x1,y1],n)=>Array.from({length:n+1},(_,i)=>[x0+(x1-x0)*i/n,y0+(y1-y0)*i/n]);
@@ -65,7 +70,7 @@ try{
  check(/작은 톱니/.test(await page.locator('[data-clue="camellia:edge"]').innerText()),'1장: camellia small teeth seen through the lens are named as teeth');
  await stage(1);check(await page.locator('text=큰 톱니').count()===0,'1장: no "큰 톱니" wording on the sorting screen');
  await tap('[data-swipe-bin="no"]');await field(`e.leaves.edge.maple==='no'`);
- check(/톱니/.test(await page.locator('.guide-bubble').innerText()),'1장: wrong basket gives an edge clue and the card stays for a retry');
+ check(/가장자리/.test(await page.locator('.guide-bubble').innerText())&&await page.locator('[data-swipe-top][data-swipe-card="maple"]').count()===1,'1장: wrong basket gives an edge clue and the card stays for a retry');
  await page.waitForTimeout(400);
  for(const p of ['maple','pine','camellia']){await page.locator(`[data-swipe-top][data-swipe-card="${p}"]`).waitFor();const bin=page.locator(`[data-swipe-bin="${p==='pine'?'no':'yes'}"]`);
   if(p==='pine'){await bin.tap();await bin.tap();}else await bin.tap();await field(`e.leaves.edge.${p}==='${p==='pine'?'no':'yes'}'`);}
@@ -77,8 +82,8 @@ try{
  // 2장: dial and string drag are done with the visible button panel.
  await enter(1);await act('field-season-predict','tree:roots');await act('field-season-predict','herb:roots');
  await keysOn();await panel('data-field-drop','link:tree:trunk');await panel('data-field-drop','link:herb:root');await field(`e.seasons.links.herb==='root'`);
- for(const [n,kind] of [[1,'tree'],[2,'herb']]){await stage(n);if(!await page.locator('.keys-panel').count())await keysOn();await panel('data-action','field-season-turn');await tap(`.keys-panel [data-action="field-season-clue"][data-id="${kind}:${kind==='tree'?'branches':'rootbud'}"]`);await field(`e.seasons.clues.${kind}`);}
- check(true,'2장: all field steps done with visible buttons (no drag, no keyboard)');
+ for(const [n,kind] of [[1,'tree'],[2,'herb']]){await stage(n);await panel('data-action','field-season-turn');await tap(`.keys-panel [data-action="field-season-clue"][data-id="${kind}:${kind==='tree'?'branches':'rootbud'}"]`);await field(`e.seasons.clues.${kind}`);}
+ check(true,'2장: all field steps done with visible buttons (no drag, no keyboard)');await keys(false);
  await explore();await act('season-review-answer','parts');await complete(1);
 
  // 3장: every required step by touch, three ways to open the stalk.
@@ -89,12 +94,13 @@ try{
  check(await page.locator('.float-lab[data-phase="cut"]').count()===1,'3장: a stroke away from the stalk does not cut');
  await page.touchscreen.tap(...await petiolePoint(.23,.86));await page.locator('[data-petiole] .cut-mark').waitFor();
  await page.touchscreen.tap(...await petiolePoint(.86,.16));await cutOpen();check(true,'3장: tap one end, then the other end opens the stalk');
- const reEnter=async()=>{await page.reload();await page.locator('.field-mission').waitFor();await stage(2);await page.locator('.float-lab[data-phase="cut"]').waitFor();};
+ // A refresh reopens the first unfinished step, so 다음 도전 is tapped only if it is offered.
+ const reEnter=async()=>{await page.reload();await page.locator('.field-mission').waitFor();if(await page.locator('[data-action="field-stage"][data-id="2"]').count())await stage(2);await page.locator('.float-lab[data-phase="cut"]').waitFor();};
  await reEnter();await touch(line(await petiolePoint(.21,.875),await petiolePoint(.89,.125),6));await cutOpen();check(true,'3장: a fast swipe with only 6 touch moves opens the stalk');
  await reEnter();await touch(line(await petiolePoint(.26,.9),await petiolePoint(.92,.2),10));await cutOpen();check(true,'3장: a swipe drawn a little off the centre line opens the stalk');
  await reEnter();await keysOn();await snap('button-mode-petiole');await panel('data-action','field-cut');await cutOpen();
  check(await page.locator('.keys-panel [data-field-item="reason:air-space"]').count()===1,'3장: button path opens the stalk first, then offers the model link');
- await act('field-keys');await page.locator('.float-lab[data-phase="reason"]').waitFor();
+ await keys(false);await page.locator('.float-lab[data-phase="reason"]').waitFor();
  await tap('[data-tank-model="air"]');await field(`e.float.reason==='air'`);
  await explore();await act('press-petiole',undefined,'.lab-dock ');await act('experiment-answer','air');await act('complete',undefined,'.learning-footer ');await act('habitat-compare-answer','aloe');
  await complete(2);
@@ -136,7 +142,8 @@ try{
   await ctx.addInitScript(([k,v])=>{if(!sessionStorage.getItem('fx')){localStorage.setItem(k,v);sessionStorage.setItem('fx','1');}},[KEY,raw]);
   await p.goto(url);const pg=page;
   const tapP=s=>p.locator(s).first().tap();
-  if(await p.locator('[data-action="home"]').count())await tapP('[data-action="home"]');await tapP('[data-action="begin"]');if(await p.locator('[data-story-action="exit"]').count())await tapP('[data-story-action="exit"]');
+  // The finished record opens on the ending screen; its map button leads to the map with the letters.
+  await tapP('main.ending [data-action="map"]');
   for(const m of [0,1,3]){
    await tapP('[data-action="map-overview"]');await p.locator(`.world-node[data-id="${m}"] .world-label`).tap();
    await p.locator('#dialog[open] .dialog-actions .btn').first().waitFor();await p.waitForTimeout(450);
@@ -156,8 +163,9 @@ try{
   const b=name==='webgl-off'?browser:gl,ctx=await b.newContext({viewport:{width:1180,height:757},hasTouch:true});await watchToasts(ctx);if(block)await ctx.route(block,r=>r.abort());
   await ctx.addInitScript(([k,v])=>{if(!sessionStorage.getItem('fx')){localStorage.setItem(k,v);sessionStorage.setItem('fx','1');}},[KEY,raw]);
   const p=await ctx.newPage(),warn=[];p.on('console',m=>{if(m.text().includes('입체 대체'))warn.push(m.text());});
-  await p.goto(url);if(await p.locator('[data-action="home"]').count())await p.locator('[data-action="home"]').first().tap();await p.locator('[data-action="begin"]').tap();if(await p.locator('[data-story-action="exit"]').count())await p.locator('[data-story-action="exit"]').tap();
-  await p.locator('[data-action="map-overview"]').tap();await p.locator('.world-node[data-id="3"] .world-label').tap();await p.locator('#dialog [data-action="enter-mission"]').tap();
+  await p.goto(url);await p.locator('main.ending [data-action="map"]').tap();
+  // Re-entering the finished 3장 opens its lab page, the 3D scene left after the field-mission redesign (4장 now reopens its field record).
+  await p.locator('[data-action="map-overview"]').tap();await p.locator('.world-node[data-id="2"] .world-label').tap();await p.locator('#dialog[open] [data-action="enter-mission"]').tap();
   const host=p.locator('[data-spatial]').first();await host.waitFor();await p.waitForTimeout(3500);
   const res=await host.evaluate(h=>({reason:h.dataset.spatialReason||'',flat:h.classList.contains('spatial-flat'),ready:h.classList.contains('spatial-ready')}));
   await p.locator('.learning-footer [data-action]').last().tap();await p.waitForTimeout(800);

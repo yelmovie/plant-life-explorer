@@ -54,7 +54,6 @@ async function keyboardPlace(item,id){await source(item).focus();await page.keyb
 async function keyboardPress(selector){await page.locator(selector).first().focus();await page.keyboard.press('Enter');report.inputs.keyboardPlacements++;}
 // The step list is gone; "다음 도전" (.objective-next) carries field-stage and disappears once that stage opens.
 async function stage(n){const next=`[data-action="field-stage"][data-id="${n}"]`;await tap(next);await page.waitForFunction(sel=>!document.querySelector(sel),next);}
-async function action(name){await tap(`.field-mission [data-action="${name}"]`);}
 // Leafy's reply must turn into a specific, non-success explanation.
 async function wrongFeedback(needle){
  await page.waitForFunction(n=>{const f=document.querySelector('.mission-feedback');return f&&!f.classList.contains('success')&&f.textContent.includes(n);},needle);
@@ -110,10 +109,6 @@ async function dragPlant(plant,zone){
 async function rain(){
  await tapAt(...mid(await box('[data-bag-cloud]')));gesture('cloudTap');
 }
-async function circleSpot(side,part){
- const b=await box(`[data-diff="${side}"]`),spot={surface:[.2,.6],cover:[.5,.22],pocket:[.56,.68]}[part];
- await stroke(ring(b.x+spot[0]*b.width,b.y+spot[1]*b.height,Math.min(30,b.height*.14),0,370,20),{steps:2});gesture('diffCircle');
-}
 
 async function initialise(mission){
  const context=await browser.newContext({viewport:report.viewport,hasTouch:true});page=await context.newPage();page.setDefaultTimeout(30000);
@@ -133,7 +128,7 @@ async function initialise(mission){
 async function finish(mission,result){
  // The DOM re-renders before the asynchronous save lands; wait for the saved state too.
  const end=Date.now()+20000;while(!await ready(mission)&&Date.now()<end)await page.waitForTimeout(40);
- assert.equal(await ready(mission),true,'all three field steps must be ready');
+ assert.equal(await ready(mission),true,'every field step must be ready');
  const before=await evidence();await page.screenshot({path:shot(`field-${mission+1}-complete.png`),fullPage:true});
  await page.reload();await page.locator('.activity').waitFor();
  assert.equal(await ready(mission),true,'field evidence survives reload');assert.deepEqual(await evidence(),before);
@@ -144,7 +139,7 @@ async function finish(mission,result){
 }
 try{
  for(let mission=0;mission<5;mission++){
-  const result={mission:mission+1,stages:3,wrongFeedback:''};let context;
+  const result={mission:mission+1,stages:[2,3,3,3,2][mission],wrongFeedback:''};let context;
   try{context=await initialise(mission);
    if(mission===0){
     // 1: magnifier rests on clue spots by hand; the rest through the keyboard scan buttons.
@@ -153,19 +148,17 @@ try{
     await until(e=>['maple','pine','camellia'].every(l=>e.leaves.scans[l].length===2),'all six clues');
     // 2: flick cards; the first flick goes to the wrong basket and must be explained.
     await stage(1);assert.equal(await flickCard('no'),'maple');
-    result.wrongFeedback=await wrongFeedback('지금 기준은');assert.equal(await ready(0),false);
+    result.wrongFeedback=await wrongFeedback('가장자리를 바구니');assert.equal(await ready(0),false);
     for(const leaf of ['maple','pine','camellia']){
      await page.locator(`[data-swipe-top][data-swipe-card="${leaf}"]`).waitFor();assert.equal(await flickCard(leaf==='pine'?'no':'yes'),leaf);
      await until(e=>e.leaves.edge[leaf]===(leaf==='pine'?'no':'yes'),'edge sort '+leaf);
     }
-    // 3: the vertical re-sort through the keyboard.
-    await stage(2);for(const leaf of ['maple','pine','camellia'])await keyboardPlace('leaf:'+leaf,`sort:narrow:${leaf==='pine'?'yes':'no'}`);
    }else if(mission===1){
     await tap('[data-action="field-season-predict"][data-id="tree:roots"]');await tap('[data-action="field-season-predict"][data-id="herb:roots"]');
     // 1: rub the soil away and pull the glowing thread to next spring's trunk.
     await rubSoil('tree');await pullThread('tree','lower');assert.equal((await until(e=>e.seasons.links.tree,'tree link')).seasons.links.tree,'trunk');
     await rubSoil('herb');await pullThread('herb','upper');await until(e=>e.seasons.links.herb==='leaf','herb wrong link');
-    result.wrongFeedback=await wrongFeedback('땅속에 살아 있던 뿌리');
+    result.wrongFeedback=await wrongFeedback('뿌리는 땅속에서 살아 있어');
     await keyboardPress('[data-field-drop="link:herb:root"]');await until(e=>e.seasons.links.herb==='root','herb link');
     // 2: the rim already shows the seasons in order; spin the hand a full lap, tap the sprout spot.
     await stage(1);
@@ -206,19 +199,16 @@ try{
     await stage(2);assert.equal(await ready(3),false);await cloudTap();await until(e=>e.garden.testedKey,'garden rain');assert.equal(await ready(3),true);
    }else{
     await tap('[data-action="field-bag-predict"][data-id="surface"]');
-    // 1: tap-dial each place (plain, flap); the second choice assembles the bag.
-    for(const [part,n] of [['surface',1],['cover',2]])for(let i=0;i<n;i++)await tap(`[data-bag-dial="${part}"]`);
-    const sewn=await until(e=>e.bag.assembled.length===2,'bag assembled');assert.deepEqual(sewn.bag.design,{surface:'plain',cover:'flap'});
-    // 2: one cloud tap rains ten drops; change one part by tap, re-test through the keyboard.
-    await stage(1);await rain();await until(e=>e.bag.tests.length===1,'first rain test');
-    await tap('[data-bag-dial="surface"]');await until(e=>e.bag.design.surface==='lotus','lotus surface');
-    await keyboardPress('.lens-fallback [data-action="field-bag-test"]');await until(e=>e.bag.tests.length===2,'second rain test');
-    // 3: circle the wrong part first, then name the changed part by keyboard and deliver.
-    await stage(2);await circleSpot('after','cover');result.wrongFeedback=await wrongFeedback('입구 덮개는 같아');assert.equal(await ready(4),false);
-    await keyboardPlace('compare:surface','compare');await until(e=>e.bag.compared.part==='surface','comparison');await action('field-bag-deliver');
-    await until(e=>e.bag.delivered,'bag delivered');
+    // 1: one cloud tap rains on the plain bag.
+    await rain();await until(e=>e.bag.tests.length===1&&e.bag.tests[0].key==='plain:open','first rain test');assert.equal(await ready(4),false);
+    // 2: one tap on a bag card rains on that bag; the same card again is refused; the last card by keyboard.
+    await stage(1);await tap('[data-action="field-bag-try"][data-id="lotus:open"]');await until(e=>e.bag.tests.length===2,'lotus rain test');
+    await tap('[data-action="field-bag-try"][data-id="lotus:open"]');result.wrongFeedback=await wrongFeedback('방금 비를 맞았어');assert.equal((await evidence()).bag.tests.length,2);
+    await tap('[data-action="field-bag-try"][data-id="plain:flap"]');await until(e=>e.bag.tests.length===3,'flap rain test');
+    await keyboardPress('[data-action="field-bag-try"][data-id="lotus:flap"]');const bag=(await until(e=>e.bag.tests.length===4,'both-parts rain test')).bag;
+    assert.deepEqual(bag.tests.map(t=>t.notebookDry),[false,false,false,true]);assert.deepEqual(bag.tests.map(t=>t.rolls),[false,true,false,true]);
    }
-   await finish(mission,result);console.log(`mission ${mission+1}: hand gesture, tap, keyboard, wrong feedback, 3 stages, reload passed`);
+   await finish(mission,result);console.log(`mission ${mission+1}: hand gesture, tap, keyboard, wrong feedback, ${result.stages} stages, reload passed`);
   }catch(error){report.failures.push({mission:mission+1,message:error.stack});await page?.screenshot({path:shot(`field-${mission+1}-failure.png`),fullPage:true}).catch(()=>{});console.error(`mission ${mission+1}: ${error.message}`);}
   finally{await context?.close();}
  }
