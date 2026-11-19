@@ -23,10 +23,9 @@ export function mountCharacterDialogue(dialog,{characters,initial=0,enabled,hold
  }
  function listen(){
   stop();status.textContent='';
-  if(!enabled()||document.hidden){if(!document.hidden)status.textContent='소리를 켜면 들을 수 있어.';return;}
-  let volume=.7;
-  try{const saved=localStorage.getItem('npc-narration-volume');if(saved!==null&&Number.isFinite(Number(saved)))volume=Math.min(1,Math.max(0,Number(saved)));}catch{}
-  if(!volume){status.textContent='음성 크기를 높이면 들을 수 있어.';return;}
+  if(!enabled()||document.hidden){if(!document.hidden)status.textContent='목소리를 켜면 들을 수 있어.';return;}
+  // Same level as the other voice lines (voice-lines.js VOICE_GAIN).
+  const volume=.7;
   const src=characters[picked].lines[line].src;
   if(!src)return;
   const audio=new Audio(src),current={audio,active:false};
@@ -69,7 +68,7 @@ export function mountCharacterDialogue(dialog,{characters,initial=0,enabled,hold
  const hidden=()=>{if(document.hidden)stop();};
  document.addEventListener('visibilitychange',hidden,opt);
  window.addEventListener('pagehide',stop,opt);
- document.addEventListener('sound-effects-off',stop,opt);
+ document.addEventListener('sound-voice-off',stop,opt);
  motion.addEventListener('change',updateMotion,opt);
  const dispose=()=>{events.abort();stop();};
  dialog.addEventListener('close',dispose,{...opt,once:true});

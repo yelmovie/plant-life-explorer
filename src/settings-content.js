@@ -17,7 +17,7 @@ export const TEXT={
  title:'설정',
  music:'배경 음악',musicVolume:'배경 음악 크기',musicAbsent:'이 탐구에는 배경 음악이 없어요. 관찰에 집중하며 효과음만 들을 수 있어요.',
  map:'탐험 지도',journal:'연구 노트',toolPack:'탐험 도구',
- sfx:'효과음',on:'켜짐',off:'꺼짐',
+ sfx:'효과음',sfxVolume:'효과음 크기',voice:'목소리',on:'켜짐',off:'꺼짐',
  largeText:'전자칠판용 큰 글자',fullscreen:'전체화면 전환',keysMode:'현장 임무를 버튼으로 조작',
  intro:'이 탐험을 하는 이유 다시 보기',
  ending:'엔딩 다시 보기',endingLocked:'끝까지 마치면 볼 수 있어요.',

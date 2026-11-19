@@ -1,4 +1,4 @@
-import {isEffectsOn,duckMusic} from './audio.js';
+import {isVoiceOn,duckMusic} from './audio.js';
 
 // ElevenLabs voice lines (2026-11-18, docs/VOICE-FILL-20261118.json): exact on-screen text -> /assets/audio/<file>.mp3.
 // Lipi = Aria, label thief = Harry - Character. Text that is not in this table simply stays silent.
@@ -95,7 +95,10 @@ const GUIDE_WAIT=2000,LINE_CAP=6500;
 let thief=false,thiefSince=0,turn=0,startTimer=0,waitTimer=0,host=null;
 // True from the moment a thief's line is asked for (its short lead included) until it has been said.
 export const villainLineOn=()=>thief&&(startTimer!==0||player!==null)&&Date.now()-thiefSince<LINE_CAP;
-const volume=()=>{try{const saved=localStorage.getItem('npc-narration-volume');if(saved!==null&&Number.isFinite(Number(saved)))return Math.min(1,Math.max(0,Number(saved)));}catch{}return .7;};
+// Every voice line plays at 0.7 (the music is tuned against it). The settings have an on/off switch for voices only.
+const VOICE_GAIN=.7;
+// Before the first press or key the browser refuses to play, so nothing is tried yet (and no line is used up).
+const activated=()=>globalThis.navigator?.userActivation?.hasBeenActive!==false;
 // quiet: the line that is being said (or about to be) ends. A guide that is waiting for its turn keeps waiting.
 // stopVoice: the popup closed, the tab was hidden or sound was turned off, so the waiting guide is dropped as well.
 export function stopVoice(){clearTimeout(waitTimer);waitTimer=0;quiet();}
@@ -122,12 +125,12 @@ export function speakTexts(texts,onState,{villain=false,delay=0}={}){
   waitTimer=setTimeout(again,100);return ()=>false;
  }
  stopVoice();
- if(!queue.length||!isEffectsOn()||globalThis.document?.hidden||!volume()||typeof Audio==='undefined')return ()=>false;
+ if(!queue.length||!isVoiceOn()||globalThis.document?.hidden||!activated()||typeof Audio==='undefined')return ()=>false;
  const mine=++turn;thief=villain;thiefSince=Date.now();
  release=duckMusic();notify=onState??null;
  const next=()=>{
   const item=queue.shift();if(!item){quiet();return;}
-  const audio=player=new Audio(item[0]);audio.volume=volume();
+  const audio=player=new Audio(item[0]);audio.volume=VOICE_GAIN;
   const state=audible=>{if(player===audio)notify?.(item[1],audible);};
   audio.onplaying=()=>state(!globalThis.document?.hidden&&!audio.paused);
   audio.onwaiting=audio.onpause=()=>state(false);
@@ -147,11 +150,23 @@ export function speakDialog(dialog){
  const lines=()=>[...dialog.querySelectorAll(DIALOG_LINES)];
  const texts=lines().map(el=>el.textContent),key=texts.map(voiceSrc).filter(Boolean).join('|');
  if(key&&key===dialogSig)return;
+ // Opened before any press (a reload straight into a popup): its lines are read once after the first press or key,
+ // unless that input closed the popup or replaced its lines (that popup reads its own).
+ if(key&&!activated()){afterFirstInput(dialog);return;}
  dialogSig=key;
  speakTexts(texts,(index,audible)=>{
   dialog.dataset.speaking=String(audible);
   lines().forEach((el,i)=>el.toggleAttribute('data-voice-now',i===index));
  });
+}
+let waitingInput=false;
+function afterFirstInput(dialog){
+ if(waitingInput)return;waitingInput=true;
+ const go=()=>{
+  removeEventListener('click',go,true);removeEventListener('keyup',go,true);waitingInput=false;
+  setTimeout(()=>{if(dialog.open)speakDialog(dialog);},0);
+ };
+ addEventListener('click',go,true);addEventListener('keyup',go,true);
 }
 export function installVoiceLines(dialog){
  host=dialog;
@@ -160,8 +175,8 @@ export function installVoiceLines(dialog){
  dialog.addEventListener('close',()=>{dialogSig='';clearTimeout(waitTimer);waitTimer=0;if(!thief)quiet();});
  document.addEventListener('visibilitychange',()=>{if(document.hidden)stopVoice();});
  window.addEventListener('pagehide',stopVoice);
- // Turning the effects (and voices) switch or the header speaker off stops the line that is being read.
- document.addEventListener('sound-effects-off',stopVoice);
+ // Turning the voices switch or the header speaker off stops the line that is being read.
+ document.addEventListener('sound-voice-off',stopVoice);
  // 리피의 정리 (research notebook): opening the summary reads it; folding it stops the voice.
  document.addEventListener('toggle',e=>{
   const d=e.target;if(!(d instanceof HTMLDetailsElement)||!d.matches('.note-content-summary'))return;

@@ -3,20 +3,31 @@
 // Sound preferences are separate from research records and survive a record reset.
 export const SOUND_KEY='green-garden-sound';
 const MUSIC_KEY='green-garden-music',VOLUME_KEY='green-garden-music-volume';
+// Added 2026-11-20: voices have their own switch and the effects their own level (settings).
+const VOICE_KEY='green-garden-voice',SFX_VOLUME_KEY='green-garden-sfx-volume';
 const saved=key=>{try{return localStorage.getItem(key);}catch{return null;}};
 const save=(key,value)=>{try{localStorage.setItem(key,value);}catch{/* keep in memory only */}};
 // 25: with voices at 0.7 the theme sits about a third as loud. Used only when no volume has been saved.
 const DEFAULT_VOLUME=25;
-const volumeValue=value=>Number.isFinite(Number(value))?Math.round(Math.min(100,Math.max(0,Number(value)))/5)*5:DEFAULT_VOLUME;
+// 100: every effect keeps the gain it was tuned to; the level multiplies the whole effects lane (effectsOut).
+const DEFAULT_SFX_VOLUME=100;
+const volumeValue=(value,fallback=DEFAULT_VOLUME)=>Number.isFinite(Number(value))&&value!==null&&value!==''?Math.round(Math.min(100,Math.max(0,Number(value)))/5)*5:fallback;
 let context,currentClick,effectsEnabled=saved(SOUND_KEY)!=='off';
 let musicEnabled=saved(MUSIC_KEY)!=='off',musicVolume=volumeValue(saved(VOLUME_KEY)??DEFAULT_VOLUME);
+let sfxVolume=volumeValue(saved(SFX_VOLUME_KEY),DEFAULT_SFX_VOLUME);
+// Until 2026-11-20 the voices followed the effects switch, so a record without its own voice value keeps that one.
+// It is written down at once, so turning the effects off later no longer takes the voices with it. New students: on.
+let voiceEnabled=(saved(VOICE_KEY)??saved(SOUND_KEY))!=='off';
+if(saved(VOICE_KEY)===null)save(VOICE_KEY,voiceEnabled?'on':'off');
 export const MUSIC_TRACKS={main:'/assets/audio/main-theme.mp3',ending:'/assets/audio/ending-theme.mp3'};
 export const hasMusic=()=>true;
 export const soundStored=()=>saved(SOUND_KEY)!==null;
 export const isEffectsOn=()=>effectsEnabled;
 export const isMusicOn=()=>hasMusic()&&musicEnabled;
-export const isSoundOn=()=>isEffectsOn()||isMusicOn();
+export const isVoiceOn=()=>voiceEnabled;
+export const isSoundOn=()=>isEffectsOn()||isMusicOn()||isVoiceOn();
 export const getMusicVolume=()=>musicVolume;
+export const getSfxVolume=()=>sfxVolume;
 export function setMusic(on){musicEnabled=Boolean(on);save(MUSIC_KEY,musicEnabled?'on':'off');syncMusic();}
 export function setMusicVolume(value){musicVolume=volumeValue(value);save(VOLUME_KEY,String(musicVolume));levelMusic(false);}
 let musicPlayer,selectedTheme='main',loadedTheme=null,endedTheme=null,unlocked=false,finaleOpen=false;
@@ -97,7 +108,12 @@ globalThis.document?.addEventListener('map-finale',event=>{
 // Combat and rewards (strikes, cards, jingles, a place opening): they ring together, four at most (ringing).
 // Footsteps: one voice of their own (stepVoice).
 const RING_MAX=4;
-let ringing=[],stepVoice=null,stepTurn=0,cardSetRang=false,leadUntil=0;
+let ringing=[],stepVoice=null,stepTurn=0,cardSetRang=false,leadUntil=0,effectsBus=null;
+// Every effect goes out through one gain that carries the effects level (settings). At 100 % it is 1.
+function effectsOut(){
+  if(!effectsBus){effectsBus=context.createGain();effectsBus.gain.value=sfxVolume/100;effectsBus.connect(context.destination);}
+  return effectsBus;
+}
 function stopClick(){
   if(!currentClick)return;
   const voice=currentClick;currentClick=null;hush(voice);
@@ -123,14 +139,21 @@ function hush({tone,volume,sample}){
 export function stopFeedback(){stopClick();}
 export function setEffects(on){
   effectsEnabled=Boolean(on);save(SOUND_KEY,effectsEnabled?'on':'off');
-  if(!effectsEnabled){
-    stopEffects();if(context?.state==='running')void context.suspend().catch(()=>{});
-    // Voices follow this switch: a line that is being read stops with it (voice-lines.js, character-dialogue.js).
-    try{globalThis.document?.dispatchEvent?.(new Event('sound-effects-off'));}catch{/* No listeners to tell. */}
-  }
+  if(!effectsEnabled){stopEffects();if(context?.state==='running')void context.suspend().catch(()=>{});}
 }
-// The header speaker controls both channels; the settings switches control one.
-export function setSound(on){setMusic(on);setEffects(on);}
+// The effects level (0-100 %, steps of 5) multiplies every effect at once, also one that is ringing now.
+export function setSfxVolume(value){
+  sfxVolume=volumeValue(value,sfxVolume);save(SFX_VOLUME_KEY,String(sfxVolume));
+  if(effectsBus)effectsBus.gain.value=sfxVolume/100;
+}
+// Voices: character lines, the narration, the thieves' bubbles and the concept captions (voice-lines.js,
+// character-dialogue.js). Turning them off stops the line that is being read; the text stays on screen.
+export function setVoice(on){
+  voiceEnabled=Boolean(on);save(VOICE_KEY,voiceEnabled?'on':'off');
+  if(!voiceEnabled)try{globalThis.document?.dispatchEvent?.(new Event('sound-voice-off'));}catch{/* No listeners to tell. */}
+}
+// The header speaker controls every channel; the settings switches control one each.
+export function setSound(on){setMusic(on);setEffects(on);setVoice(on);}
 // A soft rising seed-pop suits the garden without a sharp electronic click.
 export function playClick(){chirp(480,720,.075,.03,'sine');}
 // Card handling: a rising lift, a soft wooden drop into a box, a falling slide back to the tray.
@@ -196,7 +219,7 @@ function startSample(key,gain,rate=1,delay=0){
     const tone=context.createBufferSource(),volume=context.createGain();
     tone.buffer=buffer;volume.gain.value=gain;
     if(rate!==1&&tone.playbackRate)tone.playbackRate.value=rate;
-    tone.connect(volume);volume.connect(context.destination);
+    tone.connect(volume);volume.connect(effectsOut());
     if(delay)tone.start(context.currentTime+delay);else tone.start();
     return {tone,volume,sample:true};
   }catch{return null;}
@@ -265,7 +288,7 @@ function chirp(from,to,length,gain,type){
     currentClick={tone,volume};
     tone.type=type;tone.frequency.setValueAtTime(from,now);tone.frequency.exponentialRampToValueAtTime(to,now+length*.87);
     volume.gain.setValueAtTime(0,now);volume.gain.linearRampToValueAtTime(gain,now+.006);volume.gain.exponentialRampToValueAtTime(.0001,now+length);
-    tone.connect(volume);volume.connect(context.destination);tone.start(now);tone.stop(now+length+.005);
+    tone.connect(volume);volume.connect(effectsOut());tone.start(now);tone.stop(now+length+.005);
     tone.onended=()=>{tone.disconnect();volume.disconnect();if(currentClick?.tone===tone)currentClick=null;};
   }catch{stopClick();/* Keep controls usable on browsers without audio support. */}
 }
@@ -278,7 +301,7 @@ export function playReward(){
     const tone=context.createOscillator(),volume=context.createGain(),now=context.currentTime;tone.type='sine';
     [523.25,659.25,783.99,1046.5].forEach((frequency,i)=>tone.frequency.setValueAtTime(frequency,now+i*.12));
     volume.gain.setValueAtTime(0,now);volume.gain.linearRampToValueAtTime(.045,now+.02);volume.gain.setValueAtTime(.035,now+.4);volume.gain.exponentialRampToValueAtTime(.0001,now+.7);
-    tone.connect(volume);volume.connect(context.destination);tone.start(now);tone.stop(now+.72);ring({tone,volume});
+    tone.connect(volume);volume.connect(effectsOut());tone.start(now);tone.stop(now+.72);ring({tone,volume});
   }catch{/* The reward itself never depends on its sound. */}
 }
 

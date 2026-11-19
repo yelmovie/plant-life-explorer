@@ -15,7 +15,7 @@ async function audioFixture(t,initial={}){
  class AudioContext{
   constructor(){this.state='running';this.currentTime=4;this.destination={};this.tones=[];this.suspends=0;this.resumes=0;contexts.push(this);}
   createOscillator(){const tone={frequency:{setValueAtTime(){},exponentialRampToValueAtTime(){}},stops:[],connect(){},start(){},stop(at){this.stops.push(at);},disconnect(){this.disconnected=(this.disconnected||0)+1;}};this.tones.push(tone);return tone;}
-  createGain(){return {gain:{setValueAtTime(){},linearRampToValueAtTime(){},exponentialRampToValueAtTime(){}},connect(){},disconnect(){}};}
+  createGain(){const g={gain:{setValueAtTime(){},linearRampToValueAtTime(){},exponentialRampToValueAtTime(){}},connect(){},disconnect(){}};(this.gains||=[]).push(g);return g;}
   suspend(){this.suspends++;this.state='suspended';return Promise.resolve();}
   resume(){this.resumes++;this.state='running';return Promise.resolve();}
  }
@@ -191,20 +191,48 @@ test('지도 파이널 창이 열려 있는 동안 엔딩 곡, 닫으면 메인 
  assert.equal(player.paused,true);assert.equal(kept.disconnected,undefined);finale(false);
 });
 
-test('효과음을 끄면 재생 중인 대사가 멈추도록 알린다',async t=>{
+test('목소리는 따로 끄고 켜며, 끄면 재생 중인 대사가 멈추도록 알린다',async t=>{
  const {audio,document}=await audioFixture(t);let told=0;
- document.addEventListener('sound-effects-off',()=>told++);
- audio.setEffects(true);assert.equal(told,0);
- audio.setEffects(false);assert.equal(told,1);
- audio.setSound(true);audio.setSound(false);assert.equal(told,2,'헤더 소리 끄기도 같다');
+ document.addEventListener('sound-voice-off',()=>told++);
+ assert.equal(audio.isVoiceOn(),true,'새 학생은 목소리 켜짐');
+ audio.setEffects(false);assert.equal(told,0,'효과음을 꺼도 목소리는 그대로');assert.equal(audio.isVoiceOn(),true);
+ audio.setEffects(true);audio.setVoice(false);assert.equal(told,1);assert.equal(audio.isEffectsOn(),true,'목소리를 꺼도 효과음은 그대로');
+ assert.equal(audio.isSoundOn(),true,'하나라도 켜져 있으면 헤더는 끄기');
+ audio.setSound(true);assert.equal(audio.isVoiceOn(),true);audio.setSound(false);assert.equal(told,2,'헤더 소리 끄기도 목소리를 멈춘다');
+ assert.equal(audio.isSoundOn(),false);assert.equal(audio.isVoiceOn(),false);assert.equal(audio.isEffectsOn(),false);
+});
+
+test('3차 전 저장: 목소리는 그때의 효과음 스위치 값을 이어받고 효과음 크기는 100%',async t=>{
+ for(const [sound,want] of [['off',false],['on',true],[undefined,true]]){
+  const {audio,storage}=await audioFixture(t,sound?{'green-garden-sound':sound}:{});
+  assert.equal(audio.isVoiceOn(),want,`효과음 ${sound??'값 없음'}`);
+  assert.equal(storage.get('green-garden-voice'),want?'on':'off','이어받은 값을 바로 적어 둔다');
+  assert.equal(audio.isEffectsOn(),sound!=='off');assert.equal(audio.getSfxVolume(),100);
+  audio.setEffects(!audio.isEffectsOn());assert.equal(audio.isVoiceOn(),want,'그 뒤 효과음을 바꿔도 목소리는 따라가지 않는다');
+ }
+ const {audio}=await audioFixture(t,{'green-garden-sound':'on','green-garden-voice':'off','green-garden-sfx-volume':'35'});
+ assert.equal(audio.isVoiceOn(),false);assert.equal(audio.isEffectsOn(),true);assert.equal(audio.getSfxVolume(),35);
+});
+
+test('효과음 크기는 5% 단위로 저장되고 모든 효과음이 지나는 한 gain에 곱해진다',async t=>{
+ const {audio,storage,contexts}=await audioFixture(t);
+ audio.playClick();const bus=contexts[0].gains[1];
+ assert.equal(bus.gain.value,1,'기본 100%에서는 지금까지와 같은 크기');audio.playClick();assert.equal(contexts[0].gains.length,3,'효과음 버스는 하나');
+ audio.setSfxVolume(42);assert.equal(audio.getSfxVolume(),40);assert.equal(storage.get('green-garden-sfx-volume'),'40');
+ audio.setSfxVolume(140);assert.equal(audio.getSfxVolume(),100);audio.setSfxVolume(-3);assert.equal(audio.getSfxVolume(),0);
+ assert.equal(bus.gain.value,0);audio.setSfxVolume(50);assert.equal(bus.gain.value,.5);
 });
 
 test('대사는 줄임 표식을 쓰고 첫 누름·키로 배경 음악을 연다',async()=>{
  const {readFileSync}=await import('node:fs');const read=file=>readFileSync(new URL(`../src/${file}`,import.meta.url),'utf8');
  const voice=read('voice-lines.js'),app=read('app.js'),finale=read('map-finale.js'),talk=read('character-dialogue.js'),story=read('story.js');
  assert.match(voice,/release=duckMusic\(\);/);assert.doesNotMatch(voice,/suspendMusic/);
- assert.match(voice,/document\.addEventListener\('sound-effects-off',stopVoice\);/);
- assert.match(talk,/document\.addEventListener\('sound-effects-off',stop,opt\);/);
+ assert.match(voice,/document\.addEventListener\('sound-voice-off',stopVoice\);/);
+ assert.match(talk,/document\.addEventListener\('sound-voice-off',stop,opt\);/);
+ assert.doesNotMatch(voice+talk,/npc-narration-volume/,'쓰는 화면이 없는 음성 크기 키는 읽지 않는다');
+ assert.match(voice,/!isVoiceOn\(\)\|\|globalThis\.document\?\.hidden\|\|!activated\(\)/,'첫 입력 전에는 재생을 시도하지 않는다');
+ assert.match(voice,/if\(key&&!activated\(\)\)\{afterFirstInput\(dialog\);return;\}\n dialogSig=key;/,'거부될 줄을 읽은 줄로 소모하지 않는다');
+ assert.match(app,/enabled:isVoiceOn,/,'리피와 이야기도 목소리 스위치를 따른다');
  assert.match(app,/hold:\(\)=>\{stopFeedback\(\);return duckMusic\(\);\}/);assert.doesNotMatch(app,/suspendMusic/);
  assert.match(app,/document\.addEventListener\('pointerdown',unlockMusic,true\);document\.addEventListener\('keydown',unlockMusic,true\);/);
  assert.match(story,/const resumeMusic = suspendMusic\(\);/,'영상에는 곡이 섞여 있어 그대로 멈춘다');
@@ -333,4 +361,27 @@ test('지도 걷기·장소 열림·정답 소리가 화면 코드에 연결되�
  assert.match(app,/r\.phase!=='prediction'&&!key\.includes\('observed'\)/,'예상과 관찰 기록은 판정 소리를 내지 않는다');
  assert.match(village,/voice:speakLine,/);
  assert.match(village,/const speakLine=\(text,lead=0\)=>speakTexts\(\[text\],undefined,\{villain:true,delay:Math\.max\(lead,voiceLeadMs\(\)\)\}\);/,'열림 소리나 타격음 뒤에 악당 대사');
+});
+
+test('첫 입력 전에 열린 창의 대사는 시도하지 않고, 첫 입력 뒤 창이 열려 있으면 한 번 읽는다',async t=>{
+ const keys=['navigator','Audio','addEventListener','removeEventListener','document','localStorage'];
+ const originals=Object.fromEntries(keys.map(key=>[key,Object.getOwnPropertyDescriptor(globalThis,key)]));
+ t.after(()=>{for(const [key,d] of Object.entries(originals)){if(d)Object.defineProperty(globalThis,key,d);else delete globalThis[key];}});
+ const win=new EventTarget(),activation={hasBeenActive:false},plays=[];
+ class Audio{constructor(src){this.src=src;}play(){plays.push(this.src);return Promise.resolve();}pause(){}removeAttribute(){}load(){}}
+ const document=new EventTarget();document.hidden=false;
+ for(const [key,value] of Object.entries({navigator:{userActivation:activation},Audio,addEventListener:win.addEventListener.bind(win),removeEventListener:win.removeEventListener.bind(win),document,localStorage:{getItem:()=>null,setItem(){}}}))Object.defineProperty(globalThis,key,{configurable:true,writable:true,value});
+ const voice=await import(`../src/voice-lines.js?first-input=${++moduleId}`);
+ const line={textContent:'먼저 표본 온실 탐구를 마쳐 줘.',toggleAttribute(){}};
+ const dialog={open:true,dataset:{},querySelectorAll:()=>[line]};
+ voice.speakDialog(dialog);assert.deepEqual(plays,[],'입력 전에는 재생을 시도하지 않는다');
+ activation.hasBeenActive=true;win.dispatchEvent(new Event('click'));await new Promise(r=>setTimeout(r,5));
+ assert.deepEqual(plays,['/assets/audio/lipi-locked-0.mp3'],'첫 입력 뒤 한 번');
+ voice.speakDialog(dialog);assert.equal(plays.length,1,'같은 창을 다시 그려도 또 읽지 않는다');
+ voice.stopVoice();
+ // 첫 입력이 창을 닫은 경우: 읽지 않는다.
+ const voice2=await import(`../src/voice-lines.js?first-input=${++moduleId}`);
+ activation.hasBeenActive=false;const closed={open:true,dataset:{},querySelectorAll:()=>[line]};
+ voice2.speakDialog(closed);closed.open=false;activation.hasBeenActive=true;win.dispatchEvent(new Event('click'));await new Promise(r=>setTimeout(r,5));
+ assert.equal(plays.length,1,'닫힌 창은 읽지 않는다');
 });
