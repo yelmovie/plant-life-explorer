@@ -30,14 +30,19 @@ let due=0;
 // True from a card's turn until it is put away. The map adds it to the villains' blocked() (stage-map.js `hold`),
 // so the finale film cannot slip in ahead of a card that is still waiting for a dialog to close.
 export const rewardCardDue=()=>due>0;
+// True from the strike that earns a card until the card is in its slot. The map finale waits behind this (map-encounters.js
+// finaleHold), also while the card itself is still waiting for the villain's parting line to end.
+export const rewardCardPending=()=>flying.size>0;
 // Call with the strike record before and after each save. onMap: the map is still the screen in view.
 // covered: a dialog is over the map, so the card waits for it to close.
-export function awardRewardCards(before,after,onMap,covered=()=>false){
+// speaking: the villain's parting line is still being said, so the card's turn comes when it ends (the map stays live meanwhile).
+export function awardRewardCards(before,after,onMap,covered=()=>false,speaking=()=>false){
   preloadCardSounds(); // From the first strike, so the reveal does not start silent.
   for(const i of newRewardCards(before,after)){
     flying.add(i);
     // Wait for the villain's exit. An open card makes #app inert, which pauses the map, so the finale film follows the card.
-    setTimeout(()=>{
+    setTimeout(function turn(){
+      if(speaking()&&onMap()){setTimeout(turn,150);return;}
       due++;
       const done=()=>{due--;flying.delete(i);};
       const show=()=>{

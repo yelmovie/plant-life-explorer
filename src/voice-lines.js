@@ -88,8 +88,19 @@ export const VOICE_LINES={
 };
 export const voiceSrc=text=>VOICE_LINES[String(text??'').trim()]?`/assets/audio/${VOICE_LINES[String(text).trim()]}.mp3`:null;
 let player=null,release=null,dialogSig='',notify=null;
+// Whose turn it is. A thief's short reaction never cuts another character's line (it is skipped), and a thief's line
+// that has already started is not cut by a guide's line: the guide waits for it, GUIDE_WAIT at most.
+// LINE_CAP: a line that stalls stops counting as "being said", so nothing waits on it for ever.
+const GUIDE_WAIT=2000,LINE_CAP=6500;
+let thief=false,thiefSince=0,turn=0,startTimer=0,waitTimer=0,host=null;
+// True from the moment a thief's line is asked for (its short lead included) until it has been said.
+export const villainLineOn=()=>thief&&(startTimer!==0||player!==null)&&Date.now()-thiefSince<LINE_CAP;
 const volume=()=>{try{const saved=localStorage.getItem('npc-narration-volume');if(saved!==null&&Number.isFinite(Number(saved)))return Math.min(1,Math.max(0,Number(saved)));}catch{}return .7;};
-export function stopVoice(){
+// quiet: the line that is being said (or about to be) ends. A guide that is waiting for its turn keeps waiting.
+// stopVoice: the popup closed, the tab was hidden or sound was turned off, so the waiting guide is dropped as well.
+export function stopVoice(){clearTimeout(waitTimer);waitTimer=0;quiet();}
+function quiet(){
+ clearTimeout(startTimer);startTimer=0;thief=false;
  const current=player;player=null;
  if(current){current.onended=current.onerror=current.onplaying=current.onpause=current.onwaiting=null;current.pause();current.removeAttribute('src');current.load();}
  release?.();release=null;
@@ -98,21 +109,33 @@ export function stopVoice(){
 // Plays the voiced lines among `texts` one after another; a new call (another popup or bubble) replaces the old one.
 // onState(index,audible): which of `texts` is being read and whether sound is really coming out (the `playing` event,
 // not buffering or paused). It ends with (-1,false). A speaking character moves its mouth from this.
-export function speakTexts(texts,onState){
+// villain: a map thief's reaction (see the turn rules above). delay: ms before the line starts, so the strike or the
+// place-opening cue that leads into it is heard first. Returns a probe: is this call's line still to come or being said?
+export function speakTexts(texts,onState,{villain=false,delay=0}={}){
  const queue=texts.map((text,index)=>[voiceSrc(text),index]).filter(([src])=>src);
+ // A popup's line that outlives its popup by a moment (the close event comes a task later) is over, not interrupted.
+ if(villain&&player&&!thief){if(host&&!host.open)quiet();else return ()=>false;}
+ if(!villain&&thief&&player){
+  if(!queue.length)return ()=>false; // A popup without a voice leaves the thief to finish.
+  const until=Date.now()+GUIDE_WAIT;clearTimeout(waitTimer);
+  const again=()=>{waitTimer=0;if(thief&&player&&Date.now()<until){waitTimer=setTimeout(again,100);return;}quiet();speakTexts(texts,onState);};
+  waitTimer=setTimeout(again,100);return ()=>false;
+ }
  stopVoice();
- if(!queue.length||!isEffectsOn()||globalThis.document?.hidden||!volume()||typeof Audio==='undefined')return;
+ if(!queue.length||!isEffectsOn()||globalThis.document?.hidden||!volume()||typeof Audio==='undefined')return ()=>false;
+ const mine=++turn;thief=villain;thiefSince=Date.now();
  release=duckMusic();notify=onState??null;
  const next=()=>{
-  const item=queue.shift();if(!item){stopVoice();return;}
+  const item=queue.shift();if(!item){quiet();return;}
   const audio=player=new Audio(item[0]);audio.volume=volume();
   const state=audible=>{if(player===audio)notify?.(item[1],audible);};
   audio.onplaying=()=>state(!globalThis.document?.hidden&&!audio.paused);
   audio.onwaiting=audio.onpause=()=>state(false);
-  audio.onended=()=>{if(player===audio)next();};audio.onerror=()=>{if(player===audio)stopVoice();};
-  try{void audio.play()?.catch(()=>{if(player===audio)stopVoice();});}catch{stopVoice();}
+  audio.onended=()=>{if(player===audio)next();};audio.onerror=()=>{if(player===audio)quiet();};
+  try{void audio.play()?.catch(()=>{if(player===audio)quiet();});}catch{quiet();}
  };
- next();
+ if(delay>0)startTimer=setTimeout(()=>{startTimer=0;next();},delay);else next();
+ return ()=>turn===mine&&(startTimer!==0||player!==null);
 }
 // Popups: the mission brief, reward, and locked-place dialogs read their lines when they open; closing stops the voice.
 const DIALOG_LINES='#dialog-title, .lipi-letter p, .reward-why, .reward-next, .map-locked-message p';
@@ -131,7 +154,10 @@ export function speakDialog(dialog){
  });
 }
 export function installVoiceLines(dialog){
- dialog.addEventListener('close',()=>{dialogSig='';stopVoice();});
+ host=dialog;
+ // Closing a popup ends its own line and drops one that was still waiting. A thief's line on the map is not the popup's:
+ // the close event arrives a task after the map is back, when the thief may already be about to speak.
+ dialog.addEventListener('close',()=>{dialogSig='';clearTimeout(waitTimer);waitTimer=0;if(!thief)quiet();});
  document.addEventListener('visibilitychange',()=>{if(document.hidden)stopVoice();});
  window.addEventListener('pagehide',stopVoice);
  // Turning the effects (and voices) switch or the header speaker off stops the line that is being read.

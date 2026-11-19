@@ -331,5 +331,6 @@ test('지도 걷기·장소 열림·정답 소리가 화면 코드에 연결되�
  assert.match(app,/if\(!open\.some\(\(now,i\)=>now&&!shownOpen\[i\]\)\|\|state\.adminUnlocked\|\|studentState!==null\)\{shownOpen=open;return;\}/,'교사용 미리보기는 소리 없이 연다');
  assert.match(app,/function render\(\)\{playMusic\(state\.screen==='ending'\?'ending':'main'\);soundNewPlaces\(\);soundJudged\(\);/);
  assert.match(app,/r\.phase!=='prediction'&&!key\.includes\('observed'\)/,'예상과 관찰 기록은 판정 소리를 내지 않는다');
- assert.match(village,/voice:speakLine,/);assert.match(village,/const wait=voiceLeadMs\(\);/);
+ assert.match(village,/voice:speakLine,/);
+ assert.match(village,/const speakLine=\(text,lead=0\)=>speakTexts\(\[text\],undefined,\{villain:true,delay:Math\.max\(lead,voiceLeadMs\(\)\)\}\);/,'열림 소리나 타격음 뒤에 악당 대사');
 });

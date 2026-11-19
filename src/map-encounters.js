@@ -42,6 +42,9 @@ function layoutSpeech(host, entries){
 const REPEAT=380;
 // Input shows at once; the strike, flinch, meter and impact sound land together after a short wind-up.
 const WINDUP=90,EXIT_SOUND=280,APPEAR_SETTLE=700;
+// A strike's line starts after its impact sound. While a line is being said its bubble stays up: VOICE_TAIL past the
+// end of the voice, VOICE_CAP after it was asked for at most. Without a voice the bubble keeps its own time.
+const VOICE_LEAD=300,VOICE_TAIL=200,VOICE_CAP=6000;
 // Once per stage per page session, so re-entering the map does not repeat the entrance cue.
 const announced=new Set();
 const CUES={
@@ -71,7 +74,7 @@ export function normalizeMapHits(value,ids) {
  */
 export function mountMapEncounters({
   host,controls=host,stages,progress={},onSave=()=>{},blocked=()=>false,reduced=()=>false,
-  clearStage=()=>null,requiredFoes=0,art,tone=()=>{},palette='#a855f7',reach=90,contact=22,voice=()=>{},
+  clearStage=()=>null,requiredFoes=0,art,tone=()=>{},palette='#a855f7',reach=90,contact=22,voice=()=>{},finaleHold=()=>false,
 }) {
   const handles=new AbortController(),{signal}=handles;
   const doc=host.ownerDocument,view=doc.defaultView;
@@ -117,14 +120,16 @@ export function mountMapEncounters({
   const pose={hero:null,ally:null};
   let current=null,lastNear=null,lastHit=-Infinity,lastTone=-Infinity,saved={},last=null,closed=false,pending=null,appearFrom=null;
 
-  function speak(foe,text,time){
-    for(const other of foes)if(other!==foe){other.saidUntil=0;other.bubble.hidden=true;}
+  // voice(text,lead) may return a probe that stays true while the line is still to come or being said.
+  function speak(foe,text,time,lead=0){
+    for(const other of foes)if(other!==foe){other.saidUntil=0;other.voiced=null;other.bubble.hidden=true;}
     foe.bubble.textContent=text;
     foe.bubble.hidden=false;
     lastSpeechLayout=-Infinity;
     foe.saidUntil=time;
     live.textContent=text;
-    voice(text);
+    const voiced=voice(text,lead);
+    foe.voiced=typeof voiced==='function'?voiced:null;foe.voiceCap=(view?.performance.now()??performance.now())+VOICE_CAP;
   }
   function hit(){
     if(closed||!current||!last||paused())return;
@@ -144,7 +149,7 @@ export function mountMapEncounters({
     foe.poseUntil=time+duration;foe.hitAt=time;foe.hurtAt=undefined;
     if(n===HITS)foe.exitSoundAt=time+EXIT_SOUND;
     saved={...saved,[foe.s.id]:n};onSave({...saved});tone(n===HITS?'finish':'hit',n);
-    speak(foe, n===HITS?foe.s.finish??'앗, 물러날게!':foe.s.hit?.[n-1]??(n===1?'앗, 들켰네!':'이번 건 제법인데!'),time+(n===HITS?2750:1800));
+    speak(foe, n===HITS?foe.s.finish??'앗, 물러날게!':foe.s.hit?.[n-1]??(n===1?'앗, 들켰네!':'이번 건 제법인데!'),time+(n===HITS?2750:1800),VOICE_LEAD);
     live.textContent+=n===HITS?' 세 번 명중! 악당이 물러나요.':` ${n}번 명중. ${HITS-n}번 남았어요.`;
     if(n===HITS&&requiredFoes>0&&stages.length===requiredFoes&&stages.every(s=>(saved[s.id]??record[s.id])===HITS))finaleAt=time+2920;
   }
@@ -193,6 +198,7 @@ export function mountMapEncounters({
     const width=host.clientWidth,height=host.clientHeight;
     for(const foe of foes){
       if(foe.exitSoundAt&&now>=foe.exitSoundAt){foe.exitSoundAt=0;tone('exit',HITS);}
+      if(foe.voiced){if(now<foe.voiceCap&&foe.voiced())foe.saidUntil=Math.max(foe.saidUntil,Math.min(now+VOICE_TAIL,foe.voiceCap));else foe.voiced=null;}
       if(foe.hits>=HITS&&now>=Math.max(foe.poseUntil,foe.saidUntil)){foe.el.hidden=true;continue;}
       const dHome=distance(hero,foe.s),patrol=villainPatrol(now,foe.i);
       const animate=!stop&&!calm&&foe.hits<HITS&&now>=foe.poseUntil;
@@ -274,7 +280,7 @@ export function mountMapEncounters({
       }
       callback.hidden=now>=clearUntil;
     }
-    if(finaleAt&&now>=finaleAt&&!stop){finaleAt=0;tone('victory',HITS);openMapFinale(host,"/assets/videos/outro.mp4");}
+    if(finaleAt&&now>=finaleAt&&!stop&&!finaleHold()){finaleAt=0;tone('victory',HITS);openMapFinale(host,"/assets/videos/outro.mp4");}
     const changed=nearest!==current;
     current=nearest;
     if(current&&current!==lastNear&&current.saidUntil<=now&&now-lastHit>REPEAT&&now>=clearUntil){
