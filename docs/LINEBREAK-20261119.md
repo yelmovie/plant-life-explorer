@@ -48,3 +48,7 @@
 - 운영 `build-info.json` 커밋 `b9011b1`(`dirty=true`는 배포용 작업 트리의 `._*` 때문). `/`·`src/bundle.css`·`src/korean-linebreak.css`·`sw.js`·`src/app.bundle.js` SHA-256이 빌드와 같다(MATCH).
 - 운영 주소에서 직접 측정(앱 내장 Chrome, 뷰포트 에뮬레이션): 1280×800 현장 3장 — 스위치 라벨 「가라앉을 / 것 같아」만(균형 통과), 1920×1080 현장 2장 말풍선 문제 0(「…빛나는 점이 / 나오면 다음 봄 그림의 같은 부분으로 끌어 줘.」), 잠긴 장소 안내 창 문제 0, 해당 요소 `text-wrap: balance` 적용 확인.
 - 되돌릴 대상: https://cf4d38e5.leafy-garden.pages.dev (`75b8869`, 소리 1차 수정).
+
+## 추가 수정 (2026-11-20)
+
+- 성취 카드 보관함 잠긴 문구 「악당을 물리치면 / 열려요」: 공통 지침 8절의 네 줄을 `src/reward-cards.css` `.rc-locked small` 아래에 추가(커밋 `023cf27`). 로컬 dist(4352)에서 1280×800은 한 줄, 1024×768은 「악당을 / 물리치면 / 열려요」 세 줄, 카드 5장 모두 넘침 없음. 배포 https://223b7bbe.leafy-garden.pages.dev, 운영 `build-info.json` 커밋 `023cf27`, `/`·`bundle.css`·`reward-cards.css`·`sw.js` MATCH. 되돌릴 대상: https://284ac768.leafy-garden.pages.dev 이후 최신 배포.
