@@ -1,6 +1,6 @@
 import {plantEmphasis} from './plant-concepts.js';
 import {STORIES, captionAt} from './story-data.js';
-import {isSoundOn, setSound, stopFeedback, playMusic, suspendMusic} from './audio.js';
+import {isVoiceOn, setSound, stopFeedback, playMusic, suspendMusic} from './audio.js';
 
 let activeCleanup;
 
@@ -8,9 +8,15 @@ let activeCleanup;
 export function playStory(kind, {onFinish = () => {}, replay = false} = {}) {
   const story = STORIES[kind];
   if (!story) return;
-  // The film includes its own mixed dialogue and score on the video clock.
+  // The film includes its own mixed dialogue and score on the video clock. The dialogue cannot be split off,
+  // so with the voices off the film plays muted and the music keeps playing; it stops only while the film is heard.
   activeCleanup?.();
-  const resumeMusic = suspendMusic();
+  let resumeMusic = null;
+  const holdMusic = audible => {
+    if (audible && !resumeMusic) resumeMusic = suspendMusic();
+    if (!audible && resumeMusic) { resumeMusic(); resumeMusic = null; }
+  };
+  holdMusic(isVoiceOn());
   stopFeedback();
   const previousFocus = document.activeElement;
   const app = document.querySelector('#app');
@@ -49,7 +55,7 @@ export function playStory(kind, {onFinish = () => {}, replay = false} = {}) {
   const range = screen.querySelector('input');
   let finished = false, controlsTimer = 0;
   video.volume = 0.65;
-  video.muted = !isSoundOn();
+  video.muted = !isVoiceOn();
   // Supply a real caption track for assistive players; the styled copy stays in sync.
   if (globalThis.VTTCue) {
     const track = video.addTextTrack('captions', '한국어', 'ko');
@@ -62,7 +68,7 @@ export function playStory(kind, {onFinish = () => {}, replay = false} = {}) {
     clearTimeout(controlsTimer);
     video.pause();
     if (kind === 'outro') playMusic('ending', true);
-    resumeMusic();
+    holdMusic(false);
     screen.remove();
     video.querySelector('source').removeAttribute('src');
     video.load();
@@ -134,7 +140,15 @@ export function playStory(kind, {onFinish = () => {}, replay = false} = {}) {
       case 'exit': finish(); break;
       case 'play': if (video.paused) void play(); else video.pause(); break;
       case 'retry': video.load(); void play(); break;
-      case 'sound': video.muted = !video.muted; setSound(!video.muted); update(); break;
+      case 'sound': {
+        // Hold the music before the switches open it and let go only after they closed it, so it never blips.
+        const audible = video.muted;
+        video.muted = !audible;
+        if (audible) holdMusic(true);
+        setSound(audible);
+        if (!audible) holdMusic(false);
+        update(); break;
+      }
     }
     if (event.target.closest('.story-controls')) showControls();
   });

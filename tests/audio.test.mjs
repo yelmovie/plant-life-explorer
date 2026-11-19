@@ -235,7 +235,9 @@ test('대사는 줄임 표식을 쓰고 첫 누름·키로 배경 음악을 연�
  assert.match(app,/enabled:isVoiceOn,/,'리피와 이야기도 목소리 스위치를 따른다');
  assert.match(app,/hold:\(\)=>\{stopFeedback\(\);return duckMusic\(\);\}/);assert.doesNotMatch(app,/suspendMusic/);
  assert.match(app,/document\.addEventListener\('pointerdown',unlockMusic,true\);document\.addEventListener\('keydown',unlockMusic,true\);/);
- assert.match(story,/const resumeMusic = suspendMusic\(\);/,'영상에는 곡이 섞여 있어 그대로 멈춘다');
+ assert.match(story,/if \(audible && !resumeMusic\) resumeMusic = suspendMusic\(\);/,'영상 소리가 나는 동안에는 곡이 섞여 있어 그대로 멈춘다');
+ assert.match(story,/holdMusic\(isVoiceOn\(\)\);/,'목소리를 끄면 배경 음악은 멈추지 않는다');
+ assert.match(story,/video\.muted = !isVoiceOn\(\);/,'목소리를 끄면 영상 속 대사도 끈다');
  assert.match(finale,/video\.muted=true/);
  assert.match(finale,/new CustomEvent\('map-finale',\{detail:\{open\}\}\)\);announce\(true\);/);
  assert.match(finale,/dialog\.remove\(\);announce\(false\);/);
