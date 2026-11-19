@@ -1033,3 +1033,39 @@ body .note-quiz > summary small { margin-left: 4px; padding: 2px 7px; border-rad
   #app .exploration-activity.activity-9 .test-layout > .learning-scene { grid-template-rows: minmax(clamp(145px, calc(var(--stage-h) - 314px), 230px), 1fr) auto auto auto; }
   #app .exploration-activity.activity-9 .test-layout .water-demo { min-height: clamp(145px, calc(var(--stage-h) - 314px), 230px); }
 }
+
+/* ── 14. 놀이 화면이 주인공 (2026-11-18 밤, docs/LAYOUT-BALANCE-20261118.md): 넓은 화면에서도 작업판이 가운데에 작게
+   떠 있지 않게 장면 높이에 맞춰 넓히고, 보고서·마지막 화면은 제목을 위 줄 알약으로 올려 작업판이 남은 높이를 쓴다. ── */
+/* 탐구 기록 판: 1280×800·1024×768은 그대로(1180px 이하), 넓고 높은 창에서는 장면 높이의 1.8배까지 넓어진다. */
+@media (min-width: 1500px) and (min-height: 900px) and (orientation: landscape) {
+  #app .exploration-activity .learning-scene > .work-board { width: min(100%, calc(var(--stage-h) * 1.8)); }
+  #app .exploration-activity .leaf-specimen-picture { height: clamp(200px, calc(var(--stage-h) - 190px), 640px); }
+  #app .exploration-activity .habitat-compare-art { height: clamp(110px, calc(var(--stage-h) - 300px), 460px); }
+  #app .exploration-activity .field-review-bed { height: clamp(160px, calc(var(--stage-h) - 170px), 620px); }
+  #app .exploration-activity .field-review-choices .btn { min-height: 96px; font-size: 22px; }
+}
+/* 5장 현장 첫 비: 아직 결과 카드가 없으면 가방이 왼쪽에 쏠리지 않고 작업대 가운데에 선다. */
+#app .rain-bench:has(> .bag-results:empty) > .bag-stage { grid-column: 1 / -1; justify-self: center; width: min(100%, 720px); }
+/* 이미 비를 맞은 가방 위의 구름은 누를 곳이 아니다(가방 카드가 비를 내린다). 구름 그림은 두고 「비 내리기!」 글자만 숨긴다. */
+#app .bag-stage[data-rain="skip"] .bag-cloud > b { visibility: hidden; }
+/* 연구 노트 창: 아래 「노트 덮기」와 같은 일을 하는 위 X는 숨긴다(Esc·노트 덮기로 닫힌다). */
+body dialog.notebook-dialog > .dialog-top > [data-action="close"] { display: none; }
+/* 연구 노트 표지 고르기·마지막 화면: 제목은 위 줄 가운데 알약, 작업판이 그 아래 높이를 다 쓴다. */
+@media (min-width: 901px) and (orientation: landscape) {
+  #app .notebook-overview.tablet-report { padding-top: var(--hud-edge, 16px); }
+  #app .notebook-overview .notebook-kicker { display: none; }
+  #app .notebook-overview .notebook-heading { position: relative; z-index: 21; padding: 6px 22px; border-radius: 22px; }
+  #app .notebook-overview .notebook-heading h1 { font-size: clamp(24px, 2.2vw, 34px); line-height: 1.3; margin: 0; }
+  #app .notebook-overview .notebook-heading p { margin: 0; }
+  #app .notebook-overview .note-cover-art { max-height: 300px; }
+  #app .notebook-overview .note-cover-art img { max-height: 290px; }
+  #app .tablet-final { padding-top: var(--hud-edge, 16px); align-items: stretch; }
+  #app .tablet-final .page-heading { position: relative; z-index: 21; align-self: start; padding: 6px 22px; }
+  #app .tablet-final .page-heading h1 { font-size: clamp(24px, 2.2vw, 34px); line-height: 1.3; }
+  #app .tablet-final .page-heading p { margin-top: 0; }
+  #app .final-workspace { width: min(100%, max(1120px, calc((100dvh - 120px) * 1.75))); align-items: stretch; }
+  #app .final-quiz { grid-template-rows: auto minmax(0, 1fr) auto; align-content: stretch; }
+  #app .final-habitat-choices .btn { height: 100%; }
+  #app .final-habitat-choices .habitat-picture { width: min(100%, 220px); height: clamp(64px, calc(100dvh - 520px), 220px); }
+  #app .final-workspace > .final-review { align-self: end; }
+}
