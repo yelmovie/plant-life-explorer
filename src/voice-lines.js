@@ -1,4 +1,4 @@
-import {isEffectsOn,suspendMusic} from './audio.js';
+import {isEffectsOn,duckMusic} from './audio.js';
 
 // ElevenLabs voice lines (2026-11-18, docs/VOICE-FILL-20261118.json): exact on-screen text -> /assets/audio/<file>.mp3.
 // Lipi = Aria, label thief = Harry - Character. Text that is not in this table simply stays silent.
@@ -102,7 +102,7 @@ export function speakTexts(texts,onState){
  const queue=texts.map((text,index)=>[voiceSrc(text),index]).filter(([src])=>src);
  stopVoice();
  if(!queue.length||!isEffectsOn()||globalThis.document?.hidden||!volume()||typeof Audio==='undefined')return;
- release=suspendMusic();notify=onState??null;
+ release=duckMusic();notify=onState??null;
  const next=()=>{
   const item=queue.shift();if(!item){stopVoice();return;}
   const audio=player=new Audio(item[0]);audio.volume=volume();
@@ -134,6 +134,8 @@ export function installVoiceLines(dialog){
  dialog.addEventListener('close',()=>{dialogSig='';stopVoice();});
  document.addEventListener('visibilitychange',()=>{if(document.hidden)stopVoice();});
  window.addEventListener('pagehide',stopVoice);
+ // Turning the effects (and voices) switch or the header speaker off stops the line that is being read.
+ document.addEventListener('sound-effects-off',stopVoice);
  // 리피의 정리 (research notebook): opening the summary reads it; folding it stops the voice.
  document.addEventListener('toggle',e=>{
   const d=e.target;if(!(d instanceof HTMLDetailsElement)||!d.matches('.note-content-summary'))return;

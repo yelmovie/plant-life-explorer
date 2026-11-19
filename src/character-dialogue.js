@@ -69,6 +69,7 @@ export function mountCharacterDialogue(dialog,{characters,initial=0,enabled,hold
  const hidden=()=>{if(document.hidden)stop();};
  document.addEventListener('visibilitychange',hidden,opt);
  window.addEventListener('pagehide',stop,opt);
+ document.addEventListener('sound-effects-off',stop,opt);
  motion.addEventListener('change',updateMotion,opt);
  const dispose=()=>{events.abort();stop();};
  dialog.addEventListener('close',dispose,{...opt,once:true});

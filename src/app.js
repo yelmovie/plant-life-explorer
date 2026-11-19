@@ -1,7 +1,7 @@
 import {createSaveStore} from './safe-storage.js';
 import {characterDialogueMarkup,mountCharacterDialogue} from './character-dialogue.js';
 import {installVoiceLines,speakDialog,speakEnding} from './voice-lines.js';
-import {suspendMusic,stopFeedback} from './audio.js';
+import {duckMusic,stopFeedback} from './audio.js';
 import {recordHint,recordResponse} from './learning-records.js';
 import {carryFieldEvidence} from './field-bridge.js';
 import {QUESTS} from './inquiry.js';
@@ -68,7 +68,7 @@ function lipiDialogue(index){
  ]:[lipiWelcome];
  dialogueFocus=document.activeElement;
  modal('리피와 이야기',characterDialogueMarkup,btn('돌아가기','close','primary'),'npc');
- dialogueCleanup=mountCharacterDialogue(dialog,{characters:[{id:'lipi',name:'리피',image:lipiArt,lines}],enabled:isEffectsOn,hold:()=>{stopFeedback();return suspendMusic();}});
+ dialogueCleanup=mountCharacterDialogue(dialog,{characters:[{id:'lipi',name:'리피',image:lipiArt,lines}],enabled:isEffectsOn,hold:()=>{stopFeedback();return duckMusic();}});
 }
 dialog.addEventListener('close',()=>{
  if(dialog.open||!dialog.classList.contains('npc-dialogue-stage'))return;
@@ -321,6 +321,8 @@ async function action(a,id,el){
  save();render();
 }
 document.addEventListener('click',e=>{unlockMusic();const lockedStage=e.target.closest('.world-node[aria-disabled="true"]');if(lockedStage){e.preventDefault();explainLockedMission(Number(lockedStage.dataset.id));return;}const locked=e.target.closest('[aria-disabled="true"]');if(locked){e.preventDefault();if(locked.dataset.reason)toast(locked.dataset.reason);if(state.screen==='activity')nudgeGuide(app.querySelector('main.activity'));return;}const field=e.target.closest('[data-bud-field]');if(field&&!e.target.closest('button,.spatial-layer,.spatial-controls')){const r=field.getBoundingClientRect();playClick();action('bud-look',[(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height].map(v=>Math.min(1,Math.max(0,v)).toFixed(3)).concat([Math.round(r.width),Math.round(r.height)]).join(','));return;}const b=e.target.closest('[data-action]');if(!b||b.disabled)return;if(!['sound','sfx-toggle','music-toggle'].includes(b.dataset.action))playClick();const size=b.dataset.action==='bud-hint'?$('#season-art')?.getBoundingClientRect():null;action(b.dataset.action,size?`${Math.round(size.width)},${Math.round(size.height)}`:b.dataset.id,b);});
+// The theme starts on the first press or key. Touch browsers allow audio only from the click that follows, which unlocks too.
+document.addEventListener('pointerdown',unlockMusic,true);document.addEventListener('keydown',unlockMusic,true);
 const SEASON_STOPS=[1,2,3,4,0];
 document.addEventListener('change',e=>{if(e.target.id==='season-range')action('season',String(SEASON_STOPS[Number(e.target.value)]));});
 document.addEventListener('input',e=>{if(e.target.id==='music-volume'){setMusicVolume(Number(e.target.value));$('#music-volume-value').textContent=`${getMusicVolume()}%`;}if(e.target.id==='season-range'){state.season=SEASON_STOPS[Number(e.target.value)];$('#season-art').innerHTML=seasonArt(state.seasonPlant,state.season,state.underground&&(![3,4].includes(state.season)||!!state.seasonPrediction[state.seasonPlant]));$('#season-label').textContent=state.season===0?'다음 해 봄':SEASONS[state.season];$('#season-caption').textContent='시간을 움직이며 같은 식물의 변화를 살펴봐.';}});

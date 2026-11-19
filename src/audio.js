@@ -1,4 +1,5 @@
-// One music player owns both themes. Hidden tabs suspend it; the story films play over it.
+// One music player owns both themes. Hidden tabs suspend it; the story films (their own score is mixed in) stop it;
+// voices only turn it down. The map finale dialog plays the ending theme while it is open.
 // Sound preferences are separate from research records and survive a record reset.
 export const SOUND_KEY='green-garden-sound';
 const MUSIC_KEY='green-garden-music',VOLUME_KEY='green-garden-music-volume';
@@ -15,24 +16,49 @@ export const isMusicOn=()=>hasMusic()&&musicEnabled;
 export const isSoundOn=()=>isEffectsOn()||isMusicOn();
 export const getMusicVolume=()=>musicVolume;
 export function setMusic(on){musicEnabled=Boolean(on);save(MUSIC_KEY,musicEnabled?'on':'off');syncMusic();}
-export function setMusicVolume(value){musicVolume=volumeValue(value);save(VOLUME_KEY,String(musicVolume));if(musicPlayer)musicPlayer.volume=musicVolume/100;}
-let musicPlayer,selectedTheme='main',loadedTheme=null,endedTheme=null,unlocked=false;
-const musicHolds=new Set();
+export function setMusicVolume(value){musicVolume=volumeValue(value);save(VOLUME_KEY,String(musicVolume));levelMusic(false);}
+let musicPlayer,selectedTheme='main',loadedTheme=null,endedTheme=null,unlocked=false,finaleOpen=false;
+// Two kinds of named holds, each released by its own token: films stop the music, voices turn it down to a quarter.
+const musicHolds=new Set(),musicDucks=new Set();
+const DUCK=.25,FADE_MS=200;
+let fadeTimer=0,fadeTo=-1;
+const musicLevel=()=>musicVolume/100*(musicDucks.size?DUCK:1);
+const musicBlocked=()=>!unlocked||!musicEnabled||musicHolds.size>0||Boolean(globalThis.document?.hidden);
+// glide: move to the level over FADE_MS so a voice starting or ending never makes the music jump.
+function levelMusic(glide=true){
+  if(!musicPlayer)return;
+  const to=musicLevel(),from=Number(musicPlayer.volume);
+  if(fadeTimer){if(glide&&to===fadeTo)return;clearInterval(fadeTimer);fadeTimer=0;}
+  if(!glide||musicPlayer.paused||!(Math.abs(to-from)>.004)){musicPlayer.volume=to;return;}
+  const began=Date.now();fadeTo=to;
+  fadeTimer=setInterval(()=>{
+    const k=Math.min(1,(Date.now()-began)/FADE_MS);
+    musicPlayer.volume=musicPlayer.paused?to:from+(to-from)*k;
+    if(k>=1||musicPlayer.paused){clearInterval(fadeTimer);fadeTimer=0;}
+  },20);
+}
 // replay: a theme that already played to its end starts again (the ending theme does not loop).
 export function playMusic(theme='main',replay=false){
   if(!Object.hasOwn(MUSIC_TRACKS,theme))return;
   if(selectedTheme!==theme||replay){selectedTheme=theme;endedTheme=null;}
   syncMusic();
 }
-// Called from a user click, never from the initial render's autoplay attempt.
+// Called from a user press, key or click, never from the initial render's autoplay attempt.
 export function unlockMusic(){unlocked=true;syncMusic();}
+// Films: the music stops until every film has let go.
 export function suspendMusic(){
   const token=Symbol('story');musicHolds.add(token);syncMusic();
   return ()=>{musicHolds.delete(token);syncMusic();};
 }
+// Voices: the music keeps playing at a quarter until every voice has let go (also when a line stops early or fails).
+export function duckMusic(){
+  const token=Symbol('voice');musicDucks.add(token);levelMusic();
+  return ()=>{if(musicDucks.delete(token))levelMusic();};
+}
 function syncMusic(){
-  if(!unlocked||!musicEnabled||musicHolds.size||globalThis.document?.hidden){musicPlayer?.pause();return;}
-  if(endedTheme===selectedTheme)return;
+  if(musicBlocked()){musicPlayer?.pause();return;}
+  const theme=finaleOpen?'ending':selectedTheme;
+  if(endedTheme===theme)return;
   try{
     if(!musicPlayer){
       const Audio=globalThis.Audio||globalThis.window?.Audio;if(!Audio)return;
@@ -40,13 +66,26 @@ function syncMusic(){
       musicPlayer.addEventListener('ended',()=>{endedTheme=loadedTheme;});
       globalThis.document?.body?.append(musicPlayer);
     }
-    if(loadedTheme!==selectedTheme){
-      musicPlayer.pause();musicPlayer.src=MUSIC_TRACKS[selectedTheme];musicPlayer.currentTime=0;loadedTheme=selectedTheme;
+    if(loadedTheme!==theme){
+      musicPlayer.pause();musicPlayer.src=MUSIC_TRACKS[theme];musicPlayer.currentTime=0;loadedTheme=theme;
     }
-    musicPlayer.loop=selectedTheme==='main';musicPlayer.volume=musicVolume/100;
-    if(musicPlayer.paused)void musicPlayer.play()?.catch(()=>{/* A blocked or unavailable track never blocks learning. */});
+    musicPlayer.loop=theme==='main';
+    // A start or resume rises from silence, so a press that leads straight into a film never leaves a blip.
+    if(musicPlayer.paused){musicPlayer.volume=0;void musicPlayer.play()?.catch(()=>{/* A blocked or unavailable track never blocks learning. */});}
+    levelMusic();
   }catch{musicPlayer?.pause();}
 }
+// map-finale.js announces its dialog. Its film stays muted: the ending theme plays from the start while the dialog is
+// open and the main theme returns when it closes. The victory jingle gives way only when the theme can really sound.
+globalThis.document?.addEventListener('map-finale',event=>{
+  finaleOpen=Boolean(event.detail?.open);
+  if(finaleOpen){
+    endedTheme=null;
+    if(loadedTheme==='ending'&&musicPlayer)musicPlayer.currentTime=0;
+    if(!musicBlocked())stopClick();
+  }
+  syncMusic();
+});
 function stopClick(){
   if(!currentClick)return;
   const {tone,volume,sample}=currentClick;currentClick=null;
@@ -64,7 +103,11 @@ function stopClick(){
 export function stopFeedback(){stopClick();}
 export function setEffects(on){
   effectsEnabled=Boolean(on);save(SOUND_KEY,effectsEnabled?'on':'off');
-  if(!effectsEnabled){stopClick();if(context?.state==='running')void context.suspend().catch(()=>{});}
+  if(!effectsEnabled){
+    stopClick();if(context?.state==='running')void context.suspend().catch(()=>{});
+    // Voices follow this switch: a line that is being read stops with it (voice-lines.js, character-dialogue.js).
+    try{globalThis.document?.dispatchEvent?.(new Event('sound-effects-off'));}catch{/* No listeners to tell. */}
+  }
 }
 // The header speaker controls both channels; the settings switches control one.
 export function setSound(on){setMusic(on);setEffects(on);}

@@ -146,3 +146,68 @@ test('지도 전투 효과음은 효과음 설정을 따르고 샘플이 없으�
  audio.setEffects(false);assert.equal(storage.get(audio.SOUND_KEY),'off');
  audio.playMapEncounter('hit',1);assert.equal(sources.length,8,'효과음을 끄면 지도 전투음도 나지 않는다');
 });
+
+const settle=()=>new Promise(resolve=>setTimeout(resolve,300));
+const near=(actual,expected,message)=>assert.ok(Math.abs(actual-expected)<.002,`${message??'음량'}: ${actual} ≠ ${expected}`);
+
+test('대사 중에는 배경 음악을 멈추지 않고 1/4로 줄이며 모든 대사가 끝나야 되돌린다',async t=>{
+ const {audio,media}=await audioFixture(t);audio.unlockMusic();const player=media[0];
+ assert.equal(player.volume,0,'시작은 무음에서 올라온다');await settle();near(player.volume,.3,'평소');
+ const pauses=player.pauses,popup=audio.duckMusic(),bubble=audio.duckMusic();
+ assert.equal(player.paused,false,'대사 때 멈추지 않는다');assert.ok(player.volume>.075,'한 번에 뚝 떨어지지 않는다');
+ await settle();near(player.volume,.075,'대사 중');assert.equal(player.pauses,pauses);
+ audio.playMusic('main');audio.unlockMusic();near(player.volume,.075,'화면 갱신이 줄임을 풀지 않는다');
+ popup();popup();await settle();near(player.volume,.075,'다른 대사가 남아 있다');
+ audio.setMusicVolume(60);near(player.volume,.15,'줄인 동안 크기를 바꾸면 줄인 크기로');
+ bubble();await settle();near(player.volume,.6,'모두 끝나면 평소 크기');
+ const late=audio.duckMusic();audio.setMusic(false);assert.equal(player.paused,true);late();
+ audio.setMusic(true);await settle();near(player.volume,.6,'꺼진 동안 끝난 대사의 줄임이 남지 않는다');
+});
+
+test('영상은 대사 줄임과 별개로 배경 음악을 멈춘다',async t=>{
+ const {audio,media}=await audioFixture(t);audio.unlockMusic();const player=media[0];await settle();
+ const voice=audio.duckMusic(),film=audio.suspendMusic();assert.equal(player.paused,true);
+ voice();assert.equal(player.paused,true,'대사가 끝나도 영상 정지는 남는다');
+ film();assert.equal(player.paused,false);await settle();near(player.volume,.3);
+});
+
+test('지도 파이널 창이 열려 있는 동안 엔딩 곡, 닫으면 메인 테마',async t=>{
+ const {audio,media,document,contexts}=await audioFixture(t);audio.unlockMusic();const player=media[0];player.currentTime=40;
+ const finale=open=>document.dispatchEvent(new CustomEvent('map-finale',{detail:{open}}));
+ audio.playClick();const jingle=contexts[0].tones[0];
+ finale(true);
+ assert.equal(player.src,audio.MUSIC_TRACKS.ending);assert.equal(player.currentTime,0);assert.equal(player.loop,false);assert.equal(player.paused,false);
+ assert.equal(jingle.disconnected,1,'엔딩 곡이 나올 때 승리 징글은 물러난다');
+ audio.playMusic('main');assert.equal(player.src,audio.MUSIC_TRACKS.ending,'지도 화면 갱신이 곡을 되돌리지 않는다');
+ const voice=audio.duckMusic();await settle();near(player.volume,.075,'파이널 곡도 대사 때 줄인다');voice();
+ finale(false);assert.equal(player.src,audio.MUSIC_TRACKS.main);assert.equal(player.loop,true);assert.equal(player.paused,false);assert.equal(media.length,1);
+ // 다시 열면 끝까지 들었던 엔딩 곡도 처음부터 다시 나온다.
+ finale(true);player.paused=true;player.dispatchEvent(new Event('ended'));finale(false);finale(true);
+ assert.equal(player.src,audio.MUSIC_TRACKS.ending);assert.equal(player.paused,false);
+ finale(false);
+ // 배경 음악이 꺼져 있으면 곡 없이 징글이 남는다.
+ audio.setMusic(false);audio.playClick();const kept=contexts[0].tones.at(-1);finale(true);
+ assert.equal(player.paused,true);assert.equal(kept.disconnected,undefined);finale(false);
+});
+
+test('효과음을 끄면 재생 중인 대사가 멈추도록 알린다',async t=>{
+ const {audio,document}=await audioFixture(t);let told=0;
+ document.addEventListener('sound-effects-off',()=>told++);
+ audio.setEffects(true);assert.equal(told,0);
+ audio.setEffects(false);assert.equal(told,1);
+ audio.setSound(true);audio.setSound(false);assert.equal(told,2,'헤더 소리 끄기도 같다');
+});
+
+test('대사는 줄임 표식을 쓰고 첫 누름·키로 배경 음악을 연다',async()=>{
+ const {readFileSync}=await import('node:fs');const read=file=>readFileSync(new URL(`../src/${file}`,import.meta.url),'utf8');
+ const voice=read('voice-lines.js'),app=read('app.js'),finale=read('map-finale.js'),talk=read('character-dialogue.js'),story=read('story.js');
+ assert.match(voice,/release=duckMusic\(\);/);assert.doesNotMatch(voice,/suspendMusic/);
+ assert.match(voice,/document\.addEventListener\('sound-effects-off',stopVoice\);/);
+ assert.match(talk,/document\.addEventListener\('sound-effects-off',stop,opt\);/);
+ assert.match(app,/hold:\(\)=>\{stopFeedback\(\);return duckMusic\(\);\}/);assert.doesNotMatch(app,/suspendMusic/);
+ assert.match(app,/document\.addEventListener\('pointerdown',unlockMusic,true\);document\.addEventListener\('keydown',unlockMusic,true\);/);
+ assert.match(story,/const resumeMusic = suspendMusic\(\);/,'영상에는 곡이 섞여 있어 그대로 멈춘다');
+ assert.match(finale,/video\.muted=true/);
+ assert.match(finale,/new CustomEvent\('map-finale',\{detail:\{open\}\}\)\);announce\(true\);/);
+ assert.match(finale,/dialog\.remove\(\);announce\(false\);/);
+});
