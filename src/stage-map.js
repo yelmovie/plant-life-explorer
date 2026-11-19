@@ -23,6 +23,8 @@ export function projectToTrail(x,y){
 export const ENTRANCES=[[250,820],[405,533],[771,322],[1295,536],[1390,195]].map(([x,y])=>({...projectToTrail(x,y),x,y}));
 const vectors={up:[0,-1],left:[-1,0],down:[0,1],right:[1,0]};
 const keys={ArrowUp:'up',ArrowLeft:'left',ArrowDown:'down',ArrowRight:'right',w:'up',a:'left',s:'down',d:'right'};
+// One footstep per bob of the walking picture (stage-map.css map-walk, .28s), only while the walker really moves.
+const STEP_MS=290;
 
 export function mountStageMap(root,ui,onArrive,encounterOptions={}){
   const viewport=root.querySelector('.stage-map-viewport'),world=viewport.querySelector('.island-map');
@@ -32,7 +34,7 @@ export function mountStageMap(root,ui,onArrive,encounterOptions={}){
   const road=document.createElementNS('http://www.w3.org/2000/svg','svg');road.setAttribute('viewBox','0 0 1536 1024');road.setAttribute('aria-hidden','true');road.classList.add('map-road');road.innerHTML=`<polyline points="${TRAIL.map(p=>p.join(',')).join(' ')}"/>`;world.prepend(road);
   let distance=Number.isFinite(ui.mapDistance)?ui.mapDistance:ENTRANCES[0].distance+90,target=null,frame=0,lastTime=0,scale=1,offsetX=0,offsetY=0,disposed=false;
   let overview=ui.mapOverview===true;
-  let hand=false,free=null,grab=null,dragged=false,zoom=1,saved=null,cameraAt=0,settle=0;
+  let hand=false,free=null,grab=null,dragged=false,zoom=1,saved=null,cameraAt=0,settle=0,stepAt=-Infinity;
   const touches=new Map();let pinch=null;
   const reduce=matchMedia('(prefers-reduced-motion: reduce)');
   // An open achievement card makes #app inert: walking waits like it does behind a dialog.
@@ -90,7 +92,10 @@ export function mountStageMap(root,ui,onArrive,encounterOptions={}){
     const old=distance,p=trailPoint(distance);
     if(held.size){const [vx,vy]=[...held].reduce(([x,y],dir)=>[x+vectors[dir][0],y+vectors[dir][1]],[0,0]),ahead=trailPoint(distance+36),behind=trailPoint(distance-36),forward=vx*(ahead.x-p.x)+vy*(ahead.y-p.y),backward=vx*(behind.x-p.x)+vy*(behind.y-p.y);if(Math.max(forward,backward)>2)distance=Math.max(0,Math.min(length,distance+(forward>=backward?1:-1)*240*dt));}
     else if(target!==null){distance+=Math.sign(target.distance-distance)*Math.min(600*dt,Math.abs(target.distance-distance));}
-    actor.classList.toggle('walking',Math.abs(distance-old)>.01);draw();
+    const moved=Math.abs(distance-old)>.01;
+    actor.classList.toggle('walking',moved);draw();
+    // Blocked at an end of the road means no step; the map finale is its own dialog, so it is asked for here.
+    if(moved&&now-stepAt>=STEP_MS&&!document.querySelector('dialog[open]')){stepAt=now;encounterOptions.step?.();}
     if(target!==null&&Math.abs(target.distance-distance)<.1){const {id,enter}=target;if(id===undefined)stop();else arrive(id,enter);return;}
     if(held.size||target!==null)frame=requestAnimationFrame(tick);else lastTime=0;
   }

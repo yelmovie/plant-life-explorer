@@ -1,5 +1,5 @@
 import {mountMapEncounters,normalizeMapHits} from './map-encounters.js';
-import {preloadMapSounds} from './audio.js';
+import {preloadMapSounds,voiceLeadMs} from './audio.js';
 import {speakTexts} from './voice-lines.js';
 
 // This copy ships with its own map so offline play needs no cross-project request.
@@ -29,6 +29,13 @@ export function normalizeVillageEncounters(value,legacy) {
   return {...normalizeMapHits(previous,STAGES.map(([id])=>id)),...normalizeMapHits(value,STAGES.map(([id])=>id))};
 }
 
+// A place that has just opened sounds first (audio.js playStageOpen); the thief's line follows its latch.
+function speakLine(text){
+  const wait=voiceLeadMs();
+  if(!wait){speakTexts([text]);return;}
+  setTimeout(()=>{if(!document.querySelector('dialog[open]'))speakTexts([text]);},wait);
+}
+
 export function mountVillageEncounters({host,stages,progress,onSave,blocked,reduced,tone,actors,clearIndex}) {
   const points=stages.flatMap((stage,i)=>{
     if(!stage||!STAGES[i])return [];
@@ -37,7 +44,7 @@ export function mountVillageEncounters({host,stages,progress,onSave,blocked,redu
   });
   if(!points.some(({id})=>(progress?.[id]||0)<3))return null;
   preloadMapSounds();
-  const runtime=mountMapEncounters({requiredFoes:5,host,stages:points,progress,onSave,blocked,reduced,tone,art,palette,clearStage:()=>STAGES[clearIndex]?.[0],voice:text=>speakTexts([text]),
+  const runtime=mountMapEncounters({requiredFoes:5,host,stages:points,progress,onSave,blocked,reduced,tone,art,palette,clearStage:()=>STAGES[clearIndex]?.[0],voice:speakLine,
     reach:95,contact:25});
   const layer=host.querySelector('.map-encounter-layer');
   const poses=reactions.map((src,i)=>{

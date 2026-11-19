@@ -21,7 +21,7 @@
 | Higgsfield 도장 3종·3D 생성 입력 그림 | Higgsfield GPT Image 2.5 제작 기록 | 제작 도구 기록 있음. 계정별 상업 이용 조건은 배포 전 문서 확인 대상 |
 | Meshy GLB 7종 (`models/`, 2026-10-25 계절 4종 추가) | Meshy AI 생성·Blender 가공 기록 | 생성·입력·가공 기록 보존. 상업 이용 가능한 조건으로 제작했음을 2026-10-24 사용자 확인(10-25 계절 4종도 같은 조건 제작 전제). 파일 존재와 현재 런타임 연결 여부는 `models/README.md`에서 구분 |
 | Suno 배경 음악 2곡 (`audio/`) | 기획자 자체 AI 생성 음원 | 상업 이용 가능한 조건으로 제작했음을 2026-10-24 사용자 확인. 요금제·계약 세부는 저장소에 없음 |
-| 효과음 | 화면 조작음은 앱 코드(Web Audio)로 직접 합성. 지도 악당 전투음 8개는 CC0 파일(`audio/sfx/`, 아래 2026-11-17 절) | 사용 가능. 출처 페이지에서 CC0 재확인 |
+| 효과음 | 누르기·끌기·첫 완료 소리는 앱 코드(Web Audio)로 직접 합성. 지도 전투음 8개·성취 카드 5개·지도 발자국·장소 열림·정답/다시 소리 6개는 CC0 파일(`audio/sfx/`, 아래 2026-11-17·11-18·11-19 절) | 사용 가능. 출처 페이지에서 CC0 재확인 |
 | npm 의존성 | 없음 (`package.json`에 dependencies 없음) | 하위 작업 폴더까지 `package.json` 정적 탐색 시 본 앱 1개. 직접 동봉한 Three.js는 위에서 별도 검토 |
 
 - `generated/`: OpenAI 내장 이미지 생성 도구로 제작한 기본 2D 그림 17종(2026-10-14)과 추가 그림 13종(2026-10-15). 추가 그림은 캐릭터 3종, 시설 5종, 지도 1종, 수첩 2종, 코팅 가방 2종이다. PNG 원본과 화면용 WebP를 함께 보관한다.
@@ -172,6 +172,19 @@
 | `audio/sfx/reward-03.mp3` | 성취 카드 공개(별 4~5개) | Achievement Happy Beeps Jingle · CogFireStudios | CC0 · https://freesound.org/people/CogFireStudios/sounds/619838 |
 | `audio/sfx/pickup-01.mp3` | 카드가 보관함 칸에 들어갈 때 | item-pickup-v1.wav · DeltaCode | CC0 · https://freesound.org/people/DeltaCode/sounds/678384 |
 | `audio/sfx/victory-jingle-01.mp3` | 카드 5장 완성 축하 | Game Success Fanfare Short · el_boss | CC0 · https://freesound.org/people/el_boss/sounds/677858 |
+
+## 2026-11-19 지도 발자국·장소 열림·정답/다시 소리 (CC0)
+
+과학34 공통 효과음 라이브러리(`_shared/sfx-library-20261117`, `manifest.json`·`CREDITS.md`, 2026-11-17 라이선스 재확인 CC0만)에서 `audio/sfx/`에 그대로 복사했다. 라이브러리 가공(앞뒤 무음 제거·짧은 페이드·음량 맞춤·모노 44.1 kHz MP3 112 kbps)만 거쳤다. 앱은 발자국만 재생 속도를 ±6% 안에서 바꿔 낸다. 새로 내려받은 파일은 없다. 효과음 끄기·전체 음소거·탭 숨김을 따른다.
+
+| 파일 | 쓰는 곳 | 원본 · 만든 사람 | 라이선스 · 출처 |
+|---|---|---|---|
+| `audio/sfx/step-01.mp3` | 지도에서 걷는 동안 발자국(번갈아 첫째) | Footstep on Stone · sgossner | CC0 · https://freesound.org/people/sgossner/sounds/197778 |
+| `audio/sfx/step-02.mp3` | 지도에서 걷는 동안 발자국(번갈아 둘째) | concrete footstep 4 · Yoyodaman234 | CC0 · https://freesound.org/people/Yoyodaman234/sounds/166506 |
+| `audio/sfx/open-01.mp3` | 지도의 새 장소가 처음 열릴 때(잠금 풀림) | maximize_008 · Kenney (Interface Sounds) | CC0 · https://kenney.nl/assets/interface-sounds |
+| `audio/sfx/twinkle-03.mp3` | 새 장소가 열릴 때 0.12초 뒤 겹치는 작은 종소리 | Fantasy_ui_Button_2.wav · ZenithInfinitiveStudios | CC0 · https://freesound.org/people/ZenithInfinitiveStudios/sounds/376746 |
+| `audio/sfx/correct-01.mp3` | 판정이 있는 선택이 맞았을 때 | confirmation_001 · Kenney (Interface Sounds) | CC0 · https://kenney.nl/assets/interface-sounds |
+| `audio/sfx/retry-01.mp3` | 판정이 있는 선택을 다시 살펴볼 때(버저 아님) | question_002 · Kenney (Interface Sounds) | CC0 · https://kenney.nl/assets/interface-sounds |
 
 ## 2026-11-18 캐릭터 음성 (ElevenLabs)
 - 리피(ElevenLabs Voice Library "Aria", eleven_v4)와 지도 악당 표찰 도둑("Harry - Character", eleven_v4)의 팝업·말풍선 음성 77줄: `audio/lipi-*-problem·reward·locked·concept·note·ending-diary.mp3`, `audio/thief-*.mp3`.
