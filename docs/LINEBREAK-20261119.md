@@ -65,3 +65,12 @@
    - 그대로 둔 것: 기록 보관 창 버튼 「현재 활동 / 파일 보관」·「계속 / 살펴보기」 등(뜻 단위 2줄, 9절 「그대로 두는 것」과 같은 경우), 꽃길 꾸미기 제목·설명 줄을 낱말 끊김으로 잘못 읽은 것(서로 다른 요소라 오탐).
 3. **캔버스·3D 글**: `fillText`·`wordWrap`·텍스트 스프라이트 없음. 캔버스는 성취 카드 입자(`reward-cards.js`)와 3D 땅 질감(`garden-environment.js`, `season-environment.js`, `spatial.js` 그림자)뿐이라 확인함, 문제없음.
 4. **고친 곳**: `src/korean-linebreak.css` 프로젝트 보정에 `#dialog :is(.dialog-body > p, .expedition-tool > p) { text-wrap: balance; }`(대화창 문단은 모두 3줄 이하). 검증: `npm run check` 59개, `npm test` 186/186, 빌드 327파일. 커밋 `133594a`, 배포 https://6e4e4f2e.leafy-garden.pages.dev, 운영 `build-info.json` 커밋 `133594a`, `/`·`bundle.css`·`korean-linebreak.css`·`sw.js` MATCH.
+
+## 악당 글자 18px 뒤 다시 재기 (2026-11-20, 공통 지침 10절)
+
+18px 커밋 `7a66a50`(기록 `b26e654`) 뒤 `origin/main`과 같은 작업 트리를 로컬 QA 포트(4351)에서 앱 내장 Chrome으로 열어 1280×800·1024×768·1920×1080에서 쟀다. 다 푼 기록으로 악당 5마리를 띄우고 실제 요소에 글을 하나씩 넣어 줄을 나눴다(말풍선은 `aria-hidden` 안이라 `measure.js`와 같은 판정을 직접 계산).
+
+- 악당 말풍선 `.map-encounter-say`(18px, 폭 270px·1920은 300px, `text-wrap: balance` 이미 있음): 대사 25줄 + 기본 대사 4줄 = 29줄 × 3크기. 줄 수 1~3줄(3줄은 1280·1024에서 4개, 1920에서 1개), 끝줄 외톨이·가운데 짧은 줄·낱말 끊김 0, 화면 밖 0.
+- 격퇴 안내 `.map-encounter-clear`(18px, 최대 440px): 「표찰 도둑 · “첫 대사”」 5종 × 3크기, 모두 2줄이고 끝줄 비율 기준 통과(문제 0).
+- 공격 버튼 `.map-encounter-attack`: 지도에서는 이동 버튼 옆 아이콘 버튼(56×56, 글자 없음, 이름은 `aria-label`)으로 붙어 재야 할 글이 없다. 맞힌 횟수 `.map-encounter-meter`는 「●●●」 한 줄(nowrap).
+- 전/후 문제 0 → 0, 고친 것 없음, 배포 없음.
