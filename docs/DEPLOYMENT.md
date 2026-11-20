@@ -19,6 +19,12 @@ wrangler pages deploy dist --project-name leafy-garden --branch main
 
 이 Mac에는 시스템 Node가 없다. 도구는 외장 SSD에만 둔다: Node `DevCaches/tools/node-v24.22.2-darwin-arm64`, wrangler `DevCaches/tools/wrangler-4.154.0`(exFAT라 `--no-bin-links`로 설치). wrangler 로그인 정보는 `HOME=DevCaches/tools/wrangler-home`으로 실행해 SSD에 저장한다. 빌드는 `ESBUILD_MODULE_PATH`를 그 wrangler의 `node_modules/esbuild`로 지정한다. exFAT가 만드는 `._*` 파일은 업로드 전에 `dist`에서 지운다.
 
+## 배포 — 2026-11-20 (지도 악당 글자 18px)
+
+- 커밋 `7a66a50`(`src/map-encounters.js`만), 배포 https://c7d6632c.leafy-garden.pages.dev, `dirty=false`. 운영 `build-info.json` 커밋 일치, `src/app.bundle.js`·`src/bundle.css` SHA-256이 로컬 빌드와 같음.
+- 바뀐 것: 악당 말풍선 16px(1500px 이상만 18px) → 18px, 폭 220px → min(270px, 화면-32px)(1500px 이상 300px). 체력 표시(●●●) 10px → 18px, 악당 머리 위로 옮김. 격퇴 안내 14px → 18px(폭 최대 440px). 공격 버튼 글자 16px → 18px(지도 오른쪽 아래 도크의 아이콘 버튼은 그대로).
+- 확인(Mac, Node v24.22.2): `npm run check`, `npm test` 186/186. 지도에서 걸으며 1280×800·1024×768·1920×1080 측정(로컬·운영 모두): 말풍선 18px·2줄·화면 밖 넘침 없음, 말풍선끼리 겹침 없음, 체력 18px. 아래 조작줄과의 겹침 표시는 조작줄 전체 상자 기준이었고 화면에서 방향키·버튼과 겹치지 않음을 확인. 격퇴 안내는 세 번 공격해야 나와 화면으로 띄워 보지는 못했고 CSS 값만 확인. 캡처는 `.tmp/villain-18px-20261120/`(Git 제외).
+
 ## 최근 배포 — 2026-11-18 (3초 규칙 디자인 고도화)
 
 - 기능 커밋: `bf5f601`(지시 한 곳·진행 알약), `c760f40`(팝업 배경 0.26·의뢰 편지 3줄), `09f187d`·`8a048e7`(학생 글자 18px 이상, 완료 시 말풍선이 주 버튼 이름을 부름), `87e3fd9`(AGENTS 배포 자동 승인 문구). GitHub `main`에 푸시.
