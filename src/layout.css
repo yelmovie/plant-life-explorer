@@ -374,6 +374,8 @@ body .expedition-loot p { margin: 4px 0; line-height: 1.5; }
 #app .map-next-card .map-eyebrow { font-size: 16px; }
 #app .map-extras { border: 0; padding: 0; }
 #app .map-extras .btn { min-height: 48px; font-size: 16px; }
+/* 전자칠판(1920): 정원 더 보기 메뉴의 선택지도 18px 하한 (최종 점검 2026-11-20 C20). */
+@media (min-width: 1500px) { #app .map-extras .btn { font-size: 18px; } }
 #app .stage-map .map-walker { width: calc(82px / var(--map-scale)); height: calc(112px / var(--map-scale)); }
 #app .stage-map .map-road polyline { stroke: #fff4b9; stroke-width: 7; stroke-dasharray: 1 24; opacity: .85; filter: drop-shadow(0 1px 1px #685225); }
 #app .stage-map .world-label { color: var(--scene-ink); background: var(--frame-paper); }
