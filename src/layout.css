@@ -135,7 +135,7 @@ body .toast { pointer-events: none; }
 #app .mission-step {
   display: flex; align-items: center; justify-content: center; gap: 8px;
   min-height: 48px; min-width: 48px; padding: 8px 16px;
-  border: 0; border-radius: 13px; background: transparent; color: #637259;
+  border: 0; border-radius: 13px; background: transparent; color: #55654c;
   font: 18px/1.25 var(--font-display); word-break: keep-all;
 }
 #app .mission-step b { display: grid; place-items: center; width: 28px; height: 28px; flex-shrink: 0; border-radius: 50%; background: #e8eacb; font-weight: 400; }
@@ -812,7 +812,7 @@ body.large-text #app .exploration-activity .learning-scene { overflow: visible; 
 #app .lens-hint b { color: #4f7a4c; font-weight: 400; }
 #app .lens-leaf { position: relative; }
 #app .lens-clues { display: grid; gap: 6px; margin-top: 6px; }
-#app .lens-clue { padding: 6px 10px; border: 2px dashed #c9bf98; border-radius: 12px; background: #fffdf3d9; color: #857c62; font: 17px/1.3 var(--font-display); text-wrap: balance; }
+#app .lens-clue { padding: 6px 10px; border: 2px dashed #c9bf98; border-radius: 12px; background: #fffdf3d9; color: #655d47; font: 17px/1.3 var(--font-display); text-wrap: balance; }
 #app .lens-clue.found { border: 2px solid #8fb36a; background: #f2f9dc; color: #2f4a26; }
 #app .lens-clue.just-found { animation: lens-clue-pop .5s cubic-bezier(.2,1.5,.4,1); }
 @keyframes lens-clue-pop { from { transform: scale(.6); opacity: 0; } to { transform: none; opacity: 1; } }

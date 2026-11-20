@@ -32,6 +32,8 @@ const ring=([cx,cy],r,turns=1,n=24)=>Array.from({length:n*turns+1},(_,i)=>[cx+r*
 const evidence=fn=>page.waitForFunction(fn);
 // Drag the magnifier so its glass rests on a clue spot until the clue lights up.
 async function lens(id,kind,[fx,fy]){
+ // The bench re-renders after each clue: wait for this leaf picture (and the glass) to be laid out again, or the maths gives NaN.
+ await page.waitForFunction(id=>{const i=document.querySelector(`[data-lens-leaf="${id}"] img`),g=document.querySelector('[data-lens] .field-lens-glass');return i&&g&&i.complete&&i.naturalWidth>0&&i.getBoundingClientRect().width>0&&g.getBoundingClientRect().width>0;},id);
  const [from,to]=await page.evaluate(([id,fx,fy])=>{
   const img=document.querySelector(`[data-lens-leaf="${id}"] img`),r=img.getBoundingClientRect(),nw=img.naturalWidth,nh=img.naturalHeight,k=Math.min(r.width/nw,r.height/nh),w=nw*k,h=nh*k;
   const g=document.querySelector('[data-lens] .field-lens-glass').getBoundingClientRect();

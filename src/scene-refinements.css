@@ -112,7 +112,7 @@
 @keyframes cloth-soak { to { transform: scale(3.4,1.6); opacity: .4; border-radius: 50%; } }
 @keyframes leaf-roll { 0%,25% { transform: translate(0,-12px); } 100% { transform: translate(60px,32px) rotate(40deg); } }
 #app .discovery-actions { display: grid; gap: 6px; margin-bottom: 8px; }
-#app .discovery-actions .btn { width: 100%; min-height: 44px; padding: 6px; }
+#app .discovery-actions .btn { width: 100%; min-height: 48px; padding: 6px; }
 #app .lotus-micro { display: grid; grid-template-columns: 94px minmax(0,1fr); gap: 8px; padding: 8px; margin-bottom: 8px; border-radius: 12px; background: #edf2d9; }
 #app .lotus-micro img { width: 94px; height: 94px; object-fit: contain; }
 #app .lotus-micro p { font-size: 15px !important; }
@@ -185,7 +185,7 @@ body .tool-dialog .dialog-actions { margin-top: 14px; padding-top: 10px; }
 #app .notebook-cover { position: relative; display: flex; flex-direction: column; align-items: center; min-width: 0; min-height: 0; padding: 18px 12px 12px 20px; border: 2px solid var(--note-accent); border-left-width: 10px; border-radius: 7px 18px 18px 7px; background: linear-gradient(90deg,#fff9e9,var(--note-tint)); box-shadow: 0 6px 0 #4d593b3b,0 12px 20px #34412a1c; text-align: center; transform: rotate(-1deg); }
 #app .notebook-cover:nth-child(even) { transform: rotate(1deg); }
 #app .notebook-cover:hover { transform: translateY(-5px); }
-.note-number { font-size: 14px; letter-spacing: 1px; color: var(--note-accent,#58754a); font-weight: 700; }
+.note-number { font-size: 14px; letter-spacing: 1px; color: color-mix(in srgb, var(--note-accent,#58754a) 55%, #1c2414); font-weight: 700; }
 #app .note-cover-art { flex: 1; min-height: 60px; max-height: 210px; width: 100%; margin: 10px 0; display: grid; place-items: center; }
 #app .note-cover-art img { width: 100%; height: 100%; min-height: 0; max-height: 200px; object-fit: contain; }
 #app .notebook-cover > strong { font: clamp(18px,1.55vw,24px)/1.45 var(--font-display); word-break: keep-all; text-wrap: balance; }
@@ -224,7 +224,7 @@ body .note-hand { list-style: none; margin: 0; padding: 0 0 0 36px; }
 body .note-hand li { margin: 0; padding: 4px 4px 0; border-bottom: 2px solid #dfe6cf; font: clamp(22px,2vw,26px)/1.55 var(--font-hand); color: #33402f; word-break: keep-all; overflow-wrap: anywhere; }
 body .note-hand li.note-hand-empty { color: #6f7964; }
 body .note-hand b { margin-right: 8px; padding: 0 4px; font-weight: 400; background: linear-gradient(transparent 55%, color-mix(in srgb, var(--note-accent) 32%, transparent) 55%); }
-body .note-hand .note-old { color: #7b8572; text-decoration: line-through 2px #b46a5a; }
+body .note-hand .note-old { color: #5f6956; text-decoration: line-through 2px #b46a5a; }
 body .note-hand strong { font-weight: 400; color: #2b6a3f; }
 body .note-hand small { font-size: .8em; color: #66705c; }
 body .note-leaf-chip { display: inline-flex; align-items: center; gap: 2px; margin-right: 12px; white-space: nowrap; }

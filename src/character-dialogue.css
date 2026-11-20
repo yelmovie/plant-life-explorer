@@ -92,7 +92,7 @@ body dialog.npc-dialogue-stage > :is(.dialog-body,.modal-body) {
 .npc-dialogue-controls, .npc-dialogue-tabs, .npc-dialogue-topics { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 7px; }
 .npc-dialogue-tabs[hidden], .npc-dialogue-topics[hidden] { display: none; }
 .npc-dialogue-card :is(.npc-dialogue-tabs button, .npc-dialogue-topics button, [data-npc-replay], .npc-dialogue-close) {
-  min-height: 44px;
+  min-height: 48px;
   padding: 4px 10px;
   color: #244e39;
   background: #fffdf1;
@@ -108,7 +108,7 @@ body dialog.npc-dialogue-stage > :is(.dialog-body,.modal-body) {
 .npc-dialogue-card .npc-dialogue-close {
   position: absolute;
   inset: 2px 4px auto auto;
-  width: 44px;
+  width: 48px;
   padding: 0;
   border: 0;
   background: transparent;

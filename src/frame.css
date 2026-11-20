@@ -705,7 +705,7 @@ body .note-quiz > summary small { margin-left: 4px; padding: 2px 7px; border-rad
   border: 0; border-radius: 0; background: none; box-shadow: none;
 }
 /* The journey is a small 1·2·3 progress mark; each step keeps its name for screen readers and as a tooltip. */
-#app .activity-pill .mission-step { min-width: 44px; min-height: 44px; padding: 0 7px; gap: 0; border-radius: 22px; }
+#app .activity-pill .mission-step { min-width: 48px; min-height: 48px; padding: 0 7px; gap: 0; border-radius: 24px; }
 #app .activity-pill .mission-step > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 #app .activity-pill .mission-step b { width: 30px; height: 30px; font-size: 18px; }
 @media (min-width: 901px) and (orientation: landscape) {
@@ -931,6 +931,8 @@ body .note-quiz > summary small { margin-left: 4px; padding: 2px 7px; border-rad
 #app .bag-stage[data-rain="skip"] .bag-cloud > b { visibility: hidden; }
 /* 연구 노트 창·설정 창: 아래 「노트 덮기」·「닫기」와 같은 일을 하는 위 X는 숨긴다(Esc·아래 버튼으로 닫힌다). */
 body dialog:is(.notebook-dialog, .settings-dialog) > .dialog-top > [data-action="close"] { display: none; }
+/* 대화창 머리글(보상 창 「…의 발견」 등): 같은 초록 계열에서 한 단계 진하게 — 대비 4.5 이상 (2026-11-21 C9). */
+#dialog .eyebrow { color: #476b3e; }
 /* 연구 노트 표지 고르기·마지막 화면: 제목은 위 줄 가운데 알약, 작업판이 그 아래 높이를 다 쓴다. */
 @media (min-width: 901px) and (orientation: landscape) {
   #app .notebook-overview.tablet-report { padding-top: var(--hud-edge, 16px); }
