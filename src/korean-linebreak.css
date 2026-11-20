@@ -25,3 +25,5 @@
 .map-locked-message p { text-wrap: balance; }
 /* 시간 손잡이 안내 글은 아래 입력 막대와 한 문단으로 묶여 balance가 듣지 않았다. 막대는 원래 다음 줄이라 글만 따로 블록으로 둔다. */
 #app .timeline > .direct-hint { display: block; }
+/* 대화창(#dialog) 안 짧은 문단: 연잎 아이디어 창·보상 근거 문장·탐험 도구 설명(1920)에서 「…/ 적용하면 어떨까?」처럼 끝줄이 떨어졌다(2026-11-20, 모두 3줄 이하). */
+#dialog :is(.dialog-body > p, .expedition-tool > p) { text-wrap: balance; }
