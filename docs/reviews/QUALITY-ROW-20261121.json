@@ -1,0 +1,74 @@
+{
+  "no": "03",
+  "name": "초록정원 연구기지",
+  "appCommit": "2fbeb50",
+  "measuredAt": "2026-11-21T07:30+09:00",
+  "score": {
+    "total": 89,
+    "noDevice": 94,
+    "items": {
+      "learning": 9,
+      "fun": 8,
+      "function": 10,
+      "code": 8,
+      "design": 9,
+      "a11y": 8,
+      "perf": 9,
+      "firstScreen": 9,
+      "data": 9,
+      "deploy": 10
+    }
+  },
+  "structure": {
+    "zones": 5,
+    "activities": 15,
+    "stepsPerActivityMedian": 3,
+    "autoRunSeconds": 52
+  },
+  "interaction": {
+    "kinds": [
+      "누르기",
+      "끌기(돋보기·식물 심기)",
+      "튕기기(카드 넘기기)",
+      "문지르기",
+      "돌리기(계절)",
+      "칠하기(지형)",
+      "지도 걷기",
+      "3D 돌려 보기"
+    ],
+    "kindsCount": 8,
+    "zonesWithOwnInteraction": 5
+  },
+  "feedback": {
+    "wrongAnswerLevels": 3,
+    "hintBeforeAnswer": true,
+    "retryGoal": false,
+    "rewardEffects": 4,
+    "transitionEffects": null
+  },
+  "screen": {
+    "playAreaHeightPctMedian": 78,
+    "playAreaAreaPctMedian": 76,
+    "bodyTextMinPx": 18,
+    "bodyTextMedianPx": 20,
+    "imagesOnScreenMedian": 4
+  },
+  "sound": {
+    "bgm": true,
+    "sfx": true,
+    "voice": true,
+    "voiceLines": 94
+  },
+  "weight": {
+    "firstScreenKB": 2171,
+    "distMB": 55
+  },
+  "robust": {
+    "reloadRestores": true,
+    "corruptSaveHandled": true,
+    "offlineRevisit": true,
+    "backButtonStaysInApp": false,
+    "certificatePrintsOnePage": true
+  },
+  "notes": "activities=현장 임무 5 + 본 탐구 10, steps=현장 임무 단계 수(2·3·3·3·2) 중앙값. autoRunSeconds=운영 learning-journey 완주 테스트(브라우저 시작 포함). 놀이 영역은 2026-11-20 운영 스윕 1280×800 현장·탐구 화면 중앙값(5장 기록 쪽만 43%). 글자·그림 수는 1장 현장·3장 현장·3장 실험실 3화면 중앙값(운영 7823969 측정, 3-1에서 이 화면 글자는 안 바뀜). rewardEffects=도장·성취 카드·완료 효과·보상 창(코드 기준 셈). transitionEffects=null: 전환 효과를 같은 자로 세지 못함. voiceLines=리피 68 + 악당 25 + 환영 1(파일 수). offlineRevisit=11-20 오프라인 3주소 통과 기록(이번에 다시 재지 않음). 뒤로 가기는 앱 밖으로 나감(진행은 유지) — 3-2단계에서 바꾼다."
+}

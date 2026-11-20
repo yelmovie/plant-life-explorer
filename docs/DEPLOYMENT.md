@@ -19,6 +19,12 @@ wrangler pages deploy dist --project-name leafy-garden --branch main
 
 이 Mac에는 시스템 Node가 없다. 도구는 외장 SSD에만 둔다: Node `DevCaches/tools/node-v24.22.2-darwin-arm64`, wrangler `DevCaches/tools/wrangler-4.154.0`(exFAT라 `--no-bin-links`로 설치). wrangler 로그인 정보는 `HOME=DevCaches/tools/wrangler-home`으로 실행해 SSD에 저장한다. 빌드는 `ESBUILD_MODULE_PATH`를 그 wrangler의 `node_modules/esbuild`로 지정한다. exFAT가 만드는 `._*` 파일은 업로드 전에 `dist`에서 지운다.
 
+## 배포 — 2026-11-21 (110점 계획 3-1단계: 성취 카드 보관함 글자)
+
+- 커밋 `2fbeb50`(`src/reward-cards.css`만), 배포 https://582f8a11.leafy-garden.pages.dev. 운영 `build-info.json` 커밋 일치.
+- 바뀐 것: 잠긴 카드 문구 14px → 18px·색 85%, 10번 기준본의 `@container rc-locked` 묶음, 보관함 작은 카드 이름 17px·부제 16px(높이 600px 이상).
+- 확인(Mac, Node v24.22.2): `npm run check` 59개, `npm test` 186/186, 빌드 327파일(esbuild 묶음). 보관함 1280×800·1024×768·1920×1080·1024×600·915×412 로컬·운영 측정(넘침 0) + 스크린숏 확인. 되돌릴 대상: https://a756c68b.leafy-garden.pages.dev (`7823969`).
+
 ## 배포 — 2026-11-21 (100점 계획 2단계: 대비·48px·토스트)
 
 - 커밋 `7823969`, 배포 https://a756c68b.leafy-garden.pages.dev. 운영 `build-info.json` 커밋 `7823969` 일치(배포 폴더 기준이라 `dirty=true` 표시).
