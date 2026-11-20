@@ -19,6 +19,12 @@ wrangler pages deploy dist --project-name leafy-garden --branch main
 
 이 Mac에는 시스템 Node가 없다. 도구는 외장 SSD에만 둔다: Node `DevCaches/tools/node-v24.22.2-darwin-arm64`, wrangler `DevCaches/tools/wrangler-4.154.0`(exFAT라 `--no-bin-links`로 설치). wrangler 로그인 정보는 `HOME=DevCaches/tools/wrangler-home`으로 실행해 SSD에 저장한다. 빌드는 `ESBUILD_MODULE_PATH`를 그 wrangler의 `node_modules/esbuild`로 지정한다. exFAT가 만드는 `._*` 파일은 업로드 전에 `dist`에서 지운다.
 
+## 배포 — 2026-11-21 (100점 계획 2단계: 대비·48px·토스트)
+
+- 커밋 `7823969`, 배포 https://a756c68b.leafy-garden.pages.dev. 운영 `build-info.json` 커밋 `7823969` 일치(배포 폴더 기준이라 `dirty=true` 표시).
+- 바뀐 것: 글자색 6곳(머리띠 아직 안 한 단계 번호, 1장 단서 알약·단서 계기판, 연구 노트 표지 번호, 노트 옛 답, 대화창 머리글)을 같은 색 계열에서 진하게. 머리띠 단계 동그라미·5장 연잎 단추·리피 대화창 단추(닫기 48×48) 44→48px. 리피 말풍선이 이미 같은 문장을 말하고 있으면 장면 토스트를 띄우지 않음(화면 낭독 알림 문구는 그대로). 여정 테스트 `lens()`가 잎 그림이 다시 놓인 뒤 좌표를 잼. 학습 문구·판정·저장·진행 로직은 그대로.
+- 확인(Mac, Node v24.22.2): `npm run check` 59개, `npm test` 186/186, 배포 빌드 327파일(esbuild 묶음). 브라우저 테스트 3개(여정·탐험·전달 터치) 로컬 통과, 운영 재측정 값은 `docs/reviews/SCORE-20261121.md`. 되돌릴 대상: https://c7d6632c.leafy-garden.pages.dev (`7a66a50`).
+
 ## 배포 — 2026-11-20 (지도 악당 글자 18px)
 
 - 커밋 `7a66a50`(`src/map-encounters.js`만), 배포 https://c7d6632c.leafy-garden.pages.dev, `dirty=false`. 운영 `build-info.json` 커밋 일치, `src/app.bundle.js`·`src/bundle.css` SHA-256이 로컬 빌드와 같음.
