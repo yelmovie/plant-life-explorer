@@ -55,7 +55,8 @@ async function enter(m){
 const explore=async()=>{await act('journey-mode','explore','.learning-footer ');await page.locator('.field-mission').waitFor({state:'detached'});};
 async function complete(m){const b=page.locator('.learning-footer [data-action="complete"]');assert.notEqual(await b.getAttribute('aria-disabled'),'true',await page.locator('.guide-bubble').innerText());await b.tap();
  await dialogFits(`reward ${m+1}`);await snap(`reward-${m+1}-1180x757`);await act('reward-map',undefined,'#dialog ');const before=await saved();await page.reload();assert.deepEqual(await saved(),before,'refresh keeps progress');}
-async function leafSpot(id,[fx,fy]){return page.evaluate(([id,fx,fy])=>{const img=document.querySelector(`[data-lens-leaf="${id}"] img`),r=img.getBoundingClientRect(),k=Math.min(r.width/img.naturalWidth,r.height/img.naturalHeight),w=img.naturalWidth*k,h=img.naturalHeight*k;return [r.left+(r.width-w)/2+fx*w,r.top+(r.height-h)/2+fy*h];},[id,fx,fy]);}
+// The bench re-renders after each clue: wait until this leaf picture is laid out again, or the maths gives NaN (2026-11-21).
+async function leafSpot(id,[fx,fy]){await page.waitForFunction(id=>{const i=document.querySelector(`[data-lens-leaf="${id}"] img`);return i&&i.complete&&i.naturalWidth>0&&i.getBoundingClientRect().width>0;},id);return page.evaluate(([id,fx,fy])=>{const img=document.querySelector(`[data-lens-leaf="${id}"] img`),r=img.getBoundingClientRect(),k=Math.min(r.width/img.naturalWidth,r.height/img.naturalHeight),w=img.naturalWidth*k,h=img.naturalHeight*k;return [r.left+(r.width-w)/2+fx*w,r.top+(r.height-h)/2+fy*h];},[id,fx,fy]);}
 const petiolePoint=async(fx,fy)=>{const b=await page.locator('[data-petiole]').boundingBox();return [b.x+b.width*fx,b.y+b.height*fy];};
 const cutOpen=()=>page.locator('.float-lab[data-phase="reason"]').waitFor();
 
