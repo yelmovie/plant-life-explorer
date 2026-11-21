@@ -685,7 +685,7 @@ body dialog.reward-dialog .theme-picker small { display: none; }
 #app .habitat-compare-art { width: 100%; height: clamp(52px, 16vh, 120px); object-fit: contain; }
 #app .habitat-compare-card b { padding: 2px 8px; border-radius: 10px; background: #e2ebce; font-size: var(--font-size-xs); }
 #app .habitat-compare-card :is(span,small) { font-size: var(--font-size-xs); }
-body .note-quiz > summary { display: list-item; min-height: 44px; padding: 10px 0; cursor: pointer; }
+body .note-quiz > summary { display: list-item; min-height: 48px; padding: 10px 0; cursor: pointer; }
 body .note-quiz > summary small { margin-left: 4px; padding: 2px 7px; border-radius: 10px; background: #e7edd9; color: #3f5d3b; font: inherit; }
 
 /* ── 11. 3초 규칙 (2026-11-17): 가운데 위 알약 한 줄(장소 이름 + 여정 1·2·3), 지시는 리피 말풍선 한 곳.

@@ -38,7 +38,7 @@
 .student-record ul { padding-left:20px; margin:6px 0; }
 .student-record li { margin:6px 0; line-height:1.55; overflow-wrap:anywhere; }
 .note-content-summary { background:#edf3e5; padding:12px; border-radius:12px; }
-.note-content-summary summary { min-height:44px; cursor:pointer; }
+.note-content-summary summary { min-height:48px; cursor:pointer; }
 .note-quiz .btn { min-height:48px; }
 #app .stamp-badge.helped, #app .stamp-badge.unknown { background:#f5f1df; }
 @media (max-width:1100px) {
