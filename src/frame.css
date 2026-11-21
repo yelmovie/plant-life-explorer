@@ -830,7 +830,7 @@ body .note-quiz > summary small { margin-left: 4px; padding: 2px 7px; border-rad
   #app .field-mission-view .bag-pick { grid-template-columns: 110px minmax(0, 1fr); min-height: 112px; }
   #app .field-mission-view .bag-pick > .bag-art { width: 110px; height: 96px; }
   #app .field-mission-view .bag-pick strong { font-size: 22px; }
-  #app .field-mission-view .field-bag-predict .bag-art { max-height: calc(var(--stage-h) * .7); }
+  #app .field-mission-view .field-bag-predict .bag-art { max-height: calc(var(--stage-h) * .7); height: clamp(220px, calc(var(--stage-h) * .66), 440px); }
   #app .field-mission-view .field-bag-predict .field-predict-picture { background: none; }
   #app .field-mission-view .field-season-predictions .field-predict-picture { width: min(100%, calc((var(--stage-h) - 190px) * 1.5)); }
 }
@@ -883,7 +883,6 @@ body .note-quiz > summary small { margin-left: 4px; padding: 2px 7px; border-rad
   #app .activity-2 .season-caption { font-size: 22px; }
   /* 5장 현장 예상: 가방 그림과 두 선택 버튼을 키운다. */
   #app .field-mission-view .field-bag-predict { grid-template-columns: minmax(0, 46%) minmax(0, 1fr); gap: 28px; }
-  #app .field-mission-view .field-bag-predict .bag-art { height: clamp(220px, calc(var(--stage-h) * .66), 440px); }
   #app .field-mission-view .field-predict-choices { gap: 16px; }
   #app .field-mission-view .field-predict-choices .btn { min-height: 92px; font-size: 24px; }
   /* 5장 설계·시험: 오른쪽 질문 칸을 세로 가운데에 둔다. */
