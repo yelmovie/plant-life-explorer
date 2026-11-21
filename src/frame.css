@@ -17,10 +17,12 @@
 
 /* ── 2. Left column: 오늘의 연구 + Leafy (landscape tablets and up; narrower screens stack, see §7) ── */
 @media (min-width: 901px) and (orientation: landscape) {
+  /* 2026-11-21 정리: §11·§12에서 덮어쓰던 값(왼쪽 칸 없이 가로 전체, 위 알약 자리 72px)을 이 자리로 합쳤다. */
   #app .exploration-activity {
-    grid-template-columns: var(--today-w) minmax(0, 1fr);
-    grid-template-rows: 56px minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 0 minmax(0, 1fr) auto;
     column-gap: 18px;
+    padding: 72px 16px 0; row-gap: 6px;
   }
 }
 
@@ -709,7 +711,6 @@ body .note-quiz > summary small { margin-left: 4px; padding: 2px 7px; border-rad
 #app .activity-pill .mission-step > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 #app .activity-pill .mission-step b { width: 30px; height: 30px; font-size: 18px; }
 @media (min-width: 901px) and (orientation: landscape) {
-  #app .exploration-activity { padding-top: 72px; grid-template-rows: 0 minmax(0, 1fr) auto; }
   #app .activity-pill { grid-area: auto; position: absolute; top: var(--hud-edge); left: 50%; transform: translateX(-50%); z-index: 21; max-width: calc(100% - 580px); }
   /* 자동 진행 joins the sound/settings row instead of hanging over the scene. */
   #app .topbar .auto-play-dock { position: static; order: -1; margin: 0; }
@@ -733,7 +734,6 @@ body .note-quiz > summary small { margin-left: 4px; padding: 2px 7px; border-rad
    · 지금 할 일 말풍선 · 주 버튼. 장면 뒤 종이판은 걷어 내 배경 그림이 보이게 한다. ── */
 #app .exploration-activity > .learning-layout { grid-column: 1 / -1; grid-row: 2; }
 @media (min-width: 901px) and (orientation: landscape) {
-  #app .exploration-activity { grid-template-columns: minmax(0, 1fr); grid-template-rows: 0 minmax(0, 1fr) auto; padding: 72px 16px 0; row-gap: 6px; }
   #app .exploration-activity .learning-footer > div { flex-wrap: nowrap; align-items: flex-end; }
 }
 #app .exploration-activity .learning-footer { padding: 2px 0 10px; }
