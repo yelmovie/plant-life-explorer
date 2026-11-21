@@ -19,6 +19,12 @@ wrangler pages deploy dist --project-name leafy-garden --branch main
 
 이 Mac에는 시스템 Node가 없다. 도구는 외장 SSD에만 둔다: Node `DevCaches/tools/node-v24.22.2-darwin-arm64`, wrangler `DevCaches/tools/wrangler-4.154.0`(exFAT라 `--no-bin-links`로 설치). wrangler 로그인 정보는 `HOME=DevCaches/tools/wrangler-home`으로 실행해 SSD에 저장한다. 빌드는 `ESBUILD_MODULE_PATH`를 그 wrangler의 `node_modules/esbuild`로 지정한다. exFAT가 만드는 `._*` 파일은 업로드 전에 `dist`에서 지운다.
 
+## 배포 — 2026-11-21 (110점 계획 3-4단계: 코드 구조 정리, 동작 같음)
+
+- E1 커밋 `c5001eb`·`81f7d70`·`c0a03b4`·`e5f2c79` → https://8b75b8fb.leafy-garden.pages.dev. E2 커밋 `37c5e90` → https://5fcdb322.leafy-garden.pages.dev. 운영 `build-info.json` 커밋 일치, `prodcmp` 파일 40개 일치.
+- 바뀐 것: 학생이 보는 화면·소리·진행·저장은 같다. `frame.css` 뒤쪽 덮어쓰기를 원래 자리로 합침, `learning.js`의 3·4장 화면 함수를 `learning-lab-garden.js`로 옮김.
+- 확인(Mac, Node v24.22.2): 이동마다 `npm run check`·`npm test`(마지막 192/192), 전 화면 기준본 144장 계산된 스타일 비교 차이 0, 저장 표본 3개 같음, 빌드 328파일. 운영: 브라우저 테스트 3개(전달 터치는 테스트 타이밍 고친 뒤 3/3), 뒤로 가기 6가지. 되돌릴 대상: https://f4d0fc65.leafy-garden.pages.dev (`f94d78a`).
+
 ## 배포 — 2026-11-21 (110점 계획 3-3b단계: 재도전 목표·5장 탐구 기록 면적)
 
 - 커밋 `f94d78a`, 배포 https://f4d0fc65.leafy-garden.pages.dev. 운영 `build-info.json` 커밋 일치, `prodcmp` 파일 40개 일치.
