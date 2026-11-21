@@ -44,11 +44,11 @@
 }
 
 /* ── 3. Footer: one row — tools, where-am-I chip, the single primary action. ── */
-#app .exploration-activity .learning-footer { padding: 8px 0 14px; }
-#app .exploration-activity .learning-footer > div { align-items: center; }
+#app .exploration-activity .learning-footer { padding: 2px 0 10px; }
+#app .exploration-activity .learning-footer > div { align-items: center; gap: 12px; }
 /* Progress numbers stay off the painting (iscream screen frame); the left steps show progress. */
 #app .exploration-activity .learning-footer .activity-route { display: none; }
-#app .exploration-activity .learning-footer > div > .primary { margin-left: auto; }
+#app .exploration-activity .learning-footer > div > .primary { flex: none; margin-left: auto; }
 
 /* ── 4. Field missions: objective bar carries progress and "다음 도전"; workspace sits on a paper stage. ── */
 #app .field-mission { gap: 10px; }
@@ -737,15 +737,12 @@ body .note-quiz > summary small { margin-left: 4px; padding: 2px 7px; border-rad
 @media (min-width: 901px) and (orientation: landscape) {
   #app .exploration-activity .learning-footer > div { flex-wrap: nowrap; align-items: flex-end; }
 }
-#app .exploration-activity .learning-footer { padding: 2px 0 10px; }
-#app .exploration-activity .learning-footer > div { gap: 12px; }
 #app .learning-footer .guide-talk { flex: 1 1 auto; min-width: 0; flex-direction: row; align-items: flex-end; justify-content: flex-start; gap: 6px; }
 #app .learning-footer .guide-avatar { flex: none; padding: 0; }
 #app .exploration-activity .learning-footer .guide-avatar .guide-portrait { height: clamp(72px, 10vh, 96px); }
 #app .exploration-activity .learning-footer .guide-avatar .guide-partner { display: none; }
 #app .exploration-activity .learning-footer .guide-talk .guide-bubble { flex: 0 1 auto; max-width: min(820px, 100%); margin: 0 0 6px; border-radius: 20px 20px 20px 6px; }
 #app .exploration-activity .learning-footer .guide-talk .guide-bubble::after { display: none; }
-#app .exploration-activity .learning-footer > div > .primary { flex: none; margin-left: auto; }
 #app .exploration-activity .learning-footer .objective-keys { flex: none; align-self: center; }
 #app .field-mission .mission-workspace { background: none; border: 0; box-shadow: none; padding: 4px 0; }
 /* Big paper boards behind the work are lifted off so the painting shows; text keeps its own small plate. */
