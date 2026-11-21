@@ -19,6 +19,12 @@ wrangler pages deploy dist --project-name leafy-garden --branch main
 
 이 Mac에는 시스템 Node가 없다. 도구는 외장 SSD에만 둔다: Node `DevCaches/tools/node-v24.22.2-darwin-arm64`, wrangler `DevCaches/tools/wrangler-4.154.0`(exFAT라 `--no-bin-links`로 설치). wrangler 로그인 정보는 `HOME=DevCaches/tools/wrangler-home`으로 실행해 SSD에 저장한다. 빌드는 `ESBUILD_MODULE_PATH`를 그 wrangler의 `node_modules/esbuild`로 지정한다. exFAT가 만드는 `._*` 파일은 업로드 전에 `dist`에서 지운다.
 
+## 배포 — 2026-11-21 (110점 계획 3-3b단계: 재도전 목표·5장 탐구 기록 면적)
+
+- 커밋 `f94d78a`, 배포 https://f4d0fc65.leafy-garden.pages.dev. 운영 `build-info.json` 커밋 일치, `prodcmp` 파일 40개 일치.
+- 바뀐 것: 끝낸 장의 「다시 도전」(새 저장 칸 `fieldChallenges`, 옛 저장 호환), 5장 기록 화면 기록 칸 23%(최소 236px).
+- 확인(Mac, Node v24.22.2): `npm run check` 60개, `npm test` 192/192, 빌드 328파일. 브라우저 테스트 3개 로컬·운영 통과, 재도전 흐름·5장 면적·뒤로 가기 운영 측정. 되돌릴 대상: https://be4dbd41.leafy-garden.pages.dev (`1430f10`).
+
 ## 배포 — 2026-11-21 (110점 계획 3-2a단계: 뒤로 가기·첫 화면·연구 노트 48px)
 
 - 커밋 `1430f10`, 배포 https://be4dbd41.leafy-garden.pages.dev. 운영 `build-info.json` 커밋 일치, `prodcmp` 파일 40개 일치.
