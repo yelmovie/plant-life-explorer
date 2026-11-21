@@ -1,18 +1,18 @@
 {
   "no": "03",
   "name": "초록정원 연구기지",
-  "appCommit": "2fbeb50",
-  "measuredAt": "2026-11-21T07:30+09:00",
+  "appCommit": "1430f10",
+  "measuredAt": "2026-11-21T09:45+09:00",
   "score": {
-    "total": 89,
-    "noDevice": 94,
+    "total": 90,
+    "noDevice": 95,
     "items": {
       "learning": 9,
       "fun": 8,
       "function": 10,
       "code": 8,
       "design": 9,
-      "a11y": 8,
+      "a11y": 9,
       "perf": 9,
       "firstScreen": 9,
       "data": 9,
@@ -60,15 +60,15 @@
     "voiceLines": 94
   },
   "weight": {
-    "firstScreenKB": 2171,
+    "firstScreenKB": 2125,
     "distMB": 55
   },
   "robust": {
     "reloadRestores": true,
     "corruptSaveHandled": true,
     "offlineRevisit": true,
-    "backButtonStaysInApp": false,
+    "backButtonStaysInApp": true,
     "certificatePrintsOnePage": true
   },
-  "notes": "activities=현장 임무 5 + 본 탐구 10, steps=현장 임무 단계 수(2·3·3·3·2) 중앙값. autoRunSeconds=운영 learning-journey 완주 테스트(브라우저 시작 포함). 놀이 영역은 2026-11-20 운영 스윕 1280×800 현장·탐구 화면 중앙값(5장 기록 쪽만 43%). 글자·그림 수는 1장 현장·3장 현장·3장 실험실 3화면 중앙값(운영 7823969 측정, 3-1에서 이 화면 글자는 안 바뀜). rewardEffects=도장·성취 카드·완료 효과·보상 창(코드 기준 셈). transitionEffects=null: 전환 효과를 같은 자로 세지 못함. voiceLines=리피 68 + 악당 25 + 환영 1(파일 수). offlineRevisit=11-20 오프라인 3주소 통과 기록(이번에 다시 재지 않음). 뒤로 가기는 앱 밖으로 나감(진행은 유지) — 3-2단계에서 바꾼다."
+  "notes": "activities=현장 임무 5 + 본 탐구 10, steps=현장 임무 단계 수(2·3·3·3·2) 중앙값. autoRunSeconds=운영 learning-journey 완주 테스트(브라우저 시작 포함). 놀이 영역은 2026-11-20 운영 스윕 1280×800 현장·탐구 화면 중앙값(5장 기록 쪽만 43%). 글자·그림 수는 1장 현장·3장 현장·3장 실험실 3화면 중앙값(운영 7823969 측정, 3-1에서 이 화면 글자는 안 바뀜). rewardEffects=도장·성취 카드·완료 효과·보상 창(코드 기준 셈). transitionEffects=null: 전환 효과를 같은 자로 세지 못함. voiceLines=리피 68 + 악당 25 + 환영 1(파일 수). offlineRevisit=11-20 오프라인 3주소 통과 기록(이번에 다시 재지 않음). 뒤로 가기는 3-2a에서 앱 안 앞 화면으로 바꿈(운영 확인). firstScreenKB는 3-2a 운영 측정(시작 단추가 보일 때까지, 캐시 없음)."
 }

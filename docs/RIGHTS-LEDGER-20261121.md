@@ -23,30 +23,30 @@
 
 | ID | 파일(묶음) | 만든 곳 | 만든 날·기록 위치 | 이용 조건 | 근거 파일 경로 | 상태 |
 |---|---|---|---|---|---|---|
-| I1 | 기본 2D 그림 15장: `generated/water_hyacinth_whole`, `hyacinth_petiole_whole`, `hyacinth_petiole_cutaway`, `aloe_leaf_cutaway`, `aloe_plant`, `cherry_leaf`, `ginkgo_leaf`, `grass_leaf`, `cherry_tree`, `lotus_leaf_whole`, `lotus_surface_diagram`, `plant_lab_background`, `garden_hero`, `research_bag_body`, `research_bag_closed` (.webp) | OpenAI 내장 image_gen | 2026-10-14. 프롬프트 `docs/ASSET-PROMPTS-20261014.json`, 목록 `docs/ASSET-LIST-20261014.md`, PNG 원본 `_source/generated-images/` | 생성 계정의 서비스 조건·회사 이용 권한은 CREDITS에서 "배포 전 문서 확인 대상"으로 남아 있음 | `assets/CREDITS.md`(도구·라이선스 검토, 배포 전 문서 확인 목록), `docs/ASSET-LIST-20261014.md` | 근거 약함 |
-| I2 | 10-15 추가 그림 12장: `mascot_leaf`, `mascot_water`, `mascot_flower`, `notebook_dry`, `notebook_wet`, `bag_lotus_open`, `bag_lotus_closed`, `reward_garden`, `reward_observatory`, `reward_seasons`, `reward_water`, `reward_workshop` | OpenAI 내장 image_gen(Codex). 캐릭터 3종은 기획자 제공 캐릭터 시트(`_source/branding/characters.png`)를 참고해 편집 생성 | 2026-10-15. 줄별 프롬프트·생성 경로 `docs/new-assets-20261015.json` | I1과 같음. 캐릭터는 기획자 제공 시트의 제공 범위도 걸림(I7과 같은 확인 대상) | `docs/new-assets-20261015.json`, `assets/CREDITS.md` | 근거 약함 |
-| I3 | 보상 썸네일 5장 `generated/reward_*_thumb.webp` | I2의 보상 그림을 폭 240px로 줄임 | 2026-10-19. `assets/CREDITS.md` 10-19 절 | I2를 따름 | `assets/CREDITS.md` | 근거 약함 |
-| I4 | `generated/greenhouse_studio_v1.webp` | OpenAI image_gen | 2026-10-18. `docs/new-assets-20261018.json`(프롬프트) | I1과 같음 | `docs/new-assets-20261018.json`, `assets/CREDITS.md` | 근거 약함 |
-| I5 | `generated/map_trail_v2.webp`, `workshop_studio_v2.webp` | OpenAI image_gen | 2026-10-18. `docs/map_trail_v2-prompt.txt`, `docs/workshop_studio_v2-prompt.txt` | I1과 같음 | `assets/CREDITS.md`(10-18 탐구·입체 조작 개편) | 근거 약함 |
-| I6 | `generated/cherry_seasons_v2.webp`, `sowthistle_seasons_v2.webp` | OpenAI image_gen(I5와 같은 작업) | 2026-10-18. 별도 프롬프트 파일은 없음, CREDITS 문장만 | I1과 같음 | `assets/CREDITS.md` | 근거 약함 |
-| I7 | 활동 배경 10장 `generated/bg_m1_1_scan` … `bg_m5_2_test` | 기획자(옐샘)가 설계 대화에서 생성형 AI로 만들어 제공. 1600px WebP로 변환 | 2026-10-19 반영. 원본 `_source/original-images/chatgpt_gallery_031~040.png`, 편집본 `_source/generated-images/bg_m*.png` | 원본 권리와 회사 배포 허용 범위는 "제공자 확인 대상" | `assets/CREDITS.md`(10-19 활동 배경·표정·도장) | 근거 약함 |
-| I8 | 표정 12장 `generated/mood_{leaf,water,flower}_{idle,happy,think,surprise}` | 기획자 제공 투명 표정 시트에서 잘라 냄 | 2026-10-19. 원본 `_source/original-images/chatgpt_gallery_043.png`, `_source/generated-images/mood_sheet.png` | I7과 같음 | `assets/CREDITS.md` | 근거 약함 |
+| I1 | 기본 2D 그림 15장: `generated/water_hyacinth_whole`, `hyacinth_petiole_whole`, `hyacinth_petiole_cutaway`, `aloe_leaf_cutaway`, `aloe_plant`, `cherry_leaf`, `ginkgo_leaf`, `grass_leaf`, `cherry_tree`, `lotus_leaf_whole`, `lotus_surface_diagram`, `plant_lab_background`, `garden_hero`, `research_bag_body`, `research_bag_closed` (.webp) | OpenAI 내장 image_gen | 2026-10-14. 프롬프트 `docs/ASSET-PROMPTS-20261014.json`, 목록 `docs/ASSET-LIST-20261014.md`, PNG 원본 `_source/generated-images/` | ChatGPT 유료 요금제(사용자 확인 2026-11-21) | `assets/CREDITS.md`(도구·라이선스 검토, 배포 전 문서 확인 목록), `docs/ASSET-LIST-20261014.md`; 사용자 확인 2026-11-21(「16곳 그림은 전부 Codex(GPT), 영상은 제미나이, 모두 유료 요금제」 → "전부 맞아"), `_shared/CODEX-IMAGE-RECORDS-20261121.md` | 확인됨(사용자 확인) |
+| I2 | 10-15 추가 그림 12장: `mascot_leaf`, `mascot_water`, `mascot_flower`, `notebook_dry`, `notebook_wet`, `bag_lotus_open`, `bag_lotus_closed`, `reward_garden`, `reward_observatory`, `reward_seasons`, `reward_water`, `reward_workshop` | OpenAI 내장 image_gen(Codex). 캐릭터 3종은 기획자 제공 캐릭터 시트(`_source/branding/characters.png`)를 참고해 편집 생성 | 2026-10-15. 줄별 프롬프트·생성 경로 `docs/new-assets-20261015.json` | ChatGPT 유료 요금제(사용자 확인 2026-11-21) | `docs/new-assets-20261015.json`, `assets/CREDITS.md`; 사용자 확인 2026-11-21(「16곳 그림은 전부 Codex(GPT), 영상은 제미나이, 모두 유료 요금제」 → "전부 맞아"), `_shared/CODEX-IMAGE-RECORDS-20261121.md` | 확인됨(사용자 확인) |
+| I3 | 보상 썸네일 5장 `generated/reward_*_thumb.webp` | I2의 보상 그림을 폭 240px로 줄임 | 2026-10-19. `assets/CREDITS.md` 10-19 절 | ChatGPT 유료 요금제(사용자 확인 2026-11-21) | `assets/CREDITS.md`; 사용자 확인 2026-11-21(「16곳 그림은 전부 Codex(GPT), 영상은 제미나이, 모두 유료 요금제」 → "전부 맞아"), `_shared/CODEX-IMAGE-RECORDS-20261121.md` | 확인됨(사용자 확인) |
+| I4 | `generated/greenhouse_studio_v1.webp` | OpenAI image_gen | 2026-10-18. `docs/new-assets-20261018.json`(프롬프트) | ChatGPT 유료 요금제(사용자 확인 2026-11-21) | `docs/new-assets-20261018.json`, `assets/CREDITS.md`; 사용자 확인 2026-11-21(「16곳 그림은 전부 Codex(GPT), 영상은 제미나이, 모두 유료 요금제」 → "전부 맞아"), `_shared/CODEX-IMAGE-RECORDS-20261121.md` | 확인됨(사용자 확인) |
+| I5 | `generated/map_trail_v2.webp`, `workshop_studio_v2.webp` | OpenAI image_gen | 2026-10-18. `docs/map_trail_v2-prompt.txt`, `docs/workshop_studio_v2-prompt.txt` | ChatGPT 유료 요금제(사용자 확인 2026-11-21) | `assets/CREDITS.md`(10-18 탐구·입체 조작 개편); 사용자 확인 2026-11-21(「16곳 그림은 전부 Codex(GPT), 영상은 제미나이, 모두 유료 요금제」 → "전부 맞아"), `_shared/CODEX-IMAGE-RECORDS-20261121.md` | 확인됨(사용자 확인) |
+| I6 | `generated/cherry_seasons_v2.webp`, `sowthistle_seasons_v2.webp` | OpenAI image_gen(I5와 같은 작업) | 2026-10-18. 별도 프롬프트 파일은 없음, CREDITS 문장만 | ChatGPT 유료 요금제(사용자 확인 2026-11-21) | `assets/CREDITS.md`; 사용자 확인 2026-11-21(「16곳 그림은 전부 Codex(GPT), 영상은 제미나이, 모두 유료 요금제」 → "전부 맞아"), `_shared/CODEX-IMAGE-RECORDS-20261121.md` | 확인됨(사용자 확인) |
+| I7 | 활동 배경 10장 `generated/bg_m1_1_scan` … `bg_m5_2_test` | 기획자(옐샘)가 설계 대화에서 생성형 AI로 만들어 제공. 1600px WebP로 변환 | 2026-10-19 반영. 원본 `_source/original-images/chatgpt_gallery_031~040.png`, 편집본 `_source/generated-images/bg_m*.png` | 기획자(사용자)가 ChatGPT(GPT 이미지)로 만든 그림, 유료 요금제(사용자 확인 2026-11-21) | `assets/CREDITS.md`(10-19 활동 배경·표정·도장); 사용자 확인 2026-11-21(「16곳 그림은 전부 Codex(GPT), 영상은 제미나이, 모두 유료 요금제」 → "전부 맞아"), `_shared/CODEX-IMAGE-RECORDS-20261121.md` | 확인됨(사용자 확인) |
+| I8 | 표정 12장 `generated/mood_{leaf,water,flower}_{idle,happy,think,surprise}` | 기획자 제공 투명 표정 시트에서 잘라 냄 | 2026-10-19. 원본 `_source/original-images/chatgpt_gallery_043.png`, `_source/generated-images/mood_sheet.png` | 기획자(사용자)가 ChatGPT(GPT 이미지)로 만든 그림, 유료 요금제(사용자 확인 2026-11-21) | `assets/CREDITS.md`; 사용자 확인 2026-11-21(「16곳 그림은 전부 Codex(GPT), 영상은 제미나이, 모두 유료 요금제」 → "전부 맞아"), `_shared/CODEX-IMAGE-RECORDS-20261121.md` | 확인됨(사용자 확인) |
 | I9 | 도장 3장 `generated/stamp_direct`, `stamp_fixed`, `stamp_complete` | Higgsfield GPT Image 2.5 | 2026-10-19. `docs/icon-prompts.md`, PNG `_source/generated-images/stamp_*.png` | Higgsfield 계정의 요금제·회사 배포 조건은 "배포 전 문서 확인 대상" | `assets/CREDITS.md`, `docs/icon-prompts.md` | 근거 약함 |
 | I10 | 탐험 장면 4장 `generated/expedition_hero_20261020`, `expedition_hyacinth_tank_20261020`, `expedition_petiole_model_20261020`, `expedition_restored_garden_20261020` | Higgsfield GPT Image 2.5 high/2k(수조·정원은 기존 그림 참조 업로드) | 2026-10-20. job ID·프롬프트·결과 URL·해시 `docs/ASSET-PROVENANCE-20261020.json` | I9와 같음 | `docs/ASSET-PROVENANCE-20261020.json`, `assets/CREDITS.md` | 근거 약함 |
 | I11 | 도구 그림 5장 `generated/expedition_tool_{lens,camera,water,fabric,bag}` | Higgsfield 도구 아틀라스(`_source/generated-images/expedition_tools_atlas_20261020.png`)에서 분리 | 2026-10-20. `docs/ASSET-PROVENANCE-20261020.json` | I9와 같음 | 같은 파일 | 근거 약함 |
 | I12 | 표본 잎 3장 `generated/field_leaf_{maple,pine,camellia}` | Higgsfield 잎 아틀라스에서 분리 | 2026-10-20. `docs/ASSET-PROVENANCE-20261020.json` | I9와 같음 | 같은 파일 | 근거 약함 |
-| I13 | `generated/expedition_petiole_clear_20261023.webp` | OpenAI 내장 image_gen으로 I10의 잎자루 그림 배경만 투명 편집 | 2026-10-23. 크기·해시 `assets/CREDITS.md` 10-23 절(요약은 원문 프롬프트가 아님) | I1·I9 둘 다 걸림 | `assets/CREDITS.md` | 근거 약함 |
+| I13 | `generated/expedition_petiole_clear_20261023.webp` | OpenAI 내장 image_gen으로 I10의 잎자루 그림 배경만 투명 편집 | 2026-10-23. 크기·해시 `assets/CREDITS.md` 10-23 절(요약은 원문 프롬프트가 아님) | ChatGPT 유료 요금제(사용자 확인 2026-11-21) | `assets/CREDITS.md`; 사용자 확인 2026-11-21(「16곳 그림은 전부 Codex(GPT), 영상은 제미나이, 모두 유료 요금제」 → "전부 맞아"), `_shared/CODEX-IMAGE-RECORDS-20261121.md` | 확인됨(사용자 확인) |
 | I14 | CSS·SVG 대체 9장 `generated/cactus_plant`, `float_model_air`, `float_model_solid`, `habitat_water`, `habitat_grass`, `habitat_dry`, `cloth_swatch`, `cherry_bud_spring`, `sowthistle_bud_spring` | Higgsfield GPT Image 2.5(high, 2k), 커넥터 크레딧 24.75 | 2026-10-25. job 앞 8자·해시 표 `assets/CREDITS.md`, 원본 `_source/generated-images/originals-20261025/` | I9와 같음 | `assets/CREDITS.md`(10-25 절) | 근거 약함 |
 | I15 | 계절 질감 4장 `generated/season_cherry_blossom`, `season_cherry_leaf_autumn`, `season_cherry_winter_bud`, `season_sowthistle_crown_bud` | Higgsfield GPT Image 2.5(앞 3장). crown_bud는 Meshy 입력 그림 `M2-sowthistle-root.png`(Higgsfield)을 잘라 만듦 | 2026-10-25. 프롬프트 `docs/meshy-season-20261025/image-prompts.txt` | I9와 같음 | `assets/CREDITS.md`(10-25 계절 타임랩 절) | 근거 약함 |
-| I16 | `generated/guide_hand_leaf.webp` | OpenAI 내장 image_gen | 2026-10-31. 원문 프롬프트 `_source/generated-images/guide_hand_leaf_20261031.prompt.txt`, 커밋 `03da7ad`·`5efdd28` | I1과 같음. CREDITS에는 이 그림 줄이 없음 | `_source/generated-images/guide_hand_leaf_20261031.prompt.txt` | 근거 약함 |
-| I17 | `generated/rain_cloud_clay.webp` | 기록 없음. 편집용 PNG `_source/generated-images/rain_cloud_clay.png`만 있음 | 2026-10-31 커밋 `03da7ad`. `docs/DEPLOYMENT.md` 93행에 "구름 그림 `rain_cloud_clay`" 한마디뿐 | 알 수 없음 | `docs/DEPLOYMENT.md` | **출처 미확인** |
-| I18 | 지도 전투 그림 8장 `combat/map-{hero,ally}-reaction(-v2)`, `map-villain-{left,right}(-v2)` | 저장소·`_shared` 기록 없음. `_scratch/map-encounters-02-05-20261114/README.md`에 "기존 생성 악당 시안과 원본 지도 캐릭터를 바탕으로 만든 WebP 아틀라스"라는 말만 있고 도구 이름은 없음 | 2026-11-12~14 커밋 `cda96a8`, `d3b5165`, `0377505`(본문 없음) | 알 수 없음 | git 기록, `docs/MAP-COMBAT-20261109.md`(옛 `leafy-taggle.webp` 시트 기록, 지금 파일과 다름) | **출처 미확인** |
-| I19 | 리피 대화 초상 `npc-dialogue/lipi.webp` | Codex 내장 이미지 도구(GPT 이미지). 내장 원본 경로가 `~/.codex/generated_images/…` | 2026-11-13 커밋 `dd99764`. 기록은 `_scratch/npc-03-04-20261113/image-origin-cleanup.json`·`HANDOFF.md`에만 있고 저장소 CREDITS에는 없음 | ChatGPT 계정 조건 미확인 | `_scratch/npc-03-04-20261113/image-origin-cleanup.json` | 근거 약함 |
-| I20 | 성취 카드 10장 `reward-cards/card-1~5-*.webp`(640×960), `thumb-1~5-*.webp`(96×144) | GPT 이미지(Codex 내장 이미지 도구, `gpt-imagegen` 스킬) | 2026-11-18 커밋 `665141b`. 설정·생성 PNG는 `_scratch/reward-cards-20261118/specs/03.json`, `gen/03/` | ChatGPT 계정 조건 미확인 | `assets/CREDITS.md`(11-18 성취 카드), `_shared/reward-cards/INTEGRATION.md` | 근거 약함 |
-| I21 | 제목 그림글자 `title-logo.webp` | ChatGPT 구독 계정의 Codex 내장 이미지 도구 | 2026-11-18 커밋 `24dce7f`. 원본 `_source/branding/title-logo-20261118.png` | 구독 요금제 이름·회사 이용 조건 기록 없음 | `assets/CREDITS.md`(11-18 타이틀 그림글자) | 근거 약함 |
-| I22 | 공유 미리보기 `og/green-garden-og-20261027.png`(1774×887) | 기록 없음. "선택한 1번 온실 탐험형 이미지"라는 말만 있음 | 2026-10-27 커밋 `55c5fa6`. `docs/DEPLOYMENT.md` 151~161행 | 알 수 없음 | `docs/DEPLOYMENT.md` | **출처 미확인** |
-| I23 | 설치 아이콘 2장 `icons/icon-192.png`, `icon-512.png` | I2의 `mascot_leaf`를 줄여 바탕색 위에 배치 | 2026-10-19. `docs/icon-prompts.md` | I2를 따름 | `assets/CREDITS.md`(10-19 설정·오프라인 정리) | 근거 약함 |
-| I24 | 영상 포스터 2장 `videos/intro-poster.webp`, `outro-poster.webp` | 제공받은 원본 영상의 첫 장면(README "첫 장면 포스터") | 2026-10-23 커밋 `4c5884f` | V1을 따름 | `README.md` 11행 | **출처 미확인** |
+| I16 | `generated/guide_hand_leaf.webp` | OpenAI 내장 image_gen | 2026-10-31. 원문 프롬프트 `_source/generated-images/guide_hand_leaf_20261031.prompt.txt`, 커밋 `03da7ad`·`5efdd28` | ChatGPT 유료 요금제(사용자 확인 2026-11-21) | `_source/generated-images/guide_hand_leaf_20261031.prompt.txt`; 사용자 확인 2026-11-21(「16곳 그림은 전부 Codex(GPT), 영상은 제미나이, 모두 유료 요금제」 → "전부 맞아"), `_shared/CODEX-IMAGE-RECORDS-20261121.md` | 확인됨(사용자 확인) |
+| I17 | `generated/rain_cloud_clay.webp` | Codex(GPT 이미지) — 사용자 확인 | 2026-10-31 커밋 `03da7ad`. 11-05 이전이라 이 맥에 생성 로그 없음 | ChatGPT 유료 요금제(사용자 확인 2026-11-21) | `docs/DEPLOYMENT.md`; 사용자 확인 2026-11-21(「16곳 그림은 전부 Codex(GPT), 영상은 제미나이, 모두 유료 요금제」 → "전부 맞아"), `_shared/CODEX-IMAGE-RECORDS-20261121.md` | 확인됨(사용자 확인) |
+| I18 | 지도 전투 그림 8장 `combat/map-{hero,ally}-reaction(-v2)`, `map-villain-{left,right}(-v2)` | v2 4장(코드가 쓰는 것): Codex 내장 이미지 도구(GPT 이미지) — 생성 로그 있음. v1 4장(코드가 안 쓰는데 빌드에 들어감): Codex(GPT 이미지) — 사용자 확인 | v2: 2026-11-14 KST, Codex 세션 `rollout-2026-11-14T06-05-13-01a1d6ba…`의 image_gen 4건(2026-11-13T21:07:18Z~21:09:11Z, 「SINGLE PRODUCTION SPRITE ATLAS, strictly 6 equally wide columns…」), 프롬프트 `_scratch/redraw-02-05-20261114/prompts.json`의 "3", 결과 `_scratch/redraw-02-05-20261114/3/map-*-v2.webp`, 커밋 `0377505`. v1: 11-14 커밋 `d3b5165`·`cda96a8` | ChatGPT 유료 요금제(사용자 확인 2026-11-21) | git 기록, `docs/MAP-COMBAT-20261109.md`(옛 `leafy-taggle.webp` 시트 기록, 지금 파일과 다름); `_shared/codex-image-records-20261121/index.jsonl`, `_scratch/map-redraw-20261114/RELEASES.json`(n=3), 사용자 확인 2026-11-21(「16곳 그림은 전부 Codex(GPT), 영상은 제미나이, 모두 유료 요금제」 → "전부 맞아"), `_shared/CODEX-IMAGE-RECORDS-20261121.md` | 확인됨(v2 생성 로그, v1 사용자 확인) |
+| I19 | 리피 대화 초상 `npc-dialogue/lipi.webp` | Codex 내장 이미지 도구(GPT 이미지). 내장 원본 경로가 `~/.codex/generated_images/…` | 2026-11-13 커밋 `dd99764`. 기록은 `_scratch/npc-03-04-20261113/image-origin-cleanup.json`·`HANDOFF.md`에만 있고 저장소 CREDITS에는 없음 | ChatGPT 유료 요금제(사용자 확인 2026-11-21) | `_scratch/npc-03-04-20261113/image-origin-cleanup.json`; 사용자 확인 2026-11-21(「16곳 그림은 전부 Codex(GPT), 영상은 제미나이, 모두 유료 요금제」 → "전부 맞아"), `_shared/CODEX-IMAGE-RECORDS-20261121.md` | 확인됨(사용자 확인) |
+| I20 | 성취 카드 10장 `reward-cards/card-1~5-*.webp`(640×960), `thumb-1~5-*.webp`(96×144) | GPT 이미지(Codex 내장 이미지 도구, `gpt-imagegen` 스킬) | 2026-11-18 커밋 `665141b`. 설정·생성 PNG는 `_scratch/reward-cards-20261118/specs/03.json`, `gen/03/` | ChatGPT 유료 요금제(사용자 확인 2026-11-21) | `assets/CREDITS.md`(11-18 성취 카드), `_shared/reward-cards/INTEGRATION.md`; 사용자 확인 2026-11-21(「16곳 그림은 전부 Codex(GPT), 영상은 제미나이, 모두 유료 요금제」 → "전부 맞아"), `_shared/CODEX-IMAGE-RECORDS-20261121.md` | 확인됨(사용자 확인) |
+| I21 | 제목 그림글자 `title-logo.webp` | ChatGPT 구독 계정의 Codex 내장 이미지 도구 | 2026-11-18 커밋 `24dce7f`. 원본 `_source/branding/title-logo-20261118.png` | ChatGPT 유료 요금제(사용자 확인 2026-11-21) | `assets/CREDITS.md`(11-18 타이틀 그림글자); 사용자 확인 2026-11-21(「16곳 그림은 전부 Codex(GPT), 영상은 제미나이, 모두 유료 요금제」 → "전부 맞아"), `_shared/CODEX-IMAGE-RECORDS-20261121.md` | 확인됨(사용자 확인) |
+| I22 | 공유 미리보기 `og/green-garden-og-20261027.png`(1774×887) | Codex(GPT 이미지) — 사용자 확인 | 2026-10-27 커밋 `55c5fa6`. 11-05 이전이라 생성 로그 없음, `docs/DEPLOYMENT.md` 151~161행 | ChatGPT 유료 요금제(사용자 확인 2026-11-21) | `docs/DEPLOYMENT.md`; 사용자 확인 2026-11-21(「16곳 그림은 전부 Codex(GPT), 영상은 제미나이, 모두 유료 요금제」 → "전부 맞아"), `_shared/CODEX-IMAGE-RECORDS-20261121.md` | 확인됨(사용자 확인) |
+| I23 | 설치 아이콘 2장 `icons/icon-192.png`, `icon-512.png` | I2의 `mascot_leaf`를 줄여 바탕색 위에 배치 | 2026-10-19. `docs/icon-prompts.md` | ChatGPT 유료 요금제(사용자 확인 2026-11-21) | `assets/CREDITS.md`(10-19 설정·오프라인 정리); 사용자 확인 2026-11-21(「16곳 그림은 전부 Codex(GPT), 영상은 제미나이, 모두 유료 요금제」 → "전부 맞아"), `_shared/CODEX-IMAGE-RECORDS-20261121.md` | 확인됨(사용자 확인) |
+| I24 | 영상 포스터 2장 `videos/intro-poster.webp`, `outro-poster.webp` | V1 영상의 첫 장면(제미나이 영상) — 사용자 확인 | 2026-10-23 커밋 `4c5884f` | V1을 따름(유료 요금제, 사용자 확인) | `README.md` 11행; 사용자 확인 2026-11-21(「16곳 그림은 전부 Codex(GPT), 영상은 제미나이, 모두 유료 요금제」 → "전부 맞아"), `_shared/CODEX-IMAGE-RECORDS-20261121.md` | 확인됨(사용자 확인) |
 
 ## 2. 3D 모형 (GLB)
 
@@ -59,7 +59,7 @@
 
 | ID | 파일(묶음) | 만든 곳 | 만든 날·기록 위치 | 이용 조건 | 근거 파일 경로 | 상태 |
 |---|---|---|---|---|---|---|
-| V1 | `videos/intro.mp4`, `outro.mp4` | 그림·영상: "제공받은 원본"(`_source/videos/`). 생성 도구 이름은 저장소에 없고, 프롬프트는 외부 ChatGPT 캔버스 링크 2개(README 103~104행)로만 남음. 대사·내레이션: ElevenLabs(목소리 이름·생성 ID 없음). 영상 속 음악 출처 기록 없음. 자막(모션)은 2026-11-18 덧입힘 | 원본 2026-10-23 반영(`4c5884f`), 대사 섞은 판 11-13(`dd99764`), 자막판 11-18(`1603137`, `docs/film-captions-20261118/`) | 음성: ElevenLabs Starter 유료(2026-11-19 사용자 확인). 영상 그림·음악: 알 수 없음 | `README.md` 11·103~106행, `assets/CREDITS.md`(11-19 이야기 영상 음성), `_shared/voice-provenance-20261118.md` 3번 표 | **출처 미확인** |
+| V1 | `videos/intro.mp4`, `outro.mp4` | 그림·영상: 제미나이(사용자 확인 2026-11-21 「영상은 제미나이」, 유료 요금제). 프롬프트는 외부 ChatGPT 캔버스 링크 2개(README 103~104행). 대사·내레이션: ElevenLabs(목소리 이름·생성 ID 없음). 영상 속 음악: 출처 기록 없음(사용자 확인 범위 밖). 자막(모션)은 2026-11-18 덧입힘 | 원본 2026-10-23 반영(`4c5884f`), 대사 섞은 판 11-13(`dd99764`), 자막판 11-18(`1603137`, `docs/film-captions-20261118/`) | 영상 그림: 제미나이 유료 요금제(사용자 확인). 음성: ElevenLabs Starter 유료(2026-11-19 사용자 확인). 영상 속 음악: 알 수 없음 | `README.md` 11·103~106행, `assets/CREDITS.md`(11-19 이야기 영상 음성), `_shared/voice-provenance-20261118.md` 3번 표; 사용자 확인 2026-11-21(「16곳 그림은 전부 Codex(GPT), 영상은 제미나이, 모두 유료 요금제」 → "전부 맞아"), `_shared/CODEX-IMAGE-RECORDS-20261121.md` | 근거 약함(영상 속 음악 출처만 남음) |
 
 ## 4. 음악 (배경 음악)
 
@@ -103,32 +103,32 @@
 
 ## 요약
 
-전체 38줄.
+전체 38줄. 2026-11-21 3-2a단계에서 사용자 확인(그림 Codex·영상 제미나이·유료 요금제)과 Codex 생성 기록으로 고쳤다.
 
 | 상태 | 줄 수 | 해당 ID |
 |---|---:|---|
-| 확인됨 | 9 | S1, S2, S3, A3, A4, A5, F1, L1, L2 |
-| 근거 약함 | 24 | I1~I16, I19, I20, I21, I23, M1, M2, A1, A2 |
-| **출처 미확인** | 5 | I17, I18, I22, I24, V1 |
+| 확인됨(기록·원문) | 9 | S1, S2, S3, A3, A4, A5, F1, L1, L2 |
+| 확인됨(생성 로그 + 사용자 확인) | 1 | I18 |
+| 확인됨(사용자 확인) | 17 | I1~I8, I13, I16, I17, I19~I24 |
+| 근거 약함 | 11 | I9~I12, I14, I15(Higgsfield), M1, M2, A1, A2, V1 |
+| **출처 미확인** | 0 | — |
 
-근거 약함 24줄 내역: 그림 20줄(I1~I16의 16줄 + I19, I20, I21, I23), 3D 2줄(M1, M2), 음악 1줄(A1), 목소리 1줄(A2).
-
-- 그림 출처 미확인: I17 `rain_cloud_clay`, I18 지도 전투 8장, I22 OG 이미지, I24 영상 포스터 2장.
-- 그림 근거 약함의 공통 이유: 만든 도구·프롬프트 기록은 있으나 OpenAI(ChatGPT·Codex)·Higgsfield 생성 계정의 요금제와 회사 배포 조건, 기획자 제공 자료의 제공 범위 서류가 저장소에 없다.
-- 나머지 소리·글꼴·라이브러리는 대부분 확인됐다. 다만 Suno 배경 음악과 11-13 리피 목소리 16개는 사용자 말 확인뿐이다.
+- 출처 미확인: 5줄 → 0줄(I17·I18·I22·I24는 확인됨, V1은 영상 속 음악 출처만 남아 근거 약함).
+- **사용자 확인과 저장소 증거가 어긋나는 줄(덮어쓰지 않음, 보고만):** I9~I12·I14·I15 그림 6줄(29장)과 M1·M2의 입력 그림은 저장소 기록(`docs/icon-prompts.md`, `docs/ASSET-PROVENANCE-20261020.json`, `assets/CREDITS.md`)에 **Higgsfield GPT Image 2.5**로 적혀 있다. 「전부 Codex」라는 확인과 다르다. Higgsfield 화면에서 GPT 이미지 모델을 쓴 것이라 같은 모델일 수는 있지만, 만든 곳과 요금제가 다르므로 Higgsfield 요금제 자료(아래 3번)를 받기 전까지 근거 약함으로 둔다.
+- 남은 근거 약함: Higgsfield 6줄, Meshy 3D 2줄, Suno 음악 1줄, 11-13 리피 목소리 1줄, V1 영상 속 음악.
 
 ## 사용자가 줘야 하는 자료
 
 | # | 자료 | 묶인 줄 |
 |---|---|---|
-| 1 | OpenAI(ChatGPT) 계정의 요금제 화면과 결제 내역 — 그림을 만든 날(2026-10-14·15·18·23·31, 11-13, 11-18) 기준. 회사 납품에 써도 되는 계정인지(개인·팀·기업) 함께 | I1~I6, I13, I16, I19, I20, I21, I23 |
-| 2 | 기획자 제공 AI 그림(활동 배경 10장, 표정 시트, 캐릭터 시트·제목 원본)을 만든 도구 이름·계정 요금제와, 회사 배포·수정 허용 범위를 적은 메일이나 메모 | I2(캐릭터 3종), I7, I8, I23 |
+| 1 | (2026-11-21 사용자 확인으로 장부는 채움 — 납품 증빙용으로만) OpenAI(ChatGPT) 계정의 요금제 화면과 결제 내역 — 그림을 만든 날(2026-10-14·15·18·23·31, 11-13, 11-18) 기준. 회사 납품에 써도 되는 계정인지(개인·팀·기업) 함께 | I1~I6, I13, I16, I19, I20, I21, I23 |
+| 2 | (2026-11-21 사용자 확인으로 장부는 채움) 기획자 제공 AI 그림(활동 배경 10장, 표정 시트, 캐릭터 시트·제목 원본)을 만든 도구 이름·계정 요금제와, 회사 배포·수정 허용 범위를 적은 메일이나 메모 | I2(캐릭터 3종), I7, I8, I23 |
 | 3 | Higgsfield 구독·크레딧 구매 내역 화면(2026-10-19~10-25 생성분) | I9~I15, M1·M2의 입력 그림 |
 | 4 | Meshy 요금제 화면·결제 내역(2026-10-19, 10-25, 10-28 생성 시점) | M1, M2 |
 | 5 | Suno Premier 구독 화면·결제 내역(배경 음악 2곡 생성 시점) | A1 |
 | 6 | ElevenLabs 결제 내역(2026-11-13 이전부터 유료였음을 보이는 청구서 또는 구독 기록) | A2, V1(영상 대사) |
-| 7 | 인트로·아웃트로 영상: 누가 무슨 도구로 만들었는지, 그 도구의 요금제 화면, 영상 속 음악의 출처. 업체에서 받은 영상이면 계약서나 메일 | V1, I24 |
-| 8 | `rain_cloud_clay` 구름 그림을 만든 도구와 날짜(생성 기록이나 대화 링크) | I17 |
-| 9 | 지도 전투 그림 8장(주인공·친구 반응, 악당 좌우)을 만든 도구와 기록, 바탕이 된 악당 시안(`_scratch/villain-concepts-20261114/`)의 생성 도구 | I18 |
-| 10 | 공유 미리보기 OG 그림("1번 온실 탐험형" 시안)을 만든 도구와 기록 | I22 |
+| 7 | 인트로·아웃트로 영상: 그림은 제미나이(2026-11-21 사용자 확인). 남은 것은 영상 속 음악의 출처. 업체에서 받은 영상이면 계약서나 메일 | V1, I24 |
+| 8 | (2026-11-21 사용자 확인으로 해결) `rain_cloud_clay` 구름 그림을 만든 도구와 날짜(생성 기록이나 대화 링크) | I17 |
+| 9 | (2026-11-21 v2는 생성 로그, v1은 사용자 확인으로 해결) 지도 전투 그림 8장(주인공·친구 반응, 악당 좌우)을 만든 도구와 기록, 바탕이 된 악당 시안(`_scratch/villain-concepts-20261114/`)의 생성 도구 | I18 |
+| 10 | (2026-11-21 사용자 확인으로 해결) 공유 미리보기 OG 그림("1번 온실 탐험형" 시안)을 만든 도구와 기록 | I22 |
 | 11 | 아이스크림미디어 납품 계약서 가운데 AI 생성물·제3자 자료(CC0 효과음, 오픈 라이선스 글꼴·라이브러리) 관련 조항 | 전체 |

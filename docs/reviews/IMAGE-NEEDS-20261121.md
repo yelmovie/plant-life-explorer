@@ -4,16 +4,18 @@
 
 ## (가) 권리 장부에서 출처 미확인·근거 약함인 그림
 
-`docs/RIGHTS-LEDGER-20261121.md`의 그림 줄 가운데 **출처 미확인 4줄**(I17·I18·I22·I24)이다. 결정(2026-11-21 "추천대로"): 자료가 있으면 장부에 연결하고, 없으면 3-3단계에서 새로 만들어 바꾼다. 아래는 자료가 끝내 없을 때 새로 만들 장수다.
+**2026-11-21 3-2a 갱신: 새로 그릴 그림 없음(6장 → 0장).** 사용자 확인(「16곳 그림은 전부 Codex(GPT), 영상은 제미나이, 모두 유료 요금제」 → "전부 맞아")과 Codex 생성 기록으로 출처 미확인 그림 줄이 모두 풀렸다(`docs/RIGHTS-LEDGER-20261121.md`).
 
-| 장부 | 쓰이는 화면 | 지금 파일 | 필요한 크기·비율 | 화풍 참고 | 왜 |
-|---|---|---|---|---|---|
-| I17 | 5장 현장 「비 내리기」 구름(`src/field-hands-bag.css` `.bag-cloud`), 4장 정원 구름(`src/field-hands-garden.css` `.garden-cloud-art`) | `assets/generated/rain_cloud_clay.webp` | 640×400(16:10), 투명 배경 | `assets/generated/bag_lotus_open.webp`(점토 질감 소품) | 만든 도구 기록 없음 |
-| I18 | 지도 악당 만남(리피·친구·악당 반응 그림 띠, `src/village-encounters.js`) | `assets/combat/map-hero-reaction-v2.webp`(1024×128), `map-ally-reaction-v2.webp`(512×128), `map-villain-left-v2.webp`·`map-villain-right-v2.webp`(768×128) — 4장 | 같은 크기의 가로 띠(128px 높이 칸 나눔 스프라이트), 투명 배경 | `assets/npc-dialogue/lipi.webp`, `assets/combat/leafy-taggle.webp` | 만든 도구 기록 없음. 같은 폴더의 v2가 아닌 4장(`map-*-reaction.webp`, `map-villain-left/right.webp`)은 코드가 쓰지 않는데 빌드에 들어간다 — 새로 만들 필요 없이 빌드에서 빼면 된다(3-3단계에서 확인) |
-| I22 | 카카오톡·SNS 공유 미리보기(`index.html` `og:image`) | `assets/og/green-garden-og-20261027.png` | 1774×887(2:1), 글자 없는 바탕 그림 + 제목은 합성 | `assets/title.webp`, `assets/generated/greenhouse_studio_v1.webp` | 「1번 온실 탐험형 이미지」라는 말만 있고 도구 기록 없음 |
-| I24 | 시작·끝 영상이 뜨기 전 첫 장면 | `assets/videos/intro-poster.webp`, `outro-poster.webp` | 1280×720(16:9) | 영상 첫 장면 그대로 | 영상(V1) 자체의 출처가 미확인이라 영상 자료가 확인되면 같이 풀린다. 영상을 바꾸게 되면 새 영상 첫 장면으로 다시 뽑으면 되므로 따로 그릴 필요는 없다 |
+| 장부 | 지금 파일 | 전 | 후 |
+|---|---|---|---|
+| I17 | `assets/generated/rain_cloud_clay.webp` | 출처 미확인 → 새로 그릴 후보 1장 | 확인됨(사용자 확인). 새로 그리지 않음 |
+| I18 | `assets/combat/map-*-v2.webp` 4장 | 출처 미확인 → 새로 그릴 후보 4장 | 확인됨(Codex 생성 로그: 세션 `rollout-2026-11-14T06-05-13-01a1d6ba…`, 프롬프트 `_scratch/redraw-02-05-20261114/prompts.json` "3"). 새로 그리지 않음 |
+| I22 | `assets/og/green-garden-og-20261027.png` | 출처 미확인 → 새로 그릴 후보 1장 | 확인됨(사용자 확인). 새로 그리지 않음 |
+| I24 | `assets/videos/intro-poster.webp`·`outro-poster.webp` | 영상 출처를 따름 | 확인됨(제미나이 영상, 사용자 확인) |
 
-새로 그려야 할 수 있는 그림: **6장**(I17 1장, I18 4장, I22 1장). I24 포스터 2장은 영상이 정해지면 영상에서 뽑는다. 근거 약함 그림 20줄은 계정 요금제·제공 범위 자료만 받으면 풀리므로 새 그림 목록에 넣지 않았다.
+남는 일(그림을 그리지 않는 정리): 코드가 쓰지 않는 지도 전투 v1 4장(`assets/combat/map-hero-reaction.webp`, `map-ally-reaction.webp`, `map-villain-left.webp`, `map-villain-right.webp`)이 빌드에 들어간다. 빌드에서 빼는 것은 3-3단계에서 확인한다.
+
+Higgsfield로 적힌 그림 6줄(I9~I12·I14·I15, 29장)은 저장소 기록과 사용자 확인이 어긋나 근거 약함으로 남았지만, 새로 그릴 대상은 아니다(Higgsfield 요금제 자료만 받으면 풀림).
 
 ## (나) 화풍·해상도가 튀거나 임시로 넣은 그림
 

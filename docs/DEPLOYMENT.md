@@ -19,6 +19,12 @@ wrangler pages deploy dist --project-name leafy-garden --branch main
 
 이 Mac에는 시스템 Node가 없다. 도구는 외장 SSD에만 둔다: Node `DevCaches/tools/node-v24.22.2-darwin-arm64`, wrangler `DevCaches/tools/wrangler-4.154.0`(exFAT라 `--no-bin-links`로 설치). wrangler 로그인 정보는 `HOME=DevCaches/tools/wrangler-home`으로 실행해 SSD에 저장한다. 빌드는 `ESBUILD_MODULE_PATH`를 그 wrangler의 `node_modules/esbuild`로 지정한다. exFAT가 만드는 `._*` 파일은 업로드 전에 `dist`에서 지운다.
 
+## 배포 — 2026-11-21 (110점 계획 3-2a단계: 뒤로 가기·첫 화면·연구 노트 48px)
+
+- 커밋 `1430f10`, 배포 https://be4dbd41.leafy-garden.pages.dev. 운영 `build-info.json` 커밋 일치, `prodcmp` 파일 40개 일치.
+- 바뀐 것: 브라우저 뒤로 가기가 앱 안 앞 화면으로(시작 화면에서는 평소처럼 나감), 시작 화면에서는 효과음 6개를 미리 받지 않음, 연구 노트 컨트롤 44~46→48px.
+- 확인(Mac, Node v24.22.2): `npm run check` 59개, `npm test` 186/186, 빌드 327파일. 브라우저 테스트 3개 로컬·운영 통과, 뒤로 가기 6가지·노트 5권·첫 화면 전송량 운영 측정, 운영 전체 스윕 1280×800. 되돌릴 대상: https://582f8a11.leafy-garden.pages.dev (`2fbeb50`).
+
 ## 배포 — 2026-11-21 (110점 계획 3-1단계: 성취 카드 보관함 글자)
 
 - 커밋 `2fbeb50`(`src/reward-cards.css`만), 배포 https://582f8a11.leafy-garden.pages.dev. 운영 `build-info.json` 커밋 일치.
