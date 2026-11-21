@@ -13,7 +13,8 @@
 }
 
 /* ── 1. Scene base: a greenhouse tint while the painting streams in (no blank cream flash). ── */
-#app .exploration-activity { background-color: #cddfc3; }
+#app .exploration-activity { background-color: #cddfc3; --stage-h: calc(100vh - 190px); --scrim-bg: radial-gradient(ellipse 78% 66% at 50% 47%, #fffdf26b, #fffdf22e 68%, #fffdf200), linear-gradient(180deg, #152c2012, transparent 24%, transparent 72%, #1830252b); }
+@supports (height: 100dvh) { #app .exploration-activity { --stage-h: calc(100dvh - 190px); } }
 
 /* ── 2. Left column: 오늘의 연구 + Leafy (landscape tablets and up; narrower screens stack, see §7) ── */
 @media (min-width: 901px) and (orientation: landscape) {
@@ -759,8 +760,6 @@ body .note-quiz > summary small { margin-left: 4px; padding: 2px 7px; border-rad
 /* ── 13. 조작물 크게 · 글 줄이기 (2026-11-18): 현장 임무의 조작물이 장면 높이를 채운다. 설명 글과 큰 종이판은
    걷어 내고, 지시는 리피 말풍선 한 줄만 남긴다. 버튼 방식·자동 진행 스위치는 설정 창에 있다. ── */
 /* vh first: a browser without dvh must still get a valid length, or every size built on it falls back to auto. */
-#app .exploration-activity { --stage-h: calc(100vh - 190px); }
-@supports (height: 100dvh) { #app .exploration-activity { --stage-h: calc(100dvh - 190px); } }
 /* 잎 위에서 깜빡이는 점: 연습 잎에서 눌러 볼 곳. */
 #app .leaf-spark.leaf-dot { width: 46px; height: 46px; clip-path: none; border-radius: 50%; border: 4px solid #fff7c2; background: #f2c94c59; box-shadow: 0 0 0 3px #e3a72f, 0 0 14px #fff6; filter: none; }
 #app .leaf-spark.leaf-dot.placed { opacity: 1; animation: leaf-dot-pulse 1.3s ease-in-out infinite; }
@@ -871,7 +870,6 @@ body .note-quiz > summary small { margin-left: 4px; padding: 2px 7px; border-rad
 }
 /* 2026-11-18 작업판이 주인공: 장면 틀은 이미 화면의 97%×78%를 쓰는데 그 안의 판·그림·버튼이 작아 배경이 더 커 보였다.
    판과 그림을 장면 높이(--stage-h)에 맞춰 키우고, 가운데에 옅은 빛을 깔아 작업 층이 그림 배경에서 떠 보이게 한다. */
-#app .exploration-activity { --scrim-bg: radial-gradient(ellipse 78% 66% at 50% 47%, #fffdf26b, #fffdf22e 68%, #fffdf200), linear-gradient(180deg, #152c2012, transparent 24%, transparent 72%, #1830252b); }
 @media (min-width: 901px) and (orientation: landscape) {
   /* 1장 기록(은행잎의 새 짝): 잎 그림이 판 높이를 채운다. */
   #app .exploration-activity .leaf-partner .leaf-tile img { height: clamp(64px, calc(var(--stage-h) - 350px), 300px); }
