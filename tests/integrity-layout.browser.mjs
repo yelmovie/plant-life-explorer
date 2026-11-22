@@ -26,10 +26,12 @@ const hands=[
  [['.garden-card',44,true],['.field-garden-zone',44,true]],
  [['.garden-cloud-btn',44,true],['.field-garden-zone',44,false]],
  [['[data-bag-cloud]',44,true],['.bag-canvas > .bag-art',100,true]],
- [['.bag-upgrade',44,true],['[data-bag-cloud]',44,true]],
- [['[data-bag-spinner]',100,true],['[data-bag-spin]',44,true],['[data-action="field-bag-finish"]',44,true]],
+ [['.bag-pick',44,true]],
+ null,
 ];
-for(let m=0;m<5;m++)for(let stage=0;stage<3;stage++)scenarios.push([`field-${m+1}-${stage+1}`,m*2,{stage,hands:hands[m*3+stage]}]);
+// Missions 1 and 5 have two stages since the 11-18 redesign (the bag dial and upgrade steps are gone).
+const STAGES=[2,3,3,3,2];
+for(let m=0;m<5;m++)for(let stage=0;stage<STAGES[m];stage++)scenarios.push([`field-${m+1}-${stage+1}`,m*2,{stage,hands:hands[m*3+stage]}]);
 const inProgress={...completed.fieldEvidence,
  leaves:{scans:{maple:['shape','edge'],pine:[],camellia:[]},edge:{},narrow:{}},
  seasons:{predictions:{tree:'none',herb:'none'},clues:{},links:{},tree:['','',''],herb:['','','']},
@@ -39,6 +41,10 @@ const inProgress={...completed.fieldEvidence,
 // Wait for finite CSS animations/transitions (screen entry, card pop) without waiting on endless ones (mascot float).
 const settle=page=>page.evaluate(()=>Promise.all(document.getAnimations().filter(a=>a.effect?.getComputedTiming().endTime!==Infinity).map(a=>a.finished.catch(()=>{}))));
 // Scroll in the page itself: Playwright's scrollIntoViewIfNeeded waits for "stable", which looping decorations can starve.
+// The step list is gone (11-18 redesign): a field page opens on its mission, and stages move by the app's own
+// field-stage action (the 「다음 도전」/「N번 임무로 가기」 button carries it only once the earlier stage is done).
+const openStage=async(page,stage)=>{const field=page.locator('[data-action="journey-mode"][data-id="field"][aria-pressed="false"]');if(await field.count())await field.first().tap();
+ await page.evaluate(n=>{const b=document.createElement('button');b.dataset.action='field-stage';b.dataset.id=String(n);b.hidden=true;document.querySelector('main').append(b);b.click();b.remove();},stage);};
 const reach=el=>{el.scrollIntoView({block:'center',inline:'nearest'});const r=el.getBoundingClientRect(),x=r.x+r.width/2,y=r.y+r.height/2,hit=document.elementFromPoint(x,y);return {ok:x>=0&&x<innerWidth&&y>=0&&y<innerHeight&&!!hit&&(el===hit||el.contains(hit)),hit:hit?hit.tagName+'.'+String(hit.className?.baseVal??hit.className).slice(0,40):null};};
 for(const [width,height] of sizes){
  const context=await browser.newContext({viewport:{width,height},hasTouch:true});
@@ -48,11 +54,10 @@ for(const [width,height] of sizes){
   await page.addInitScript(s=>localStorage.setItem('green-garden-mvp-v2',JSON.stringify(s)),state);
   try{
    await page.goto(process.env.JOURNEY_URL||'http://127.0.0.1:4328');await page.locator('main').waitFor();await page.evaluate(()=>document.fonts.ready);
-   if(name==='field-bag'){await page.locator('[data-action="journey-mode"][data-id="field"]').first().tap();await page.locator('[data-action="field-stage"][data-id="1"]').tap();}
+   if(name==='field-bag')await openStage(page,1);
    if(name==='tests'&&await page.locator('.result-parts summary').count())await page.locator('.result-parts summary').tap();
    if(name==='notebook')await page.locator('[data-action="note-open"][data-id="4"]').tap();
-   if(field){const step=`[data-action="field-stage"][data-id="${field.stage}"]`;await page.locator('[data-action="journey-mode"][data-id="field"]').first().tap();await page.locator(step).tap();
-    await page.locator(step+'[aria-current="step"]').waitFor();for(const [selector] of field.hands)await page.locator(selector).first().waitFor();}
+   if(field){await openStage(page,field.stage);for(const [selector] of field.hands)await page.locator(selector).first().waitFor();}
    await settle(page);
    const result=await page.evaluate(()=>{
     const visible=el=>el.getClientRects().length&&getComputedStyle(el).visibility!=='hidden';

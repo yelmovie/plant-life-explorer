@@ -19,8 +19,8 @@ const waitFrames=()=>page.evaluate(()=>new Promise(resolve=>requestAnimationFram
 const enter=async i=>{await page.locator(`.world-node[data-id="${i}"] .world-label`).click();await page.locator('#dialog [data-action="enter-mission"]').waitFor();await page.locator('#dialog [data-action="enter-mission"]').click();};
 // The map is reached from Settings on every screen (home has no direct map button any more).
 const openMap=async()=>{await page.getByRole('button',{name:'설정',exact:true}).click();await page.locator('[data-action="settings-map"]').evaluate(b=>b.click());await page.locator('.stage-map').waitFor();};
-// Mission 5 opens on its field mission: leave a first guess if asked, then tap a numbered bag place by hand.
-const touchBag=async()=>{const guess=page.locator('[data-action="field-bag-predict"]').first();if(await guess.count())await guess.click();const dial=page.locator('[data-bag-dial]').first();await dial.waitFor();const before=await dial.getAttribute('data-value');await dial.tap();await page.waitForFunction(b=>document.querySelector('[data-bag-dial]').dataset.value!==b,before);};
+// Mission 5 opens on its field mission: leave a first guess if asked, then tap the rain cloud by hand (the bag dial is gone since 11-18).
+const touchBag=async()=>{const guess=page.locator('[data-action="field-bag-predict"]').first();if(await guess.count())await guess.click();const cloud=page.locator('[data-bag-cloud]').first();await cloud.waitFor();const before=await page.locator('[data-bag-stage]').first().innerHTML();await cloud.tap({force:true});await page.waitForFunction(b=>document.querySelector('[data-bag-stage]').innerHTML!==b,before);};
 const enablePreview=async()=>{await page.getByRole('button',{name:'설정',exact:true}).click();await page.locator('details[data-key="teacher"]>summary').click();await page.locator('details[data-key="tools"]>summary').click();await page.locator('[data-action="admin-unlock"]').click();await close();};
 try{
   await page.goto(process.env.STAGE_MAP_URL||'http://127.0.0.1:4318');
@@ -28,13 +28,12 @@ try{
   await page.evaluate(()=>Promise.all([...document.images].map(i=>i.decode().catch(()=>{}))));
   await page.locator('.world-node[data-id="4"]').tap({force:true});
   assert.match(await page.locator('#dialog').innerText(),/먼저 표본 온실/);
-  const pausedPosition=await page.locator('.map-walker').getAttribute('style');
+  const pausedPosition=await page.locator('.map-walker:not(.map-flower)').getAttribute('style');
   await page.keyboard.press('ArrowRight');await waitFrames();
-  assert.equal(await page.locator('.map-walker').getAttribute('style'),pausedPosition);
+  assert.equal(await page.locator('.map-walker:not(.map-flower)').getAttribute('style'),pausedPosition);
+  // 「표본 온실로 가기」 walks Leafy there and enters the mission directly (no second brief since the map redesign).
   await page.locator('#dialog [data-action="map-locked-next"]').click();
-  await page.locator('#dialog [data-action="enter-mission"]').waitFor();
-  assert.equal(await page.locator('#dialog h2').innerText(),'표본 온실');
-  await page.locator('#dialog [data-action="enter-mission"]').click();
+  await page.locator('main.activity').waitFor({timeout:60000});
   // Entering a mission now opens its field mission first.
   assert.equal(await page.locator('main h1').innerText(),'리피의 뒤섞인 잎 서랍');
   assert.equal(await page.locator('[data-action="journey-mode"][data-id="field"]').getAttribute('aria-pressed'),'true');
@@ -89,10 +88,10 @@ try{
   assert.equal(await page.locator('.map-preview-note').count(),0);
   checks.push('비밀번호 없는 전체 해금 → 마지막 미션(현장 임무) 손 조작·미완료 엔딩 잠김 → 종료·새로고침 후 학생 저장본 동일');
 
-  const actor=page.locator('.map-walker');
+  const actor=page.locator('.map-walker:not(.map-flower)');
   const before=await actor.getAttribute('style');
   await page.keyboard.down('ArrowRight');
-  await page.waitForFunction(before=>document.querySelector('.map-walker').getAttribute('style')!==before,before);
+  await page.waitForFunction(before=>document.querySelector('.map-walker:not(.map-flower)').getAttribute('style')!==before,before);
   await page.keyboard.up('ArrowRight');
   await page.getByRole('button',{name:'설정',exact:true}).click();
   const frozen=await actor.getAttribute('style');await page.keyboard.press('d');await waitFrames();
