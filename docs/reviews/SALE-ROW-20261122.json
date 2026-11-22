@@ -14,7 +14,7 @@
   "minutes": null,
   "stages": 5,
   "thumbnail": "thumbnails/thumbnail-16x8.png",
-  "appCommit": "37c5e90",
+  "appCommit": "a8f69ba",
   "host": "pages",
   "consistency": {
     "creditLine": {
@@ -65,7 +65,10 @@
         "PNG 저장",
         "닫기"
       ],
-      "note": "2026-11-22 신설. 실제 최종 완료/기존 완주 기록의 엔딩·설정에서 열림, 관리자 미리보기 잠금. A4 가로, 학교55.8mm·이름68.3mm·높이11.3mm, PDF1쪽·PNG2400×1697. 진행/성취 숫자 요약 없이 수여 본문과 제목900/획 보강. 모든 버튼은 종이 밖. 저장 형식 유지라 날짜는 만든 날."
+      "note": "2026-11-22 신설. 실제 최종 완료/기존 완주 기록의 엔딩·설정에서 열림, 관리자 미리보기 잠금. A4 가로, 학교55.8mm·이름68.3mm·높이11.3mm, PDF1쪽·PNG2400×1697. 진행/성취 숫자 요약 없이 수여 본문과 제목900/획 보강. 모든 버튼은 종이 밖. 저장 형식 유지라 날짜는 만든 날.",
+      "status": "공식 운영 확인 완료",
+      "verifiedAt": "2026-11-22T20:22:14+09:00",
+      "appCommit": "a8f69ba"
     },
     "rewardCards": {
       "count": 5,
@@ -92,7 +95,7 @@
       "checkedAt": "2026-11-22T15:05+09:00",
       "appCommit": "1dd9888",
       "deploy": "https://64991115.leafy-garden.pages.dev",
-      "A_certificate": "해당 없음(인증서 화면 없음, 지침대로 만들지 않음)",
+      "A_certificate": "15:05 당시에는 인증서가 없었음. 이후 사용자 지시로 a8f69ba에서 새로 만들었고 현재 공식 운영 확인 완료(consistency.certificate 참조).",
       "B1_close": "이미 기준대로: 위 × 숨김, 아래 「닫기」, 바깥 눌러도 안 닫힘, Esc로 닫힘, 닫은 뒤 포커스는 설정 버튼(운영 1280·1024·1920 확인)",
       "B2_soundOrder": "이미 기준대로: 배경 음악 → 배경 음악 크기 → 효과음 → 효과음 크기 → 목소리",
       "C_resetConfirm": "이미 기준대로: 왼쪽 「취소」·오른쪽 「기록 지우기」(danger), 처음 포커스 「취소」",
@@ -138,5 +141,29 @@
   "note": "영상 Range 처리 파일 없음(공통 media-range 표에 3번 없음). 푸시 자동 배포 없음(직접 업로드)",
   "gradeRepo": "3학년",
   "unitRepo": "(3) 식물의 생활",
-  "gradeUnitSource": "운영 시트 「이예리 선생님」 탭, 2026-11-22 확인"
+  "gradeUnitSource": "운영 시트 「이예리 선생님」 탭, 2026-11-22 확인",
+  "productionVerification": {
+    "checkedAt": "2026-11-22T20:22:14+09:00",
+    "url": "https://leafy-garden.pages.dev",
+    "appCommit": "a8f69ba",
+    "status": "MATCH",
+    "deploymentId": "814be42c",
+    "deploymentAction": "최신 앱이 운영과 일치해 기존 배포 유지, 문서만 갱신",
+    "matchedFiles": 6,
+    "certificateEvidence": ".tmp/cert-design-20261122/prod.json",
+    "views": [
+      "1280x800",
+      "1024x768",
+      "1920x1080"
+    ],
+    "certificateChecks": [
+      "A4 가로",
+      "손기입 빈칸",
+      "인쇄/PDF 1쪽",
+      "PNG 2400x1697",
+      "진행·성취 숫자 요약 없음",
+      "제목 900·화면/PNG 획 일치"
+    ],
+    "scope": "이번에는 운영 파일 SHA256과 기존 성공한 출력 검증 기록 대조. 실기기·수업 검수는 기존 미확인 상태."
+  }
 }
