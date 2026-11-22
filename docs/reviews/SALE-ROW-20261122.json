@@ -21,12 +21,14 @@
       "text": "기획·제작: 옐샘 & ⓒ 아이스크림미디어",
       "where": [
         "settings",
-        "start"
+        "start",
+        "certificate"
       ],
       "note": "설정에는 앱 이름·버전이 앞에 붙은 줄(초록정원 연구기지 v0.5.4 · …), 시작 화면에는 문구만. 인증서(수료증) 화면 없음"
     },
     "settings": {
       "items": [
+        "인증서 받기",
         "배경 음악 스위치·크기",
         "효과음 스위치·크기",
         "목소리 스위치",
@@ -52,13 +54,18 @@
       "note": "위 X는 CSS로 숨김(설정 창), 아래 「닫기」 + Esc. 바깥을 눌러도 닫히지 않음(2026-11-22 운영 확인)"
     },
     "certificate": {
-      "fields": [],
-      "buttons": [
-        "내 연구 노트 펼치기",
-        "엔딩 영상 다시 보기",
-        "정원으로 돌아가기"
+      "fields": [
+        "학교·학년·반·번호·이름 손기입 빈칸",
+        "인증서 만든 날",
+        "식물 탐구 수여 본문",
+        "제작 표기"
       ],
-      "note": "이름 입력·날짜·저장·인쇄가 있는 인증서 없음. 엔딩 화면(오늘의 탐험 일기)이 대신하며 certificate 요소는 화면 읽기 프로그램용 숨김 문장"
+      "buttons": [
+        "인증서 인쇄 / PDF 저장",
+        "PNG 저장",
+        "닫기"
+      ],
+      "note": "2026-11-22 신설. 실제 최종 완료/기존 완주 기록의 엔딩·설정에서 열림, 관리자 미리보기 잠금. A4 가로, 학교55.8mm·이름68.3mm·높이11.3mm, PDF1쪽·PNG2400×1697. 진행/성취 숫자 요약 없이 수여 본문과 제목900/획 보강. 모든 버튼은 종이 밖. 저장 형식 유지라 날짜는 만든 날."
     },
     "rewardCards": {
       "count": 5,
@@ -90,17 +97,23 @@
       "B2_soundOrder": "이미 기준대로: 배경 음악 → 배경 음악 크기 → 효과음 → 효과음 크기 → 목소리",
       "C_resetConfirm": "이미 기준대로: 왼쪽 「취소」·오른쪽 「기록 지우기」(danger), 처음 포커스 「취소」",
       "D_notice": "고침: 「효과음은 앱 코드에서 직접 만든 짧은 소리이고, 지도 악당 전투음 8개만 CC0」 → 「코드로 만든 짧은 소리와 CC0 공개 효과음 19개(지도 전투·성취 카드·발자국·장소 열림·정답 소리)」(권리 장부 S1~S3, assets/audio/sfx 19파일). 나머지 고지 문장은 장부와 맞음. 목소리(ElevenLabs)·영상(제미나이)·meshopt(MIT)은 고지에 적혀 있지 않음(틀린 문장이 아니라 빠진 내용이라 이번에 넣지 않음)"
+    },
+    "certificateDesign20261122": {
+      "replaces": "unify20261122.A_certificate",
+      "image": "assets/generated/certificate-frame-20261122.webp",
+      "prompt": "_source/generated-images/PROMPT-03.txt"
     }
   },
   "ledger": {
-    "rows": 38,
-    "open": 11,
+    "rows": 39,
+    "open": 12,
     "openItems": [
       "I9~I12·I14·I15 Higgsfield 그림 6줄",
       "M1·M2 Meshy 3D",
       "A1 Suno 음악",
       "A2 ElevenLabs 리피 목소리",
-      "V1 영상 속 음악"
+      "V1 영상 속 음악",
+      "I25: certificate frame account terms evidence"
     ],
     "userPending": [
       "OpenAI 요금제 화면·결제 내역",

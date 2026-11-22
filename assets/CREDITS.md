@@ -195,3 +195,7 @@
 
 ## 2026-11-19 이야기 영상 음성 출처
 - `videos/intro.mp4`, `videos/outro.mp4`에 섞인 대사·내레이션(2026-11-13 반영)은 ElevenLabs로 생성했다(2026-11-19 사용자 확인). 생성 당시 ElevenLabs 유료 요금제(Starter)를 구독 중이었고 상업 이용이 가능하다. 목소리 이름과 생성 ID는 저장소에 남아 있지 않다.
+
+## 인증서 테두리 · 2026-11-22
+
+`generated/certificate-frame-20261122.webp`(1800×1273, 132212바이트)는 Codex 기본 이미지 도구(GPT 이미지)로 1회 생성했다. 잎·덩굴·씨앗·빛씨앗을 바깥에 두고 가운데를 글자 없이 비웠다. 이 프로젝트 정원과 리피·05 인증서 테두리를 참고했다. 원본 `_source/generated-images/certificate-frame-20261122.png`, 전체 프롬프트 `_source/generated-images/PROMPT-03.txt`. 제목·본문·빈칸·날짜·도장·제작 표기는 코드로 올린다. 생성 계정 요금제·약관 증빙은 기존 사용자 자료 대기와 함께 확인한다.
