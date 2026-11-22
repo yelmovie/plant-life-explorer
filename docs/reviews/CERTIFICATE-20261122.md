@@ -9,3 +9,5 @@
 - A4 가로 PDF 1쪽·PNG 2400×1697을 직접 열어 확인했다. 버튼·기입 안내는 출력에서 빠진다. 제작 표기는 잎 장식과 겹치지 않게 여백을 두었다.
 - 기존 실제 완주 기록을 격리 브라우저에 넣어 확인했다. 전체 새 플레이나 실제 태블릿 검사로 확대하지 않는다.
 - 근거 `.tmp/cert-design-20261122/local-final.json`, `shots/local-final.pdf`, `shots/local-final-saved.png`, `compare.png`.
+
+운영 확인: 그림 `152b9af`·앱 `a8f69ba`·문서 `5b3bc82`를 main에 푸시하고 기존 Pages `leafy-garden`에 배포했다. 배포 `814be42c`, 공식 주소 `https://leafy-garden.pages.dev`에서 세 뷰·PDF 1쪽·PNG 2400×1697·설정 재진입을 확인했다. 오류와 종이/요소 겹침은 0, 진행 숫자 요약은 없고 제목 굵기는 900이다. 운영 index와 코드/스타일 40개, 테두리 SHA256이 검증 빌드와 일치한다. `prod.json`, `shots/prod.pdf`, `shots/prod-saved.png`, `compare.png`가 최종 운영 근거다.
