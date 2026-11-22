@@ -19,6 +19,11 @@ wrangler pages deploy dist --project-name leafy-garden --branch main
 
 이 Mac에는 시스템 Node가 없다. 도구는 외장 SSD에만 둔다: Node `DevCaches/tools/node-v24.22.2-darwin-arm64`, wrangler `DevCaches/tools/wrangler-4.154.0`(exFAT라 `--no-bin-links`로 설치). wrangler 로그인 정보는 `HOME=DevCaches/tools/wrangler-home`으로 실행해 SSD에 저장한다. 빌드는 `ESBUILD_MODULE_PATH`를 그 wrangler의 `node_modules/esbuild`로 지정한다. exFAT가 만드는 `._*` 파일은 업로드 전에 `dist`에서 지운다.
 
+## 배포 — 2026-11-22 (파이널 영상은 탐구를 마칠 때 한 번만)
+
+- 커밋 `5d8f564` → https://b9920f5e.leafy-garden.pages.dev. `src/village-encounters.js`·`src/app.bundle.js` 운영 파일이 배포 빌드와 일치(cmp MATCH, index MATCH). 마지막 악당 격퇴 뒤에는 성취 카드만 나오고 지도 피날레 영상(outro.mp4)은 열리지 않는다(`requiredFoes` 5 → 0). 파이널 영상은 「초록정원 깨우기」 뒤 한 번 자동 재생된다.
+- 확인(Mac, Node v24.22.2): `npm run check`, `npm test` 192/192. 헤드리스 Chrome(소리 끔, 새 컨텍스트) 로컬·운영 각 18/18 — 시나리오 1(끝낸 뒤 마지막 악당: 영상 0회), 2(마지막 단계: 영상 1회, 새로고침 뒤 0회), 3(악당 먼저 → 마지막 단계: 합계 1회), 엔딩 다시 보기 열림, 콘솔 오류 0.
+
 ## 배포 — 2026-11-21 (110점 계획 3-4단계: 코드 구조 정리, 동작 같음)
 
 - E1 커밋 `c5001eb`·`81f7d70`·`c0a03b4`·`e5f2c79` → https://8b75b8fb.leafy-garden.pages.dev. E2 커밋 `37c5e90` → https://5fcdb322.leafy-garden.pages.dev. 운영 `build-info.json` 커밋 일치, `prodcmp` 파일 40개 일치.
