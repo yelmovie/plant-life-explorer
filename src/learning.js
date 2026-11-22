@@ -1,3 +1,4 @@
+import {canIssueGardenCertificate} from './certificate.js';
 import {coreResponse} from './response-tracking.js';
 import {PLANTS,HABITAT_PLANTS,HABITATS,HABITAT_COMPARE_PLANT,PAGES,SEASONS,pageReady,fieldSeasonReview,fieldBagReview,SEASON_REVIEW_ANSWERS,singleFieldRecord,gardenReviewReady,plantAt,BAG_REVIEW_ANSWERS,gardenSnapshot,gardenPlants,missionDone,gardenPlaced,gardenValid,comparisonPair,canFinish,presetTerrain,LEAF_PARTNER,addMiss,awardStamp,terrainReady,TERRAIN_MIN,misplacedPlants,misfitNote} from './model.js';
 import {leafArt,seasonArt,icon} from './art.js';
@@ -176,7 +177,7 @@ export function renderFinal(s,u={}){
   </div>
  </main>`;
 }
-export function renderEnding(s,grid){return `<main class="ending ending-celebration">${assetImage('expedition_restored_garden_20261020','ending-background',true)}<div class="ending-celebration-title"><span>다섯 번의 발견, 하나의 초록정원</span><h1>우리가 정원을 깨웠어!</h1></div><article class="ending-note" aria-labelledby="ending-diary-title" tabindex="0"><h2 id="ending-diary-title">오늘의 탐험 일기</h2><p>잎을 살피고 식물을 나눴다.</p><p>겨울을 지나 다시 자란 식물도 만났다.</p><p>식물에게 맞는 정원도 꾸몄다.</p><p>연잎의 비밀로 가방까지 만들었다!</p><p>작은 발견이 멋진 발명이 되었다.</p><p><strong>나는 초록정원의 식물 연구원!</strong></p></article><div class="ending-sparkles" aria-hidden="true">${Array.from({length:10},(_,i)=>`<i style="--i:${i}">✦</i>`).join('')}</div><div class="certificate sr-only"><p>탐험 완료 기록이야. 이해한 내용은 연구 노트의 선택과 관찰 근거를 보며 함께 이야기해 봐.</p></div><div class="ending-actions">${button('내 연구 노트 펼치기','report')}${button('엔딩 영상 다시 보기','outro-replay')}${button('정원으로 돌아가기','map')}</div></main>`;}
+export function renderEnding(s,grid){return `<main class="ending ending-celebration">${assetImage('expedition_restored_garden_20261020','ending-background',true)}<div class="ending-celebration-title"><span>다섯 번의 발견, 하나의 초록정원</span><h1>우리가 정원을 깨웠어!</h1></div><article class="ending-note" aria-labelledby="ending-diary-title" tabindex="0"><h2 id="ending-diary-title">오늘의 탐험 일기</h2><p>잎을 살피고 식물을 나눴다.</p><p>겨울을 지나 다시 자란 식물도 만났다.</p><p>식물에게 맞는 정원도 꾸몄다.</p><p>연잎의 비밀로 가방까지 만들었다!</p><p>작은 발견이 멋진 발명이 되었다.</p><p><strong>나는 초록정원의 식물 연구원!</strong></p></article><div class="ending-sparkles" aria-hidden="true">${Array.from({length:10},(_,i)=>`<i style="--i:${i}">✦</i>`).join('')}</div><div class="certificate sr-only"><p>탐험 완료 기록이야. 이해한 내용은 연구 노트의 선택과 관찰 근거를 보며 함께 이야기해 봐.</p></div><div class="ending-actions">${canIssueGardenCertificate(s)?button('인증서 받기','certificate'):''}${button('내 연구 노트 펼치기','report')}${button('엔딩 영상 다시 보기','outro-replay')}${button('정원으로 돌아가기','map')}</div></main>`;}
 
 // Each answer records the student's choice, not an automatic completion click.
 // Wrong picks add a 'miss' (헛다리) to the mission and return a clue, never a penalty.
