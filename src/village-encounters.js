@@ -41,7 +41,7 @@ export function mountVillageEncounters({host,stages,progress,onSave,blocked,redu
   });
   if(!points.some(({id})=>(progress?.[id]||0)<3))return null;
   preloadMapSounds();
-  const runtime=mountMapEncounters({requiredFoes:5,host,stages:points,progress,onSave,blocked,reduced,tone,art,palette,finaleHold,clearStage:()=>STAGES[clearIndex]?.[0],voice:speakLine,
+  const runtime=mountMapEncounters({requiredFoes:0,host,stages:points,progress,onSave,blocked,reduced,tone,art,palette,finaleHold,clearStage:()=>STAGES[clearIndex]?.[0],voice:speakLine,
     reach:95,contact:25});
   const layer=host.querySelector('.map-encounter-layer');
   const poses=reactions.map((src,i)=>{
