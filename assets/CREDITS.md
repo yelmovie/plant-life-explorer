@@ -199,3 +199,8 @@
 ## 인증서 테두리 · 2026-11-22
 
 `generated/certificate-frame-20261122.webp`(1800×1273, 132212바이트)는 Codex 기본 이미지 도구(GPT 이미지)로 1회 생성했다. 잎·덩굴·씨앗·빛씨앗을 바깥에 두고 가운데를 글자 없이 비웠다. 이 프로젝트 정원과 리피·05 인증서 테두리를 참고했다. 원본 `_source/generated-images/certificate-frame-20261122.png`, 전체 프롬프트 `_source/generated-images/PROMPT-03.txt`. 제목·본문·빈칸·날짜·도장·제작 표기는 코드로 올린다. 생성 계정 요금제·약관 증빙은 기존 사용자 자료 대기와 함께 확인한다.
+
+
+## 2026-11-23 인증서 촛농 봉인
+
+사용자가 이번 작업에 직접 제공한 투명 PNG 원본을 알파를 유지한 768px WebP로 변환하여 사용. 원본: 공통 작업 폴더 `_scratch/certificate-wax-20261123/assets/user-wax-seal-reference.png`. 배포본: `assets/ui/certificate-wax-seal-20261123.webp`. 프로젝트별 문구는 별도 텍스트로 합성하며 생성 AI 이미지로 기재하지 않음.

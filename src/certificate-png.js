@@ -1,3 +1,4 @@
+import {finishCertificateWax} from './certificate-wax.js';
 const LONG_SIDE = 2400;
 function loadImage(src) {
   return new Promise((resolve, reject) => {
@@ -46,6 +47,7 @@ function lines(node) {
   return out.filter((l) => l.text.trim());
 }
 async function drawCertificate(paper) {
+  finishCertificateWax(paper);
   await document.fonts?.ready;
   for (const animation of paper.getAnimations({ subtree: true })) animation.finish();
   const box = paper.getBoundingClientRect();
@@ -64,6 +66,7 @@ async function drawCertificate(paper) {
     ctx.drawImage(img, X(r.left), Y(r.top), r.width * scale, r.height * scale);
   }
   for (const el of paper.querySelectorAll(".cert-content *")) {
+    if (el.closest('[data-cert-export-ignore]')) continue;
     const cs = getComputedStyle(el);
     if (cs.display === "none" || cs.visibility === "hidden") continue;
     const r = el.getBoundingClientRect();
@@ -88,6 +91,10 @@ async function drawCertificate(paper) {
         ctx.fillRect(X(r.left), Y(r.bottom) - bb * scale, r.width * scale, bb * scale);
       }
     }
+  }
+  for (const image of paper.querySelectorAll('.cert-wax-art')) {
+    const loaded = await loadImage(image.src), r = image.getBoundingClientRect();
+    ctx.drawImage(loaded, X(r.left), Y(r.top), r.width * scale, r.height * scale);
   }
   const walker = document.createTreeWalker(paper.querySelector(".cert-content"), NodeFilter.SHOW_TEXT);
   for (let n = walker.nextNode(); n; n = walker.nextNode()) {

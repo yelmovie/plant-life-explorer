@@ -1,4 +1,6 @@
 import {canFinish} from './model.js';
+import {mountCertificateWax} from './certificate-wax.js';
+import {playMapEncounter} from './audio.js';
 import {shownItems,wrapTabAtEnds} from './certificate-focus.js';
 import {saveCertificatePng} from './certificate-png.js';
 const blank=(field,label)=>`<span class="cert-field"><span class="cert-blank" data-cert-blank="${field}" aria-label="${label} 적는 빈칸"></span><span>${label}</span></span>`;
@@ -19,5 +21,5 @@ export function openGardenCertificate(state,{announce,onClose}){
  overlay.querySelector('#certificate-print').onclick=()=>window.print();
  overlay.querySelector('#certificate-close').onclick=close;
  overlay.querySelector('#certificate-png').onclick=async event=>{const button=event.currentTarget;button.disabled=true;try{await saveCertificatePng(overlay.querySelector('.cert-paper'),'초록정원_식물연구원_인증서.png');announce('인증서 PNG를 저장했어요.');}catch{announce('인증서 그림을 불러오지 못했어요. 연결을 확인하고 다시 눌러 주세요.');}finally{button.disabled=false;}};
- document.body.append(overlay);overlay.showModal();overlay.querySelector('#certificate-print').focus({preventScroll:true});
+ document.body.append(overlay);overlay.showModal();mountCertificateWax(overlay.querySelector('.cert-paper'),{label:'식물 탐구\n연구원 인증',onImpact:()=>playMapEncounter('finish',3)});overlay.querySelector('#certificate-print').focus({preventScroll:true});
 }
