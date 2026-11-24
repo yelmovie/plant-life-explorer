@@ -45,15 +45,27 @@ async function verifyStory(page, kind, size) {
   const timeline = story.locator('input[type="range"]');
   await video.waitFor();
   await page.waitForFunction(() => document.querySelector('.story-video')?.readyState >= 2);
-  if (!await video.evaluate(el => el.paused)) await play.click();
-  await timeline.evaluate(el => {
-    el.value = '10';
-    el.dispatchEvent(new Event('input', { bubbles: true }));
-  });
-  await page.waitForFunction(() => {
-    const el = document.querySelector('.story-video');
-    return el.paused && !el.seeking && Math.abs(el.currentTime - 10) < .15;
-  });
+  const canSeek = await video.evaluate(el => Array.from({ length: el.seekable.length }, (_, i) =>
+    el.seekable.start(i) <= 10 && el.seekable.end(i) >= 10).some(Boolean));
+  if (canSeek) {
+    if (!await video.evaluate(el => el.paused)) await play.click();
+    await timeline.evaluate(el => {
+      el.value = '10';
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    await page.waitForFunction(() => {
+      const el = document.querySelector('.story-video');
+      return el.paused && !el.seeking && Math.abs(el.currentTime - 10) < .15;
+    });
+  } else {
+    // Pages streams the full MP4. Play through the cue when the browser has no seekable range.
+    if (await video.evaluate(el => el.paused)) await play.click();
+    await video.evaluate(el => { el.playbackRate = 4; });
+    await page.waitForFunction(() => document.querySelector('.story-video').currentTime >= 10,
+      null, { timeout: 30000 });
+    await play.click();
+    await video.evaluate(el => { el.playbackRate = 1; });
+  }
   assert.equal(await story.locator('[data-story-action="captions"]').count(), 0);
   const caption = story.locator('#story-caption.sr-only');
   assert.ok((await caption.textContent()).trim());
@@ -62,11 +74,12 @@ async function verifyStory(page, kind, size) {
   await noOverlap([video, title, exit, play, sound, timeline, story.locator('.story-time')], kind);
   for (const control of [exit, play, sound, timeline]) await reachable(control);
   if (output) await page.screenshot({ path: join(output, `${size}-${kind}.png`) });
+  const pausedAt = await video.evaluate(el => el.currentTime);
   await play.click();
-  await page.waitForFunction(() => {
+  await page.waitForFunction(time => {
     const el = document.querySelector('.story-video');
-    return !el.paused && el.currentTime > 10;
-  });
+    return !el.paused && el.currentTime > time;
+  }, pausedAt);
   await noOverlap([video, exit, play, sound, timeline], kind + ' during playback');
   await exit.click();
   await story.waitFor({ state: 'detached' });
