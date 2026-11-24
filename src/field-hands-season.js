@@ -19,7 +19,7 @@ const shortName={winter:'겨울',bud:'초봄',spring:'다음 봄'};
 // Season tags use the shared line icons, not emoji (emoji draw differently on each tablet).
 const seatIcon={winter:'❄',bud:icon('leaf',14),spring:icon('sun',14)};
 // Card k sits at HALF+k*SPAN on the rim; the hand shows it in full when pointing at it.
-const SPAN=120,HALF=60,FULL=360;
+const SPAN=120,HALF=60,FULL=360,FINISH_SLOP=10;
 const inOrder=a=>FIELD_ORDER.every((x,i)=>a[i]===x);
 
 export function timeDial(e,u,kind,fallback){
@@ -56,23 +56,33 @@ function mountDial(bench,onAction,on,later,capture){
  const park=()=>{parked=true;bloomed=false;bench.classList.remove('bloomed');turn=HALF+SPAN;paint(turn);hotspot.hidden=false;};
  paint(turn);
 
- // Turning back rewinds time; letting go keeps the hand in place, and a full lap blooms the plant.
+ // Keep a partial turn when the pointer lifts. Snap to the start after nearly a full lap.
  if(!awaiting){
-  on(face,'pointerdown',e=>{if(e.button>0||spin)return;e.preventDefault();e.stopPropagation();capture(face,e.pointerId);const r=face.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+  on(face,'pointerdown',e=>{if(e.button>0||spin||(!done&&bloomed))return;e.preventDefault();e.stopPropagation();capture(face,e.pointerId);const r=face.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
    clearTimeout(parkTimer);
    if(bloomed||parked)rewind();
    parked=false;
    if(hotspot)hotspot.hidden=true;
    spin={id:e.pointerId,cx,cy,last:angleOf(e,cx,cy)};bench.classList.add('spinning');});
-  on(face,'pointermove',e=>{if(!spin||e.pointerId!==spin.id)return;e.preventDefault();if(Math.hypot(e.clientX-spin.cx,e.clientY-spin.cy)<18)return;
-   const a=angleOf(e,spin.cx,spin.cy);let d=a-spin.last;if(d>180)d-=360;if(d<-180)d+=360;spin.last=a;if(bloomed)return;
-   let t=Math.max(0,turn+d);if(t>=FULL){t=FULL;bloomed=true;bench.classList.add('bloomed');}
-   turn=t;paint(t);});
-  const end=e=>{if(!spin||e.pointerId!==spin.id)return;spin=null;bench.classList.remove('spinning');
-   if(done)parkTimer=later(park,bloomed&&e.type==='pointerup'?900:180);
-   else if(e.type==='pointerup'&&bloomed)later(()=>onAction('field-season-turn',kind),900);
+  const move=e=>{
+   if(!spin||e.pointerId!==spin.id||bloomed||Math.hypot(e.clientX-spin.cx,e.clientY-spin.cy)<18)return;
+   e.preventDefault();
+   const a=angleOf(e,spin.cx,spin.cy);let d=a-spin.last;if(d>180)d-=FULL;if(d<-180)d+=FULL;spin.last=a;
+   turn=Math.max(0,turn+d);
+   if(turn>=FULL-FINISH_SLOP){
+    turn=FULL;bloomed=true;bench.classList.add('bloomed');
+    // A browser can cancel the pointer after the bloom, so queue the record here.
+    if(!done)later(()=>onAction('field-season-turn',kind),900);
+   }
+   paint(turn);
   };
-  on(face,'pointerup',end);on(face,'pointercancel',end);
+  on(face,'pointermove',move);
+  const end=e=>{if(!spin||e.pointerId!==spin.id)return;
+   if(e.type==='pointerup')move(e);
+   spin=null;bench.classList.remove('spinning');
+   if(done)parkTimer=later(park,bloomed&&e.type==='pointerup'?900:180);
+  };
+  on(face,'pointerup',end);on(face,'pointercancel',end);on(face,'lostpointercapture',end);
  }
  if(hotspot)on(hotspot,'click',()=>{
   const {clue,asset}=REGROWTH[kind];
