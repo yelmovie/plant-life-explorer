@@ -124,8 +124,13 @@ try{
  await until(`JSON.parse(localStorage['${KEY}'])?.page===7`);
  check((await saved()).page===7&&await page.locator('.field-review-bed').count()===3,'4장: original three sites open without a second planting');
  const gardenBefore=(await saved()).garden;
- await act('garden-review-pick','aloe');await act('garden-review-reason','aloe');
- check((await saved()).gardenReview.explained,'4장: one site explanation recorded');
+ await act('garden-review-pick','aloe');
+ const bed=await page.locator('[data-action="garden-review-pick"][data-id="aloe"]').boundingBox();
+ const reason=await page.locator('[data-action="garden-review-reason"][data-id="aloe"]').boundingBox();
+ // A finger lifted near the matching card still connects the pair.
+ await touch(line([bed.x+bed.width/3,bed.y+bed.height/2],[reason.x-14,reason.y+reason.height/2],12));
+ await until(`JSON.parse(localStorage['${KEY}'])?.gardenReview?.explained===true`);
+ check((await saved()).gardenReview.explained,'4장: touch drag near the reason card records a site explanation');
  assert.deepEqual((await saved()).garden,gardenBefore);
  check(!!await page.locator('.garden-link-line path').getAttribute('d'),'4장: linked reason remains visible');
  await complete(3);

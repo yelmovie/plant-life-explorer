@@ -1,4 +1,98 @@
-/* Field mission 2, steps 2-3: turn the hand of a time dial to play a time-lapse of the rim photos. */
+/* Step 1: size the two comparisons from the space between the header and footer. */
+body #app .field-mission-view:has(.field-season-pairs) {
+ height: 100dvh; min-height: 0; grid-template-rows: 0 minmax(0, 1fr) auto;
+}
+#app .field-mission-view .field-layout:has(.field-season-pairs) {
+ display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto;
+}
+#app .field-mission-view .field-layout:has(.field-season-pairs) > .learning-scene {
+ grid-area: 1 / 1; height: 100%; min-height: 0; padding: 4px 0; overflow: visible;
+}
+#app .field-layout:has(.field-season-pairs) .field-mission {
+ height: 100%; min-height: 0; padding: 0;
+}
+#app .field-mission .mission-workspace:has(> .field-season-pairs) {
+ container-type: size; display: flex; flex-direction: column; justify-content: center;
+ min-height: 0; padding: 0;
+}
+#app .field-mission-view .field-layout:has(.field-season-pairs) > .objective-next {
+ grid-area: 2 / 1; position: relative; inset: auto; justify-self: end; margin: 4px 6px; min-height: 48px;
+}
+#app .field-mission-view:has(.field-season-pairs) .learning-footer [data-id="explore"][aria-disabled="true"] { display: none; }
+#app .field-mission-view:has(.field-season-pairs) .guide-finger { display: none; }
+
+#app .field-season-pairs {
+ --specimen-gap: clamp(8px, 2cqh, 14px);
+ --season-gap: clamp(12px, 2cqw, 28px);
+ --specimen-name: 112px;
+ --photo-width: min(600px, calc((100cqh - var(--specimen-gap)) * .75));
+ --comparison-width: calc(2 * var(--photo-width) + var(--season-gap));
+ align-self: center;
+ width: min(100%, calc(var(--specimen-name) + 12px + var(--comparison-width)));
+ grid-template-columns: minmax(0, 1fr);
+ gap: var(--specimen-gap);
+}
+#app .field-season-pair {
+ display: grid; grid-template-columns: var(--specimen-name) minmax(0, 1fr);
+ align-items: center; gap: 12px;
+}
+#app .field-season-pair > h3 {
+ justify-self: end; margin: 0; padding: 4px 12px; font-size: clamp(18px, 2vw, 24px); line-height: 1.3;
+}
+#app .field-season-images { width: min(100%, var(--comparison-width)); gap: var(--season-gap); }
+#app .field-season-images > div { position: relative; }
+#app .field-season-images :is(.season-dig, .link-target) { width: 100%; }
+#app .field-season-images .season-cap {
+ position: absolute; left: 6px; top: 6px; z-index: 4;
+ padding: 2px 8px; border-radius: 999px; background: var(--text-plate); pointer-events: none;
+}
+#app .field-season-images .dig-cover::before { content: '흙을 문질러 봐'; font-size: var(--font-size-xs); }
+#app .field-season-images .link-handle { width: 44px; height: 44px; margin: -22px 0 0 -22px; }
+
+@media (max-width: 900px), (orientation: portrait) {
+ body #app .field-mission-view:has(.field-season-pairs) {
+  display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 6px; padding-inline: 10px;
+ }
+ #app .field-mission-view:has(.field-season-pairs) > .field-layout { height: 100%; }
+ #app .field-mission-view:has(.field-season-pairs) .learning-footer { padding: 0 0 6px; }
+ #app .field-mission-view:has(.field-season-pairs) .learning-footer .guide-avatar { min-height: 48px; }
+ #app .field-mission-view:has(.field-season-pairs) .learning-footer .guide-portrait { height: 48px; }
+ #app .field-mission-view:has(.field-season-pairs) .learning-footer .guide-bubble {
+  margin: 0; padding: 6px 10px; font-size: var(--font-size-xs); line-height: 1.3; word-break: keep-all;
+ }
+ body.large-text #app .field-mission-view:has(.field-season-pairs) .learning-footer .guide-bubble { font-size: var(--frame-text); }
+}
+@media (orientation: portrait), (max-height: 550px) and (orientation: landscape) {
+ #app .field-season-pairs {
+  --season-gap: 10px;
+  --photo-width: calc((100cqh - var(--specimen-gap) - 72px) * .75);
+  width: min(100%, var(--comparison-width));
+ }
+ #app .field-season-pair { grid-template-columns: minmax(0, 1fr); justify-items: center; gap: 4px; }
+ #app .field-season-pair > h3 { justify-self: center; }
+}
+@media (max-height: 550px) and (orientation: landscape) {
+ body #app .field-mission-view:has(.field-season-pairs) {
+  grid-template-rows: 0 minmax(0, 1fr) auto; padding-top: 68px; row-gap: 4px;
+ }
+ #app .field-mission-view:has(.field-season-pairs) .activity-pill {
+  grid-area: auto; position: absolute; z-index: 21; top: 8px; left: 50%; transform: translateX(-50%);
+  max-width: calc(100% - 240px); margin: 0;
+ }
+ #app .field-season-pairs {
+  --photo-width: calc((100cqh - 36px) * 1.5);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: min(100%, calc(2 * var(--comparison-width) + var(--specimen-gap)));
+ }
+}
+@media (max-width: 480px) {
+ #app .field-season-images .season-cap { left: 4px; top: 4px; }
+ #app .field-season-images .dig-cover::before { padding: 3px 6px; }
+ #app .field-season-images .link-zone { font-size: var(--font-size-xs); }
+}
+
+/* Steps 2–3: turn the hand of a time dial to play a time-lapse of the rim photos. */
 #app .time-bench { --r: 118px; --turn: 0deg; --grow: 0; display: grid; grid-template-columns: 320px minmax(0,1fr); align-items: center; gap: 16px; padding: 8px 14px; border-radius: 18px; background: #fffdf3e6; }
 
 /* The dial: a progress ring, a face you turn, a hand, and three cards on the rim. */

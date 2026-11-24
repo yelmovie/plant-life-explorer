@@ -60,7 +60,7 @@ export function fieldGardenReview(s){
  };
  return layout(`<section class="work-board field-review-board garden-review-board" aria-label="식물과 까닭 잇기">
   ${done?`<p class="field-review-result" role="status" tabindex="-1">${icon('check',20)} ${josa(p.name,'이/가')} ${HABITATS[p.habitat]}에서 잘 살 수 있는 까닭을 찾았어.</p>`:
-   '<p class="garden-link-instructions">정원의 식물 하나와 알맞은 까닭을 <b>선으로 이어</b> 봐. 차례로 눌러도 돼.</p>'}
+   `<p class="garden-link-instructions">${p?`<b>${p.name}</b>의 알맞은 까닭을 눌러 봐.`:'<b>식물 → 까닭</b> 순서로 눌러 봐. 끌어서 이어도 돼.'}</p>`}
   <div class="garden-link-board" data-garden-link>
    <div class="garden-link-column garden-link-plants"><h2>정원의 식물</h2>${REVIEW_PLANTS.map(bed).join('')}</div>
    <div class="garden-link-column garden-link-reasons"><h2>잘 살 수 있는 까닭</h2>${REVIEW_REASONS.map(reason).join('')}</div>
@@ -69,15 +69,11 @@ export function fieldGardenReview(s){
  </section>`,'');
 }
 
-// The same pair can be joined in one gesture or by activating the two controls.
+// Cards work as ordinary buttons. A drag adds a preview and generous release targets for fingers.
 export function mountGardenReviewLink(board,onAction){
  if(!board)return;
  const line=board.querySelector('.garden-link-line'),path=line.querySelector('path');
  const source='[data-action="garden-review-pick"]',target='[data-action="garden-review-reason"]';
- const hit=(x,y)=>{
-  const el=document.elementFromPoint(x,y)?.closest(target);
-  return board.contains(el)?el:null;
- };
  const center=el=>{
   const box=el.querySelector('.garden-link-point').getBoundingClientRect();
   return [box.left+box.width/2,box.top+box.height/2];
@@ -96,51 +92,82 @@ export function mountGardenReviewLink(board,onAction){
   redraw();
   return ()=>observer.disconnect();
  }
+
+ const reasons=[...board.querySelectorAll(target)];
  let drag=null,suppressClick=false,delivery;
+ const reasonAt=({clientX:x,clientY:y,pointerType})=>{
+  const underFinger=document.elementFromPoint(x,y);
+  const exact=underFinger?.closest(target);
+  if(exact&&board.contains(exact))return exact;
+  if(!underFinger||underFinger.closest('button'))return null;
+  const reach=pointerType==='mouse'?5:18;
+  const candidates=reasons.map(reason=>{
+   const {left,right,top,bottom}=reason.getBoundingClientRect();
+   const distance=Math.hypot(Math.max(left-x,0,x-right),Math.max(top-y,0,y-bottom));
+   return {reason,distance};
+  }).filter(candidate=>candidate.distance<=reach).sort((a,b)=>a.distance-b.distance);
+  if(!candidates.length)return null;
+  const [nearest,next]=candidates;
+  // In the space between two cards, keep the previewed one when both are equally close.
+  if(next&&next.distance-nearest.distance<2)return drag.aim===next.reason?next.reason:drag.aim===nearest.reason?nearest.reason:null;
+  return nearest.reason;
+ };
  const handlers=new AbortController(),options={signal:handlers.signal};
  const reset=()=>{
-  drag?.plant.classList.remove('is-connecting');
-  board.querySelector('.is-aimed')?.classList.remove('is-aimed');
+  drag.plant.classList.remove('is-connecting');
+  drag.aim?.classList.remove('is-aimed');
   board.classList.remove('is-drawing');
-  path.removeAttribute('d');drag=null;
+  path.removeAttribute('d');
+  drag=null;
  };
+ const movedEnough=e=>Math.hypot(e.clientX-drag.x,e.clientY-drag.y)>=(e.pointerType==='mouse'?6:10);
  board.addEventListener('pointerdown',e=>{
+  if(drag||e.isPrimary===false||e.button!==0)return;
+  suppressClick=false;
   const plant=e.target.closest(source);
-  if(!plant||drag||e.button!==0)return;
-  drag={plant,id:e.pointerId,x:e.clientX,y:e.clientY,moved:false};
+  if(!plant)return;
+  drag={plant,id:e.pointerId,x:e.clientX,y:e.clientY,moved:false,aim:null};
   plant.setPointerCapture?.(e.pointerId);
  },options);
  board.addEventListener('pointermove',e=>{
   if(!drag||e.pointerId!==drag.id)return;
-  const {clientX:x,clientY:y}=e;
-  if(!drag.moved&&Math.hypot(x-drag.x,y-drag.y)<7)return;
+  if(!drag.moved){
+   if(!movedEnough(e))return;
+   drag.moved=true;
+   drag.plant.classList.add('is-connecting');
+   board.classList.add('is-drawing');
+  }
   e.preventDefault();
-  drag.moved=true;
-  drag.plant.classList.add('is-connecting');
-  board.classList.add('is-drawing');
-  const reason=hit(x,y);
-  board.querySelector('.is-aimed')?.classList.remove('is-aimed');
-  reason?.classList.add('is-aimed');
-  draw(drag.plant,reason?center(reason):[x,y]);
+  const reason=reasonAt(e);
+  if(reason!==drag.aim){
+   drag.aim?.classList.remove('is-aimed');
+   reason?.classList.add('is-aimed');
+   drag.aim=reason;
+  }
+  draw(drag.plant,reason?center(reason):[e.clientX,e.clientY]);
  },options);
  board.addEventListener('pointerup',e=>{
   if(!drag||e.pointerId!==drag.id)return;
-  const {moved,plant}=drag,reason=moved?hit(e.clientX,e.clientY):null;
+  const {plant}=drag,moved=drag.moved||movedEnough(e),reason=moved?reasonAt(e):null;
   reset();
   if(!moved)return;
-  // The pointer gesture consumed this click. Let a later tap or keyboard press through.
   suppressClick=true;
-  clearTimeout(delivery);
-  delivery=setTimeout(()=>{
-   suppressClick=false;
-   if(reason&&board.isConnected)onAction('garden-review-link',plant.dataset.id+':'+reason.dataset.id);
+  // Let pointerup finish first so its generated click cannot activate a replaced card.
+  if(reason)delivery=setTimeout(()=>{
+   if(board.isConnected)onAction('garden-review-link',plant.dataset.id+':'+reason.dataset.id);
   },0);
  },options);
- board.addEventListener('pointercancel',reset,options);
- board.addEventListener('lostpointercapture',reset,options);
+ const cancel=e=>{
+  if(!drag||e.pointerId!==drag.id)return;
+  suppressClick=drag.moved;
+  reset();
+ };
+ board.addEventListener('pointercancel',cancel,options);
+ board.addEventListener('lostpointercapture',cancel,options);
  board.addEventListener('click',e=>{
-  if(!suppressClick)return;
-  e.preventDefault();e.stopImmediatePropagation();
+  if((e.detail===0&&!e.pointerType)||(!suppressClick&&!drag?.moved))return;
+  e.preventDefault();
+  e.stopImmediatePropagation();
  },{...options,capture:true});
  return ()=>{clearTimeout(delivery);handlers.abort();};
 }

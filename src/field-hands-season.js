@@ -115,8 +115,9 @@ export function mountSeasonHands(root,onAction){
   // A ghost dot glides from the handle to the middle of the spring picture (never to the answer).
   const ghost=pair.querySelector('.link-ghost'),aim=()=>{if(!ghost)return;const p=pair.getBoundingClientRect(),h=handle.getBoundingClientRect(),t=targetBox.getBoundingClientRect();
    ghost.style.cssText=`--x1:${h.left+h.width/2-p.left}px;--y1:${h.top+h.height/2-p.top}px;--x2:${t.left+t.width/2-p.left}px;--y2:${t.top+t.height/2-p.top}px`;};
-  const raf=requestAnimationFrame(()=>{restore();aim();});offs.push(()=>cancelAnimationFrame(raf));on(window,'resize',aim);
   let pulling=false;
+  const layout=()=>{if(!pulling)restore();aim();};
+  const raf=requestAnimationFrame(layout);offs.push(()=>cancelAnimationFrame(raf));on(window,'resize',layout);
   on(handle,'pointerdown',e=>{e.preventDefault();e.stopPropagation();pulling=true;capture(handle,e.pointerId);pair.classList.add('linking');svg.classList.remove('fixed');draw(e.clientX,e.clientY);});
   on(handle,'pointermove',e=>{if(!pulling)return;e.preventDefault();draw(e.clientX,e.clientY);const t=targetBox.getBoundingClientRect(),inside=e.clientX>=t.left&&e.clientX<=t.right&&e.clientY>=t.top&&e.clientY<=t.bottom;targetBox.querySelectorAll('.link-zone').forEach(z=>z.classList.remove('hover'));if(inside)targetBox.querySelector(partAt((e.clientY-t.top)/t.height)==='leaf'?'.upper':'.lower').classList.add('hover');});
   const end=e=>{if(!pulling)return;pulling=false;pair.classList.remove('linking');targetBox.querySelectorAll('.link-zone').forEach(z=>z.classList.remove('hover'));const t=targetBox.getBoundingClientRect();if(e.type==='pointerup'&&e.clientX>=t.left&&e.clientX<=t.right&&e.clientY>=t.top&&e.clientY<=t.bottom){const part=partAt((e.clientY-t.top)/t.height),[x,y]=zoneCenter(part);draw(x,y);onAction('field-season-link',`${kind}:${part}`);}else restore();};

@@ -142,6 +142,7 @@ export function renderActivity(s,u,grid){
  // Button names in Leafy's lines match the buttons on screen (fieldNextButton, footer primary).
  const nextLabel=todo?.currentDone?(todo.i===(u.fieldMission?.stage??0)+1?'다음 도전':`${todo.i+1}번 임무로 가기`):'';
  const hint=field&&!fieldReady&&!todo?.currentDone?sceneHint(fieldScene):'',said=field?fieldFeedback(u):null;
+ const seasonLinkFeedback=i===1&&u.fieldMission?.stage===0&&said?.success?`${esc(said.text)} `:'';
  const nextLeafRule=!field&&p===1&&activeLeafRule(s)==='edge'&&leafSortDone(s,'edge');
  const seasonReview=!field&&p===3&&fieldSeasonReview(s);
  const nextSeasonReview=seasonReview&&!ready&&seasonReviewDone(s,seasonReviewPlant(s,u));
@@ -152,7 +153,7 @@ export function renderActivity(s,u,grid){
  const tip=!field&&!ready&&guide?.tip&&(guide.target||seasonReview)?`<span class="bubble-next">${esc(guide.tip)}</span>`:'';
  const reply=!field?{text:u.activityFeedback?esc(u.activityFeedback)+tip:ready?`${single?'발견을 기록했어.':'기록이 준비됐어.'} 아래의 <b>${josa(doneLabel,'을/를')}</b> 눌러 줘.`:tip||help,success:ready}
   :fieldReady?{text:u.challengeGoal?'도전 끝! 아래의 <b>도전 마치기</b>를 눌러 줘.':`현장 임무 성공! 아래의 <b>${fieldDoneLabel}</b>를 눌러 줘.`,success:true}
-  :todo?.currentDone?{text:`이 단계는 끝! 오른쪽 아래 <b>${josa(nextLabel,'을/를')}</b> 눌러 줘.`,success:true}
+  :todo?.currentDone?{text:`${seasonLinkFeedback||'이 단계는 끝! '}오른쪽 아래 <b>${josa(nextLabel,'을/를')}</b> 눌러 줘.`,success:true}
   :u.fieldMission?.feedback?{text:hint&&hint!==said.text?`${said.text}<span class="bubble-next">${hint}</span>`:said.text,success:said.success}
   :hint?{text:hint,success:false}:said;
  const mood=ready||fieldReady||reply.success?'happy':field?'think':'idle';

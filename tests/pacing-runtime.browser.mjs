@@ -74,13 +74,63 @@ try{
   report.checks.push('Garden: same-cell tap is a no-op; optional extra planting and undo preserve reasons and readiness');await context.close();
  }
  {
-  const state={...structuredClone(completed),screen:'activity',page:8};state.completed[8]=state.completed[9]=false;state.finished=false;state.fieldBridges[4]=false;
-  state.fieldEvidence.bag={...freshState().fieldEvidence.bag,prediction:'cover',assembled:['surface','cover'],design:{surface:'lotus',cover:'flap'}};state.design=freshState().design;state.tests=[];state.inventionExplanations={};state.testExplanation=null;
-  const {context,page}=await fixture(state);await page.locator('[data-action="field-stage"][data-id="1"]').tap();
-  const cloud=await page.locator('[data-bag-cloud]').boundingBox();await page.touchscreen.tap(cloud.x+cloud.width/2,cloud.y+cloud.height/2);await page.waitForFunction(()=>document.querySelector('[data-rain-count] b')?.textContent==='10');
-  await page.locator('[data-action="field-stage"][data-id="0"]').tap();await page.waitForTimeout(2300);
-  assert.equal((await read(page)).fieldEvidence.bag.tests.length,0);
-  report.checks.push('Leaving bag rain after all drops launch cancels callbacks and never adds a late trial');await context.close();
+  const state={...structuredClone(completed),screen:'activity',page:8,finished:false,bagReviewAnswer:'',testPrediction:''};
+  state.completed[8]=state.completed[9]=false;
+  state.journeyRequired[4]=true;state.fieldBridges[4]=false;
+  state.fieldEvidence.bag=freshState().fieldEvidence.bag;
+  const {context,page}=await fixture(state);
+  const trials=async()=> (await read(page)).fieldEvidence.bag.tests;
+  const waitForTrials=count=>page.waitForFunction(([key,count])=>JSON.parse(localStorage.getItem(key))?.fieldEvidence.bag.tests.length===count,[STORAGE_KEY,count]);
+
+  await action(page,'field-bag-predict','cover');
+  const cloud=page.locator('[data-bag-cloud]');
+  await cloud.waitFor();
+  // The cloud drifts continuously, so tap its current centre.
+  const {x,y,width,height}=await cloud.boundingBox();
+  await page.touchscreen.tap(x+width/2,y+height/2);
+  await waitForTrials(1);
+  assert.deepEqual((await trials()).map(t=>t.key),['plain:open']);
+  await action(page,'field-stage','1');
+  await action(page,'field-bag-try','lotus:open');
+  await page.waitForFunction(()=>document.querySelector('[data-bag-stage].raining [data-rain-count] b')?.textContent==='10');
+  await action(page,'back');
+  await page.locator('main.stage-map').waitFor();
+  // The fall, runoff and result pause after the last drop launches take up to 2,280 ms.
+  await page.waitForTimeout(2600);
+  assert.deepEqual((await trials()).map(t=>t.key),['plain:open']);
+  report.checks.push('Leaving the comparison bench after the last drop launches cancels the unfinished trial');
+
+  await action(page,'map-overview');
+  await page.locator('.world-node[data-id="4"] .world-label').tap();
+  await action(page,'enter-mission');
+  for(const [index,key] of ['lotus:open','plain:flap','lotus:flap'].entries()){
+   await action(page,'field-bag-try',key);
+   await waitForTrials(index+2);
+  }
+  const results=await trials();
+  assert.deepEqual(results.map(t=>t.key),['plain:open','lotus:open','plain:flap','lotus:flap']);
+  assert.deepEqual(results.map(t=>t.notebookDry),[false,false,false,true]);
+  assert.deepEqual(results.map(t=>t.rolls),[false,true,false,true]);
+  await page.locator('.learning-footer [data-action="journey-mode"][data-id="explore"]').tap();
+  await page.locator('.bag-review-board').waitFor();
+  assert.equal(await page.locator('.field-review-trial').count(),4);
+  await action(page,'bag-review-answer','surface');
+  const complete=page.locator('.learning-footer [data-action="complete"]');
+  assert.equal(await complete.getAttribute('aria-disabled'),'true');
+  await action(page,'bag-review-answer','both');
+  await page.screenshot({path:fileURLToPath(new URL('bag-results.png',output)),animations:'disabled'});
+  await complete.tap();
+  await page.locator('#dialog[open] [data-action="reward-map"]').waitFor();
+  assert.match(await page.locator('#dialog[open]').innerText(),/탐험 가방이 완성됐어/);
+  const restored=await read(page);
+  assert.deepEqual(restored.completed.slice(8),[true,true]);
+  assert.deepEqual(restored.fieldEvidence.bag.tests,results);
+  await page.screenshot({path:fileURLToPath(new URL('bag-restored.png',output)),animations:'disabled'});
+  await action(page,'reward-map');
+  await page.reload();
+  assert.deepEqual((await read(page)).fieldEvidence.bag.tests,results);
+  report.checks.push('Returning to the bench allows four distinct rain tests, a corrected explanation and a saved restoration reward');
+  await context.close();
  }
  for(const [width,height] of [[1280,800],[1024,768],[1280,720],[768,1024]]){
   const {context,page}=await fixture({...completed,screen:'activity',page:5,completed:completed.completed.map((value,i)=>i===5?false:value),habitatCompareAnswer:'',reasons:{},habitatFeatures:{}});await page.setViewportSize({width,height});
