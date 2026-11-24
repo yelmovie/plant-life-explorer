@@ -193,6 +193,11 @@
 ## 2026-11-18 타이틀 그림글자
 - `title-logo.webp`: 시작 화면 제목 "초록정원 연구기지" 그림글자. ChatGPT 구독 계정의 Codex 내장 이미지 도구(GPT 이미지)로 생성했고, 2번·4번 로고와 온실 배경을 그림체 참고로 붙였다. 투명 배경 PNG 원본은 `_source/branding/title-logo-20261118.png`(Git 제외), 화면용은 여백을 잘라 1200px WebP로 변환했다. 납품 썸네일(`thumbnails/`)에도 같은 그림글자를 쓴다. 글자는 생성 뒤 한 자씩 확인했다.
 
+## 2026-11-24 리피 활동 안내 음성
+
+- `audio/lipi-guide-*.mp3` 5개는 ElevenLabs Voice Library의 기존 리피 보이스 Aria – Bright & Youthful Korean(`O2KReOFLpoR65nz6C9Se`, `eleven_v4`)으로 제작했다. 원본 생성 ID `aCWCdB7efrdM0bzZ0M6p`를 대사 단위로 나눴다.
+- 앱은 로컬 음원을 사용한다. 각 음원에 대응하는 문구는 `src/voice-lines.js`에서 확인할 수 있다.
+
 ## 2026-11-19 이야기 영상 음성 출처
 - `videos/intro.mp4`, `videos/outro.mp4`에 섞인 대사·내레이션(2026-11-13 반영)은 ElevenLabs로 생성했다(2026-11-19 사용자 확인). 생성 당시 ElevenLabs 유료 요금제(Starter)를 구독 중이었고 상업 이용이 가능하다. 목소리 이름과 생성 ID는 저장소에 남아 있지 않다.
 
@@ -204,3 +209,5 @@
 ## 2026-11-23 인증서 촛농 봉인
 
 사용자가 이번 작업에 직접 제공한 투명 PNG 원본을 알파를 유지한 768px WebP로 변환하여 사용. 원본: 공통 작업 폴더 `_scratch/certificate-wax-20261123/assets/user-wax-seal-reference.png`. 배포본: `assets/ui/certificate-wax-seal-20261123.webp`. 프로젝트별 문구는 별도 텍스트로 합성하며 생성 AI 이미지로 기재하지 않음.
+
+- `generated/bag-rain-streaks.webp`: 5장 가방 비 시험에 겹치는 투명 빗결. Codex 기본 ImageGen으로 제작하고 투명도를 유지해 WebP로 변환했다.

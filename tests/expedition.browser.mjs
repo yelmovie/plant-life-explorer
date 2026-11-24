@@ -160,16 +160,20 @@ try{
     await rubSoil('herb');await pullThread('herb','upper');await until(e=>e.seasons.links.herb==='leaf','herb wrong link');
     result.wrongFeedback=await wrongFeedback('뿌리는 땅속에서 살아 있어');
     await keyboardPress('[data-field-drop="link:herb:root"]');await until(e=>e.seasons.links.herb==='root','herb link');
-    // 2: the rim already shows the seasons in order; spin the hand a full lap, tap the sprout spot.
+    // 2: spin the seasons in order, then tap the marked bud to open its close-up.
     await stage(1);
     assert.equal(await page.locator('[data-time-dial]').evaluate(b=>[...b.querySelectorAll('[data-dial-card]')].sort((x,y)=>parseFloat(x.style.getPropertyValue('--a'))-parseFloat(y.style.getPropertyValue('--a'))).map(c=>c.dataset.dialCard).join(',')),'winter,bud,spring');
     await spinDial();await until(e=>e.seasons.tree.join()==='winter,bud,spring','tree order');
-    await page.locator('.time-bench.pin-mode').waitFor();
-    const bud=await box('[data-viewer] [data-layer="bud"] img');await tapAt(bud.x+bud.width/2,bud.y+bud.height*.3);
-    await until(e=>e.seasons.clues.tree==='branches','tree regrow pin');
-    // 3: the underground herb through the keyboard.
+    await tap('[data-regrow-observe]');
+    await page.locator('#dialog[open] [data-asset="season_cherry_winter_bud"]').waitFor();
+    await until(e=>e.seasons.clues.tree==='branches','winter-bud observation');
+    await page.keyboard.press('Escape');
+    // 3: the underground herb can be observed with the keyboard too.
     await stage(2);await keyboardPress('.lens-fallback [data-action="field-season-turn"][data-id="herb"]');await until(e=>e.seasons.herb.join()==='winter,bud,spring','herb turned');
-    await keyboardPress('.lens-fallback [data-action="field-season-clue"][data-id="herb:rootbud"]');
+    await keyboardPress('[data-regrow-observe]');
+    await page.locator('#dialog[open] [data-asset="season_sowthistle_crown_bud"]').waitFor();
+    await until(e=>e.seasons.clues.herb==='rootbud','root-crown observation');
+    await page.keyboard.press('Escape');
    }else if(mission===2){
     // 1: slide the switch down (air) or tap the label (solid).
     const knob=mid(await box('[data-heft="air"] .sw-knob'));await stroke([knob,[knob[0],knob[1]+40],[knob[0],knob[1]+80]],{steps:4});gesture('switchSlide');

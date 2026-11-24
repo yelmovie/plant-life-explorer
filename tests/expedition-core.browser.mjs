@@ -39,6 +39,8 @@ try{
   for(const rule of ['edge','narrow']){s.groupsByRule[rule]=Object.fromEntries(PLANTS.map(p=>[p.id,p[rule]?'yes':'no']));s.classificationEvidence[rule]='cherry';}s.groups={...s.groupsByRule.edge};localStorage.setItem('green-garden-mvp-v2',JSON.stringify(s));
  });
  await page.reload();await page.locator('[data-action="complete"]').click();await page.waitForFunction(()=>JSON.parse(localStorage.getItem('green-garden-mvp-v2')).page===1);
+ await page.locator('[data-action="leaf-rule"][data-id="narrow"]').click();
+ await page.locator('[data-action="leaf-partner"][data-id="cherry"]').click();
  await page.locator('[data-action="complete"]').click();assert.match(await page.locator('#dialog').innerText(),/관찰 렌즈 획득/);
  await page.locator('.reward-building').evaluate(img=>img.decode());
  await screenshot('reward');assert.deepEqual((await saved()).completed,[true,true,false,false,false,false,false,false,false,false]);

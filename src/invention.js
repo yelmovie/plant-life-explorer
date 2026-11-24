@@ -65,8 +65,8 @@ function renderFieldBagReview(s,u,review){
  const names=['보통 가방','연잎 겉면만','덮개만','두 부품 모두'];
  const cards=review.trials.map((trial,i)=>`<article class="field-review-trial ${trial.notebookDry?'dry':''}">
   <h2>${names[i]}</h2>${bagArt(trial)}
-  <span>물방울 ${trial.rolls?'굴러감':'남음'}</span>
-  <b>공책 ${trial.notebookDry?'뽀송':'젖음'}</b>
+  <div class="bag-review-evidence"><span>물방울 ${trial.rolls?'굴러감':'남음'}</span>
+  <b>공책 ${trial.notebookDry?'뽀송':'젖음'}</b></div>
  </article>`).join('');
  return `<div class="learning-layout"><section class="learning-scene"><div class="work-board field-review-board bag-review-board">
     <div class="field-review-trials">${cards}</div>

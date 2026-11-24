@@ -44,7 +44,7 @@ export function mountStageMap(root,ui,onArrive,encounterOptions={}){
   const encounters=mountVillageEncounters({host:viewport,clearIndex:encounterOptions.clearIndex,stages:ENTRANCES.map((entry,i)=>{
     if(!encounterOptions.completed?.[i])return null;
     const p=trailPoint(entry.distance+(i===4?-42:42));return {x:p.x,y:p.y,name:REWARDS[i].name};
-  }),progress:encounterOptions.progress,onSave:encounterOptions.onSave,tone:encounterOptions.tone,finaleHold:encounterOptions.finaleHold,
+  }),progress:encounterOptions.progress,onSave:encounterOptions.onSave,tone:encounterOptions.tone,
     // hold: an achievement card is waiting to open (or open), so the villains and the finale film wait behind it.
     blocked:()=>!!blocked()||overview||!!encounterOptions.hold?.(),reduced:()=>reduce.matches,actors:[actor,flower]});
   if(encounters)world.append(flower);

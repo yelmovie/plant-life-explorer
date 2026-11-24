@@ -1,5 +1,5 @@
 // 3장 실험실·4장 서식지·정원 화면(2026-11-21 코드 구조 정리: learning.js에서 내용 그대로 옮김).
-import {HABITAT_PLANTS,HABITATS,HABITAT_COMPARE_PLANT,pageReady,gardenReviewReady,gardenPlants,gardenValid,terrainCount,terrainReady,TERRAIN_MIN,misplacedPlants,misfitNote} from './model.js';
+import {HABITAT_PLANTS,HABITATS,HABITAT_COMPARE_PLANT,pageReady,gardenReviewReady,gardenReviewPlant,gardenPlants,gardenValid,terrainCount,terrainReady,TERRAIN_MIN,misplacedPlants,misfitNote} from './model.js';
 import {plantArt,icon} from './art.js';
 import {assetImage} from './asset-catalog.js';
 import {HABITAT_FACTS} from './inquiry.js';
@@ -39,22 +39,110 @@ export function habitats(s,u){
   ${solved?`<p class="field-review-result" role="status" tabindex="-1">${icon('check',20)} 알로에는 잎에 물을 저장해 물이 적은 곳에서도 쓸 수 있어.</p>`:!done&&u.activityFeedback?`<p class="field-review-feedback" role="status">${esc(u.activityFeedback)}</p>`:''}
  </div>`,'');
 }
-export function fieldGardenReview(s,u){
- const review=s.gardenReview,p=HABITAT_PLANTS.find(p=>p.id===review?.plant),done=gardenReviewReady(s);
- const bed=p=>{
-  const picked=p.id===review?.plant,content=`${assetImage('habitat_'+p.habitat,'habitat-picture',true).replace(/alt="[^"]*"/,'alt=""')}${plantArt(p.id).replace(/alt="[^"]*"/,'alt=""')}<span><b>${p.name}</b><small>${HABITATS[p.habitat]}${picked&&done?' · 확인했어':''}</small></span>`;
-  return done?`<div class="field-review-bed ${picked?'is-picked':''} ${picked&&review.cell!==review.from?'moved':''}">${content}</div>`:`<button type="button" class="field-review-bed ${picked?'is-picked':''} ${picked&&review.cell!==review.from?'moved':''}" data-action="garden-review-pick" data-id="${p.id}" aria-pressed="${picked}">${content}</button>`;
+const REVIEW_PLANTS=['hyacinth','cherry','aloe'].map(id=>HABITAT_PLANTS.find(p=>p.id===id));
+const REVIEW_REASONS=['aloe','hyacinth','cherry'].map(id=>HABITAT_PLANTS.find(p=>p.id===id));
+const linkPoint='<span class="garden-link-point" aria-hidden="true"></span>';
+export function fieldGardenReview(s){
+ const p=gardenReviewPlant(s),done=gardenReviewReady(s);
+ const bed=plant=>{
+  const picked=plant.id===p?.id,cls='field-review-bed'+(picked?' is-picked':'');
+  const art=assetImage('habitat_'+plant.habitat,'habitat-picture',true).replace(/alt="[^"]*"/,'alt=""')+
+   plantArt(plant.id).replace(/alt="[^"]*"/,'alt=""');
+  const content=`<span class="garden-link-art" aria-hidden="true">${art}</span><span class="garden-link-name"><b>${plant.name}</b><small>${HABITATS[plant.habitat]}</small></span>${linkPoint}`;
+  return done?`<div class="${cls}">${content}</div>`:
+   `<button type="button" class="${cls}" data-action="garden-review-pick" data-id="${plant.id}" aria-pressed="${picked}">${content}</button>`;
  };
- return layout(`<div class="work-board field-review-board garden-review-board">
-  <p class="field-review-kicker">현장에서 심은 내 정원</p>
-  <div class="field-review-beds">${['hyacinth','cherry','aloe'].map(id=>bed(HABITAT_PLANTS.find(p=>p.id===id))).join('')}</div>
-  ${done?`<p class="field-review-result" role="status" tabindex="-1">${icon('check',20)} ${review.cell===review.from?'이 자리를 그대로 뒀어.':'같은 구역의 옆자리로 옮겼어.'} <b>${p.reason}.</b></p>`:p?`
-   <div class="garden-review-tools"><span>${p.name} · ${review.cell===review.from?'처음 심은 자리':'같은 구역의 옆자리'}</span>${button(review.cell===review.from?'옆자리로 옮기기':'처음 자리로 돌리기','garden-review-move')}</div>
-   <p class="garden-review-question">이 자리에서 ${josa(p.name,'이/가')} 잘 살 수 있는 까닭은?</p>
-   <div class="field-review-choices">${HABITAT_PLANTS.map(q=>button(q.reason,'garden-review-reason',q.id)).join('')}</div>`:
-   '<p class="garden-review-question">세 식물 중 한 자리만 골라 살펴봐.</p>'}
-  ${!done&&u.activityFeedback?`<p class="field-review-feedback" role="status">${esc(u.activityFeedback)}</p>`:''}
- </div>`,'');
+ const reason=plant=>{
+  const linked=done&&plant.id===p?.id,cls='garden-link-reason'+(linked?' is-linked':'');
+  const content=`${linkPoint}<span>${plant.reason}.${linked?icon('check',20):''}</span>`;
+  return done?`<div class="${cls}">${content}</div>`:
+   `<button type="button" class="${cls}" data-action="garden-review-reason" data-id="${plant.id}">${content}</button>`;
+ };
+ return layout(`<section class="work-board field-review-board garden-review-board" aria-label="식물과 까닭 잇기">
+  ${done?`<p class="field-review-result" role="status" tabindex="-1">${icon('check',20)} ${josa(p.name,'이/가')} ${HABITATS[p.habitat]}에서 잘 살 수 있는 까닭을 찾았어.</p>`:
+   '<p class="garden-link-instructions">정원의 식물 하나와 알맞은 까닭을 <b>선으로 이어</b> 봐. 차례로 눌러도 돼.</p>'}
+  <div class="garden-link-board" data-garden-link>
+   <div class="garden-link-column garden-link-plants"><h2>정원의 식물</h2>${REVIEW_PLANTS.map(bed).join('')}</div>
+   <div class="garden-link-column garden-link-reasons"><h2>잘 살 수 있는 까닭</h2>${REVIEW_REASONS.map(reason).join('')}</div>
+   <svg class="garden-link-line" aria-hidden="true"><path fill="none"/></svg>
+  </div>
+ </section>`,'');
+}
+
+// The same pair can be joined in one gesture or by activating the two controls.
+export function mountGardenReviewLink(board,onAction){
+ if(!board)return;
+ const line=board.querySelector('.garden-link-line'),path=line.querySelector('path');
+ const source='[data-action="garden-review-pick"]',target='[data-action="garden-review-reason"]';
+ const hit=(x,y)=>{
+  const el=document.elementFromPoint(x,y)?.closest(target);
+  return board.contains(el)?el:null;
+ };
+ const center=el=>{
+  const box=el.querySelector('.garden-link-point').getBoundingClientRect();
+  return [box.left+box.width/2,box.top+box.height/2];
+ };
+ const draw=(from,end)=>{
+  const box=line.getBoundingClientRect(),[x,y]=center(from),[x2,y2]=end;
+  const a=x-box.left,b=y-box.top,c=x2-box.left,d=y2-box.top,mid=(a+c)/2;
+  path.setAttribute('d',`M ${a} ${b} C ${mid} ${b}, ${mid} ${d}, ${c} ${d}`);
+ };
+ const linked=board.querySelector('.garden-link-reason.is-linked');
+ if(linked){
+  const plant=board.querySelector('.field-review-bed.is-picked');
+  const redraw=()=>draw(plant,center(linked));
+  const observer=new ResizeObserver(redraw);
+  observer.observe(board);
+  redraw();
+  return ()=>observer.disconnect();
+ }
+ let drag=null,suppressClick=false,delivery;
+ const handlers=new AbortController(),options={signal:handlers.signal};
+ const reset=()=>{
+  drag?.plant.classList.remove('is-connecting');
+  board.querySelector('.is-aimed')?.classList.remove('is-aimed');
+  board.classList.remove('is-drawing');
+  path.removeAttribute('d');drag=null;
+ };
+ board.addEventListener('pointerdown',e=>{
+  const plant=e.target.closest(source);
+  if(!plant||drag||e.button!==0)return;
+  drag={plant,id:e.pointerId,x:e.clientX,y:e.clientY,moved:false};
+  plant.setPointerCapture?.(e.pointerId);
+ },options);
+ board.addEventListener('pointermove',e=>{
+  if(!drag||e.pointerId!==drag.id)return;
+  const {clientX:x,clientY:y}=e;
+  if(!drag.moved&&Math.hypot(x-drag.x,y-drag.y)<7)return;
+  e.preventDefault();
+  drag.moved=true;
+  drag.plant.classList.add('is-connecting');
+  board.classList.add('is-drawing');
+  const reason=hit(x,y);
+  board.querySelector('.is-aimed')?.classList.remove('is-aimed');
+  reason?.classList.add('is-aimed');
+  draw(drag.plant,reason?center(reason):[x,y]);
+ },options);
+ board.addEventListener('pointerup',e=>{
+  if(!drag||e.pointerId!==drag.id)return;
+  const {moved,plant}=drag,reason=moved?hit(e.clientX,e.clientY):null;
+  reset();
+  if(!moved)return;
+  // The pointer gesture consumed this click. Let a later tap or keyboard press through.
+  suppressClick=true;
+  clearTimeout(delivery);
+  delivery=setTimeout(()=>{
+   suppressClick=false;
+   if(reason&&board.isConnected)onAction('garden-review-link',plant.dataset.id+':'+reason.dataset.id);
+  },0);
+ },options);
+ board.addEventListener('pointercancel',reset,options);
+ board.addEventListener('lostpointercapture',reset,options);
+ board.addEventListener('click',e=>{
+  if(!suppressClick)return;
+  e.preventDefault();e.stopImmediatePropagation();
+ },{...options,capture:true});
+ return ()=>{clearTimeout(delivery);handlers.abort();};
 }
 export function garden(s,u,grid,place){
  const planting=place||u.gardenMode==='plant',selected=HABITAT_PLANTS.find(p=>p.id===u.selected)||HABITAT_PLANTS[0];
@@ -64,7 +152,7 @@ export function garden(s,u,grid,place){
  const tools=`<div class="garden-palette">${tiles}${plants}${button('되돌리기','undo','','',u.undo.length?'':lock('되돌릴 기록이 아직 없어.'))}</div>`;
  // A plant on ground that does not suit it is named first, so a locked next step never goes unexplained.
  const wrong=misplacedPlants(s),misfit=wrong.find(p=>p.id===selected.id)||wrong[0];
- const hint=!place&&!terrainReady(s)?`물가·들판·건조 구역을 각각 ${TERRAIN_MIN}칸 이상 칠해 봐.`:misfit?misfitNote(s,misfit):!planting?'이제 식물 카드를 어울리는 땅으로 끌어다 심어 봐.':place&&s.terrain[s.garden[selected.id]]===selected.habitat&&!s.gardenReasons.includes(selected.id)?`${josa(selected.name,'을/를')} 심은 까닭을 골라 줘.`:`${josa(selected.name,'을/를')} 골랐어. ${s.terrain[s.garden[selected.id]]===selected.habitat?'어울리는 땅에 더 심어 봐.':Number.isInteger(s.garden[selected.id])?'심은 자리를 살펴보고, 원하면 끌어서 옮겨 봐.':'어울리는 땅에 끌어다 심어 줘.'}`;
+ const hint=!place&&s.gardenFromField&&pageReady(s,6)?'현장에서 심은 정원을 가져왔어. 입체로 둘러보거나 땅과 식물을 꾸며 봐.':!place&&!terrainReady(s)?`물가·들판·건조 구역을 각각 ${TERRAIN_MIN}칸 이상 칠해 봐.`:misfit?misfitNote(s,misfit):!planting?'이제 식물 카드를 어울리는 땅으로 끌어다 심어 봐.':place&&s.terrain[s.garden[selected.id]]===selected.habitat&&!s.gardenReasons.includes(selected.id)?`${josa(selected.name,'을/를')} 심은 까닭을 골라 줘.`:`${josa(selected.name,'을/를')} 골랐어. ${s.terrain[s.garden[selected.id]]===selected.habitat?'어울리는 땅에 더 심어 봐.':Number.isInteger(s.garden[selected.id])?'심은 자리를 살펴보고, 원하면 끌어서 옮겨 봐.':'어울리는 땅에 끌어다 심어 줘.'}`;
  const counts=place?'':`<div class="garden-terrain-status">${Object.entries(HABITATS).map(([id,n])=>`<span class="${terrainCount(s,id)>=TERRAIN_MIN?'done':''}">${n} ${terrainCount(s,id)}/${TERRAIN_MIN}</span>`).join('')}</div>`;
  // Keep-or-change check: the starting garden is allowed, but the student picks one spot and says why it suits the plant.
  const confirm=place&&gardenValid(s)?`<div class="garden-confirm" role="group" aria-label="내 정원 확인"><p><b>내 정원 확인</b> · ${s.gardenPick?'이 정원으로 기록할게. 다시 골라도 돼.':'이대로 좋으면 친구에게 소개할 자리 하나를 골라 줘.'}</p><div class="garden-confirm-picks">${HABITAT_PLANTS.map(p=>button(`<strong>${p.name} · ${HABITATS[p.habitat]}</strong>${s.gardenPick===p.id?`<small>${p.reason}</small>`:''}`,'garden-pick',p.id,s.gardenPick===p.id)).join('')}</div>${button('땅 모양 바꾸기','edit-terrain')}</div>`:'';

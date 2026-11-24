@@ -24,7 +24,7 @@ test('현장 분류를 마쳐도 1장의 잎 살피기와 나누기는 학생이
  assert.equal(pageReady(s,1),false);
  leaves(s);carryFieldEvidence(s,0);assert.equal(pageReady(s,0),false);assert.equal(pageReady(s,1),false);
  assert.deepEqual(s.leafEvidence,{});assert.deepEqual(s.groups,freshState().groups);
- s.page=1;assert.match(renderActivity(s,u,()=>''),/data-action="leaf-partner"/,'새 짝은 학생이 고른다');
+ s.page=1;assert.match(renderActivity(s,u,()=>''),/data-action="leaf-pick"/,'현장 분류 기록으로 다른 세 잎의 분류가 자동 완료되지 않는다');
  // A page saved as done under the old field shortcut stays done.
  const old=restoreState(JSON.stringify({...s,completed:[true,true,false,false,false,false,false,false,false,false]}));assert.equal(pageReady(old,1),true);
 });

@@ -35,10 +35,10 @@ test('완료 팝업에 리피가 서서 음성 문장을 말한다',()=>{
 
 test('작업판이 장면 높이에 맞춰 커진다',()=>{
  const css=read('src/frame.css');
- assert.match(css,/\.leaf-partner \.leaf-tile img \{ height: clamp\(64px, calc\(var\(--stage-h\) - 350px\), 300px\); \}/);
+ assert.match(css,/\.leaf-sort\.is-sorted\s*\{\s*--leaf-sort-card-h:\s*clamp\(108px, calc\(var\(--stage-h\) \* \.59\), 490px\)/);
  assert.match(css,/\.habitat-compare-board \{ max-width: none; \}/);
  assert.match(css,/#app \.activity-2 \.season-scene \{ max-width: none; \}/);
- assert.match(css,/\.field-bag-predict \.bag-art \{[^}]*height: clamp\(220px, calc\(var\(--stage-h\) \* \.66\), 440px\); \}/);
+ assert.match(css,/\.bag-desk[^}]*--bag-position: max\(var\(--bag-sky\), calc\(var\(--mat-height\) - var\(--bag-height\) \* \.87\)\)/);
  // 5장 설계는 가로 화면 전체에서, 시험은 글이 줄바꿈되지 않는 넓고 높은 화면에서만 키운다.
  assert.match(css,/\.design-layout \.learning-scene \.picture-parts \.part-card \{ min-height: 88px; \}/);
  assert.match(css,/@media \(min-width: 1200px\) and \(min-height: 780px\) and \(orientation: landscape\) \{\s*#app \.exploration-activity \.test-layout \.learning-scene \.test-record \{/);

@@ -33,7 +33,7 @@ export function normalizeVillageEncounters(value,legacy) {
 // that has just opened (audio.js playStageOpen). The returned probe keeps the speech bubble up while the line is said.
 const speakLine=(text,lead=0)=>speakTexts([text],undefined,{villain:true,delay:Math.max(lead,voiceLeadMs())});
 
-export function mountVillageEncounters({host,stages,progress,onSave,blocked,reduced,tone,actors,clearIndex,finaleHold}) {
+export function mountVillageEncounters({host,stages,progress,onSave,blocked,reduced,tone,actors,clearIndex}) {
   const points=stages.flatMap((stage,i)=>{
     if(!stage||!STAGES[i])return [];
     const [id,prop,first,again,hitOne,hitTwo,finish]=STAGES[i];
@@ -41,7 +41,7 @@ export function mountVillageEncounters({host,stages,progress,onSave,blocked,redu
   });
   if(!points.some(({id})=>(progress?.[id]||0)<3))return null;
   preloadMapSounds();
-  const runtime=mountMapEncounters({requiredFoes:0,host,stages:points,progress,onSave,blocked,reduced,tone,art,palette,finaleHold,clearStage:()=>STAGES[clearIndex]?.[0],voice:speakLine,
+  const runtime=mountMapEncounters({host,stages:points,progress,onSave,blocked,reduced,tone,art,palette,clearStage:()=>STAGES[clearIndex]?.[0],voice:speakLine,
     reach:95,contact:25});
   const layer=host.querySelector('.map-encounter-layer');
   const poses=reactions.map((src,i)=>{

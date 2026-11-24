@@ -1,3 +1,4 @@
+import {sortLeaves} from './leaf-sort-fixture.mjs';
 // 남은 활동 안내: the left-panel list and the pointing hand follow pageReady() item by item on every page.
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
@@ -23,7 +24,9 @@ test('잎 비교는 같은 확대 버튼 하나로 마치고, 짝 고르기 안�
  assert.equal(g.target,'[data-action="leaf-zoom"][data-id="large"]');
  assert.equal((html(s,u).match(/class="leaf-specimen"/g)||[]).length,3);
  learningAction(s,u,'leaf-zoom','large');expectLeft(s,u,0);
- s.page=1;g=expectLeft(s,u,1);assert.equal(g.target,'.leaf-partner-question');assert.equal(g.anchor,'ask');
+ s.page=1;g=expectLeft(s,u,3);assert.equal(g.target,'.leaf-sort-tray');
+ sortLeaves(s,u,'edge');g=expectLeft(s,u,2);assert.equal(g.target,'[data-action="leaf-rule"][data-id="narrow"]');
+ sortLeaves(s,u,'narrow');g=expectLeft(s,u,1);assert.equal(g.target,'.leaf-partner-question');assert.equal(g.anchor,'ask');
  learningAction(s,u,'leaf-partner','grass');expectLeft(s,u,1);
  learningAction(s,u,'leaf-partner','cherry');expectLeft(s,u,0);
 });

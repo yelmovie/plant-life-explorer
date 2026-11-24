@@ -1,3 +1,4 @@
+import {sortLeaves} from './leaf-sort-fixture.mjs';
 import {recordResponse} from '../src/learning-records.js';
 import {completeInvention} from './invention-fixture.mjs';
 import {test} from 'node:test';
@@ -18,15 +19,23 @@ test('이전 페이지는 전체 화면 순서를 따르고 메인에서는 범�
  for(let i=0;i<PAGE_ROUTES.length;i++)assert.deepEqual(previousRoute(PAGE_ROUTES[i]),PAGE_ROUTES[Math.max(0,i-1)]);
  const old=restoreState(JSON.stringify({version:1}));assert.equal(old.soundEnabled,true);assert.equal(old.adminUnlocked,false);
 });
-test('세 잎을 확대하기 전에는 새 짝을 기록할 수 없고 알맞게 고르면 새로고침 뒤에도 완료할 수 있다',()=>{
+test('확대 관찰과 두 분류를 차례대로 해야 은행잎의 새 짝을 기록할 수 있다',()=>{
  const s=freshState(),u={};s.page=1;
  learningAction(s,u,'leaf-partner','cherry');assert.equal(pageReady(s,1),false);assert.equal(s.leafPartner,'');
  s.page=0;learningAction(s,u,'leaf-zoom','large');learningAction(s,u,'leaf-zoom','normal');
  assert.equal(pageReady(s,0),true);assert.deepEqual(s.leafEvidence,{});
  s.page=1;assert.equal(pageReady(s,1),false);
+ learningAction(s,u,'leaf-rule','narrow');assert.equal(s.rule,'edge');
+ learningAction(s,u,'leaf-sort','narrow:grass:yes');assert.deepEqual(s.groupsByRule.narrow,{});
+ learningAction(s,u,'leaf-partner','cherry');assert.equal(s.leafPartner,'');
+ learningAction(s,u,'leaf-sort','edge:cherry:no');assert.deepEqual(s.groupsByRule.edge,{});
+ sortLeaves(s,u,'edge');
+ learningAction(s,u,'leaf-partner','cherry');assert.equal(s.leafPartner,'');
+ sortLeaves(s,u,'narrow');
  assert.match(learningAction(s,u,'leaf-partner','grass'),/은행잎의 폭/);assert.equal(pageReady(s,1),false);
  learningAction(s,u,'leaf-partner','cherry');assert.equal(pageReady(s,1),true);
  const restored=restoreState(JSON.stringify(s));assert.equal(pageReady(restored,1),true);assert.equal(restored.leafPartner,'cherry');
+ assert.deepEqual(restored.groupsByRule,{edge:{cherry:'yes',ginkgo:'no',grass:'no'},narrow:{cherry:'no',ginkgo:'no',grass:'yes'}});
 });
 test('계절 관찰과 증거 연결은 실제 기록을 요구한다',()=>{
  const s=freshState();s.linkedEvidence=['cherry:0','cherry:3'];assert.equal(pageReady(s,3),false);

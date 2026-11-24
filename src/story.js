@@ -57,12 +57,8 @@ export function playStory(kind, {onFinish = () => {}, replay = false} = {}) {
   let finished = false;
   video.volume = 0.65;
   video.muted = !isVoiceOn();
-  // The films carry their own visible captions. Keep a text equivalent available to assistive technology.
-  if (globalThis.VTTCue) {
-    const track = video.addTextTrack('captions', '한국어', 'ko');
-    for (const [start, end, text] of story.captions) track.addCue(new VTTCue(start, end, text));
-    track.mode = 'hidden';
-  }
+  // The MP4 already shows captions. The hidden transcript supplies the text
+  // equivalent without a native track that a device could render over the film.
   const listen = (target, event, fn) => target.addEventListener(event, fn, {signal: events.signal});
   function cleanup() {
     events.abort();

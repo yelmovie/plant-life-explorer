@@ -104,6 +104,26 @@ export const SEASON_REVIEW_ANSWERS={
 };
 export const fieldSeasonReview=s=>(!s.completed[3]||s.seasonCompareAnswer==='parts')&&fieldMissionReady(s,1);
 export const LEAF_PARTNER='cherry';
+export const LEAF_SORT_RULES={
+  edge:{title:'톱니 기준으로 나누어 보기',name:'톱니',yes:'톱니가 있어',no:'톱니가 없어'},
+  narrow:{title:'모양 기준으로 나누어 보기',name:'모양',yes:'가늘고 길쭉해',no:'가늘고 길쭉하지 않아'},
+};
+const leafGroup=(plant,rule)=>plant[rule]?'yes':'no';
+export function placedLeafGroup(s,rule,plant){
+  const group=leafGroup(plant,rule);
+  return s.groupsByRule[rule][plant.id]===group?group:'';
+}
+export const leafSortDone=(s,rule)=>PLANTS.every(plant=>placedLeafGroup(s,rule,plant));
+export const activeLeafRule=s=>s.rule==='narrow'&&leafSortDone(s,'edge')?'narrow':'edge';
+export const canPickLeafPartner=s=>s.page===1&&pageReady(s,0)&&!s.completed[1]&&!s.leafPartner&&leafSortDone(s,'edge')&&leafSortDone(s,'narrow');
+export function leafSortAttempt(s,id){
+  const [rule,plantId,group,extra]=String(id).split(':');
+  if(s.page!==1||!pageReady(s,0)||rule!==activeLeafRule(s)||!['yes','no'].includes(group)||extra!==undefined)return null;
+  const plant=PLANTS.find(p=>p.id===plantId);
+  if(!plant||placedLeafGroup(s,rule,plant))return null;
+  return {rule,plant,group,correct:leafGroup(plant,rule)===group};
+}
+
 // Stamps (equal praise, not grades): 'direct' = found without a wrong pick, 'fixed' = fixed after wrong picks.
 // Given once, on the mission's first completion. Completed results and rewards are never cleared.
 export const STAMP_KINDS=['direct','fixed','helped','unknown'];
@@ -125,9 +145,12 @@ export function misplacedPlants(s){return HABITAT_PLANTS.filter(p=>Number.isInte
 export function misfitNote(s,p){return `${josa(p.name,'은/는')} 지금 ${HABITATS[s.terrain[s.garden[p.id]]]||'빈 땅'}에 있어. ${PLANT_NEEDS[p.id]} ${josa(HABITATS[p.habitat],'이/가')} 어울려. 끌어서 옮겨 줘.`;}
 export function gardenValid(s){return gardenPlaced(s)&&HABITAT_PLANTS.every(p=>s.gardenReasons.includes(p.id));}
 // The field garden stays separate from older gardens the student made from scratch.
+export function gardenReviewPlant(s){
+ const review=s.gardenReview;
+ return HABITAT_PLANTS.find(p=>p.id===review?.plant&&review.cell===s.garden[p.id]&&s.terrain[review.cell]===p.habitat);
+}
 export function gardenReviewReady(s){
- const review=s.gardenReview,p=HABITAT_PLANTS.find(p=>p.id===review?.plant);
- return !!p&&review.explained===true&&review.cell===s.garden[p.id]&&gardenPlaced(s);
+ return !!gardenReviewPlant(s)&&s.gardenReview.explained===true&&gardenPlaced(s);
 }
 export const BAG_REVIEW_ANSWERS={
  surface:'겉면만 있으면 입구로도 비가 안 들어와.',
@@ -143,7 +166,6 @@ export function fieldBagReview(s){
 }
 export function fieldRecordPage(s,p){
  if((p===2||p===3)&&fieldSeasonReview(s))return 3;
- if((p===6||p===7)&&s.gardenFromField)return 7;
  if((p===8||p===9)&&fieldBagReview(s))return 9;
  return p;
 }
@@ -181,7 +203,7 @@ export function pageReady(s,p){
     case 5:return s.completed[5]||pageReady(s,4)&&(s.habitatCompareAnswer===HABITAT_COMPARE_PLANT||HABITAT_PLANTS.every(p=>s.habitats[p.id]===p.habitat&&s.habitatFeatures[p.id]===p.id&&s.reasons[p.id]===p.id));
     // New rules (3-cell area, prediction) apply only to pages not yet completed; saved completions keep the old rule.
     case 6:return s.gardenReviewed&&(s.completed[6]?['water','grass','dry'].every(t=>s.terrain.includes(t)):terrainReady(s)&&gardenPlaced(s));
-    // A garden carried over from the field still needs the student's own keep-or-change pick; saved completions keep the old rule.
+    // A garden carried over from the field records one plant-to-habitat explanation.
     case 7:return s.gardenFromField?gardenReviewReady(s):pageReady(s,6)&&gardenValid(s)&&(s.completed[7]||!!s.gardenPick);
     case 8:return s.design.linked&&(s.completed[8]||!!s.testPrediction);
     case 9:return testValid(s);

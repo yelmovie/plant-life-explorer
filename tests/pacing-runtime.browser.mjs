@@ -22,13 +22,23 @@ try{
  {
   const state=freshState();state.screen='activity';state.page=1;state.completed[0]=true;state.fieldEvidence.leaves=completed.fieldEvidence.leaves;state.groups={cherry:'yes',ginkgo:'no',grass:'no'};
   const {context,page}=await fixture(state);
-  assert.equal(await page.locator('.leaf-grouping').count(),1);
-  assert.equal(await page.locator('[data-action="complete"]').getAttribute('aria-disabled'),'true');
+  assert.equal(await page.locator('[data-leaf-rule="edge"].is-sorted').count(),1);
+  assert.equal(await page.locator('[data-action="complete"]').count(),0);
+  await action(page,'leaf-rule','narrow');
+  await action(page,'leaf-pick','grass');
+  await action(page,'leaf-drop','narrow:yes');
+  await page.waitForFunction(key=>JSON.parse(localStorage.getItem(key)).groupsByRule.narrow.grass==='yes',STORAGE_KEY);
+  await page.reload();
+  assert.equal(await page.locator('[data-leaf-rule="narrow"]').count(),1);
+  assert.equal(await page.locator('[data-action="leaf-pick"]').count(),2);
+  for(const leaf of ['cherry','ginkgo']){
+   await action(page,'leaf-pick',leaf);await action(page,'leaf-drop','narrow:no');
+  }
   await action(page,'leaf-partner','cherry');
-  assert.equal(await page.locator('.leaf-grouping').count(),2);
+  await page.waitForFunction(key=>JSON.parse(localStorage.getItem(key)).leafPartner==='cherry',STORAGE_KEY);
+  await page.reload();assert.match(await page.locator('.leaf-sort-result').innerText(),/강아지풀.*벚나무/);
   assert.notEqual(await page.locator('[data-action="complete"]').getAttribute('aria-disabled'),'true');
-  await page.reload();assert.equal(await page.locator('.leaf-grouping').count(),2);
-  report.checks.push('Field-sorted save: one leaf partner choice reveals both groupings and survives reload');await context.close();
+  report.checks.push('Grouping records and the active criterion survive reload, with one criterion visible at a time');await context.close();
  }
  {
   const state=freshState();state.screen='activity';state.page=2;state.completed[0]=state.completed[1]=true;state.fieldEvidence.seasons=completed.fieldEvidence.seasons;

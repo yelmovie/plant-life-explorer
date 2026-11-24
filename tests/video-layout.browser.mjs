@@ -70,7 +70,7 @@ async function verifyStory(page, kind, size) {
   const caption = story.locator('#story-caption.sr-only');
   assert.ok((await caption.textContent()).trim());
   assert.ok(await caption.evaluate(el => el.getBoundingClientRect().height <= 1 && getComputedStyle(el).overflow === 'hidden'));
-  assert.ok(await video.evaluate(el => !el.controls && Array.from(el.textTracks).every(track => track.mode !== 'showing')));
+  assert.ok(await video.evaluate(el => !el.controls && el.textTracks.length === 0));
   await noOverlap([video, title, exit, play, sound, timeline, story.locator('.story-time')], kind);
   for (const control of [exit, play, sound, timeline]) await reachable(control);
   if (output) await page.screenshot({ path: join(output, `${size}-${kind}.png`) });

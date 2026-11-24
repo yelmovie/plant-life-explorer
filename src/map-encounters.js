@@ -1,6 +1,5 @@
 import {villainPatrol} from './map-villain-patrol.js';
 import {dockMapAttack} from './map-attack-control.js';
-import {openMapFinale} from './map-finale.js';
 const HITS=3;
 // Place speech in map space without covering interactive signs, icons or other speech.
 function layoutSpeech(host, entries){
@@ -74,12 +73,11 @@ export function normalizeMapHits(value,ids) {
  */
 export function mountMapEncounters({
   host,controls=host,stages,progress={},onSave=()=>{},blocked=()=>false,reduced=()=>false,
-  clearStage=()=>null,requiredFoes=0,art,tone=()=>{},palette='#a855f7',reach=90,contact=22,voice=()=>{},finaleHold=()=>false,
+  clearStage=()=>null,art,tone=()=>{},palette='#a855f7',reach=90,contact=22,voice=()=>{},
 }) {
   const handles=new AbortController(),{signal}=handles;
   const doc=host.ownerDocument,view=doc.defaultView;
   const record=normalizeMapHits(progress,stages.map(stage=>stage.id));
-  let finaleAt=0;
   const layer=doc.createElement('div');
   layer.className='map-encounter-layer';
   layer.style.setProperty('--encounter-color',palette);
@@ -151,7 +149,6 @@ export function mountMapEncounters({
     saved={...saved,[foe.s.id]:n};onSave({...saved});tone(n===HITS?'finish':'hit',n);
     speak(foe, n===HITS?foe.s.finish??'앗, 물러날게!':foe.s.hit?.[n-1]??(n===1?'앗, 들켰네!':'이번 건 제법인데!'),time+(n===HITS?2750:1800),VOICE_LEAD);
     live.textContent+=n===HITS?' 세 번 명중! 악당이 물러나요.':` ${n}번 명중. ${HITS-n}번 남았어요.`;
-    if(n===HITS&&requiredFoes>0&&stages.length===requiredFoes&&stages.every(s=>(saved[s.id]??record[s.id])===HITS))finaleAt=time+2920;
   }
   attack.addEventListener('click',hit,{signal});
   let tap=null;
@@ -280,7 +277,6 @@ export function mountMapEncounters({
       }
       callback.hidden=now>=clearUntil;
     }
-    if(finaleAt&&now>=finaleAt&&!stop&&!finaleHold()){finaleAt=0;tone('victory',HITS);openMapFinale(host,"/assets/videos/outro.mp4");}
     const changed=nearest!==current;
     current=nearest;
     if(current&&current!==lastNear&&current.saidUntil<=now&&now-lastHit>REPEAT&&now>=clearUntil){

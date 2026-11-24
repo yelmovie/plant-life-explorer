@@ -4,7 +4,7 @@
 // pointing hand; jump = [action,id] that brings that control on screen (tab, plant card, season stop).
 // The hand never tells the answer. It never points at a choice, never names the leaf that is wrong, and never lies over the
 // choices: a question line is marked from above (anchor 'ask'), a picture or a row by its bottom edge (anchor 'edge').
-import {fieldSeasonReview,fieldBagReview,gardenReviewReady,HABITAT_PLANTS,HABITATS,TERRAIN_MIN,terrainCount,gardenValid,pageReady,designKey,currentTrial,comparisonPair,inventionEvidence} from './model.js';
+import {fieldSeasonReview,fieldBagReview,gardenReviewReady,gardenReviewPlant,HABITAT_PLANTS,HABITATS,TERRAIN_MIN,terrainCount,gardenValid,pageReady,designKey,currentTrial,comparisonPair,inventionEvidence,leafSortDone,activeLeafRule} from './model.js';
 import {seasonEvidenceReady} from './inquiry.js';
 import {fieldSteps,normalizeFieldEvidence,fieldMissionReady} from './field-missions-state.js';
 import {fieldTodo,fieldStageLabels} from './field-missions.js';
@@ -21,8 +21,15 @@ const ask=(target,tip)=>({target,tip,anchor:'ask'});
 function leavesItems(s){
  return [item('compare-leaves','세 잎 크게 비교하기',pageReady(s,0),{target:sel('leaf-zoom','large'),tip:'크게 보기를 눌러 봐'})];
 }
-function classifyItems(s){
- return [item('leaf-partner','은행잎의 새 짝 고르기',pageReady(s,1),ask('.leaf-partner-question','잎 모양을 보고 새 짝을 골라 봐'))];
+function classifyItems(s,u){
+ const edgeDone=leafSortDone(s,'edge'),shapeDone=leafSortDone(s,'narrow'),rule=activeLeafRule(s);
+ const sort=u.leafPick?ask('.leaf-sort-bins','골라 둔 잎을 넣을 칸을 눌러 봐'):ask('.leaf-sort-tray','잎 카드를 고르고, 알맞은 칸에 놓아 봐.');
+ const next={target:sel('leaf-rule','narrow'),tip:'모양 기준으로 나누기를 눌러 봐'};
+ return [
+  item('leaf-sort-edge','톱니 기준으로 나누기',edgeDone,rule==='edge'&&!edgeDone?sort:{}),
+  item('leaf-sort-shape','모양 기준으로 나누기',shapeDone,rule==='edge'&&edgeDone?next:rule==='narrow'&&!shapeDone?sort:{}),
+  item('leaf-partner','은행잎의 새 짝 고르기',pageReady(s,1),rule==='edge'&&shapeDone?next:ask('.leaf-partner-question','모양으로 나눈 잎에서 은행잎의 새 짝을 골라 봐')),
+ ];
 }
 function seasonsItems(s){
  return ['cherry','sowthistle'].map(plant=>{
@@ -73,7 +80,10 @@ function terrainItems(s,u){
  return [...lands,...HABITAT_PLANTS.map(p=>{const it=plantItem(s,u,p,false);return land&&!it.done?{...it,target:land.target,tip:land.tip,jump:land.jump}:it;})];
 }
 function gardenItems(s,u){
- if(s.gardenFromField)return [item('site','정원에서 한 자리 고르기',!!s.gardenReview,ask('.garden-review-question','살펴볼 식물 한 자리를 골라 봐')),item('why','고른 자리의 까닭 확인하기',gardenReviewReady(s),ask('.garden-review-question','고른 식물과 그 땅을 보고 까닭을 골라 봐'))];
+ if(s.gardenFromField)return [
+  item('site','정원에서 한 자리 고르기',!!gardenReviewPlant(s),ask('.garden-link-plants','왼쪽에서 살펴볼 식물 하나를 골라 봐')),
+  item('why','식물과 머무는 까닭 잇기',gardenReviewReady(s),ask('.garden-link-reasons','고른 식물이 잘 살 수 있는 까닭을 이어 줘'))
+ ];
  const plants=HABITAT_PLANTS.map(p=>plantItem(s,u,p,true));
  if(gardenValid(s)||s.gardenPick)plants.push(item('pick','내 정원 확인',s.completed[7]||!!s.gardenPick,ask('.garden-confirm > p','소개할 자리 하나를 골라 봐')));
  return plants;

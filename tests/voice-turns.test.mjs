@@ -81,17 +81,16 @@ test('악당의 짧은 대사는 다른 인물 대사를 끊지 않고 건너뛴
  assert.match(made.at(-1).src,/lipi-0-goal\.mp3$/);await pause(340);assert.match(made.at(-1).src,/lipi-0-goal\.mp3$/);
 });
 
-test('말풍선은 음성이 끝날 때까지, 카드는 퇴장 대사 뒤, 파이널 창은 카드 뒤',()=>{
+test('말풍선은 음성이 끝날 때까지, 카드는 퇴장 대사 뒤, 지도는 파이널 영상을 열지 않는다',()=>{
  const read=file=>readFileSync(new URL(`../src/${file}`,import.meta.url),'utf8');
  const map=read('map-encounters.js'),cards=read('achievement-cards.js'),app=read('app.js'),stage=read('stage-map.js'),village=read('village-encounters.js');
  assert.match(map,/const VOICE_LEAD=300,VOICE_TAIL=200,VOICE_CAP=6000;/);
  assert.ok(map.includes('if(foe.voiced){if(now<foe.voiceCap&&foe.voiced())foe.saidUntil=Math.max(foe.saidUntil,Math.min(now+VOICE_TAIL,foe.voiceCap));else foe.voiced=null;}'));
  assert.ok(map.includes('time+(n===HITS?2750:1800),VOICE_LEAD);'),'타격 판정과 말풍선 기본 시간은 그대로, 음성만 0.3초 뒤');
  assert.ok(map.includes('const WINDUP=90,EXIT_SOUND=280,APPEAR_SETTLE=700;')&&map.includes('const REPEAT=380;'),'타격 간격·퇴장음 시각은 바꾸지 않는다');
- assert.ok(map.includes('if(finaleAt&&now>=finaleAt&&!stop&&!finaleHold()){finaleAt=0;'));
+ assert.doesNotMatch(map,/openMapFinale|outro\.mp4/);
  assert.ok(cards.includes('if(speaking()&&onMap()){setTimeout(turn,150);return;}'));
  assert.ok(cards.includes('export const rewardCardPending=()=>flying.size>0;'));
- assert.ok(app.includes("()=>!!document.querySelector('dialog[open]'),villainLineOn);},hold:rewardCardDue,finaleHold:rewardCardPending,"));
- assert.ok(stage.includes('finaleHold:encounterOptions.finaleHold,'));
- assert.ok(village.includes('finaleHold,'));
+ assert.ok(app.includes("()=>!!document.querySelector('dialog[open]'),villainLineOn);},hold:rewardCardDue,"));
+ assert.doesNotMatch(stage+village,/finaleHold|requiredFoes/);
 });

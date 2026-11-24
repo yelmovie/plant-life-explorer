@@ -67,10 +67,107 @@
 /* Each atlas quadrant is 3:2, so the box keeps that ratio instead of stretching to the card width. */
 #app .field-season-predictions .field-predict-picture { width: min(100%, calc(clamp(150px, 30vh, 240px) * 1.5)); margin-inline: auto; }
 #app .field-season-predictions .field-predict-picture .season-atlas { height: auto; min-height: 0; aspect-ratio: 3 / 2; }
-#app .field-bag-predict { display: grid; grid-template-columns: minmax(180px, 34%) minmax(0, 1fr); align-items: center; gap: 18px; }
-#app .field-bag-predict .field-predict-picture { padding: 8px; background: #fffdf1; }
-#app .field-bag-predict .bag-art { max-height: 220px; }
-#app .field-predict-choices { display: grid; gap: 10px; margin-top: 10px; }
+/* Mission 5 shares one worktop for the prediction, the first rain and the comparison. */
+#app .field-mission-view .field-mission .mission-workspace:has(> .bag-desk) {
+  justify-content: flex-start; padding: 0; border: 0; background: none; box-shadow: none;
+}
+#app .field-mission .bag-desk {
+  --bag-height: clamp(112px, min(40dvh, 44vw), 370px);
+  --bag-sky: clamp(48px, 11dvh, 106px);
+  /* The mat sits below the center of the 16:9 background. The image includes a transparent lip. */
+  --mat-height: calc(50dvh + max(13dvh, 7.3125vw) - 78px);
+  --bag-position: max(var(--bag-sky), calc(var(--mat-height) - var(--bag-height) * .87));
+  display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; justify-items: center;
+  gap: clamp(4px, 1dvh, 12px); width: 100%;
+}
+#app .bag-desk > .field-predict-picture, #app .bag-desk > .bag-stage {
+  width: min(100%, calc(var(--bag-height) * 1.5)); margin: 0;
+}
+#app .bag-desk > .field-predict-picture { margin-top: var(--bag-position); overflow: visible; }
+#app .bag-desk > .field-predict-picture .bag-art { height: var(--bag-height); }
+#app .bag-desk > .bag-stage.with-sky {
+  grid-column: 1; margin-top: calc(var(--bag-position) - var(--bag-sky)); padding-top: var(--bag-sky);
+}
+#app .bag-desk > .bag-stage .bag-canvas { max-width: none; }
+#app .bag-desk :is(.field-predict-picture, .bag-canvas) > .bag-art::after {
+  content: ''; position: absolute; z-index: 0; inset: auto 18% 10% 18%; height: 12%;
+  background: radial-gradient(ellipse, #152c2480, transparent 72%); pointer-events: none;
+}
+#app .bag-desk .bag-cloud {
+  width: min(100%,calc(var(--bag-sky) * 1.75)); height: var(--bag-sky); margin: 0; translate: -50% 0;
+}
+#app .bag-desk .bag-cloud > b { font-size: clamp(18px, 1.6vw, 24px); }
+#app .bag-desk .bag-say {
+  position: absolute; left: 50%; bottom: 0; z-index: 8; width: max-content; max-width: 100%;
+  margin: 0; transform: translateX(-50%); pointer-events: none;
+}
+#app .bag-desk-prompt { max-width: 100%; }
+#app .bag-desk .field-predict-choices { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(8px, 1.2vw, 18px); }
+#app .bag-desk .field-predict-choices .btn {
+  width: auto; min-height: clamp(48px, 7.7dvh, 72px); padding: 7px clamp(12px, 2vw, 32px);
+  font-size: clamp(20px, 1.6vw, 30px); white-space: normal; word-break: keep-all;
+}
+#app .exploration-activity:has(.field-bag-predict) .learning-footer .guide-bubble { font-size: clamp(20px, 1.6vw, 28px); }
+#app .rain-bench.bag-desk > .bag-results { grid-row: auto; grid-column: 1; width: min(100%, 940px); }
+#app .rain-bench.bag-desk:not(.pick-bench) > .bag-results { width: min(100%, 450px); }
+#app .bag-desk > .bag-results:empty { display: none; }
+#app .bag-desk .bag-picks { grid-template-columns: repeat(3, minmax(0,1fr)); }
+#app .bag-desk .bag-pick {
+  grid-template-columns: clamp(52px, 6vw, 94px) minmax(0,1fr); min-height: clamp(68px, 10dvh, 114px);
+  gap: 2px 8px;
+}
+#app .bag-desk .bag-pick > .bag-art { width: 100%; height: clamp(48px, 8dvh, 90px); }
+#app .bag-desk .bag-pick strong { font-size: clamp(18px, 1.5vw, 22px); }
+#app .bag-desk .bag-pick small { padding-inline: 7px; }
+@media (max-width: 900px), (orientation: portrait) {
+  #app .field-mission .bag-desk { --mat-height: max(140px, calc(63dvh - 150px)); }
+}
+@media (max-height: 550px) and (orientation: landscape) {
+  #app .field-mission .bag-desk { --bag-height: clamp(104px, 35dvh, 176px); }
+  #app .bag-desk .bag-pick { padding: 4px 8px; border-radius: 14px; }
+}
+@media (min-width: 680px) and (min-height: 360px) and (max-height: 550px) and (orientation: landscape) {
+  body:not(.large-text) #app .activity-8.field-mission-view:has(.bag-desk) {
+    display: grid; grid-template-rows: 0 minmax(0,1fr) auto; gap: 4px;
+    height: 100dvh; min-height: 100dvh; padding: 64px 10px 0; overflow: hidden;
+  }
+  body:not(.large-text) #app .activity-8.field-mission-view:has(.bag-desk) .activity-pill {
+    grid-area: auto; position: absolute; z-index: 21; top: 8px; left: 50%; transform: translateX(-50%);
+    max-width: calc(100% - 225px); margin: 0;
+  }
+  body:not(.large-text) #app .activity-8.field-mission-view:has(.bag-desk) :is(.learning-layout, .learning-scene) {
+    height: 100%; min-height: 0; padding-block: 0;
+  }
+  body:not(.large-text) #app .activity-8.field-mission-view:has(.bag-desk) .learning-scene { overflow-y: auto; }
+  body:not(.large-text) #app .field-mission .bag-desk { --mat-height: calc(50dvh + max(13dvh, 7.3125vw) - 78px); position: relative; }
+  body:not(.large-text) #app .bag-desk:not(.pick-bench) > .bag-results {
+    position: absolute; right: 0; top: calc(var(--bag-position) + var(--bag-height) * .45); width: min(32%, 256px);
+  }
+  body:not(.large-text) #app .activity-8.field-mission-view:has(.bag-desk) .learning-footer { padding: 0 0 3px; }
+  body:not(.large-text) #app .activity-8.field-mission-view:has(.bag-desk) .learning-footer > div {
+    flex-wrap: nowrap; gap: 6px; align-items: center;
+  }
+  body:not(.large-text) #app .activity-8.field-mission-view:has(.bag-desk) .guide-avatar { min-height: 44px; padding: 0; }
+  body:not(.large-text) #app .activity-8.field-mission-view:has(.bag-desk) .guide-avatar .guide-portrait { height: 46px; }
+  body:not(.large-text) #app .activity-8.field-mission-view:has(.bag-desk) .guide-bubble {
+    margin: 0; padding: 4px 8px; font-size: 18px; line-height: 1.3;
+  }
+  body:not(.large-text) #app .activity-8.field-mission-view:has(.bag-desk) .learning-footer .btn {
+    min-height: 44px; padding: 4px 8px; font-size: 17px;
+  }
+}
+@media (max-width: 620px) {
+  #app .bag-desk .field-predict-choices {
+    display: grid; grid-template-columns: minmax(0, 1fr); max-width: 340px; margin-inline: auto;
+  }
+  #app .bag-desk .bag-picks { gap: 6px; }
+  #app .bag-desk .bag-pick {
+    grid-template-columns: minmax(0,1fr); grid-template-rows: auto auto 1fr;
+    justify-items: center; align-items: start; padding: 6px 4px; text-align: center;
+  }
+  #app .bag-desk .bag-pick > .bag-art { grid-row: auto; height: 54px; }
+  #app .bag-desk .bag-pick small { justify-self: center; padding-inline: 4px; font-size: 16px; }
+}
 #app .field-mission .mission-loot { justify-content: center; font: 19px/1.4 var(--font-display); animation: frame-pop .42s cubic-bezier(.2,1.4,.4,1) both; }
 @keyframes frame-nudge { 0%, 86%, 100% { transform: none; } 92% { transform: translateY(-3px); } }
 @keyframes frame-pop { from { transform: scale(.86); opacity: 0; } to { transform: none; opacity: 1; } }
@@ -552,14 +649,11 @@ body dialog.reward-dialog .theme-picker small { display: none; }
  justify-content: safe center; align-items: center; padding: 6px 10px; overflow-y: auto;
  background: none; border: 0; box-shadow: none;
 }
-#app :is(.leaf-compare,.leaf-partner) { width: min(100%, 880px); text-align: center; }
-#app .leaf-board-intro, #app .leaf-partner-question, #app .leaf-partner-hint {
+#app .leaf-compare { width: min(100%, 880px); text-align: center; }
+#app .leaf-board-intro {
  margin: 0; font-size: var(--frame-text, 18px); line-height: 1.4; color: #243e30;
 }
-#app .leaf-compare-grid, #app .leaf-group-bins, #app .leaf-partner-choices {
- display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px;
-}
-#app .leaf-compare-grid { grid-template-columns: repeat(3,minmax(0,1fr)); }
+#app .leaf-compare-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 8px; }
 #app .leaf-specimen {
  min-width: 0; margin: 0; padding: 8px 4px; border: 1px solid #d3d9ba;
  border-radius: 16px; background: #f6f7e9;
@@ -568,47 +662,87 @@ body dialog.reward-dialog .theme-picker small { display: none; }
  height: clamp(88px, 29vh, 265px); display: grid; place-items: center; overflow: hidden;
 }
 #app .leaf-specimen-picture img {
- width: 60%; height: 60%; min-height: 0; object-fit: contain;
+ width: var(--leaf-picture-fit, 62%); height: var(--leaf-picture-fit, 62%); min-height: 0; object-fit: contain;
  transition: width .22s ease, height .22s ease;
 }
-#app .is-zoomed .leaf-specimen-picture img { width: 96%; height: 96%; }
+#app .leaf-compare-grid.is-zoomed { --leaf-picture-fit: 98%; }
 #app .leaf-specimen figcaption { display: grid; gap: 3px; line-height: 1.25; }
 #app .leaf-specimen figcaption span { font-size: var(--font-size-xs); color: #4b6043; }
 #app .leaf-compare-tools { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
 #app .leaf-compare-tools .btn { min-height: 48px; }
-#app .leaf-group-compare { display: grid; gap: 10px; }
-#app .leaf-partner.is-solved .leaf-group-compare { grid-template-columns: repeat(2,minmax(0,1fr)); }
-#app .leaf-grouping {
- min-width: 0; background: #eee9d6; border-radius: 16px; padding: 8px; color: #304c35;
+/* One classification criterion per screen, with the same trays for touch, drag and keyboard. */
+#app .exploration-activity.activity-1 .learning-scene > .leaf-sort {
+ --leaf-sort-gap: clamp(6px, 1vw, 16px);
+ --leaf-sort-card-h: clamp(76px, calc(var(--stage-h) * .32), 300px);
+ width: min(100%, calc(var(--stage-h) * 2.25), 1520px);
+ gap: var(--leaf-sort-gap); padding: var(--leaf-sort-gap) 0;
+ color: var(--scene-ink); text-align: center;
 }
-#app .leaf-grouping h2 { margin: 0 0 6px; font-size: var(--frame-text, 18px); }
-#app .leaf-group-bin {
- min-width: 0; padding: 5px 2px; background: #faf8ed; border-radius: 12px; border: 1px solid #d9d1b5;
+#app .exploration-activity.activity-1 .learning-scene > .leaf-sort.is-sorted {
+ --leaf-sort-card-h: clamp(108px, calc(var(--stage-h) * .59), 490px);
 }
-#app .leaf-group-bin.ginkgo-team { background: #eef5df; border-color: #8ba767; }
-#app .leaf-group-bin h3 { margin: 0 0 4px; font-size: var(--font-size-xs); line-height: 1.2; }
-#app .leaf-group-bin > div { display: flex; justify-content: center; gap: 2px; }
-#app .leaf-tile { display: grid; justify-items: center; align-content: center; min-width: 0; gap: 3px; padding: 4px 2px; }
-#app .leaf-tile b { font-size: var(--font-size-xs); line-height: 1.2; }
-#app .leaf-tile img { display: block; width: 100%; height: clamp(40px, 9vh, 94px); object-fit: contain; }
-#app .leaf-tile.ginkgo-leaf { background: #dfeabe; border: 1px solid #759759; border-radius: 10px; }
-#app .leaf-partner-choices .btn { justify-content: center; padding: 5px 8px; min-height: 64px; }
-#app .leaf-partner-question { font-weight: 700; }
-#app .leaf-partner-hint { padding: 6px; border-radius: 10px; background: #fff2c9; }
-#app .leaf-result-title {
- margin: 0; display: flex; justify-content: center; align-items: center; gap: 6px; font-size: var(--font-size-md);
+#app .leaf-sort-header { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; }
+#app .leaf-sort-header h2, #app :is(.leaf-sort-result,.leaf-partner-question) {
+ margin: 0; padding: 4px 14px; border-radius: 12px; background: var(--text-plate);
+ font-size: var(--frame-text); line-height: 1.35; word-break: keep-all;
 }
-#app .leaf-group-compare > .leaf-grouping:nth-child(2) .ginkgo-leaf { animation: new-leaf-team .45s ease-out both; }
-@keyframes new-leaf-team {
- from { opacity: .25; transform: translateX(-18px); }
- to { opacity: 1; transform: none; }
+#app .leaf-sort-header .btn { min-height: 48px; }
+#app .leaf-sort-tray {
+ display: flex; justify-content: center; gap: var(--leaf-sort-gap);
+ align-self: center; width: min(100%, 1040px);
 }
-@media (max-width: 820px) {
- #app .leaf-partner.is-solved .leaf-group-compare { grid-template-columns: minmax(0,1fr); }
+#app .leaf-sort-tray > .btn {
+ display: block; flex: 0 0 calc((100% - 2 * var(--leaf-sort-gap)) / 3); min-width: 0; padding: 0;
+ border: 2px solid #d3d9ba; border-radius: 16px; background: var(--text-plate);
+ cursor: grab; touch-action: none; user-select: none;
+}
+#app .leaf-sort-tray > .btn.selected { border-color: #4c753f; box-shadow: 0 0 0 3px #4c753f70; }
+#app .leaf-sort-tray > .btn.drag-origin { opacity: .35; }
+#app .leaf-sort-bins { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: var(--leaf-sort-gap); }
+#app .leaf-sort-bin {
+ display: grid; grid-template-rows: auto minmax(0,1fr); gap: 6px; justify-items: center;
+ min-width: 0; padding: var(--leaf-sort-gap); border: 2px solid #adb88b; border-radius: 18px;
+ background: #f4f8e5a8; color: inherit; font: inherit;
+}
+#app button.leaf-sort-bin { border-style: dashed; cursor: pointer; }
+#app button.leaf-sort-bin.drop-ready { border-style: solid; border-color: #4c753f; background: #e4f0cf; }
+#app .leaf-sort-bin > strong {
+ width: fit-content; max-width: 100%; padding: 4px 12px; border-radius: 999px;
+ background: var(--text-plate); font-size: var(--frame-text); line-height: 1.25; word-break: keep-all;
+}
+#app .leaf-sort-placed {
+ display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: var(--leaf-sort-gap);
+ width: 100%; min-height: var(--leaf-sort-card-h);
+}
+#app .leaf-sort-placed .leaf-tile:only-child {
+ grid-column: 1 / -1; justify-self: center; width: calc((100% - var(--leaf-sort-gap)) / 2);
+}
+#app .leaf-sort .leaf-tile {
+ display: grid; grid-template-rows: minmax(0,1fr) auto; justify-items: center;
+ gap: 4px; height: var(--leaf-sort-card-h); min-width: 0; padding: 6px;
+ border-radius: 12px; background: var(--text-plate);
+}
+#app .leaf-sort .leaf-tile img { display: block; width: 100%; height: 100%; min-height: 0; object-fit: contain; pointer-events: none; }
+#app .leaf-sort .leaf-tile b { font-size: clamp(16px, 1.55vw, 25px); line-height: 1.25; white-space: normal; word-break: keep-all; }
+#app .leaf-sort.is-sorted .ginkgo-leaf { background: #e3ecc8; box-shadow: inset 0 0 0 1px #869e65; }
+#app .leaf-sort-result, #app .leaf-partner-choices { align-self: center; }
+#app .leaf-partner-choices, #app .leaf-partner-choices > div { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+#app .leaf-partner-choices .btn { min-height: 48px; }
+@media (min-width: 721px) and (max-height: 540px) and (orientation: landscape) {
+ #app .exploration-activity.activity-1 .learning-scene > .leaf-sort:not(.is-sorted) {
+  display: grid; grid-template-columns: minmax(0, 42%) minmax(0, 1fr); width: 100%; align-items: stretch;
+ }
+ #app .leaf-sort:not(.is-sorted) .leaf-sort-header { grid-column: 1 / -1; }
+ #app .leaf-sort:not(.is-sorted) .leaf-sort-tray { align-self: center; }
+}
+@media (max-width: 600px) {
+ #app .exploration-activity.activity-1 .learning-scene > .leaf-sort.is-sorted { --leaf-sort-card-h: clamp(116px, 43vw, 225px); }
+ #app .exploration-activity.activity-1 .learning-scene > .leaf-sort { width: 100%; }
+ #app .leaf-sort-bin > strong { padding-inline: 6px; }
+ #app .leaf-sort.is-sorted .leaf-sort-bins { grid-template-columns: minmax(0,1fr); }
 }
 @media (prefers-reduced-motion: reduce) {
  #app .leaf-specimen-picture img { transition: none; }
- #app .leaf-group-compare > .leaf-grouping:nth-child(2) .ginkgo-leaf { animation: none; }
 }
 @media (min-width: 821px) and (max-height: 760px) {
  #app :is(.activity-0,.activity-1):not(.field-mission-view) .guide-avatar .guide-mascot { max-height: 102px; }
@@ -622,38 +756,146 @@ body dialog.reward-dialog .theme-picker small { display: none; }
 #app .field-review-board { width: min(100%, 880px); gap: 10px; text-align: center; }
 #app .field-review-board p { margin: 0; color: #243e30; }
 #app .field-review-kicker { font: var(--font-size-md)/1.3 var(--font-display); }
-#app .field-review-beds, #app .field-review-trials, #app .field-review-choices { display: grid; gap: 8px; }
-#app .field-review-beds { grid-template-columns: repeat(3,minmax(0,1fr)); }
+#app .field-review-trials, #app .field-review-choices { display: grid; gap: 8px; }
 #app .field-review-trials { grid-template-columns: repeat(4,minmax(0,1fr)); }
-#app .field-review-bed, #app .field-review-trial { min-width: 0; overflow: hidden; border-radius: 14px; border: 2px solid #d8d7bc; }
-#app .field-review-bed { position: relative; display: grid; align-items: end; height: clamp(98px, 19vh, 159px); padding: 5px; isolation: isolate; }
-#app button.field-review-bed { cursor: pointer; }
-#app .field-review-bed.is-picked { border-color: #3d714c; box-shadow: 0 0 0 2px #91b376; }
-#app .field-review-bed .habitat-picture { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; }
-#app .field-review-bed .plant-illustration { position: absolute; width: 45%; height: 67%; top: 0; left: 10%; object-fit: contain; filter: drop-shadow(0 2px 2px #20332455); transition: left .25s ease; }
-#app .field-review-bed.moved .plant-illustration { left: 45%; }
-#app .field-review-bed > span { display: grid; justify-self: center; padding: 3px 10px; border-radius: 10px; background: #fffff3; color: #243e30; line-height: 1.2; }
-#app .field-review-bed small, #app .field-review-trial span { font-size: var(--font-size-xs); }
-#app .field-review-trial { display: grid; align-content: start; gap: 3px; background: #f8f0df; padding: 6px 3px; }
-#app .field-review-trial.dry { background: #e8f3dc; border-color: #8ba767; }
-#app .field-review-trial h2 { margin: 0; font-size: var(--font-size-xs); }
-#app .field-review-trial .bag-art { height: clamp(53px, 13vh, 110px); min-height: 0; }
+#app .field-review-trial {
+ display: grid; justify-items: center; align-content: start; gap: 6px;
+ min-width: 0; padding: 4px; color: var(--scene-ink);
+}
+#app .field-review-trial h2, #app .bag-review-evidence > * {
+ width: fit-content; max-width: 100%; margin: 0; padding: 4px 9px;
+ border-radius: 10px; background: var(--text-plate);
+ font-size: clamp(16px, 1.4vw, 22px); line-height: 1.25; word-break: keep-all;
+}
+#app .field-review-trial .bag-art {
+ width: 100%; height: clamp(94px, calc(var(--stage-h) * .28), 246px); min-height: 0;
+ filter: drop-shadow(0 8px 5px #33473645);
+}
 #app .field-review-trial img { width: 100%; height: 100%; object-fit: contain; }
-#app .field-review-trial b { color: #59452d; font-size: var(--font-size-xs); }
-#app .field-review-trial.dry b { color: #2e5d3d; }
+#app .bag-review-evidence { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; }
+#app .bag-review-evidence b { color: #59452d; }
+#app .field-review-trial.dry b { color: #245339; background: #e5efd6; }
+#app .activity-9.field-record-view { --activity-bg: var(--bg-activity-8); }
+#app .bag-review-board .bag-art::after {
+ content: ''; position: absolute; z-index: 0; inset: auto 16% 9%; height: 13%;
+ background: radial-gradient(ellipse, #152c246b, transparent 73%); pointer-events: none;
+}
+@media (min-width: 901px) and (min-height: 650px) and (orientation: landscape) {
+ #app .activity-9 .learning-scene > .bag-review-board { margin-block-start: min(16dvh, 150px); }
+}
+#app .activity-9 .learning-scene > .bag-review-board {
+ width: min(100%, 1320px); padding: 4px 0 10px; gap: clamp(8px, 1vw, 16px);
+}
+#app .activity-9 .bag-review-board .field-review-trials { gap: clamp(6px, 1.2vw, 20px); }
+#app .activity-9 .bag-review-board .bag-review-question {
+ width: fit-content; align-self: center; padding: 4px 12px; border-radius: 10px;
+ background: var(--text-plate); font-size: var(--frame-text); line-height: 1.35;
+}
+#app .activity-9 .bag-review-board .field-review-choices {
+ display: flex; justify-content: center; flex-wrap: wrap; gap: 8px;
+}
+#app .activity-9 .bag-review-board .field-review-choices > .btn {
+ flex: 0 1 auto; max-width: min(100%, 380px); min-height: 52px; padding: 8px 14px;
+ font-size: clamp(18px, 1.5vw, 24px); line-height: 1.3;
+}
+@media (max-width: 600px) {
+ #app .activity-9 .bag-review-board .field-review-choices { flex-direction: column; align-items: center; }
+}
 #app .field-review-choices { grid-template-columns: repeat(3,minmax(0,1fr)); }
 #app .field-review-choices .btn { justify-content: center; min-height: 54px; margin: 0; padding: 7px; font-size: var(--font-size-xs); line-height: 1.25; white-space: normal; }
-#app .garden-review-tools { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px 10px; }
-#app .garden-review-tools .btn { min-height: 46px; }
+#app .exploration-activity.activity-7 .learning-scene > .garden-review-board {
+ width: min(100%, 1340px); gap: clamp(8px, 1.5vh, 18px); padding: clamp(6px, 1.2vw, 18px);
+}
+#app .garden-review-board .garden-link-instructions {
+ align-self: center; padding: 5px 12px; border-radius: 13px; background: var(--text-plate);
+ font-size: var(--frame-text); line-height: 1.35; word-break: keep-all;
+}
+#app .garden-link-board {
+ --link-gap: clamp(30px, 10vw, 156px);
+ --link-row: clamp(76px, calc(var(--stage-h) * .2), 170px);
+ --link-point: clamp(17px, 2vw, 24px);
+ position: relative; display: grid; grid-template-columns: minmax(0,1.05fr) var(--link-gap) minmax(0,1fr);
+}
+#app .garden-link-column {
+ display: grid; grid-template-rows: 1.7em repeat(3,var(--link-row)); gap: clamp(6px, 1.2vh, 14px); min-width: 0;
+}
+#app .garden-link-plants { grid-column: 1; }
+#app .garden-link-reasons { grid-column: 3; }
+#app .garden-link-column h2 {
+ justify-self: center; align-self: center; margin: 0; padding: 4px 10px; border-radius: 999px;
+ background: var(--text-plate); color: var(--scene-ink); font-size: var(--frame-text); line-height: 1.15;
+}
+#app :is(.field-review-bed,.garden-link-reason) {
+ position: relative; display: flex; align-items: center; gap: clamp(4px, 1.4vw, 18px);
+ min-width: 0; min-height: 48px; padding: 5px clamp(6px, 1.5vw, 18px); border: 2px solid #b4bd98;
+ border-radius: 16px; background: var(--text-plate); color: var(--scene-ink); text-align: left;
+}
+#app button.field-review-bed { cursor: grab; touch-action: none; user-select: none; }
+#app .garden-link-board.is-drawing button.field-review-bed { cursor: grabbing; }
+#app button.garden-link-reason { cursor: pointer; }
+#app :is(.field-review-bed.is-picked,.field-review-bed.is-connecting,.garden-link-reason.is-linked,.garden-link-reason.is-aimed) {
+ border-color: #3d714c; background: #eaf3dc; box-shadow: 0 0 0 2px #a4bb74;
+}
+#app .garden-link-art {
+ position: relative; align-self: stretch; flex: 0 1 47%; min-width: 0; isolation: isolate;
+}
+#app .garden-link-art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+#app .garden-link-art .plant-illustration { inset: 4% 14% auto auto; width: 67%; height: 72%; filter: drop-shadow(0 2px 2px #20332455); }
+#app .garden-link-name { align-self: center; display: grid; gap: 3px; min-width: 0; }
+#app .garden-link-name b, #app .garden-link-reason { font-size: clamp(16px, 1.65vw, 25px); line-height: 1.3; overflow-wrap: anywhere; word-break: keep-all; }
+#app .garden-link-name small { color: #536947; font-size: var(--font-size-xs); line-height: 1.25; }
+#app .garden-link-reason > span:nth-child(2) { width: 100%; }
+#app .garden-link-reason svg { vertical-align: middle; margin-inline-start: 6px; }
+#app .garden-link-point {
+ position: absolute; top: 50%; z-index: 2; translate: 0 -50%; display: grid; place-items: center;
+ width: var(--link-point); height: var(--link-point); border: 2px solid #557644; border-radius: 50%;
+ background: #ffffed; box-shadow: 0 0 0 2px #e7ebc9;
+}
+#app .field-review-bed .garden-link-point { right: calc(var(--link-point) / -2); background: #557644; }
+#app .field-review-bed .garden-link-point::after { content: ''; width: 36%; height: 36%; border-radius: 50%; background: #ffffee; }
+#app .garden-link-reason .garden-link-point { left: calc(var(--link-point) / -2); }
+#app :is(.garden-link-reason.is-linked,.garden-link-reason.is-aimed) .garden-link-point { background: #557644; }
+#app .garden-link-line { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+#app .garden-link-line path { stroke: #466d39; stroke-width: 5; stroke-linecap: round; }
+#app .garden-link-board.is-drawing .garden-link-line path { stroke-width: 4; stroke-dasharray: 7 4; }
+#app .garden-review-board .field-review-result { align-self: center; }
+@media (max-width: 570px) {
+ #app .garden-link-board { --link-gap: 25px; --link-row: 82px; }
+ #app .garden-link-column h2 { font-size: 16px; padding-inline: 7px; white-space: nowrap; }
+ #app .garden-link-name small { font-size: 14px; }
+ #app .garden-link-reason { padding-left: 13px; }
+ #app .garden-link-art { flex-basis: 40%; }
+}
+body.large-text #app .garden-link-column { grid-template-rows: auto repeat(3,minmax(var(--link-row),auto)); }
+body.large-text #app :is(.garden-link-reason,.garden-link-name b) { font-size: max(21px,var(--font-size-md)); }
+@media (min-width: 680px) and (min-height: 360px) and (max-height: 540px) and (orientation: landscape) {
+ body:not(.large-text) #app .activity-7.field-record-view:has(.garden-review-board) {
+  display: grid; grid-template-rows: 0 minmax(0,1fr) auto; gap: 4px;
+  height: 100dvh; min-height: 100dvh; padding: 64px 10px 0; overflow: hidden;
+ }
+ body:not(.large-text) #app .activity-7.field-record-view:has(.garden-review-board) .activity-pill {
+  grid-area: auto; position: absolute; z-index: 21; top: 8px; left: 50%; transform: translateX(-50%);
+  max-width: calc(100% - 225px); margin: 0;
+ }
+ body:not(.large-text) #app .activity-7.field-record-view:has(.garden-review-board) :is(.learning-layout,.learning-scene) { height: 100%; min-height: 0; padding-block: 0; }
+ body:not(.large-text) #app .activity-7.field-record-view .garden-review-board { padding: 4px 0; gap: 5px; }
+ body:not(.large-text) #app .activity-7.field-record-view .garden-link-board { --link-row: clamp(48px, 14dvh, 74px); }
+ body:not(.large-text) #app .activity-7.field-record-view .garden-link-column { grid-template-rows: 26px repeat(3,var(--link-row)); gap: 4px; }
+ body:not(.large-text) #app .activity-7.field-record-view .garden-link-column h2 { font-size: 16px; }
+ body:not(.large-text) #app .activity-7.field-record-view :is(.garden-link-instructions,.field-review-result) { font-size: 16px; }
+ body:not(.large-text) #app .activity-7.field-record-view .learning-footer { padding: 0 0 4px; }
+ body:not(.large-text) #app .activity-7.field-record-view .learning-footer > div { flex-wrap: nowrap; gap: 6px; align-items: center; }
+ body:not(.large-text) #app .activity-7.field-record-view .learning-footer .guide-avatar { min-height: 44px; padding: 0; }
+ body:not(.large-text) #app .activity-7.field-record-view .learning-footer .guide-avatar .guide-portrait { height: 46px; }
+ body:not(.large-text) #app .activity-7.field-record-view .learning-footer .guide-bubble { margin: 0; padding: 5px 8px; font-size: 16px; }
+ body:not(.large-text) #app .activity-7.field-record-view .learning-footer .btn { min-height: 44px; padding: 4px 8px; font-size: 16px; }
+}
 #app .field-review-result, #app .field-review-feedback { padding: 8px 12px; border-radius: 12px; line-height: 1.35; }
 #app .field-review-result { background: #e8f3dc; }
 #app .field-review-feedback { background: #fff2c9; }
 @media (max-width: 620px) {
  #app .field-review-choices { grid-template-columns: minmax(0,1fr); }
  #app .field-review-trials { grid-template-columns: repeat(2,minmax(0,1fr)); }
-}
-@media (prefers-reduced-motion: reduce) {
- #app .field-review-bed .plant-illustration { transition: none; }
 }
 
 #app .season-review-plants, #app .season-review-pair { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 6px; }
@@ -665,7 +907,7 @@ body dialog.reward-dialog .theme-picker small { display: none; }
 
 @media (min-width: 821px) and (max-height: 760px) {
  #app .bag-review-board { gap: 7px; padding-block: 10px; }
- #app .bag-review-board .field-review-trial .bag-art { height: 72px; }
+ #app .bag-review-board .field-review-trial .bag-art { height: clamp(74px, 18vh, 146px); }
 }
 
 @media (min-width: 821px) and (orientation: landscape) {
@@ -770,12 +1012,11 @@ body .note-quiz > summary small { margin-left: 4px; padding: 2px 7px; border-rad
   #app .field-mission-view .field-mission.mission-0 .lens-clues { grid-template-columns: 1fr 1fr; }
   #app .field-mission-view .field-mission.mission-0 .lens-hint { min-height: 72px; }
   /* 1-2 나누기: 바구니는 테두리만, 카드는 크게. */
-  #app .field-mission-view .swipe-sort.axis-x { grid-template-columns: minmax(0, 1fr) clamp(260px, calc(var(--stage-h) * .56), 380px) minmax(0, 1fr); min-height: calc(var(--stage-h) * .8); }
+  #app .field-mission-view .swipe-sort.axis-x:not(.has-results) { grid-template-columns: minmax(0, 1fr) clamp(260px, calc(var(--stage-h) * .56), 380px) minmax(0, 1fr); min-height: calc(var(--stage-h) * .8); }
   #app .field-mission-view .swipe-bin { background: #fffce84d; box-shadow: none; }
-  #app .field-mission-view .swipe-bin > strong { padding: 4px 16px; border-radius: 999px; background: var(--text-plate); font-size: 26px; }
-  #app .field-mission-view .swipe-bin-leaves .field-leaf-picture { width: 96px; height: 88px; }
-  #app .field-mission-view .swipe-bin-leaves > span { padding: 4px 8px; border-radius: 12px; background: var(--text-plate); font-size: 18px; }
+  #app .field-mission-view .swipe-bin-heading > strong { font-size: clamp(20px, 1.6vw, 26px); }
   #app .field-mission-view .axis-x .swipe-deck { min-height: 0; display: grid; place-items: center; }
+  #app .field-mission-view .swipe-sort.axis-x.has-results { min-height: calc(var(--stage-h) * .8); grid-template-rows: minmax(0, 1fr) auto; }
   #app .field-mission-view .axis-x .swipe-card { top: 50%; width: clamp(220px, calc(var(--stage-h) * .5), 340px); margin: calc(var(--stage-h) * -.3) 0 0 calc(clamp(220px, calc(var(--stage-h) * .5), 340px) / -2); }
   #app .field-mission-view .axis-x .swipe-card .field-leaf-picture { width: 80%; height: calc(var(--stage-h) * .34); }
   #app .field-mission-view .axis-x .swipe-count { align-self: end; }
@@ -820,59 +1061,34 @@ body .note-quiz > summary small { margin-left: 4px; padding: 2px 7px; border-rad
   #app .field-mission-view .garden-field .field-garden-zone > img.plant-illustration { height: calc(var(--stage-h) * .34); }
   #app .field-mission-view .garden-card { min-height: 76px; font-size: 22px; }
   #app .field-mission-view .garden-card > :is(img, svg) { width: 64px; height: 64px; }
-  /* 5 가방: 가방과 구름을 키운다. */
-  #app .field-mission-view .bag-bench { align-items: center; }
-  #app .field-mission-view .rain-bench > .bag-results { grid-row: 1; }
-  #app .field-mission-view .bag-stage.with-sky { padding-top: 124px; }
-  #app .field-mission-view .bag-cloud { width: 220px; height: 124px; margin-left: -110px; }
-  #app .field-mission-view .bag-cloud > b { font-size: 24px; }
-  #app .field-mission-view .rain-bench .bag-canvas, #app .field-mission-view .bag-bench .bag-canvas { max-width: min(100%, calc((var(--stage-h) - 180px) * 1.5)); }
-  #app .field-mission-view .bag-pick { grid-template-columns: 110px minmax(0, 1fr); min-height: 112px; }
-  #app .field-mission-view .bag-pick > .bag-art { width: 110px; height: 96px; }
-  #app .field-mission-view .bag-pick strong { font-size: 22px; }
-  #app .field-mission-view .field-bag-predict .bag-art { max-height: calc(var(--stage-h) * .7); height: clamp(220px, calc(var(--stage-h) * .66), 440px); }
-  #app .field-mission-view .field-bag-predict .field-predict-picture { background: none; }
   #app .field-mission-view .field-season-predictions .field-predict-picture { width: min(100%, calc((var(--stage-h) - 190px) * 1.5)); }
 }
 #app .bag-say:empty { display: none; }
 /* 탐구 기록: 작업판이 장면 너비를 쓰고 그림·선택 카드를 키운다. 말풍선과 겹치는 안내 줄은 숨긴다. */
-#app .exploration-activity .work-board :is(.field-review-kicker, .garden-review-question) { display: none; }
+#app .exploration-activity .work-board .field-review-kicker { display: none; }
 #app .exploration-activity .guide-bubble > .bubble-next:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
-#app .exploration-activity :is(.leaf-specimen, .habitat-compare-card:not(.is-picked), .season-review-plants section, .leaf-grouping) { background: #fffdf38c; border-color: #ffffff99; }
+#app .exploration-activity :is(.leaf-specimen, .habitat-compare-card:not(.is-picked), .season-review-plants section) { background: #fffdf38c; border-color: #ffffff99; }
 @media (min-width: 901px) and (orientation: landscape) {
   #app .exploration-activity .learning-scene > .work-board { width: min(100%, 1180px); }
   #app .exploration-activity .leaf-specimen-picture { height: clamp(200px, calc(var(--stage-h) - 190px), 520px); }
-  #app .exploration-activity .leaf-specimen-picture img { width: 78%; height: 78%; }
-  #app .exploration-activity .leaf-tile img { height: clamp(64px, calc(var(--stage-h) * .2), 170px); }
-  #app .exploration-activity .leaf-tile b, #app .exploration-activity .leaf-group-bin h3 { font-size: 20px; }
   #app .exploration-activity .season-review-pair .season-atlas { height: auto; aspect-ratio: 3 / 2; max-height: calc(var(--stage-h) - 300px); }
   #app .exploration-activity .field-review-choices .btn { min-height: 84px; font-size: 20px; }
   #app .exploration-activity .habitat-compare-art { height: clamp(110px, calc(var(--stage-h) - 300px), 340px); }
   #app .exploration-activity .habitat-compare-card :is(strong, b) { font-size: 22px; }
-  #app .exploration-activity .field-review-bed { height: clamp(160px, calc(var(--stage-h) - 150px), 460px); }
-  #app .exploration-activity .field-review-bed > span { font-size: 22px; padding: 6px 16px; }
 }
 #app .mission-0.keys-on .keys-panel .field-hotspot { grid-column: span 2; }
 #app .idea-application > span:empty { display: none; }
-#app .exploration-activity .field-review-bed { background: #ffffff59; border-color: #ffffffb3; }
-#app .exploration-activity .field-review-bed .habitat-picture { object-fit: contain; }
 /* Dial size steps by screen height (plain numbers: length ÷ length is not supported on older tablets). */
 @media (min-width: 901px) and (orientation: landscape) and (min-height: 780px) { #app .field-mission-view .field-mission .time-dial { zoom: 1.3; } }
 @media (min-width: 901px) and (orientation: landscape) and (min-height: 960px) { #app .field-mission-view .field-mission .time-dial { zoom: 1.5; } }
 /* 5장 설계: 글이 줄어 남는 높이는 가방이 쓴다. */
 @media (min-width: 901px) and (orientation: landscape) {
   #app .exploration-activity .design-layout .learning-scene > .compact-bag { flex: 1 1 auto; height: auto; min-height: 0; }
-  #app .exploration-activity .bag-review-board .field-review-trial .bag-art { height: clamp(90px, calc(var(--stage-h) - 370px), 300px); }
-  #app .exploration-activity .field-review-trial :is(h2, b) { font-size: 20px; }
 }
 /* 2026-11-18 작업판이 주인공: 장면 틀은 이미 화면의 97%×78%를 쓰는데 그 안의 판·그림·버튼이 작아 배경이 더 커 보였다.
    판과 그림을 장면 높이(--stage-h)에 맞춰 키우고, 가운데에 옅은 빛을 깔아 작업 층이 그림 배경에서 떠 보이게 한다. */
 @media (min-width: 901px) and (orientation: landscape) {
   /* 1장 기록(은행잎의 새 짝): 잎 그림이 판 높이를 채운다. */
-  #app .exploration-activity .leaf-partner .leaf-tile img { height: clamp(64px, calc(var(--stage-h) - 350px), 300px); }
-  #app .exploration-activity .leaf-partner :is(.leaf-tile b, .leaf-group-bin h3, .leaf-grouping h2) { font-size: 22px; }
-  #app .exploration-activity .leaf-partner .leaf-group-bin > div { gap: 10px; }
-  #app .exploration-activity .leaf-partner .leaf-tile { flex: 1 1 0; padding: 8px 6px; }
   /* 3장 기록(식물이 사는 곳): 판이 장면 너비를 쓴다. */
   #app .exploration-activity .habitat-compare-board { max-width: none; }
   #app .exploration-activity .habitat-compare-card small { font-size: 18px; }
@@ -881,10 +1097,6 @@ body .note-quiz > summary small { margin-left: 4px; padding: 2px 7px; border-rad
   #app .activity-2 .season-scene { max-width: none; }
   #app .activity-2 .learning-scene > :is(.timeline, .season-caption, .rule-result) { align-self: center; }
   #app .activity-2 .season-caption { font-size: 22px; }
-  /* 5장 현장 예상: 가방 그림과 두 선택 버튼을 키운다. */
-  #app .field-mission-view .field-bag-predict { grid-template-columns: minmax(0, 46%) minmax(0, 1fr); gap: 28px; }
-  #app .field-mission-view .field-predict-choices { gap: 16px; }
-  #app .field-mission-view .field-predict-choices .btn { min-height: 92px; font-size: 24px; }
   /* 5장 설계·시험: 오른쪽 질문 칸을 세로 가운데에 둔다. */
   #app .exploration-activity :is(.design-layout, .test-layout) > .learning-note { align-self: center; }
 }
@@ -916,11 +1128,9 @@ body .note-quiz > summary small { margin-left: 4px; padding: 2px 7px; border-rad
   #app .exploration-activity .learning-scene > .work-board { width: min(100%, calc(var(--stage-h) * 1.8)); }
   #app .exploration-activity .leaf-specimen-picture { height: clamp(200px, calc(var(--stage-h) - 190px), 640px); }
   #app .exploration-activity .habitat-compare-art { height: clamp(110px, calc(var(--stage-h) - 300px), 460px); }
-  #app .exploration-activity .field-review-bed { height: clamp(160px, calc(var(--stage-h) - 170px), 620px); }
   #app .exploration-activity .field-review-choices .btn { min-height: 96px; font-size: 22px; }
 }
 /* 5장 현장 첫 비: 아직 결과 카드가 없으면 가방이 왼쪽에 쏠리지 않고 작업대 가운데에 선다. */
-#app .rain-bench:has(> .bag-results:empty) > .bag-stage { grid-column: 1 / -1; justify-self: center; width: min(100%, 720px); }
 /* 이미 비를 맞은 가방 위의 구름은 누를 곳이 아니다(가방 카드가 비를 내린다). 구름 그림은 두고 「비 내리기!」 글자만 숨긴다. */
 #app .bag-stage[data-rain="skip"] .bag-cloud > b { visibility: hidden; }
 /* 연구 노트 창·설정 창: 아래 「노트 덮기」·「닫기」와 같은 일을 하는 위 X는 숨긴다(Esc·아래 버튼으로 닫힌다). */

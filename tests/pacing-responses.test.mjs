@@ -1,3 +1,4 @@
+import {sortLeaves} from './leaf-sort-fixture.mjs';
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {freshState,restoreState} from '../src/model.js';
@@ -43,6 +44,10 @@ test('필수 관찰 전이나 무효 분류 입력은 이전 피드백이 있어
 
 test('은행잎 새 짝의 첫 선택과 고친 선택이 남고 맞춘 뒤에는 기록이 바뀌지 않는다',()=>{
  const s=freshState(),u={};learningAction(s,u,'leaf-zoom','large');s.page=1;
+ learningAction(s,u,'leaf-sort','edge:ginkgo:yes');
+ sortLeaves(s,u,'edge');sortLeaves(s,u,'narrow');
+ const sort=s.learningRecords[0].responses['core:leaf-sort:edge:ginkgo'];
+ assert.equal(sort.first,'톱니가 있어');assert.equal(sort.last,'톱니가 없어');assert.equal(sort.wrong,1);
  learningAction(s,u,'leaf-partner','grass');learningAction(s,u,'leaf-partner','cherry');
  const record=s.learningRecords[0].responses['core:leaf-partner'];
  assert.equal(record.first,'강아지풀');assert.equal(record.last,'벚나무');

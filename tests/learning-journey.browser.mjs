@@ -78,9 +78,18 @@ try{
  await evidence(`JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.leaves.edge.maple==='no'`);await hint();
  for(const p of ['maple','pine','camellia']){await page.locator('[data-swipe-top][data-swipe-card="'+p+'"]').waitFor();await page.locator('[data-swipe-bin="'+(p==='pine'?'no':'yes')+'"]').tap();await evidence(`JSON.parse(localStorage['green-garden-mvp-v2']).fieldEvidence.leaves.edge.${p}==='${p==='pine'?'no':'yes'}'`);}
  await explore();assert.equal((await saved()).page,0);
- await a('leaf-zoom','large');await completePage();await page.locator('main.activity-1').waitFor();await evidence("JSON.parse(localStorage['green-garden-mvp-v2']).page===1");
- assert.equal(await page.locator('.leaf-grouping').count(),1);
- await a('leaf-partner','cherry');assert.equal(await page.locator('.leaf-grouping').count(),2);
+ const leafWidth=()=>page.locator('.leaf-specimen-picture img').first().evaluate(el=>el.getBoundingClientRect().width);
+ const overview=await leafWidth();
+ await a('leaf-zoom','large');assert.ok(await leafWidth()>overview*1.25,'zoom visibly enlarges leaf artwork');
+ await a('leaf-zoom','normal');assert.ok(Math.abs(await leafWidth()-overview)<1,'overview restores leaf artwork');
+ await completePage();await page.locator('main.activity-1').waitFor();await evidence("JSON.parse(localStorage['green-garden-mvp-v2']).page===1");
+ const sortLeaf=async(rule,leaf,group)=>{await a('leaf-pick',leaf);await a('leaf-drop',`${rule}:${group}`);};
+ assert.equal(await page.locator('[data-leaf-rule="narrow"]').count(),0);
+ for(const [leaf,group] of [['cherry','yes'],['ginkgo','no'],['grass','no']])await sortLeaf('edge',leaf,group);
+ await a('leaf-rule','narrow');
+ assert.equal(await page.locator('[data-leaf-rule="edge"]').count(),0);
+ for(const [leaf,group] of [['grass','yes'],['cherry','no'],['ginkgo','no']])await sortLeaf('narrow',leaf,group);
+ await a('leaf-partner','cherry');assert.match(await page.locator('.leaf-sort-result').innerText(),/강아지풀.*벚나무/);
  assert.deepEqual((await saved()).leafEvidence,{},'comparison does not invent feature answers');
  await snap('leaves-classified');
  await completePage();await missionDone(0);
@@ -124,11 +133,15 @@ try{
  // A wrong bed refuses the plant; Leafy's hint, then the right beds.
  await stage(1);await place('plant:hyacinth','plant:ridge');assert.deepEqual((await saved()).fieldEvidence.garden.plants,{});await hint();
  for(const [plant,zone] of [['hyacinth','pond'],['cherry','meadow'],['aloe','ridge']])await place('plant:'+plant,'plant:'+zone);
- await stage(2);await a('field-garden-rain');await explore();assert.equal((await saved()).page,7);
+ await stage(2);await a('field-garden-rain');await explore();assert.equal((await saved()).page,6);
+ await page.locator('.garden-frame[data-spatial="garden"]').waitFor();
+ assert.match(await page.locator('.learning-footer [data-action="complete"]').innerText(),/까닭 이어 보기/);
+ await completePage();await page.locator('[data-garden-link]').waitFor();
+ await evidence("JSON.parse(localStorage['green-garden-mvp-v2']).page===7");
  assert.deepEqual((await saved()).garden,{hyacinth:6,cherry:8,aloe:10});
- await a('garden-review-pick','cherry');await a('garden-review-move');
- assert.equal((await saved()).garden.cherry,9);
- await a('garden-review-reason','cherry');
+ await stroke(line(await center(page.locator('[data-action="garden-review-pick"][data-id="cherry"] .garden-link-point')),await center(page.locator('[data-action="garden-review-reason"][data-id="cherry"] .garden-link-point')),12));
+ await evidence("JSON.parse(localStorage['green-garden-mvp-v2']).gardenReview?.explained");
+ assert.equal((await saved()).garden.cherry,8);
  await snap('garden-reviewed');await completePage();await missionDone(3);
 
  await enter(4);await a('field-bag-predict','surface');

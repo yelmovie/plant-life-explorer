@@ -3,6 +3,11 @@ import {isVoiceOn,duckMusic} from './audio.js';
 // ElevenLabs voice lines (2026-11-18, docs/VOICE-FILL-20261118.json): exact on-screen text -> /assets/audio/<file>.mp3.
 // Lipi = Aria, label thief = Harry - Character. Text that is not in this table simply stays silent.
 export const VOICE_LINES={
+ "그림에서 표시된 곳을 눌러 돋보기로 살펴봐.":"lipi-guide-season-lens",
+ "이 단계는 끝! 오른쪽 아래 다음 도전을 눌러 줘.":"lipi-guide-field-next",
+ "현장 임무 성공! 아래의 발견을 연구 노트에 담기를 눌러 줘.":"lipi-guide-field-done",
+ "잎 카드를 고르고, 알맞은 칸에 놓아 봐.":"lipi-guide-leaf-sort",
+ "기록이 준비됐어. 아래의 다음 기록을 눌러 줘.":"lipi-guide-record-next",
  "잎을 살펴보고, 같은 특징끼리 모아 줘.":"lipi-0-goal",
  "겨울에 남은 부분과 다음 봄의 모습을 이어 줘.":"lipi-1-goal",
  "예상하고, 물속에서 눌러 보고, 비교해 봐.":"lipi-2-goal",
@@ -140,6 +145,48 @@ export function speakTexts(texts,onState,{villain=false,delay=0}={}){
  if(delay>0)startTimer=setTimeout(()=>{startTimer=0;next();},delay);else next();
  return ()=>turn===mine&&(startTimer!==0||player!==null);
 }
+// The footer changes with the learner's actions. Read each available cue once per activity
+// or criterion and leave unrecorded feedback as text so the displayed and spoken cues agree.
+let guideRoot,guideTimer=0,guideScene='',guideTrack=null,guidePlaying=()=>false;
+const guideSeen=new Set();
+export function speakActivityGuide(root){
+ guideRoot=root;
+ clearTimeout(guideTimer);
+ // An activity action may also open an observation window. Let that window take the first turn.
+ guideTimer=setTimeout(readActivityGuide,0);
+}
+function readActivityGuide(){
+ const activity=guideRoot?.querySelector('main.exploration-activity');
+ const bubble=activity?.querySelector('.learning-footer .guide-bubble');
+ const scene=bubble?[
+  [...activity.classList].find(name=>name.startsWith('activity-')),
+  activity.classList.contains('field-mission-view'),
+  activity.querySelector('[data-time-dial]')?.dataset.timeDial,
+  activity.querySelector('[data-leaf-rule]')?.dataset.leafRule
+ ].join(':'):'';
+ if(scene!==guideScene){
+  guideScene=scene;
+  guideSeen.clear();
+  if(guidePlaying())stopVoice();
+ }
+ if(!bubble||host?.open||!isVoiceOn()||document.hidden||!activated())return;
+ const text=bubble.textContent.trim().replace(/\s+/g,' ');
+ const tips=[...bubble.querySelectorAll('.bubble-next')].map(el=>el.textContent.trim());
+ const line=[text,...tips].find(voiceSrc);
+ const track=voiceSrc(line);
+ if(guidePlaying()){
+  if(guideTrack===track)return;
+  stopVoice();
+ }
+ if(!track||guideSeen.has(track))return;
+ if(villainLineOn()){
+  guideTimer=setTimeout(readActivityGuide,100);
+  return;
+ }
+ guideTrack=track;
+ guidePlaying=speakTexts([line],(_,audible)=>{if(audible)guideSeen.add(track);});
+}
+
 // Popups: the mission brief, reward, and locked-place dialogs read their lines when they open; closing stops the voice.
 const DIALOG_LINES='#dialog-title, .lipi-letter p, .reward-why, .reward-next, .map-locked-message p';
 // A re-render of the same open popup (e.g. picking a flower-path colour) does not start the lines again.
@@ -172,11 +219,19 @@ export function installVoiceLines(dialog){
  host=dialog;
  // Closing a popup ends its own line and drops one that was still waiting. A thief's line on the map is not the popup's:
  // the close event arrives a task after the map is back, when the thief may already be about to speak.
- dialog.addEventListener('close',()=>{dialogSig='';clearTimeout(waitTimer);waitTimer=0;if(!thief)quiet();});
+ dialog.addEventListener('close',()=>{
+  if(dialog.open)return;
+  dialogSig='';clearTimeout(waitTimer);waitTimer=0;if(!thief)quiet();
+  speakActivityGuide(guideRoot);
+ });
  document.addEventListener('visibilitychange',()=>{if(document.hidden)stopVoice();});
  window.addEventListener('pagehide',stopVoice);
  // Turning the voices switch or the header speaker off stops the line that is being read.
  document.addEventListener('sound-voice-off',stopVoice);
+ document.addEventListener('sound-voice-off',()=>guideSeen.clear());
+ const readGuideAfterInput=()=>{if(guideRoot&&!guideSeen.size)speakActivityGuide(guideRoot);};
+ window.addEventListener('click',readGuideAfterInput,true);
+ window.addEventListener('keyup',readGuideAfterInput,true);
  // 리피의 정리 (research notebook): opening the summary reads it; folding it stops the voice.
  document.addEventListener('toggle',e=>{
   const d=e.target;if(!(d instanceof HTMLDetailsElement)||!d.matches('.note-content-summary'))return;

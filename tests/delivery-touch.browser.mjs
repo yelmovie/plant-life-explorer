@@ -76,8 +76,13 @@ try{
  for(const p of ['maple','pine','camellia']){await page.locator(`[data-swipe-top][data-swipe-card="${p}"]`).waitFor();const bin=page.locator(`[data-swipe-bin="${p==='pine'?'no':'yes'}"]`);
   if(p==='pine'){await bin.tap();await bin.tap();}else await bin.tap();await field(`e.leaves.edge.${p}==='${p==='pine'?'no':'yes'}'`);}
  check((await saved()).fieldEvidence.leaves.edge.camellia==='yes','1장: a fast double tap throws one card only');
- await explore();await act('leaf-zoom','large');await act('complete');await act('leaf-partner','cherry');
- check(await page.locator('.leaf-grouping').count()===2,'1장: one partner choice shows both sets of groups');
+ await explore();await act('leaf-zoom','large');await act('complete');
+ for(const [rule,groups] of [['edge',[['cherry','yes'],['ginkgo','no'],['grass','no']]],['narrow',[['cherry','no'],['ginkgo','no'],['grass','yes']]]]){
+  if(rule==='narrow')await act('leaf-rule','narrow');
+  for(const [plant,group] of groups){await act('leaf-pick',plant);await act('leaf-drop',`${rule}:${group}`);}
+ }
+ await act('leaf-partner','cherry');
+ check(await page.locator('[data-leaf-rule="narrow"].is-sorted .leaf-sort-result').count()===1,'1장: two distinct sorting screens reveal the change of partner');
  await complete(0);
 
  // 2장: dial and string drag are done with the visible button panel.
@@ -106,16 +111,23 @@ try{
  await explore();await act('press-petiole',undefined,'.lab-dock ');await act('experiment-answer','air');await act('complete',undefined,'.learning-footer ');await act('habitat-compare-answer','aloe');
  await complete(2);
 
- // 4장: card → bed taps, then the keep-or-change pick on the student's own garden.
+ // 4장: card → bed taps, then a plant → reason connection on the student's garden.
  await enter(3);await act('field-garden-ground');await field(`e.garden.environments.ridge==='dry'`);
  await stage(1);await tap('[data-field-item="plant:hyacinth"]');await tap('[data-field-drop="plant:ridge"]');
  check(Object.keys((await saved()).fieldEvidence.garden.plants).length===0,'4장: a wrong bed refuses the plant without penalty');
  for(const [p,z] of [['hyacinth','pond'],['cherry','meadow'],['aloe','ridge']]){await tap(`[data-field-item="plant:${p}"]`);await tap(`[data-field-drop="plant:${z}"]`);}
  await stage(2);await act('field-garden-rain');await explore();
+ check((await saved()).page===6&&await page.locator('.garden-frame[data-spatial="garden"]').count()===1,'4장: field garden opens the terrain and planting workbench');
+ await act('complete',undefined,'.learning-footer ');
+ await page.locator('[data-garden-link]').waitFor();
+ await until(`JSON.parse(localStorage['${KEY}'])?.page===7`);
  check((await saved()).page===7&&await page.locator('.field-review-bed').count()===3,'4장: original three sites open without a second planting');
- await act('garden-review-pick','aloe');await act('garden-review-move');await act('garden-review-reason','aloe');
+ const gardenBefore=(await saved()).garden;
+ await act('garden-review-pick','aloe');await act('garden-review-reason','aloe');
  check((await saved()).gardenReview.explained,'4장: one site explanation recorded');
- const gardenBefore=(await saved()).garden;await complete(3);
+ assert.deepEqual((await saved()).garden,gardenBefore);
+ check(!!await page.locator('.garden-link-line path').getAttribute('d'),'4장: linked reason remains visible');
+ await complete(3);
 
  // 5장: guess → rain on the plain bag → one tap per bag card → explain the two parts once.
  await enter(4);const first=await page.locator('.field-objective').innerText();
