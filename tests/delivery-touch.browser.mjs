@@ -90,7 +90,8 @@ try{
  await keysOn();await panel('data-field-drop','link:tree:trunk');await panel('data-field-drop','link:herb:root');await field(`e.seasons.links.herb==='root'`);
  for(const [n,kind] of [[1,'tree'],[2,'herb']]){await stage(n);await panel('data-action','field-season-turn');await tap(`.keys-panel [data-action="field-season-clue"][data-id="${kind}:${kind==='tree'?'branches':'rootbud'}"]`);await field(`e.seasons.clues.${kind}`);}
  check(true,'2장: all field steps done with visible buttons (no drag, no keyboard)');await keys(false);
- await explore();await act('season-review-answer','parts');await complete(1);
+ await explore();await act('season-review-answer','bud');await act('season-review-plant','sowthistle');
+ await act('season-review-answer','root');await complete(1);
 
  // 3장: every required step by touch, three ways to open the stalk.
  await enter(2);await tap('[data-heft="air"] [data-heft-pick="float"]');await field(`e.float.predictions.air`);await tap('[data-heft="solid"] [data-heft-pick="sink"]');await field(`e.float.predictions.solid`);

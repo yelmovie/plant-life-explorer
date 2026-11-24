@@ -34,12 +34,25 @@ test('현장 분류를 다 마치지 않으면 1장 기록도 마칠 수 없다'
  for(const id of ['maple','pine','camellia'])fieldMissionAction(s,u,'field-sort',`edge:${id}:${id!=='pine'?'yes':'no'}`);
  assert.equal(pageReady(s,1),false);
 });
-test('계절 현장 뒤에는 사진을 다시 찍지 않고 두 식물의 차이를 한 번 기록한다',()=>{
+test('계절 현장 뒤에는 벚나무와 씀바귀를 하나씩 확인하고 두 답을 모두 기록한다',()=>{
  const s=freshState();carryFieldEvidence(s,1);assert.equal(s.fieldBridges[1],false);assert.deepEqual(s.seasonExplained,[]);
  seasons(s);carryFieldEvidence(s,1);assert.equal(s.fieldBridges[1],true);
  assert.equal(pageReady(s,2),false);assert.equal(pageReady(s,3),false);assert.equal(s.completed[2],false);
  assert.deepEqual(s.seasonExplained,[]);assert.deepEqual(s.seasonalRecords,[]);assert.equal(s.seasonPrediction.cherry,'none');
- s.page=3;const u={activityMode:'explore'};assert.match(renderActivity(s,u,()=>''),/현장에서 살펴본 겨울과 다음 봄/);
- learningAction(s,u,'season-review-answer','new');assert.equal(pageReady(s,3),false);
- learningAction(s,u,'season-review-answer','parts');assert.equal(pageReady(restoreState(JSON.stringify(s)),3),true);assert.deepEqual(s.seasonalRecords,[]);
+ s.page=3;const u={activityMode:'explore'},view=(state=s,ui=u)=>renderActivity(state,ui,()=>'');
+ assert.match(view(),/data-review-plant="cherry"/);assert.doesNotMatch(view(),/data-review-plant="sowthistle"/);
+ learningAction(s,u,'season-review-plant','sowthistle');
+ learningAction(s,u,'season-review-answer','root');assert.equal(s.seasonReviewCherry,false);
+ learningAction(s,u,'season-review-answer','leaf');assert.match(u.activityFeedback,/잎이 떨어진 뒤/);
+ learningAction(s,u,'season-review-answer','bud');assert.equal(pageReady(s,3),false);
+ assert.match(view(),/씀바귀 살펴보기/);
+ const partial=restoreState(JSON.stringify(s));assert.match(view(partial,{}),/data-review-plant="sowthistle"/);
+ learningAction(s,u,'season-review-plant','sowthistle');
+ assert.match(view(),/data-review-plant="sowthistle"/);
+ learningAction(s,u,'season-review-answer','root');
+ assert.equal(pageReady(restoreState(JSON.stringify(s)),3),true);assert.deepEqual(s.seasonalRecords,[]);
+ for(const plant of ['cherry','sowthistle'])assert.ok(s.learningRecords[1].responses['core:season-review:'+plant]);
+ const legacy=restoreState(JSON.stringify({...s,seasonReviewCherry:undefined}));
+ assert.equal(pageReady(legacy,3),true);
+ learningAction(legacy,u,'season-review-plant','cherry');assert.match(view(legacy),/가지 끝 겨울눈<\/strong>에서 새잎과 꽃이 나왔어/);
 });

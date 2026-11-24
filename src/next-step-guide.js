@@ -4,7 +4,7 @@
 // pointing hand; jump = [action,id] that brings that control on screen (tab, plant card, season stop).
 // The hand never tells the answer. It never points at a choice, never names the leaf that is wrong, and never lies over the
 // choices: a question line is marked from above (anchor 'ask'), a picture or a row by its bottom edge (anchor 'edge').
-import {fieldSeasonReview,fieldBagReview,gardenReviewReady,gardenReviewPlant,HABITAT_PLANTS,HABITATS,TERRAIN_MIN,terrainCount,gardenValid,pageReady,designKey,currentTrial,comparisonPair,inventionEvidence,leafSortDone,activeLeafRule} from './model.js';
+import {fieldSeasonReview,seasonReviewPlant,seasonReviewDone,fieldBagReview,gardenReviewReady,gardenReviewPlant,HABITAT_PLANTS,HABITATS,TERRAIN_MIN,terrainCount,gardenValid,pageReady,designKey,currentTrial,comparisonPair,inventionEvidence,leafSortDone,activeLeafRule} from './model.js';
 import {seasonEvidenceReady} from './inquiry.js';
 import {fieldSteps,normalizeFieldEvidence,fieldMissionReady} from './field-missions-state.js';
 import {fieldTodo,fieldStageLabels} from './field-missions.js';
@@ -44,8 +44,13 @@ function seasonsItems(s){
   return item('season:'+plant,seasonName(plant)+' 사진',n===undefined,{sub,target,tip,jump,anchor});
  });
 }
-function compareItems(s){
- if(fieldSeasonReview(s))return [item('seasons-why','두 식물이 다시 자란 부분 비교하기',pageReady(s,3),ask('.season-review-question','겨울과 봄의 두 그림을 비교해 봐'))];
+function compareItems(s,u){
+ if(fieldSeasonReview(s)){
+  const plant=seasonReviewPlant(s,u),tip=seasonReviewDone(s,plant)
+   ?'다음은 씀바귀야. 아래 버튼을 눌러 봐.'
+   :'겨울과 봄을 비교하고 답을 골라 봐.';
+  return [item('seasons-why','겨울을 난 두 식물 확인하기',pageReady(s,3),{tip})];
+ }
  return ['cherry','sowthistle'].map(plant=>{
   const here=s.seasonPlant===plant,photos=here?seasonEvidenceReady(s):[3,0].every(n=>s.seasonPhotos[`${plant}:${n}`]&&s.seasonalRecords.includes(`${plant}:${n}`));
   const target=!here?sel('season-plant',plant):!photos?sel('previous'):'.season-question > p';

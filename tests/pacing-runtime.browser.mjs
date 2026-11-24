@@ -43,9 +43,26 @@ try{
  {
   const state=freshState();state.screen='activity';state.page=2;state.completed[0]=state.completed[1]=true;state.fieldEvidence.seasons=completed.fieldEvidence.seasons;
   const {context,page}=await fixture(state);assert.equal((await read(page)).page,3);assert.equal(await page.locator('[data-action="season-explain"]').count(),0);
-  await action(page,'season-review-answer','parts');await page.waitForFunction(key=>JSON.parse(localStorage.getItem(key))?.seasonCompareAnswer==='parts',STORAGE_KEY);assert.notEqual(await page.locator('[data-action="complete"]').getAttribute('aria-disabled'),'true');
-  await page.reload();assert.equal((await read(page)).seasonCompareAnswer,'parts');
-  report.checks.push('Reload after season field game: carries observations and explanations without repeated questions');await context.close();
+  const review=page.locator('.season-review-board');
+  const showing=async plant=>{
+   assert.equal(await review.getAttribute('data-review-plant'),plant);
+   assert.equal(await review.locator('.season-atlas').count(),2);
+  };
+  await showing('cherry');
+  assert.equal(await page.locator('[data-action="complete"]').count(),0);
+  await action(page,'season-review-answer','leaf');assert.match(await page.locator('.guide-bubble').innerText(),/잎이 떨어진 뒤/);
+  await action(page,'season-review-answer','bud');
+  await page.waitForFunction(key=>JSON.parse(localStorage.getItem(key))?.seasonReviewCherry===true,STORAGE_KEY);
+  assert.match(await review.locator('.field-review-result').innerText(),/겨울눈/);
+  await action(page,'season-review-plant','sowthistle');await showing('sowthistle');
+  await page.reload();await showing('sowthistle');
+  await action(page,'season-review-plant','cherry');await showing('cherry');
+  await action(page,'season-review-plant','sowthistle');await showing('sowthistle');
+  await action(page,'season-review-answer','root');
+  await page.waitForFunction(key=>JSON.parse(localStorage.getItem(key))?.seasonCompareAnswer==='parts',STORAGE_KEY);
+  assert.notEqual(await page.locator('[data-action="complete"]').getAttribute('aria-disabled'),'true');
+  await page.reload();assert.match(await review.locator('.field-review-result').innerText(),/뿌리/);
+  report.checks.push('Season review shows one plant at a time, saves the first finding across reload, and unlocks restoration after both answers');await context.close();
  }
  {
   const {context,page}=await fixture({...completed,screen:'activity',page:7,gardenFromField:false,gardenReview:null,garden:{...completed.garden,hyacinth:0},gardenReasons:['hyacinth','cherry','aloe']});

@@ -1,6 +1,6 @@
 import {plantConceptMarkup} from './plant-concepts.js';
 import {assetImage} from './asset-catalog.js';
-import {missionDone,fieldBagReview,SEASON_REVIEW_ANSWERS,gardenReviewReady,BAG_REVIEW_ANSWERS,terrainCount,inventionEvidence,PLANTS,HABITAT_PLANTS,LEAF_PARTNER} from './model.js';
+import {missionDone,fieldBagReview,gardenReviewReady,BAG_REVIEW_ANSWERS,terrainCount,inventionEvidence,PLANTS,HABITAT_PLANTS,LEAF_PARTNER} from './model.js';
 import {normalizeFieldEvidence,FIELD_BAG_ROLES,FIELD_LEAVES} from './field-missions-state.js';
 import {BUD_TOTAL,budsFoundCount} from './winter-buds.js';
 import {josa} from './josa.js';

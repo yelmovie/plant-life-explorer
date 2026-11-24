@@ -898,12 +898,95 @@ body.large-text #app :is(.garden-link-reason,.garden-link-name b) { font-size: m
  #app .field-review-trials { grid-template-columns: repeat(2,minmax(0,1fr)); }
 }
 
-#app .season-review-plants, #app .season-review-pair { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 6px; }
-#app .season-review-plants section { padding: 6px; background: #f3eee0; border-radius: 14px; min-width: 0; }
-#app .season-review-plants h2 { font-size: var(--font-size-xs); margin: 0 0 5px; }
-#app .season-review-pair figure { margin: 0; min-width: 0; }
-#app .season-review-pair .season-atlas { height: clamp(85px,22vh,170px); width: 100%; min-height: 0; border-radius: 9px; }
-#app .season-review-pair figcaption { font-size: var(--font-size-xs); }
+#app .season-review-board {
+ --photo-height: clamp(100px, min(calc(var(--stage-h) - 174px), 29vw), 410px);
+ display: grid; gap: clamp(8px, 1.4vh, 16px);
+ width: min(100%, calc(var(--photo-height) * 3 + 52px)); color: var(--forest-dark);
+}
+#app .season-review-heading {
+ display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 12px;
+}
+#app .season-review-heading h2 {
+ margin: 0; padding: 6px 16px; border-radius: 12px; background: var(--paper);
+ font: 800 clamp(22px, 2.8vw, 38px)/1.2 var(--font-display);
+}
+#app .season-review-heading ol {
+ display: flex; flex-wrap: wrap; gap: 4px; margin: 0; padding: 0; list-style: none;
+ font-size: var(--font-size-xs);
+}
+#app .season-review-heading li > :is(span,.btn) {
+ display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+ min-height: var(--touch-min); margin: 0; padding: 4px 10px; border: 1px solid var(--line);
+ border-radius: 12px; background: var(--paper); color: var(--forest-dark); font-size: inherit;
+}
+#app .season-review-heading li > [aria-current="step"] { border-color: var(--forest); background: var(--forest); color: white; font-weight: 800; }
+#app .season-review-heading li > .btn { text-decoration: underline; text-underline-offset: .15em; }
+#app .season-review-pair {
+ display: grid; align-items: center; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr);
+ gap: clamp(4px, 1vw, 12px);
+}
+#app .season-review-pair figure {
+ align-self: stretch; min-width: 0; margin: 0; border: 1px solid var(--line);
+ border-radius: 14px; overflow: hidden; background: var(--paper);
+}
+#app .season-review-pair .season-atlas {
+ width: 100%; min-height: 0; height: auto; aspect-ratio: 3 / 2; border-radius: 0;
+}
+#app .season-review-pair figcaption {
+ display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 4px 10px;
+ padding: 8px 6px; font-size: var(--font-size-xs); line-height: 1.3;
+}
+#app .season-review-pair figcaption b { padding: 2px 8px; border-radius: 6px; background: #e4eef3; color: #244b60; }
+#app .season-review-pair figure:last-child figcaption b { background: #e3efdb; color: var(--forest); }
+#app .season-review-arrow {
+ display: grid; place-items: center; width: clamp(24px, 3vw, 38px); aspect-ratio: 1;
+ border-radius: 50%; background: var(--paper);
+}
+#app .season-review-arrow svg { width: 65%; }
+#app .season-review-task {
+ display: grid; justify-self: center; gap: 8px; width: min(100%, 720px);
+ padding: 10px 12px 12px; border-radius: 14px; background: var(--paper);
+}
+#app .season-review-question { font-weight: 800; font-size: var(--font-size-md); line-height: 1.3; text-wrap: balance; }
+#app .season-review-choices { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+#app .season-review-choices .btn {
+ justify-content: center; min-height: var(--touch-min); margin: 0; padding: 6px 8px;
+ font-size: var(--font-size-sm); white-space: normal; word-break: keep-all; line-height: 1.3;
+}
+#app .season-review-board .field-review-result {
+ display: flex; align-items: center; justify-self: center; gap: 8px; min-height: var(--touch-min);
+ font-size: var(--font-size-md); text-align: start;
+}
+#app .season-review-board .field-review-result svg { flex: none; }
+
+@media (min-width: 680px) and (min-height: 360px) and (max-height: 540px) and (orientation: landscape) {
+ body:not(.large-text) #app .activity-3:has(.season-review-board) {
+  display: grid; grid-template-rows: 0 minmax(0,1fr) auto; gap: 4px;
+  height: 100dvh; min-height: 100dvh; padding: 64px 10px 0; overflow: hidden;
+ }
+ body:not(.large-text) #app .activity-3:has(.season-review-board) .activity-pill {
+  grid-area: auto; position: absolute; z-index: 21; top: 8px; left: 50%; transform: translateX(-50%);
+  max-width: calc(100% - 240px);
+ }
+ body:not(.large-text) #app .activity-3:has(.season-review-board) :is(.learning-layout,.learning-scene) {
+  height: 100%; min-height: 0; padding-block: 0;
+ }
+ body:not(.large-text) #app .season-review-board {
+  width: min(100%, calc(200dvh - 20px), 800px); grid-template-columns: minmax(0,1.55fr) minmax(0,1fr);
+  align-items: center; gap: 6px 12px; padding: 4px 0;
+ }
+ body:not(.large-text) #app .season-review-heading { grid-column: 1 / -1; }
+ body:not(.large-text) #app .season-review-pair figure { position: relative; }
+ body:not(.large-text) #app .season-review-pair figcaption { padding: 4px; }
+ body:not(.large-text) #app .season-review-pair figcaption b { position: absolute; top: 6px; left: 6px; }
+ body:not(.large-text) #app .season-review-choices { grid-template-columns: minmax(0,1fr); }
+ body:not(.large-text) #app .activity-3:has(.season-review-board) .learning-footer { padding: 0 0 4px; }
+ body:not(.large-text) #app .activity-3:has(.season-review-board) .learning-footer > div { flex-wrap: nowrap; gap: 6px; }
+ body:not(.large-text) #app .activity-3:has(.season-review-board) .learning-footer .primary { flex: 0 0 auto; }
+ body:not(.large-text) #app .activity-3:has(.season-review-board) .learning-footer .guide-avatar { min-height: var(--touch-min); }
+ body:not(.large-text) #app .activity-3:has(.season-review-board) .learning-footer .guide-portrait { height: 48px; }
+ body:not(.large-text) #app .activity-3:has(.season-review-board) .guide-talk .guide-bubble { margin: 0; padding: 4px 8px; font-size: var(--font-size-xs); }
+}
 
 @media (min-width: 821px) and (max-height: 760px) {
  #app .bag-review-board { gap: 7px; padding-block: 10px; }
@@ -1067,11 +1150,10 @@ body .note-quiz > summary small { margin-left: 4px; padding: 2px 7px; border-rad
 /* 탐구 기록: 작업판이 장면 너비를 쓰고 그림·선택 카드를 키운다. 말풍선과 겹치는 안내 줄은 숨긴다. */
 #app .exploration-activity .work-board .field-review-kicker { display: none; }
 #app .exploration-activity .guide-bubble > .bubble-next:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
-#app .exploration-activity :is(.leaf-specimen, .habitat-compare-card:not(.is-picked), .season-review-plants section) { background: #fffdf38c; border-color: #ffffff99; }
+#app .exploration-activity :is(.leaf-specimen, .habitat-compare-card:not(.is-picked)) { background: #fffdf38c; border-color: #ffffff99; }
 @media (min-width: 901px) and (orientation: landscape) {
   #app .exploration-activity .learning-scene > .work-board { width: min(100%, 1180px); }
   #app .exploration-activity .leaf-specimen-picture { height: clamp(200px, calc(var(--stage-h) - 190px), 520px); }
-  #app .exploration-activity .season-review-pair .season-atlas { height: auto; aspect-ratio: 3 / 2; max-height: calc(var(--stage-h) - 300px); }
   #app .exploration-activity .field-review-choices .btn { min-height: 84px; font-size: 20px; }
   #app .exploration-activity .habitat-compare-art { height: clamp(110px, calc(var(--stage-h) - 300px), 340px); }
   #app .exploration-activity .habitat-compare-card :is(strong, b) { font-size: 22px; }

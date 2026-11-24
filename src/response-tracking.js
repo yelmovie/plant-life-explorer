@@ -1,5 +1,5 @@
 import {recordResponse} from './learning-records.js';
-import {pageReady,LEAF_PARTNER,LEAF_SORT_RULES,activeLeafRule,canPickLeafPartner,leafSortAttempt,HABITAT_COMPARE_PLANT,fieldSeasonReview,SEASON_REVIEW_ANSWERS,fieldBagReview,gardenReviewReady,gardenReviewPlant,HABITAT_PLANTS,BAG_REVIEW_ANSWERS} from './model.js';
+import {pageReady,LEAF_PARTNER,LEAF_SORT_RULES,activeLeafRule,canPickLeafPartner,leafSortAttempt,HABITAT_COMPARE_PLANT,seasonReviewAttempt,fieldBagReview,gardenReviewReady,gardenReviewPlant,HABITAT_PLANTS,BAG_REVIEW_ANSWERS} from './model.js';
 import {josa} from './josa.js';
 const plantNames={cherry:'벚나무',ginkgo:'은행나무',grass:'강아지풀',hyacinth:'부레옥잠',aloe:'알로에',sowthistle:'씀바귀',maple:'단풍나무',pine:'소나무',camellia:'동백나무'};
 const labels={yes:'톱니 있음',no:'톱니 없음',roots:'뿌리가 남음',none:'아무것도 없음',bubbles:'공기 방울이 나옴',air:'공기',soil:'흙',water:'물가',grass:'들판',dry:'건조 구역',growth:'살아 있던 부분에서 다시 자람',gone:'모두 사라짐',roll:'겉면의 물방울이 굴러감',close:'입구도 저절로 막힘',surface:'겉면',cover:'입구 덮개',float:'뜸',sink:'가라앉음',trunk:'줄기와 뿌리',root:'뿌리',leaf:'새로 나온 잎',branches:'겨울눈에서 새잎과 꽃이 나옴',rootbud:'뿌리가 살아 있어 땅 위로 새싹이 남',color:'꽃 색깔만 같음',pond:'물이 고이는 자리',meadow:'물이 배어드는 자리',ridge:'물이 빠지는 자리'};
@@ -20,7 +20,11 @@ export function coreResponse(s,u,a,id) {
     }
     case 'leaf-partner':if(!canPickLeafPartner(s)||activeLeafRule(s)!=='narrow'||!['cherry','grass'].includes(id))return;return spec('leaf-partner',id===LEAF_PARTNER,'은행잎의 새 짝','application');
     case 'season-predict':if(s.undergroundSeen.includes(s.seasonPlant)||s.seasonPrediction[s.seasonPlant])return;return spec('season:'+s.seasonPlant,id==='roots',`${named(s.seasonPlant)} 겨울 땅속`,'prediction');
-    case 'season-review-answer':if(s.page!==3||!fieldSeasonReview(s)||s.seasonCompareAnswer||!Object.hasOwn(SEASON_REVIEW_ANSWERS,id))return;return spec('season-review',id==='parts','두 식물이 다시 자란 부분','application',SEASON_REVIEW_ANSWERS[id]);
+    case 'season-review-answer':{
+      const attempt=seasonReviewAttempt(s,u,id);if(!attempt)return;
+      const {plant,step,correct}=attempt;
+      return spec('season-review:'+plant,correct,`${josa(step.name,'이/가')} 다시 자란 부분`,'application',step.choices[id]);
+    }
     case 'season-explain':{if(![0,3].every(n=>s.seasonalRecords.includes(`${s.seasonPlant}:${n}`)))return;const record=spec('season-reason:'+s.seasonPlant,id==='growth',`${named(s.seasonPlant)} 겨울과 봄 연결`),plant=s.seasonPlant;return ()=>{record();if(id==='growth')revise(s,m,['field:season-predict:'+(plant==='cherry'?'tree':'herb'),'core:season:'+plant],named('roots'));};}
     case 'experiment-predict':if(s.experiment.prediction||s.experiment.step>=4)return;return spec('experiment-predict',id==='bubbles','물속 잎자루 예상','prediction');
     case 'experiment-answer':{if(s.experiment.step<4)return;const record=spec('experiment-answer',id==='air','누른 잎자루에서 나온 방울');return ()=>{record();if(id==='air')revise(s,m,['core:experiment-predict'],named('bubbles'));};}

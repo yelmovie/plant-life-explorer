@@ -70,7 +70,7 @@ export const PAGES = [
 // Index 4 (초봄) is a view-only stop between winter and the next spring; records keep keys 0-3.
 export const SEASONS=['봄','여름','가을','겨울','초봄'];
 export function freshState() {
-  return {version:2,mapEncounters:{},fieldChallenges:emptyChallenges(),learningRecords:emptyLearningRecords(),fieldBridges:Array(5).fill(false),notebook:normalizeNotebook(),fieldEvidence:normalizeFieldEvidence(null),journeyRequired:Array(5).fill(false),legacyCompleted:[],legacyFinished:false,leafComparisonSeen:false,leafPartner:'',leafEvidence:{},groupsByRule:{edge:{},narrow:{}},classificationEvidence:{},seasonPhotos:{},seasonExplanation:'',seasonExplained:[],habitatFeatures:{},habitatCompareAnswer:'',experimentAnswer:'',gardenReviewed:false,testExplanation:null,inventionRevision:2,inventionExplanations:{},testPrediction:'',bagReviewAnswer:'',activeTestKey:'',seasonPrediction:{},seasonCompareAnswer:'',undergroundSeen:[],budsFound:normalizeBuds(),misses:Array(5).fill(0),stamps:{direct:[],fixed:[],helped:[],unknown:[]},sharing:{status:'pending',question:'',response:''},highlight:0,screen:'home',page:0,completed:Array(10).fill(false),observation:{cherry:[],ginkgo:[],grass:[]},rule:'edge',groups:{},seasonPlant:'cherry',season:1,underground:false,seasonalRecords:[],linkedEvidence:[],experiment:{step:0,compared:false,prediction:''},habitats:{},reasons:{},terrain:Array(24).fill('empty'),garden:{},gardenExtras:[],gardenReasons:[],gardenPick:'',gardenFromField:false,gardenReview:null,gardenPhoto:null,design:{surface:'plain',cover:'open',linked:false},tests:[],reportSubmitted:[],finalChecks:{classification:false,habitat:false,garden:false,invention:false},finished:false,gardenTheme:'pink',largeText:false,soundEnabled:true,adminUnlocked:false};
+  return {version:2,mapEncounters:{},fieldChallenges:emptyChallenges(),learningRecords:emptyLearningRecords(),fieldBridges:Array(5).fill(false),notebook:normalizeNotebook(),fieldEvidence:normalizeFieldEvidence(null),journeyRequired:Array(5).fill(false),legacyCompleted:[],legacyFinished:false,leafComparisonSeen:false,leafPartner:'',leafEvidence:{},groupsByRule:{edge:{},narrow:{}},classificationEvidence:{},seasonPhotos:{},seasonExplanation:'',seasonExplained:[],habitatFeatures:{},habitatCompareAnswer:'',experimentAnswer:'',gardenReviewed:false,testExplanation:null,inventionRevision:2,inventionExplanations:{},testPrediction:'',bagReviewAnswer:'',activeTestKey:'',seasonPrediction:{},seasonReviewCherry:false,seasonCompareAnswer:'',undergroundSeen:[],budsFound:normalizeBuds(),misses:Array(5).fill(0),stamps:{direct:[],fixed:[],helped:[],unknown:[]},sharing:{status:'pending',question:'',response:''},highlight:0,screen:'home',page:0,completed:Array(10).fill(false),observation:{cherry:[],ginkgo:[],grass:[]},rule:'edge',groups:{},seasonPlant:'cherry',season:1,underground:false,seasonalRecords:[],linkedEvidence:[],experiment:{step:0,compared:false,prediction:''},habitats:{},reasons:{},terrain:Array(24).fill('empty'),garden:{},gardenExtras:[],gardenReasons:[],gardenPick:'',gardenFromField:false,gardenReview:null,gardenPhoto:null,design:{surface:'plain',cover:'open',linked:false},tests:[],reportSubmitted:[],finalChecks:{classification:false,habitat:false,garden:false,invention:false},finished:false,gardenTheme:'pink',largeText:false,soundEnabled:true,adminUnlocked:false};
 }
 export function presetTerrain(){return Array.from({length:24},(_,i)=>['water','grass','dry'][Math.floor((i%6)/2)]);}
 export function evidenceCount(s){return MISSIONS.filter((_,i)=>s.completed[i*2]&&s.completed[i*2+1]).length;}
@@ -97,12 +97,33 @@ export function testDesign(d){return {key:designKey(d),surface:d.surface,cover:d
 export const TERRAIN_MIN=3;
 export function terrainCount(s,t){return s.terrain.filter(x=>x===t).length;}
 export function terrainReady(s){return ['water','grass','dry'].every(t=>terrainCount(s,t)>=TERRAIN_MIN);}
-export const SEASON_REVIEW_ANSWERS={
- parts:'벚나무는 가지의 겨울눈에서, 씀바귀는 살아 있던 뿌리에서 다시 자랐어.',
- leaves:'두 식물 모두 겨울에도 잎이 남아 있다가 봄에 다시 자랐어.',
- new:'두 식물 모두 겨울에 사라지고, 봄에 다른 식물이 자랐어.'
+export const SEASON_REVIEW={
+ cherry:{
+  name:'벚나무',winter:'잎이 떨어졌어.',spring:'새잎과 꽃이 나왔어.',
+  question:'새잎과 꽃은 어디에서 나왔을까?',
+  choices:{bud:'가지 끝에 있던 겨울눈',leaf:'겨울에 남아 있던 잎'},answer:'bud',
+  hint:'겨울 그림을 봐. 잎이 떨어진 뒤에도 무엇이 남아 있어?',
+  clue:'가지 끝 겨울눈',result:'에서 새잎과 꽃이 나왔어.',
+ },
+ sowthistle:{
+  name:'씀바귀',winter:'땅 위의 잎이 시들었어.',spring:'새싹이 땅 위로 올라왔어.',
+  question:'무엇이 살아 있어서 새싹이 났을까?',
+  choices:{leaf:'땅 위에서 시든 잎',root:'땅속에 있던 뿌리'},answer:'root',
+  hint:'겨울 그림에서 땅 위와 땅속을 함께 살펴봐.',
+  clue:'살아 있던 뿌리',result:'에서 새싹이 올라왔어.',
+ },
 };
+export const seasonReviewDone=(s,plant)=>s.seasonCompareAnswer==='parts'||(plant==='cherry'&&s.seasonReviewCherry);
+export function seasonReviewPlant(s,u){
+ return seasonReviewDone(s,'cherry')?(u.seasonReviewPlant||'sowthistle'):'cherry';
+}
 export const fieldSeasonReview=s=>(!s.completed[3]||s.seasonCompareAnswer==='parts')&&fieldMissionReady(s,1);
+export function seasonReviewAttempt(s,u,id){
+ if(s.page!==3||!fieldSeasonReview(s))return null;
+ const plant=seasonReviewPlant(s,u),step=SEASON_REVIEW[plant];
+ if(seasonReviewDone(s,plant)||!Object.hasOwn(step.choices,id))return null;
+ return {plant,step,correct:id===step.answer};
+}
 export const LEAF_PARTNER='cherry';
 export const LEAF_SORT_RULES={
   edge:{title:'톱니 기준으로 나누어 보기',name:'톱니',yes:'톱니가 있어',no:'톱니가 없어'},
@@ -254,6 +275,7 @@ export function restoreState(raw){
     }
     if(v.habitatCompareAnswer===HABITAT_COMPARE_PLANT)s.habitatCompareAnswer=v.habitatCompareAnswer;
     if(v.seasonCompareAnswer==='parts')s.seasonCompareAnswer='parts';
+    s.seasonReviewCherry=v.seasonReviewCherry===true||s.seasonCompareAnswer==='parts';
     if(v.bagReviewAnswer==='both')s.bagReviewAnswer='both';
     // 내 정원 사진: 24 cells of [land, plant]; a malformed photo is dropped, never repaired into a different garden.
     const shot=v.gardenPhoto?.cells;if(Array.isArray(shot)&&shot.length===24&&shot.every(c=>Array.isArray(c)&&member(c[0],['water','grass','dry','empty'])&&(c[1]===''||HABITAT_PLANTS.some(p=>p.id===c[1]))))s.gardenPhoto={cells:shot.map(([t,id])=>[t,id])};

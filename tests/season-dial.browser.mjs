@@ -81,7 +81,9 @@ try{
  await page.reload();
  await page.locator('.field-record-view').waitFor();
  assert.deepEqual((await seasons()).clues,{tree:'branches',herb:'rootbud'});
- await page.locator('[data-action="season-review-answer"][data-id="parts"]').tap();
+ await page.locator('[data-action="season-review-answer"][data-id="bud"]').tap();
+ await page.locator('.learning-footer [data-action="season-review-plant"][data-id="sowthistle"]').tap();
+ await page.locator('[data-action="season-review-answer"][data-id="root"]').tap();
  await page.locator('.learning-footer [data-action="complete"]').tap();
  await page.locator('#dialog[open] [data-action="reward-map"]').tap();
  await page.locator('[data-action="map-overview"]').tap();

@@ -1,6 +1,6 @@
 import {canIssueGardenCertificate} from './certificate.js';
 import {coreResponse} from './response-tracking.js';
-import {PLANTS,HABITAT_PLANTS,HABITATS,HABITAT_COMPARE_PLANT,PAGES,SEASONS,pageReady,fieldSeasonReview,fieldBagReview,SEASON_REVIEW_ANSWERS,singleFieldRecord,gardenReviewReady,gardenReviewPlant,BAG_REVIEW_ANSWERS,gardenSnapshot,gardenPlants,missionDone,gardenPlaced,gardenValid,comparisonPair,canFinish,presetTerrain,LEAF_PARTNER,addMiss,awardStamp,terrainReady,TERRAIN_MIN,misplacedPlants,misfitNote,LEAF_SORT_RULES,placedLeafGroup,leafSortDone,activeLeafRule,canPickLeafPartner,leafSortAttempt} from './model.js';
+import {PLANTS,HABITAT_PLANTS,HABITATS,HABITAT_COMPARE_PLANT,PAGES,SEASONS,pageReady,fieldSeasonReview,fieldBagReview,SEASON_REVIEW,seasonReviewPlant,seasonReviewDone,seasonReviewAttempt,singleFieldRecord,gardenReviewReady,gardenReviewPlant,BAG_REVIEW_ANSWERS,gardenSnapshot,gardenPlants,missionDone,gardenPlaced,gardenValid,comparisonPair,canFinish,presetTerrain,LEAF_PARTNER,addMiss,awardStamp,terrainReady,TERRAIN_MIN,misplacedPlants,misfitNote,LEAF_SORT_RULES,placedLeafGroup,leafSortDone,activeLeafRule,canPickLeafPartner,leafSortAttempt} from './model.js';
 import {leafArt,seasonArt,icon} from './art.js';
 import {assetImage} from './asset-catalog.js';
 
@@ -88,15 +88,28 @@ function seasons(s,u={}){
  return layout(`${plantTabs([{id:'cherry',name:'벚나무'},{id:'sowthistle',name:'씀바귀'}],'season-plant',plant)}<div class="season-scene ${searching?'bud-searching':''}"><div id="season-art" data-spatial="season" ${searching?'data-bud-field':''}>${seasonArt(plant,n,under,winter?budLayer(s,u,plant):'',searching?'bud-search':'')}</div><span id="season-label" class="scene-badge">${seasonName(n)}</span>${button(under?'땅속 닫기':missionDone(s,0)?'관찰 렌즈로 땅속 보기':'땅속 보기','underground','',under,(winter||early)&&!pred?lock(early?'먼저 겨울에서 땅속을 예상해 줘.':'먼저 땅속에 무엇이 있을지 예상해 줘.'):'')}</div><div class="timeline"><label for="season-range" class="direct-hint">시간 손잡이를 움직여 같은 식물을 따라가 봐.</label><input id="season-range" type="range" min="0" max="4" step="1" value="${SEASON_STOPS.indexOf(n)}"><div class="season-stops">${SEASON_STOPS.map(k=>button(k===0?'다음 봄':seasonName(k),'season',String(k),n===k,k===0?'aria-label="다음 해 봄"':'')).join('')}</div></div>${predict}<p class="season-caption" id="season-caption">${hidden?winterCaption(plant,n):seasonText(plant,n)}</p>${budTools}${photo}`,panel('끊긴 계절 기록',`${['cherry','sowthistle'].map(p=>`<section><strong>${name(p)}</strong>${[3,0].map(k=>row(!!s.seasonPhotos[`${p}:${k}`],seasonName(k))).join('')}</section>`).join('')}<p>두 식물의 겨울과 다음 봄을 남겨 줘. 겨울엔 땅속을 먼저 예상해 봐.</p><section class="bud-record"><strong>겨울눈 찾기 <small>더 해 보기</small></strong>${budRows}</section>`));
 }
 function fieldSeasonCompare(s,u){
- const done=s.seasonCompareAnswer==='parts';
- return layout(`<div class="work-board field-review-board season-review-board">
-  <p class="field-review-kicker">현장에서 살펴본 겨울과 다음 봄</p>
-  <div class="season-review-plants">${['cherry','sowthistle'].map(plant=>`<section><h2>${name(plant)}</h2><div class="season-review-pair">${[3,0].map(n=>`<figure>${seasonArt(plant,n,true)}<figcaption>${n===3?'겨울':'다음 봄'}</figcaption></figure>`).join('')}</div></section>`).join('')}</div>
-  ${done?`<p class="field-review-result" role="status" tabindex="-1">${icon('check',20)} ${SEASON_REVIEW_ANSWERS.parts}</p>`:`
-    <p class="season-review-question">두 식물은 겨울을 난 뒤 어느 부분에서 다시 자랐을까?</p>
-    <div class="field-review-choices">${Object.entries(SEASON_REVIEW_ANSWERS).map(([id,label])=>button(label,'season-review-answer',id)).join('')}</div>
-    ${u.activityFeedback?`<p class="field-review-feedback" role="status">${esc(u.activityFeedback)}</p>`:''}`}
- </div>`,'');
+ const plant=seasonReviewPlant(s,u),step=SEASON_REVIEW[plant],done=seasonReviewDone(s,plant);
+ const progress=Object.entries(SEASON_REVIEW).map(([id,{name}])=>{
+  const current=id===plant,checked=seasonReviewDone(s,id);
+  const label=`${checked?icon('check',16):''}${name}${checked?'<span class="sr-only"> 확인 완료</span>':''}`;
+  return `<li>${!current&&checked?button(label,'season-review-plant',id):`<span ${current?'aria-current="step"':''}>${label}</span>`}</li>`;
+ }).join('');
+ return layout(`<section class="field-review-board season-review-board" aria-labelledby="season-review-title" data-review-plant="${plant}">
+  <header class="season-review-heading">
+   <h2 id="season-review-title" tabindex="-1">${step.name}</h2>
+   <ol aria-label="식물 관찰 순서">${progress}</ol>
+  </header>
+  <div class="season-review-pair">
+   <figure>${seasonArt(plant,3,true)}<figcaption><b>겨울</b><span>${step.winter}</span></figcaption></figure>
+   <span class="season-review-arrow" aria-hidden="true">${icon('arrow',24)}</span>
+   <figure>${seasonArt(plant,0,true)}<figcaption><b>다음 봄</b><span>${step.spring}</span></figcaption></figure>
+  </div>
+  ${done?`<p class="field-review-result" role="status" tabindex="-1">${icon('check',22)} <span><strong>${step.clue}</strong>${step.result}</span></p>`:`
+   <div class="season-review-task">
+    <p id="season-review-question" class="season-review-question" tabindex="-1">${step.question}</p>
+    <div class="season-review-choices" role="group" aria-labelledby="season-review-question">${Object.entries(step.choices).map(([id,label])=>`<button type="button" class="btn soft" data-action="season-review-answer" data-id="${id}">${label}</button>`).join('')}</div>
+   </div>`}
+ </section>`,'');
 }
 // Before/after pictures side by side, then one question about what happened between them.
 const SEASON_CHOICES={cherry:[['new','죽은 나무 자리에 새 나무를 심었어요'],['growth','같은 나무의 가지에서 새잎과 꽃이 나왔어요'],['gone','겨울에 나무가 모두 죽어 사라졌어요']],sowthistle:[['gone','겨울에 풀이 뿌리까지 모두 사라졌어요'],['new','다른 곳에서 새 풀을 옮겨 심었어요'],['growth','땅속 뿌리가 살아 있어서 땅 위로 새싹이 나왔어요']]};
@@ -123,18 +136,20 @@ export function renderActivity(s,u,grid){
  const views=[()=>leaves(u),()=>classify(s,u),()=>seasons(s,u),()=>fieldSeasonReview(s)?fieldSeasonCompare(s,u):seasonsCompare(s),()=>experiment(s,u),()=>habitats(s,u),()=>garden(s,u,grid,false),()=>s.gardenFromField?fieldGardenReview(s,u):garden(s,u,grid,true),()=>renderDesign(s,u),()=>renderTests(s,u)];
  const fieldScene=field?renderFieldMission(s,u,p):'';
  const scene=field?`<div class="learning-layout field-layout"><section class="learning-scene">${fieldScene}</section>${fieldNextButton(s,u,p)}</div>`:views[p]();
- const help=field?plan.goal:nextHint(s,p),title=single?(p===3?'두 식물은 어떻게 봄을 맞았을까?':p===7?'정원 한 자리 살펴보기':'두 부품이 공책을 지킨 까닭'):PAGES[p][0];
+ const help=field?plan.goal:nextHint(s,p),title=single?(p===3?'겨울을 지나 봄으로':p===7?'정원 한 자리 살펴보기':'두 부품이 공책을 지킨 까닭'):PAGES[p][0];
  // In the field Leafy says what is left and where to tap, once the current step is finished.
  const todo=field?fieldTodo(s,u,p):null,guide=activityGuide(s,u);
  // Button names in Leafy's lines match the buttons on screen (fieldNextButton, footer primary).
  const nextLabel=todo?.currentDone?(todo.i===(u.fieldMission?.stage??0)+1?'다음 도전':`${todo.i+1}번 임무로 가기`):'';
  const hint=field&&!fieldReady&&!todo?.currentDone?sceneHint(fieldScene):'',said=field?fieldFeedback(u):null;
  const nextLeafRule=!field&&p===1&&activeLeafRule(s)==='edge'&&leafSortDone(s,'edge');
+ const seasonReview=!field&&p===3&&fieldSeasonReview(s);
+ const nextSeasonReview=seasonReview&&!ready&&seasonReviewDone(s,seasonReviewPlant(s,u));
  const doneLabel=p%2?'장소 복구하고 보상 받기':p===6&&s.gardenFromField?'까닭 이어 보기':p===8?'가방 시험하러 가기':'다음 기록';
  const fieldDoneLabel=i===3?'내 정원 살펴보기':i!==0&&i!==2?'현장 결과 확인하기':'발견을 연구 노트에 담기';
  // The hand on the stage is only a marker; what to tap next is said here, in the one bubble.
  // One line only (2026-11-18): the next tap when there is one, otherwise the task.
- const tip=!field&&!ready&&guide?.target&&guide.tip?`<span class="bubble-next">${esc(guide.tip)}</span>`:'';
+ const tip=!field&&!ready&&guide?.tip&&(guide.target||seasonReview)?`<span class="bubble-next">${esc(guide.tip)}</span>`:'';
  const reply=!field?{text:u.activityFeedback?esc(u.activityFeedback)+tip:ready?`${single?'발견을 기록했어.':'기록이 준비됐어.'} 아래의 <b>${josa(doneLabel,'을/를')}</b> 눌러 줘.`:tip||help,success:ready}
   :fieldReady?{text:u.challengeGoal?'도전 끝! 아래의 <b>도전 마치기</b>를 눌러 줘.':`현장 임무 성공! 아래의 <b>${fieldDoneLabel}</b>를 눌러 줘.`,success:true}
   :todo?.currentDone?{text:`이 단계는 끝! 오른쪽 아래 <b>${josa(nextLabel,'을/를')}</b> 눌러 줘.`,success:true}
@@ -144,7 +159,7 @@ export function renderActivity(s,u,grid){
  // 앞 활동 (2026-11-18 밤): the top-left back already opens the previous record, so the footer button shows only when the guide points there.
  // No side panel (2026-11-18): the scene gets the width; Leafy and the one instruction line sit in the footer row.
  const talk=`<div class="guide-talk"><button type="button" class="guide-avatar" data-action="journey-help" aria-label="리피를 눌러 힌트 보기"><span class="guide-portrait" data-mood="${mood}" data-guide-scene="${p}:${field?'field':'explore'}"><span class="guide-motion">${assetImage('mood_leaf_'+mood,'guide-mascot',true)}</span></span><span class="guide-partner">리피 · 정원 구조대</span></button><p class="guide-bubble ${field?'mission-feedback':''} ${reply.success?'success':''}" role="status">${reply.text}</p></div>`;
- return `<main class="activity tablet-activity exploration-activity activity-${p} ${field?'field-mission-view scene-hint-moved':single||p===5?'field-record-view':''}"><header class="activity-pill"><h1>${field?plan.title:title}</h1>${field&&u.challengeGoal?`<span class="challenge-chip" title="${u.challengeGoal}">도전 중</span>`:''}<nav class="mission-journey-root" aria-label="이번 탐구의 여정"><button class="mission-step ${field?'active':''} ${fieldReady?'done':''}" data-action="journey-mode" data-id="field" aria-pressed="${field}"><b>${fieldReady?icon('check',16):'1'}</b><span>현장 임무</span></button><button class="mission-step ${!field?'active':''} ${missionDone(s,i)?'done':''}" data-action="journey-mode" data-id="explore" aria-pressed="${!field}"><b>2</b><span>탐구하며 기록</span></button>${missionDone(s,i)?`<button class="mission-step done" data-action="journey-reward"><b>${icon('check',16)}</b><span>받은 도구 보기</span></button>`:`<span class="mission-step"><b>3</b><span>${plan.tool} 받기</span></span>`}</nav></header>${scene}<footer class="learning-footer"><p class="next-condition sr-only">${field?(fieldReady?'현장 단서를 연구 기록에 이어 쓸 준비가 됐어.':'현장 임무를 마치면 다음으로 갈 수 있어.'):help}</p><div>${!field&&p===7&&s.gardenFromField?button(icon('back')+' 내 정원 돌아보기','previous'):!field&&!single&&p%2&&guide?.target==='[data-action="previous"]'?button(icon('back')+' 앞 활동','previous'):''}${field?fieldObjective(s,u,p):''}${talk}<span class="activity-route">${field?'현장 임무':single?'현장 기록 확인':p%2?'연구 기록 2 / 2':'연구 기록 1 / 2'} · 도구 ${earnedTools(s).length} / 5</span>${field?`<button class="btn primary ${fieldReady?'go-now':''}" data-action="journey-mode" data-id="explore" ${fieldReady?'':lock(todo?`${todo.i+1}번 ${josa(todo.label,'이/가')} 남았어. 리피 말풍선을 따라 해 봐.`:'현장 임무를 먼저 마쳐 줘.')}>${u.challengeGoal?'도전 마치기':fieldReady?fieldDoneLabel:'발견을 연구 노트에 담기'} ${icon('arrow',18)}</button>`:nextLeafRule?`<button class="btn primary go-now" data-action="leaf-rule" data-id="narrow">모양 기준으로 나누기 ${icon('arrow',18)}</button>`:p===1&&!ready?'':`<button class="btn primary ${ready?'go-now':''}" data-action="complete" ${ready?'':lock(nextHint(s,p))}>${doneLabel} ${icon('arrow',18)}</button>`}</div></footer></main>`;
+ return `<main class="activity tablet-activity exploration-activity activity-${p} ${field?'field-mission-view scene-hint-moved':single||p===5?'field-record-view':''}"><header class="activity-pill"><h1>${field?plan.title:title}</h1>${field&&u.challengeGoal?`<span class="challenge-chip" title="${u.challengeGoal}">도전 중</span>`:''}<nav class="mission-journey-root" aria-label="이번 탐구의 여정"><button class="mission-step ${field?'active':''} ${fieldReady?'done':''}" data-action="journey-mode" data-id="field" aria-pressed="${field}"><b>${fieldReady?icon('check',16):'1'}</b><span>현장 임무</span></button><button class="mission-step ${!field?'active':''} ${missionDone(s,i)?'done':''}" data-action="journey-mode" data-id="explore" aria-pressed="${!field}"><b>2</b><span>탐구하며 기록</span></button>${missionDone(s,i)?`<button class="mission-step done" data-action="journey-reward"><b>${icon('check',16)}</b><span>받은 도구 보기</span></button>`:`<span class="mission-step"><b>3</b><span>${plan.tool} 받기</span></span>`}</nav></header>${scene}<footer class="learning-footer"><p class="next-condition sr-only">${field?(fieldReady?'현장 단서를 연구 기록에 이어 쓸 준비가 됐어.':'현장 임무를 마치면 다음으로 갈 수 있어.'):help}</p><div>${!field&&p===7&&s.gardenFromField?button(icon('back')+' 내 정원 돌아보기','previous'):!field&&!single&&p%2&&guide?.target==='[data-action="previous"]'?button(icon('back')+' 앞 활동','previous'):''}${field?fieldObjective(s,u,p):''}${talk}<span class="activity-route">${field?'현장 임무':single?'현장 기록 확인':p%2?'연구 기록 2 / 2':'연구 기록 1 / 2'} · 도구 ${earnedTools(s).length} / 5</span>${field?`<button class="btn primary ${fieldReady?'go-now':''}" data-action="journey-mode" data-id="explore" ${fieldReady?'':lock(todo?`${todo.i+1}번 ${josa(todo.label,'이/가')} 남았어. 리피 말풍선을 따라 해 봐.`:'현장 임무를 먼저 마쳐 줘.')}>${u.challengeGoal?'도전 마치기':fieldReady?fieldDoneLabel:'발견을 연구 노트에 담기'} ${icon('arrow',18)}</button>`:nextLeafRule?`<button class="btn primary go-now" data-action="leaf-rule" data-id="narrow">모양 기준으로 나누기 ${icon('arrow',18)}</button>`:nextSeasonReview?`<button class="btn primary go-now" data-action="season-review-plant" data-id="sowthistle">씀바귀 살펴보기 ${icon('arrow',18)}</button>`:(p===1||seasonReview)&&!ready?'':`<button class="btn primary ${ready?'go-now':''}" data-action="complete" ${ready?'':lock(nextHint(s,p))}>${doneLabel} ${icon('arrow',18)}</button>`}</div></footer></main>`;
 }
 
 export function renderFinal(s,u={}){
@@ -211,10 +226,19 @@ export function learningAction(s,u,a,id){
 function learningActionCore(s,u,a,id){
   const p=HABITAT_PLANTS.find(p=>p.id===u.selected);
   switch(a){
-    case 'season-review-answer':
-      if(s.page!==3||!fieldSeasonReview(s)||s.seasonCompareAnswer||!Object.hasOwn(SEASON_REVIEW_ANSWERS,id))return '';
-      if(id!=='parts'){addMiss(s,1);return '잎이 없던 겨울에도 남아 있었던 가지와 땅속을 살펴봐.';}
-      s.seasonCompareAnswer=id;u.activityFeedback='';return '';
+    case 'season-review-plant':{
+      if(s.page!==3||!fieldSeasonReview(s)||!seasonReviewDone(s,'cherry')||!Object.hasOwn(SEASON_REVIEW,id))return '';
+      u.seasonReviewPlant=id;u.activityFeedback='';return '';
+    }
+    case 'season-review-answer':{
+      const attempt=seasonReviewAttempt(s,u,id);if(!attempt)return '';
+      const {plant,step,correct}=attempt;
+      if(!correct){addMiss(s,1);return step.hint;}
+      u.seasonReviewPlant=plant;u.activityFeedback='';
+      if(plant==='cherry')s.seasonReviewCherry=true;
+      else s.seasonCompareAnswer='parts';
+      return '';
+    }
     case 'garden-review-pick':{
       if(s.page!==7||!s.gardenFromField||gardenReviewReady(s))return '';
       const plant=HABITAT_PLANTS.find(p=>p.id===id),cell=s.garden[id];

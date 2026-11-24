@@ -110,7 +110,9 @@ try{
  }
  await explore();assert.equal((await saved()).seasonPrediction.cherry,'none');
  assert.equal((await saved()).page,3);assert.equal((await saved()).seasonalRecords.length,0);
- await a('season-review-answer','parts');assert.equal((await saved()).seasonCompareAnswer,'parts');await snap('season-discovery');
+ await a('season-review-answer','bud');assert.equal((await saved()).seasonReviewCherry,true);await snap('season-cherry-discovery');
+ await a('season-review-plant','sowthistle');
+ await a('season-review-answer','root');assert.equal((await saved()).seasonCompareAnswer,'parts');await snap('season-discovery');
  await completePage();await missionDone(1);
 
  await enter(2);
