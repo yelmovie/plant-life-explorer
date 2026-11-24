@@ -77,26 +77,34 @@ try {
   const css = await esbuild.transform(bundle, {loader: 'css', minify: true, logLevel: 'error'});
   await writeFile(path.join(output, 'src/bundle.css'), css.code);
   bytes += Buffer.byteLength(css.code) - Buffer.byteLength(bundle);
-  const entry = '<script type="module" src="/src/app.js"></script>';
-  if (!bundledHtml.includes(entry)) throw new Error('index.html app.js entry not found.');
-  bundledHtml = bundledHtml.replace(entry, '<script type="module" src="/src/app.bundle.js"></script>');
   scriptBundle = 'src/app.bundle.js';
   bytes += (await stat(path.join(output, scriptBundle))).size;
 } catch (error) {
   if (error.code !== 'MODULE_NOT_FOUND') throw error;
   console.warn('esbuild not found: shipping unbundled ES modules.');
 }
-await writeFile(path.join(output, 'index.html'), bundledHtml);
-bytes += Buffer.byteLength(bundle) + Buffer.byteLength(bundledHtml) - Buffer.byteLength(indexHtml);
-// Service worker: version + content hash so any redeploy replaces old caches; precache the app shell.
+// Use the same revision in HTML and the offline cache. An older worker can still serve stable
+// URLs from its cache during an update, so each document requests its matching entry files.
 const hash = createHash('sha1');
 for (const file of files) hash.update(file).update(await readFile(path.join(root, file)));
-const shell = ['/', '/src/bundle.css', ...(scriptBundle ? ['/'+scriptBundle] : []), ...files.filter(file => file !== 'sw.js' && !styles.includes(file) && !file.startsWith('src/vendor/') && !file.startsWith('assets/icons/') && !file.startsWith('assets/og/') && !file.startsWith('assets/models/') && !/\.(mp4|mp3)$/.test(file) && !/\.(?:md|txt)$/i.test(file)
+for (const file of ['src/bundle.css', ...(scriptBundle ? [scriptBundle] : [])]) {
+  hash.update(file).update(await readFile(path.join(output, file)));
+}
+const cacheVersion = `${version}-${hash.digest('hex').slice(0, 8)}`;
+const cssUrl = `/src/bundle.css?v=${cacheVersion}`;
+const scriptUrl = `/${scriptBundle ?? 'src/app.js'}?v=${cacheVersion}`;
+const entry = '<script type="module" src="/src/app.js"></script>';
+if (!bundledHtml.includes(entry)) throw new Error('index.html app.js entry not found.');
+bundledHtml = bundledHtml.replace('href="/src/bundle.css"', `href="${cssUrl}"`)
+  .replace(entry, `<script type="module" src="${scriptUrl}"></script>`);
+await writeFile(path.join(output, 'index.html'), bundledHtml);
+bytes += Buffer.byteLength(bundle) + Buffer.byteLength(bundledHtml) - Buffer.byteLength(indexHtml);
+const shell = ['/', cssUrl, scriptUrl, ...files.filter(file => file !== 'sw.js' && !styles.includes(file) && !file.startsWith('src/vendor/') && !file.startsWith('assets/icons/') && !file.startsWith('assets/og/') && !file.startsWith('assets/models/') && !/\.(mp4|mp3)$/.test(file) && !/\.(?:md|txt)$/i.test(file)
   && (!file.startsWith('assets/generated/') || /\/(?:expedition_hero_20261020|mascot_[a-z]+|map_trail_v2|reward_[a-z]+_thumb)\.webp$/.test(file))).map(file => `/${file}`)];
 const swPath = path.join(output, 'sw.js');
 shell.push('/assets/audio/npc-welcome.mp3', ...assets.filter(file => /^assets\/audio\/(?:lipi-[\w-]+|sfx\/[\w-]+)\.mp3$/.test(file)).map(file => '/'+file));
 let sw = await readFile(swPath, 'utf8');
-const versioned = sw.replace(/const CACHE_VERSION='[^']*';/, `const CACHE_VERSION='${version}-${hash.digest('hex').slice(0, 8)}';`).replace(/const APP_SHELL=\[[^\]]*\];/, `const APP_SHELL=${JSON.stringify(shell)};`);
+const versioned = sw.replace(/const CACHE_VERSION='[^']*';/, `const CACHE_VERSION='${cacheVersion}';`).replace(/const APP_SHELL=\[[^\]]*\];/, `const APP_SHELL=${JSON.stringify(shell)};`);
 if (versioned === sw || !versioned.includes(`'${version}-`)) throw new Error('sw.js CACHE_VERSION/APP_SHELL markers not found.');
 await writeFile(swPath, versioned);
 bytes += Buffer.byteLength(versioned) - Buffer.byteLength(sw);

@@ -1,4 +1,3 @@
-import {plantEmphasis} from './plant-concepts.js';
 import {STORIES, captionAt} from './story-data.js';
 import {isVoiceOn, setSound, stopFeedback, playMusic, suspendMusic} from './audio.js';
 
@@ -29,12 +28,14 @@ export function playStory(kind, {onFinish = () => {}, replay = false} = {}) {
   screen.setAttribute('aria-label', `${story.chapter} · ${story.title}`);
   const exitLabel = replay ? '돌아가기' : kind === 'intro' ? '건너뛰고 탐험 시작' : '탐구 기록 보기';
   screen.innerHTML = `
-    <video class="story-video" playsinline preload="auto" poster="${story.poster}" aria-label="${story.title}" aria-describedby="story-caption"><source src="${story.src}" type="video/mp4"></video>
     <header class="story-heading"><div><span>${story.chapter}</span><h1>${story.title}</h1></div>
       <button class="story-button story-exit" data-story-action="exit" ${kind === 'intro' && !replay ? 'data-action="intro-start"' : ''}>${exitLabel}<span aria-hidden="true"> →</span></button>
     </header>
-    <div class="story-message" role="status"><p>리피의 이야기를 준비하고 있어…</p><button class="story-button" data-story-action="retry" hidden>영상 재생하기</button></div>
-    <div class="story-caption" id="story-caption"><span class="story-speaker">리피</span><p></p></div>
+    <div class="story-media">
+      <video class="story-video" playsinline preload="auto" poster="${story.poster}" aria-label="${story.title}" aria-describedby="story-caption"><source src="${story.src}" type="video/mp4"></video>
+      <p class="sr-only" id="story-caption"></p>
+      <div class="story-message" role="status"><p>리피의 이야기를 준비하고 있어…</p><button class="story-button" data-story-action="retry" hidden>영상 재생하기</button></div>
+    </div>
     <footer class="story-controls" aria-label="영상 조작">
       <button class="story-button" data-story-action="play" aria-label="일시 정지">Ⅱ <span>일시 정지</span></button>
       <button class="story-button" data-story-action="sound"></button>
@@ -47,16 +48,16 @@ export function playStory(kind, {onFinish = () => {}, replay = false} = {}) {
   document.body.append(screen);
   screen.focus({preventScroll: true});
   const video = screen.querySelector('video');
-  const caption = screen.querySelector('.story-caption');
+  const caption = screen.querySelector('#story-caption');
   const message = screen.querySelector('.story-message');
   const retry = screen.querySelector('[data-story-action="retry"]');
   const playButton = screen.querySelector('[data-story-action="play"]');
   const soundButton = screen.querySelector('[data-story-action="sound"]');
   const range = screen.querySelector('input');
-  let finished = false, controlsTimer = 0;
+  let finished = false;
   video.volume = 0.65;
   video.muted = !isVoiceOn();
-  // Supply a real caption track for assistive players; the styled copy stays in sync.
+  // The films carry their own visible captions. Keep a text equivalent available to assistive technology.
   if (globalThis.VTTCue) {
     const track = video.addTextTrack('captions', '한국어', 'ko');
     for (const [start, end, text] of story.captions) track.addCue(new VTTCue(start, end, text));
@@ -65,7 +66,6 @@ export function playStory(kind, {onFinish = () => {}, replay = false} = {}) {
   const listen = (target, event, fn) => target.addEventListener(event, fn, {signal: events.signal});
   function cleanup() {
     events.abort();
-    clearTimeout(controlsTimer);
     video.pause();
     if (kind === 'outro') playMusic('ending', true);
     holdMusic(false);
@@ -86,27 +86,16 @@ export function playStory(kind, {onFinish = () => {}, replay = false} = {}) {
   function update() {
     const time = video.currentTime;
     const text = captionAt(kind, time);
-    const emphasized=plantEmphasis(text,['식물의 특징','모양','가장자리','관찰','시험','연잎']);
-    if(caption.querySelector('p').innerHTML!==emphasized)caption.querySelector('p').innerHTML=emphasized;
-    caption.hidden = !text;
+    if (caption.textContent !== text) caption.textContent = text;
     range.max = String(Number.isFinite(video.duration) ? video.duration : story.duration);
     range.value = String(time);
     range.style.setProperty('--story-progress', `${100 * time / Number(range.max)}%`);
     screen.querySelector('.story-time').textContent = `${clock(time)} / ${clock(Number(range.max))}`;
-    screen.classList.toggle('is-paused', video.paused);
     playButton.innerHTML = video.paused ? '▶ <span>계속 보기</span>' : 'Ⅱ <span>일시 정지</span>';
     playButton.setAttribute('aria-label', video.paused ? '계속 보기' : '일시 정지');
     soundButton.textContent = video.muted ? '소리 꺼짐' : '소리 켜짐';
     soundButton.setAttribute('aria-label', video.muted ? '영상 소리 켜기' : '영상 소리 끄기');
     soundButton.setAttribute('aria-pressed', String(!video.muted));
-  }
-  // Captions are burned into the films: once frames play, the styled copy stays for screen readers only
-  // and the controls leave the bottom caption band until a tap or pause brings them back.
-  function filmLive(live) { screen.classList.toggle('is-film-live', live); }
-  function showControls() {
-    screen.classList.add('show-controls');
-    clearTimeout(controlsTimer);
-    controlsTimer = setTimeout(() => screen.classList.remove('show-controls'), 3500);
   }
   function notice(text, canRetry = false) {
     message.hidden = false;
@@ -122,20 +111,16 @@ export function playStory(kind, {onFinish = () => {}, replay = false} = {}) {
   }
   listen(video, 'timeupdate', update);
   listen(video, 'loadedmetadata', update);
-  listen(video, 'playing', () => { message.hidden = true; filmLive(true); update(); });
+  listen(video, 'playing', () => { message.hidden = true; update(); });
   listen(video, 'pause', update);
   listen(video, 'ended', finish);
   listen(video, 'waiting', () => notice('이야기를 조금 더 불러오고 있어…'));
-  const failed = () => { filmLive(false); notice('영상을 불러오지 못했어. 다시 재생하거나 다음으로 넘어가도 괜찮아.', true); };
+  const failed = () => notice('영상을 불러오지 못했어. 다시 재생하거나 다음으로 넘어가도 괜찮아.', true);
   listen(video, 'error', failed);
   listen(video.querySelector('source'), 'error', failed);
   listen(range, 'input', () => { video.currentTime = Number(range.value); update(); });
   listen(screen, 'click', event => {
     event.stopPropagation();
-    if (!event.target.closest('.story-controls, .story-heading, .story-message')) {
-      if (screen.classList.contains('show-controls')) { clearTimeout(controlsTimer); screen.classList.remove('show-controls'); }
-      else showControls();
-    }
     switch (event.target.closest('[data-story-action]')?.dataset.storyAction) {
       case 'exit': finish(); break;
       case 'play': if (video.paused) void play(); else video.pause(); break;
@@ -150,7 +135,6 @@ export function playStory(kind, {onFinish = () => {}, replay = false} = {}) {
         update(); break;
       }
     }
-    if (event.target.closest('.story-controls')) showControls();
   });
   listen(screen, 'keydown', event => {
     if (event.key === 'Escape') { event.preventDefault(); finish(); }

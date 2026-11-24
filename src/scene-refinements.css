@@ -355,7 +355,7 @@ body .notebook-dialog .dialog-actions { display: flex; gap: 10px; margin-top: 14
   #app .ending-note h2 { margin-bottom: .45em; }
   #app .ending-note p:last-child { margin-top: .45em; }
 }
-@media (max-width: 760px) and (max-height: 540px) {
+@media (max-width: 420px), (max-width: 760px) and (max-height: 540px) {
   #app .ending.ending-celebration { height: auto; min-height: 100dvh; padding: 76px 5% 14px; }
   #app .ending-celebration-title, #app .ending-note, #app .ending-celebration .ending-actions { position: relative; inset: auto; width: 100%; max-width: none; max-height: none; margin: 0 0 12px; }
 }
